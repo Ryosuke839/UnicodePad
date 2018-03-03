@@ -863,6 +863,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			layout.addView(del);
 			layout.setGravity(Gravity.RIGHT);
 			vl.addView(layout, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			//noinspection ResourceType: Error of Lint
 			ViewGroup.MarginLayoutParams mlp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
 			mlp.setMargins(0, 0, 0, 0);
 			for (int i = 5; i >= 0; --i)

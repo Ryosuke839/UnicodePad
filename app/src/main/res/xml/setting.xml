@@ -5,7 +5,7 @@
 		android:key="gen"
 		android:title="@string/general">
 		<ListPreference
-			android:defaultValue="Latest"
+			android:defaultValue="@string/version_def"
 			android:dialogTitle="@string/version_desc"
 			android:entries="@array/version"
 			android:entryValues="@array/version_val"
@@ -68,7 +68,7 @@
 					android:dialogTitle="@string/single_fav_desc"
 					android:widgetLayout="@layout/spinwidget" /> -->
 		<EditTextPreference
-			android:defaultValue="24.0"
+			android:defaultValue="@string/gridsize_def"
 			android:dialogTitle="@string/gridsize_desc"
 			android:key="gridsize"
 			android:numeric="decimal"
@@ -93,26 +93,26 @@
 			android:defaultValue="8"
 			android:dialogTitle="@string/columnl_desc"
 			android:entries="@array/column"
-			android:entryValues="@array/column"
+			android:entryValues="@array/column_val"
 			android:key="columnl"
 			android:summary=""
 			android:title="@string/columnl_desc" />
 		<EditTextPreference
-			android:defaultValue="24.0"
+			android:defaultValue="@string/textsize_def"
 			android:dialogTitle="@string/textsize_desc"
 			android:key="textsize"
 			android:numeric="decimal"
 			android:summary=""
 			android:title="@string/textsize_desc" />
 		<EditTextPreference
-			android:defaultValue="120.0"
+			android:defaultValue="@string/viewsize_def"
 			android:dialogTitle="@string/viewsize_desc"
 			android:key="viewsize"
 			android:numeric="decimal"
 			android:summary=""
 			android:title="@string/viewsize_desc" />
 		<EditTextPreference
-			android:defaultValue="15.0"
+			android:defaultValue="@string/checker_def"
 			android:dialogTitle="@string/checker_desc"
 			android:key="checker"
 			android:numeric="decimal"

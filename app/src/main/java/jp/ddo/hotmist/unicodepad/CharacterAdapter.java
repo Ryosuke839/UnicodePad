@@ -262,8 +262,8 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		ScrollView scroll = new ScrollView(context);
 		scroll.addView(layout);
 		((ViewPager)collection).addView(scroll);
-		collection.findViewById(0x3EFFFFFF).measure(MeasureSpec.makeMeasureSpec(10, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-		layout.setPadding(0, 0, 0, collection.findViewById(0x3EFFFFFF).getMeasuredHeight() * 2);
+		collection.findViewById(R.id.TAB_ID).measure(MeasureSpec.makeMeasureSpec(10, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+		layout.setPadding(0, 0, 0, collection.findViewById(R.id.TAB_ID).getMeasuredHeight() * 2);
 		return scroll;
 	}
 

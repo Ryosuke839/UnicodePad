@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+	<string-array name="column_val">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string-array name="version_val">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>Latest</item>
+	</string-array>
+	<string name="version_def">Latest</string>
+	<string-array name="single_val">
+		<item>false</item>
+		<item>true</item>
+	</string-array>
+	<string-array name="theme_val">
+		<item>2131492983</item>
+		<item>2131492984</item>
+		<item>2131492985</item>
+	</string-array>
+	<string-array name="scroll_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string name="gridsize_def">24.0</string>
+	<string name="textsize_def">24.0</string>
+	<string name="viewsize_def">120.0</string>
+	<string name="checker_def">15.0</string>
+</resources>

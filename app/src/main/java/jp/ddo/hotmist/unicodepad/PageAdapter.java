@@ -178,7 +178,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 	void showDesc(final View view, int index, final UnicodeAdapter ua)
 	{
 		PagerTabStrip tab = new PagerTabStrip(activity);
-		tab.setId(0x3EFFFFFF);
+		tab.setId(R.id.TAB_ID);
 		ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
 		layoutParams.height = LayoutParams.WRAP_CONTENT;
 		layoutParams.width = LayoutParams.MATCH_PARENT;

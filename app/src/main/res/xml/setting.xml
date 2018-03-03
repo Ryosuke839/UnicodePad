@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory
+		android:key="gen"
+		android:title="@string/general">
+		<ListPreference
+			android:defaultValue="Latest"
+			android:dialogTitle="@string/version_desc"
+			android:entries="@array/version"
+			android:entryValues="@array/version_val"
+			android:key="universion"
+			android:summary=""
+			android:title="@string/version_desc" />
+		<Preference
+			android:key="download"
+			android:summary="@string/download_uri"
+			android:title="@string/download_desc" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="app"
+		android:title="@string/appearance">
+		<ListPreference
+			android:defaultValue="2131492983"
+			android:dialogTitle="@string/theme_desc"
+			android:entries="@array/theme"
+			android:entryValues="@array/theme_val"
+			android:key="theme"
+			android:summary="@string/theme_title"
+			android:title="@string/theme_desc" />
+		<Preference
+			android:key="tabs"
+			android:title="@string/tabs_desc" />
+		<!-- 	    <ListPreference
+					android:key="single_rec"
+					android:title="@string/single_rec_desc"
+					android:summary=""
+					android:defaultValue="false"
+					android:entries="@array/single"
+					android:entryValues="@array/single_val"
+					android:dialogTitle="@string/single_rec_desc"
+					android:widgetLayout="@layout/spinwidget" />
+				<ListPreference
+					android:key="single_list"
+					android:title="@string/single_list_desc"
+					android:summary=""
+					android:defaultValue="false"
+					android:entries="@array/single"
+					android:entryValues="@array/single_val"
+					android:dialogTitle="@string/single_list_desc"
+					android:widgetLayout="@layout/spinwidget" />
+				<ListPreference
+					android:key="single_find"
+					android:title="@string/single_find_desc"
+					android:summary=""
+					android:defaultValue="true"
+					android:entries="@array/single"
+					android:entryValues="@array/single_val"
+					android:dialogTitle="@string/single_find_desc"
+					android:widgetLayout="@layout/spinwidget" />
+				<ListPreference
+					android:key="single_fav"
+					android:title="@string/single_fav_desc"
+					android:summary=""
+					android:defaultValue="false"
+					android:entries="@array/single"
+					android:entryValues="@array/single_val"
+					android:dialogTitle="@string/single_fav_desc"
+					android:widgetLayout="@layout/spinwidget" /> -->
+		<EditTextPreference
+			android:defaultValue="24.0"
+			android:dialogTitle="@string/gridsize_desc"
+			android:key="gridsize"
+			android:numeric="decimal"
+			android:summary=""
+			android:title="@string/gridsize_desc" />
+		<EditTextPreference
+			android:defaultValue="4"
+			android:dialogTitle="@string/padding_desc"
+			android:key="padding"
+			android:numeric="integer"
+			android:summary=""
+			android:title="@string/padding_desc" />
+		<ListPreference
+			android:defaultValue="8"
+			android:dialogTitle="@string/column_desc"
+			android:entries="@array/column"
+			android:entryValues="@array/column"
+			android:key="column"
+			android:summary=""
+			android:title="@string/column_desc" />
+		<ListPreference
+			android:defaultValue="8"
+			android:dialogTitle="@string/columnl_desc"
+			android:entries="@array/column"
+			android:entryValues="@array/column"
+			android:key="columnl"
+			android:summary=""
+			android:title="@string/columnl_desc" />
+		<EditTextPreference
+			android:defaultValue="24.0"
+			android:dialogTitle="@string/textsize_desc"
+			android:key="textsize"
+			android:numeric="decimal"
+			android:summary=""
+			android:title="@string/textsize_desc" />
+		<EditTextPreference
+			android:defaultValue="120.0"
+			android:dialogTitle="@string/viewsize_desc"
+			android:key="viewsize"
+			android:numeric="decimal"
+			android:summary=""
+			android:title="@string/viewsize_desc" />
+		<EditTextPreference
+			android:defaultValue="15.0"
+			android:dialogTitle="@string/checker_desc"
+			android:key="checker"
+			android:numeric="decimal"
+			android:summary=""
+			android:title="@string/checker_desc" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="lines"
+			android:title="@string/lines_desc" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="shrink"
+			android:title="@string/shrink_desc" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="beh"
+		android:title="@string/behaviour">
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="ime"
+			android:title="@string/ime_desc" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="clear"
+			android:title="@string/clear_desc" />
+		<ListPreference
+			android:defaultValue="1"
+			android:dialogTitle="@string/scroll_desc"
+			android:entries="@array/scroll"
+			android:entryValues="@array/scroll_val"
+			android:key="scroll"
+			android:summary=""
+			android:title="@string/scroll_desc" />
+		<EditTextPreference
+			android:defaultValue="256"
+			android:dialogTitle="@string/recent_desc"
+			android:key="recentsize"
+			android:numeric="integer"
+			android:summary=""
+			android:title="@string/recent_desc" />
+	</PreferenceCategory>
+
+</PreferenceScreen>

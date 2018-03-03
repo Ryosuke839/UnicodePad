@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">UnicodePad</string>
+ 	<string name="delete">Del</string>
+	<string name="paste">貼り付け</string>
+	<string name="desc">詳細</string>
+	<string name="find">検索</string>
+	<string name="fhint">文字名称を入力</string>
+	<string name="inlist">リスト内表示</string>
+	<string name="copy">コピー</string>
+	<string name="copied">クリップボードにコピーしました</string>
+	<string name="finish">確定</string>
+	<string name="share">共有</string>
+	<string name="font">フォント</string>
+	<string name="favorite">お気に入り</string>
+	<string name="recent">履歴</string>
+	<string name="list">一覧</string>
+	<string name="edit">入力</string>
+	<string name="emoji">絵文字</string>
+	<string name="normal">デフォルト</string>
+	<string name="input">入力</string>
+	<string name="addfav">お気に入り</string>
+	<string name="remfav">削除</string>
+	<string name="remrec">削除</string>
+	<string name="add">選択…</string>
+	<string name="mark">マーク</string>
+	<string name="addm">追加…</string>
+	<string name="rem">削除…</string>
+	<string name="code">コードポイント</string>
+	<string name="nocode">無効なコードポイントです</string>
+	<string name="name">名前から検索</string>
+	<string name="cantopen">フォントを開けませんでした</string>
+	<string name="cantread">アクセスできませんでした　アプリに読み取り権限が与えられていないかもしれません</string>
+	<string name="denied">アクセスが拒否されています. SDカードにアクセスするにはアプリ設定からストレージ権限を付与してください</string>
+	<string name="loaddb">データベースの構築中…</string>
+	<string name="invalid">無効な値です</string>
+	<string-array name="codes">
+		<item>0 基本ラテン文字</item>
+		<item>80 ラテン1補助</item>
+		<item>100 ラテン文字拡張A</item>
+		<item>180 ラテン文字拡張B</item>
+		<item>250 IPA拡張</item>
+		<item>2B0 前進を伴う修飾文字</item>
+		<item>300 ダイアクリティカルマーク</item>
+		<item>370 ギリシア文字及びコプト文字</item>
+		<item>400 キリール文字</item>
+		<item>500 キリール文字補助</item>
+		<item>530 アルメニア文字</item>
+		<item>590 ヘブライ文字</item>
+		<item>600 アラビア文字</item>
+		<item>700 シリア文字</item>
+		<item>750 アラビア文字補助</item>
+		<item>780 ターナ文字</item>
+		<item>7C0 ンコ文字</item>
+		<item>800 サマリア文字</item>
+		<item>840 マンダ文字</item>
+		<item>860 シリア文字補助</item>
+		<item>8A0 アラビア文字拡張A</item>
+		<item>900 デーヴァナーガリー文字</item>
+		<item>980 ベンガル文字</item>
+		<item>A00 グルムキー文字</item>
+		<item>A80 グジャラート文字</item>
+		<item>B00 オリヤー文字</item>
+		<item>B80 タミル文字</item>
+		<item>C00 テルグ文字</item>
+		<item>C80 カンナダ文字</item>
+		<item>D00 マラヤーラム文字</item>
+		<item>D80 シンハラ文字</item>
+		<item>E00 タイ文字</item>
+		<item>E80 ラオス文字</item>
+		<item>F00 チベット文字</item>
+		<item>1000 ミャンマー文字</item>
+		<item>10A0 グルジア文字</item>
+		<item>1100 ハングル字母</item>
+		<item>1200 エチオピア文字</item>
+		<item>1380 エチオピア文字補助</item>
+		<item>13A0 チェロキー文字</item>
+		<item>1400 統合カナダ先住民音節</item>
+		<item>1680 オガム文字</item>
+		<item>16A0 ルーン文字</item>
+		<item>1700 タガログ文字</item>
+		<item>1720 ハヌノオ文字</item>
+		<item>1740 ブヒッド文字</item>
+		<item>1760 タグバヌア文字</item>
+		<item>1780 クメール文字</item>
+		<item>1800 モンゴル文字</item>
+		<item>18B0 統合カナダ先住民音節拡張</item>
+		<item>1900 リンブ文字</item>
+		<item>1950 タイ・ロ文字</item>
+		<item>1980 新タイ・ロ文字</item>
+		<item>19E0 クメール文字用記号</item>
+		<item>1A00 ブギス文字</item>
+		<item>1A20 ラーンナー文字</item>
+		<item>1AB0 ダイアクリティカルマーク拡張</item>
+		<item>1B00 バリ文字</item>
+		<item>1B80 スンダ文字</item>
+		<item>1BC0 バタク文字</item>
+		<item>1C00 レプチャ文字</item>
+		<item>1C50 オル・チキ文字</item>
+		<item>1C80 キリール文字拡張C</item>
+		<item>1CC0 スンダ文字補助</item>
+		<item>1CD0 ヴェーダ文字拡張</item>
+		<item>1D00 音声記号拡張</item>
+		<item>1D80 音声記号拡張補助</item>
+		<item>1DC0 ダイアクリティカルマーク補助</item>
+		<item>1E00 ラテン文字拡張追加</item>
+		<item>1F00 ギリシア文字拡張</item>
+		<item>2000 一般句読点</item>
+		<item>2070 上付き・下付き</item>
+		<item>20A0 通貨記号</item>
+		<item>20D0 記号用ダイアクリティカルマーク</item>
+		<item>2100 文字様記号</item>
+		<item>2150 数字に準じるもの</item>
+		<item>2190 矢印</item>
+		<item>2200 数学記号</item>
+		<item>2300 その他の技術用記号</item>
+		<item>2400 制御機能用記号</item>
+		<item>2440 光学的文字認識、OCR</item>
+		<item>2460 囲み英数字</item>
+		<item>2500 罫線素片</item>
+		<item>2580 ブロック要素</item>
+		<item>25A0 幾何学模様</item>
+		<item>2600 その他の記号</item>
+		<item>2700 装飾記号</item>
+		<item>27C0 その他の数学記号A</item>
+		<item>27F0 補助矢印A</item>
+		<item>2800 点字図形</item>
+		<item>2900 補助矢印B</item>
+		<item>2980 その他の数学記号B</item>
+		<item>2A00 補助数学記号</item>
+		<item>2B00 その他の記号及び矢印</item>
+		<item>2C00 グラゴル文字</item>
+		<item>2C60 ラテン文字拡張C</item>
+		<item>2C80 コプト文字</item>
+		<item>2D00 グルジア文字補助</item>
+		<item>2D30 ティフナグ文字</item>
+		<item>2D80 エチオピア文字拡張</item>
+		<item>2DE0 キリール文字拡張A</item>
+		<item>2E00 補助句読点</item>
+		<item>2E80 CJK部首補助</item>
+		<item>2F00 康熙部首</item>
+		<item>2FF0 漢字構成記述文字、IDC</item>
+		<item>3000 CJKの記号及び句読点</item>
+		<item>3040 平仮名</item>
+		<item>30A0 片仮名</item>
+		<item>3100 注音字母</item>
+		<item>3130 ハングル互換字母</item>
+		<item>3190 漢文用記号</item>
+		<item>31A0 注音字母拡張</item>
+		<item>31C0 CJKの筆画</item>
+		<item>31F0 片仮名拡張</item>
+		<item>3200 囲みCJK文字・月</item>
+		<item>3300 CJK互換用文字</item>
+		<item>3400 CJK統合漢字拡張A</item>
+		<item>4DC0 易経記号</item>
+		<item>4E00 CJK統合漢字</item>
+		<item>A000 イ文字</item>
+		<item>A490 イ文字部首</item>
+		<item>A4D0 リス文字</item>
+		<item>A500 ヴァイ文字</item>
+		<item>A640 キリール文字拡張B</item>
+		<item>A6A0 バムン文字</item>
+		<item>A700 声調修飾文字</item>
+		<item>A720 ラテン文字拡張D</item>
+		<item>A800 シロティ・ナグリ文字</item>
+		<item>A830 共通インド数字に準じるもの</item>
+		<item>A840 パスパ文字</item>
+		<item>A880 サウラーシュトラ文字</item>
+		<item>A8E0 デーヴァナーガリー文字拡張</item>
+		<item>A900 カヤー文字</item>
+		<item>A930 レジャン文字</item>
+		<item>A960 ハングル字母拡張A</item>
+		<item>A980 ジャワ文字</item>
+		<item>A9E0 ミャンマー文字拡張B</item>
+		<item>AA00 チャム文字</item>
+		<item>AA60 ミャンマー文字拡張A</item>
+		<item>AA80 タイ・ヴェト文字</item>
+		<item>AAE0 マニプリ文字拡張</item>
+		<item>AB00 エチオピア文字拡張A</item>
+		<item>AB30 ラテン文字拡張E</item>
+		<item>AB70 チェロキー文字補助</item>
+		<item>ABC0 マニプリ文字</item>
+		<item>AC00 ハングル音節文字</item>
+		<item>D7B0 ハングル字母拡張B</item>
+		<item>E000 私用領域</item>
+		<item>F900 CJK互換漢字</item>
+		<item>FB00 アルファベット表示形</item>
+		<item>FB50 アラビア表示形A</item>
+		<item>FE00 字形選択子</item>
+		<item>FE10 縦書き形</item>
+		<item>FE20 半記号</item>
+		<item>FE30 CJK互換形</item>
+		<item>FE50 小字形</item>
+		<item>FE70 アラビア表示形B</item>
+		<item>FF00 半角・全角形</item>
+		<item>FFF0 特殊用途文字</item>
+		<item>10000 線文字B音節文字</item>
+		<item>10080 線文字B表意文字</item>
+		<item>10100 エーゲ数字</item>
+		<item>10140 古代ギリシア数字</item>
+		<item>10190 古代記号</item>
+		<item>101D0 ファイストスの円盤の文字</item>
+		<item>10280 リキア文字</item>
+		<item>102A0 カリア文字</item>
+		<item>102E0 コプト数字</item>
+		<item>10300 古代イタリア文字</item>
+		<item>10330 ゴート文字</item>
+		<item>10350 古ペルム文字</item>
+		<item>10380 ウガリト文字</item>
+		<item>103A0 古代ペルシャ文字</item>
+		<item>10400 デザレット文字</item>
+		<item>10450 シェイヴィアン文字</item>
+		<item>10480 オスマニア文字</item>
+		<item>104B0 オセージ文字</item>
+		<item>10500 エルバサン文字</item>
+		<item>10530 カフカス・アルバニア文字</item>
+		<item>10600 線文字A</item>
+		<item>10800 キプロス音節文字</item>
+		<item>10840 アラム文字</item>
+		<item>10860 パルミラ文字</item>
+		<item>10880 ナバテア文字</item>
+		<item>108E0 ハトラ文字</item>
+		<item>10900 フェニキア文字</item>
+		<item>10920 リディア文字</item>
+		<item>10980 メロエ記念碑書体</item>
+		<item>109A0 メロエ草書体</item>
+		<item>10A00 カローシュティー文字</item>
+		<item>10A60 南アラビア文字</item>
+		<item>10A80 北アラビア文字</item>
+		<item>10AC0 マニ文字</item>
+		<item>10B00 アヴェスター文字</item>
+		<item>10B40 碑文パルティア文字</item>
+		<item>10B60 碑文パフラヴィー文字</item>
+		<item>10B80 詩編パフラヴィー文字</item>
+		<item>10C00 突厥文字</item>
+		<item>10C80 ロヴァーシュ文字</item>
+		<item>10E60 ルーミー数字</item>
+		<item>11000 ブラーフミー文字</item>
+		<item>11080 カイティ文字</item>
+		<item>110D0 ソラ・ソンペン文字</item>
+		<item>11100 チャクマ文字</item>
+		<item>11150 マハージャニー文字</item>
+		<item>11180 シャラダ文字</item>
+		<item>111E0 旧シンハラ数字</item>
+		<item>11200 ホジャ文字</item>
+		<item>11280 ムルターニー文字</item>
+		<item>112B0 フダーワーディー文字</item>
+		<item>11300 グランタ文字</item>
+		<item>11400 ネパール文字</item>
+		<item>11480 ティルフータ文字</item>
+		<item>11580 梵字</item>
+		<item>11600 モーディー文字</item>
+		<item>11660 モンゴル文字補助</item>
+		<item>11680 タクリ文字</item>
+		<item>11700 アーホム文字</item>
+		<item>118A0 ワラング・クシティ文字</item>
+		<item>11A00 ザナバザル方形文字</item>
+		<item>11A50 ソヨンボ文字</item>
+		<item>11AC0 パウ・チン・ハウ表語文字</item>
+		<item>11C00 バイクシュキー文字</item>
+		<item>11C70 マルチェン文字</item>
+		<item>11D00 マサラム・ゴーンディー文字</item>
+		<item>12000 楔形文字</item>
+		<item>12400 楔形文字の数字及び句読点</item>
+		<item>12480 シュメール楔形文字</item>
+		<item>13000 エジプト・ヒエログリフ</item>
+		<item>14400 アナトリア・ヒエログリフ</item>
+		<item>16800 バムン文字補助</item>
+		<item>16A40 ムロ文字</item>
+		<item>16AD0 バサ文字</item>
+		<item>16B00 パハウ・フモン文字</item>
+		<item>16F00 ポラード文字</item>
+		<item>16FE0 漢字の記号及び句読点</item>
+		<item>17000 西夏文字</item>
+		<item>18800 西夏文字構成要素</item>
+		<item>1B000 仮名文字補助</item>
+		<item>1B100 仮名文字拡張A</item>
+		<item>1B170 女書</item>
+		<item>1BC00 デュブロワエ式速記</item>
+		<item>1BCA0 速記方式制御</item>
+		<item>1D000 ビザンチン音楽記号</item>
+		<item>1D100 音楽記号</item>
+		<item>1D200 古代ギリシア音符記号</item>
+		<item>1D300 太玄経記号</item>
+		<item>1D360 算木用数字</item>
+		<item>1D400 数学用英数字記号</item>
+		<item>1D800 サットン手話表記法</item>
+		<item>1E000 グラゴル文字補助</item>
+		<item>1E800 メンデ文字</item>
+		<item>1E900 アドラム文字</item>
+		<item>1EE00 アラビア数学用文字記号</item>
+		<item>1F000 麻雀牌</item>
+		<item>1F030 ドミノ牌</item>
+		<item>1F0A0 トランプ</item>
+		<item>1F100 囲み英数字補助</item>
+		<item>1F200 囲み表意文字補助</item>
+		<item>1F300 その他の記号及び絵文字</item>
+		<item>1F600 顔文字</item>
+		<item>1F650 装飾文字</item>
+		<item>1F680 交通及び地図の記号</item>
+		<item>1F700 錬金術記号</item>
+		<item>1F780 幾何学模様拡張</item>
+		<item>1F800 補助矢印C</item>
+		<item>1F900 補助記号及び絵文字</item>
+		<item>20000 CJK統合漢字拡張B</item>
+		<item>2A700 CJK統合漢字拡張C</item>
+		<item>2B740 CJK統合漢字拡張D</item>
+		<item>2B820 CJK統合漢字拡張E</item>
+		<item>2CEB0 CJK統合漢字拡張F</item>
+		<item>2F800 CJK互換漢字補助</item>
+		<item>E0000 タグ</item>
+		<item>E0100 字形選択子補助</item>
+		<item>F0000 私用領域補助A</item>
+		<item>100000 私用領域補助B</item>
+	</string-array>
+	<string name="general">一般</string>
+	<string name="appearance">外観</string>
+	<string name="behaviour">動作</string>
+	<string name="textsize_desc">エディットボックスのフォントサイズ</string>
+	<string name="column_desc">表の列数</string>
+	<string name="columnl_desc">表の列数 (横位置)</string>
+	<string-array name="column">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string name="tabs_desc">タブ設定…</string>
+	<string name="shown_desc">表示タブ</string>
+	<string name="hidden_desc">非表示タブ</string>
+	<string name="single_rec_desc">履歴タブの列数</string>
+	<string name="single_list_desc">一覧タブの列数</string>
+	<string name="single_find_desc">検索タブの列数</string>
+	<string name="single_fav_desc">お気に入りタブの列数</string>
+	<string name="single_edt_desc">入力タブの列数</string>
+	<string name="single_emoji_desc">絵文字タブの列数</string>
+	<string-array name="single">
+		<item>複数列 (文字のみ)</item>
+		<item>1列 (詳細も表示)</item>
+	</string-array>
+	<string-array name="single_val">
+		<item>false</item>
+		<item>true</item>
+	</string-array>
+	<string name="version_desc">Unicodeのバージョン</string>
+	<string-array name="version">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>最新 (10.0.0)</item>
+	</string-array>
+	<string name="download_desc">Notoフォントをダウンロード…</string>
+	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="padding_desc">表の余白</string>
+	<string name="gridsize_desc">表のフォントサイズ</string>
+	<string name="viewsize_desc">拡大表示のフォントサイズ</string>
+	<string name="emojisize_desc">拡大表示のカラー絵文字サイズ</string>
+	<string name="checker_desc">拡大表示の格子模様の濃さ (%)</string>
+	<string name="lines_desc">拡大表示でフォントメトリックを表示</string>
+	<string name="shrink_desc">フォントを幅に合わせ縮小</string>
+	<string name="recent_desc">履歴の最大数</string>
+	<string name="theme_desc">テーマ</string>
+	<string-array name="theme">
+		<item>黒基調</item>
+		<item>白基調</item>
+		<item>白基調 + 黒タイトル</item>
+	</string-array>
+	<string-array name="theme_val">
+		<item>2131492983</item>
+		<item>2131492984</item>
+		<item>2131492985</item>
+	</string-array>
+	<string name="theme_title">再起動後に適用されることがあります</string>
+	<string name="list_title">一覧タブは非表示にできません</string>
+	<string name="scroll_desc">画面のスクロール</string>
+	<string-array name="scroll">
+		<item>無効</item>
+		<item>横位置でのみ有効</item>
+		<item>常に有効</item>
+	</string-array>
+	<string-array name="scroll_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string name="ime_desc">IMEを無効化</string>
+	<string name="clear_desc">全削除ボタンを表示</string>
+</resources>

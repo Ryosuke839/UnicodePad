@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Theme" parent="Theme.AppCompat">
+		<item name="backspace">@drawable/ic_action_backspace</item>
+		<item name="cancel">@drawable/ic_action_cancel</item>
+		<item name="search">@drawable/ic_action_search</item>
+	</style>
+
+	<style name="Theme.Light" parent="Theme.AppCompat.Light">
+		<item name="backspace">@drawable/ic_action_backspace_light</item>
+		<item name="cancel">@drawable/ic_action_cancel_light</item>
+		<item name="search">@drawable/ic_action_search_light</item>
+	</style>
+
+	<style name="Theme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="backspace">@drawable/ic_action_backspace_light</item>
+		<item name="cancel">@drawable/ic_action_cancel_light</item>
+		<item name="search">@drawable/ic_action_search_light</item>
+	</style>
+</resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">UnicodePad</string>
+	<string name="delete">Del</string>
+	<string name="paste">Klistra in</string>
+	<string name="desc">Detaljer</string>
+	<string name="find">Sök</string>
+	<string name="fhint">Mata in namn på tecken</string>
+	<string name="inlist">Hitta i lista</string>
+	<string name="copy">Kopiera</string>
+	<string name="copied">Kopierad till urklipp</string>
+	<string name="finish">Enter</string>
+	<string name="share">Dela</string>
+	<string name="font">Typsnitt</string>
+	<string name="favorite">Favoriter</string>
+	<string name="recent">Senast använda</string>
+	<string name="list">Lista</string>
+	<string name="edit">Inmatning</string>
+	<string name="emoji">Emoji</string>
+	<string name="normal">Systemstandard</string>
+	<string name="input">Mata in</string>
+	<string name="addfav">Favorisera</string>
+	<string name="remfav">Avfavorisera</string>
+	<string name="remrec">Ta bort</string>
+	<string name="add">Välj …</string>
+	<string name="mark">Markera</string>
+	<string name="addm">Lägg till …</string>
+	<string name="rem">Ta bort …</string>
+	<string name="code">Kodpunkt</string>
+	<string name="nocode">Ogiltig kodpunkt</string>
+	<string name="name">Hitta via namn</string>
+	<string name="cantopen">Det gick inte att öppna typsnittet</string>
+	<string name="cantread">Åtkomst nekad. Appen har inte behörigheten att läsa.</string>
+	<string name="denied">Åtkomst nekad. För åtkomst till SD-kortet, ge behörighet till lagring i appinställningar</string>
+	<string name="loaddb">Skapar databas …</string>
+	<string name="invalid">Ogiltigt värde</string>
+	<string name="general">Allmänt</string>
+	<string name="appearance">Utseende</string>
+	<string name="behaviour">Beteende</string>
+	<string name="textsize_desc">Textstorlek på input</string>
+	<string name="column_desc">Antal kolumner i rutnät</string>
+	<string name="columnl_desc">Antal kolumner i rutnät (liggande)</string>
+	<string-array name="column">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string name="tabs_desc">Flikinställningar …</string>
+	<string name="shown_desc">Synliga flikar</string>
+	<string name="hidden_desc">Dolda flikar</string>
+	<string name="single_rec_desc">Kolumner i senast använda</string>
+	<string name="single_list_desc">Kolumner i listan</string>
+	<string name="single_find_desc">Kolumner i sök</string>
+	<string name="single_fav_desc">Kolumner i favoriter</string>
+	<string name="single_edt_desc">Kolumner i input</string>
+	<string name="single_emoji_desc">Kolumner i emoji</string>
+	<string-array name="single">
+		<item>Flera kolumner med endast tecken</item>
+		<item>En kolumn med beskrivning</item>
+	</string-array>
+	<string-array name="single_val">
+		<item>false</item>
+		<item>true</item>
+	</string-array>
+	<string name="version_desc">Unicode-version</string>
+	<string-array name="version">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>Senaste (10.0.0)</item>
+	</string-array>
+	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
+	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="padding_desc">Avstånd i rutnät</string>
+	<string name="gridsize_desc">Textstorlek i rutnät</string>
+	<string name="viewsize_desc">Textstorlek i stor vy</string>
+	<string name="emojisize_desc">Storlek på emoji i stor vy</string>
+	<string name="checker_desc">Opacitet på rutnätet i stor vy (%)</string>
+	<string name="lines_desc">Visa teckensnittsegenskaper i stor vy</string>
+	<string name="shrink_desc">Krymp tecken till bredd</string>
+	<string name="recent_desc">Antalet senast använda tecken</string>
+	<string name="theme_desc">Tema</string>
+	<string-array name="theme">
+		<item>Mörkt</item>
+		<item>Ljust</item>
+		<item>Ljust + mörk list</item>
+	</string-array>
+	<string-array name="theme_val">
+		<item>2131492983</item>
+		<item>2131492984</item>
+		<item>2131492985</item>
+	</string-array>
+	<string name="theme_title">Tillämpas efter omstart</string>
+	<string name="list_title">Listan kan inte döljas</string>
+	<string name="scroll_desc">Autoscrolla</string>
+	<string-array name="scroll">
+		<item>Aldrig</item>
+		<item>Alltid i liggande läge</item>
+		<item>Alltid</item>
+	</string-array>
+	<string-array name="scroll_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string name="ime_desc">Inaktivera tangentbord</string>
+	<string name="clear_desc">Visa rensa-knapp</string>
+</resources>

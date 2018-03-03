@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        applicationId "jp.ddo.hotmist.unicodepad"
+        minSdkVersion 9
+        targetSdkVersion 25
+        multiDexEnabled true
+        versionCode 32
+        versionName "2.3.0"
+    }
+
+    buildTypes {
+        release {
+        }
+    }
+
+    lintOptions {
+        disable "ResourceType"
+        disable 'GoogleAppIndexingWarning'
+    }
+}
+
+dependencies {
+    compile "com.android.support:support-v4:25.3+"
+    compile "com.android.support:appcompat-v7:25.3+"
+}

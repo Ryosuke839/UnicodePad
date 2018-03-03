@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+/**
+ * Copyright (c) 2009, adamrocker (http://www.adamrocker.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+<resources>
+	<string name="app_name">UnicodePad</string>
+	<string name="delete">Del</string>
+	<string name="paste">Paste</string>
+	<string name="desc">Detail</string>
+	<string name="find">Find</string>
+	<string name="fhint">Enter a character name</string>
+	<string name="inlist">Find in List</string>
+	<string name="copy">Copy</string>
+	<string name="copied">Copied to clipboard</string>
+	<string name="finish">Enter</string>
+	<string name="share">Share</string>
+	<string name="font">Font</string>
+	<string name="favorite">Favorite</string>
+	<string name="recent">Recent</string>
+	<string name="list">List</string>
+	<string name="edit">Input</string>
+	<string name="emoji">Emoji</string>
+	<string name="normal">Default</string>
+	<string name="input">Input</string>
+	<string name="addfav">Favorite</string>
+	<string name="remfav">Unfavorite</string>
+	<string name="remrec">Remove</string>
+	<string name="add">Select…</string>
+	<string name="mark">Mark</string>
+	<string name="addm">Add…</string>
+	<string name="rem">Remove…</string>
+	<string name="code">Codepoint</string>
+	<string name="nocode">Invalid codepoint</string>
+	<string name="name">Find by name</string>
+	<string name="cantopen">Cannot open the font</string>
+	<string name="cantread">Cannot access, The application may not have permission to read</string>
+	<string name="denied">You have denied the access. To browse SD card, please grant the Storage permission from Apps setting</string>
+	<string name="loaddb">Creating database…</string>
+	<string name="invalid">Invalid value</string>
+	<string-array name="codes">
+		<item>0 Basic Latin</item>
+		<item>80 Latin-1 Supplement</item>
+		<item>100 Latin Extended-A</item>
+		<item>180 Latin Extended-B</item>
+		<item>250 IPA Extensions</item>
+		<item>2B0 Spacing Modifier Letters</item>
+		<item>300 Combining Diacritical Marks</item>
+		<item>370 Greek and Coptic</item>
+		<item>400 Cyrillic</item>
+		<item>500 Cyrillic Supplement</item>
+		<item>530 Armenian</item>
+		<item>590 Hebrew</item>
+		<item>600 Arabic</item>
+		<item>700 Syriac</item>
+		<item>750 Arabic Supplement</item>
+		<item>780 Thaana</item>
+		<item>7C0 NKo</item>
+		<item>800 Samaritan</item>
+		<item>840 Mandaic</item>
+		<item>860 Syriac Supplement</item>
+		<item>8A0 Arabic Extended-A</item>
+		<item>900 Devanagari</item>
+		<item>980 Bengali</item>
+		<item>A00 Gurmukhi</item>
+		<item>A80 Gujarati</item>
+		<item>B00 Oriya</item>
+		<item>B80 Tamil</item>
+		<item>C00 Telugu</item>
+		<item>C80 Kannada</item>
+		<item>D00 Malayalam</item>
+		<item>D80 Sinhala</item>
+		<item>E00 Thai</item>
+		<item>E80 Lao</item>
+		<item>F00 Tibetan</item>
+		<item>1000 Myanmar</item>
+		<item>10A0 Georgian</item>
+		<item>1100 Hangul Jamo</item>
+		<item>1200 Ethiopic</item>
+		<item>1380 Ethiopic Supplement</item>
+		<item>13A0 Cherokee</item>
+		<item>1400 Unified Canadian Aboriginal Syllabics</item>
+		<item>1680 Ogham</item>
+		<item>16A0 Runic</item>
+		<item>1700 Tagalog</item>
+		<item>1720 Hanunoo</item>
+		<item>1740 Buhid</item>
+		<item>1760 Tagbanwa</item>
+		<item>1780 Khmer</item>
+		<item>1800 Mongolian</item>
+		<item>18B0 Unified Canadian Aboriginal Syllabics Extended</item>
+		<item>1900 Limbu</item>
+		<item>1950 Tai Le</item>
+		<item>1980 New Tai Lue</item>
+		<item>19E0 Khmer Symbols</item>
+		<item>1A00 Buginese</item>
+		<item>1A20 Tai Tham</item>
+		<item>1AB0 Combining Diacritical Marks Extended</item>
+		<item>1B00 Balinese</item>
+		<item>1B80 Sundanese</item>
+		<item>1BC0 Batak</item>
+		<item>1C00 Lepcha</item>
+		<item>1C50 Ol Chiki</item>
+		<item>1C80 Cyrillic Extended-C</item>
+		<item>1CC0 Sundanese Supplement</item>
+		<item>1CD0 Vedic Extensions</item>
+		<item>1D00 Phonetic Extensions</item>
+		<item>1D80 Phonetic Extensions Supplement</item>
+		<item>1DC0 Combining Diacritical Marks Supplement</item>
+		<item>1E00 Latin Extended Additional</item>
+		<item>1F00 Greek Extended</item>
+		<item>2000 General Punctuation</item>
+		<item>2070 Superscripts and Subscripts</item>
+		<item>20A0 Currency Symbols</item>
+		<item>20D0 Combining Diacritical Marks for Symbols</item>
+		<item>2100 Letterlike Symbols</item>
+		<item>2150 Number Forms</item>
+		<item>2190 Arrows</item>
+		<item>2200 Mathematical Operators</item>
+		<item>2300 Miscellaneous Technical</item>
+		<item>2400 Control Pictures</item>
+		<item>2440 Optical Character Recognition</item>
+		<item>2460 Enclosed Alphanumerics</item>
+		<item>2500 Box Drawing</item>
+		<item>2580 Block Elements</item>
+		<item>25A0 Geometric Shapes</item>
+		<item>2600 Miscellaneous Symbols</item>
+		<item>2700 Dingbats</item>
+		<item>27C0 Miscellaneous Mathematical Symbols-A</item>
+		<item>27F0 Supplemental Arrows-A</item>
+		<item>2800 Braille Patterns</item>
+		<item>2900 Supplemental Arrows-B</item>
+		<item>2980 Miscellaneous Mathematical Symbols-B</item>
+		<item>2A00 Supplemental Mathematical Operators</item>
+		<item>2B00 Miscellaneous Symbols and Arrows</item>
+		<item>2C00 Glagolitic</item>
+		<item>2C60 Latin Extended-C</item>
+		<item>2C80 Coptic</item>
+		<item>2D00 Georgian Supplement</item>
+		<item>2D30 Tifinagh</item>
+		<item>2D80 Ethiopic Extended</item>
+		<item>2DE0 Cyrillic Extended-A</item>
+		<item>2E00 Supplemental Punctuation</item>
+		<item>2E80 CJK Radicals Supplement</item>
+		<item>2F00 Kangxi Radicals</item>
+		<item>2FF0 Ideographic Description Characters</item>
+		<item>3000 CJK Symbols and Punctuation</item>
+		<item>3040 Hiragana</item>
+		<item>30A0 Katakana</item>
+		<item>3100 Bopomofo</item>
+		<item>3130 Hangul Compatibility Jamo</item>
+		<item>3190 Kanbun</item>
+		<item>31A0 Bopomofo Extended</item>
+		<item>31C0 CJK Strokes</item>
+		<item>31F0 Katakana Phonetic Extensions</item>
+		<item>3200 Enclosed CJK Letters and Months</item>
+		<item>3300 CJK Compatibility</item>
+		<item>3400 CJK Unified Ideographs Extension A</item>
+		<item>4DC0 Yijing Hexagram Symbols</item>
+		<item>4E00 CJK Unified Ideographs</item>
+		<item>A000 Yi Syllables</item>
+		<item>A490 Yi Radicals</item>
+		<item>A4D0 Lisu</item>
+		<item>A500 Vai</item>
+		<item>A640 Cyrillic Extended-B</item>
+		<item>A6A0 Bamum</item>
+		<item>A700 Modifier Tone Letters</item>
+		<item>A720 Latin Extended-D</item>
+		<item>A800 Syloti Nagri</item>
+		<item>A830 Common Indic Number Forms</item>
+		<item>A840 Phags-pa</item>
+		<item>A880 Saurashtra</item>
+		<item>A8E0 Devanagari Extended</item>
+		<item>A900 Kayah Li</item>
+		<item>A930 Rejang</item>
+		<item>A960 Hangul Jamo Extended-A</item>
+		<item>A980 Javanese</item>
+		<item>A9E0 Myanmar Extended-B</item>
+		<item>AA00 Cham</item>
+		<item>AA60 Myanmar Extended-A</item>
+		<item>AA80 Tai Viet</item>
+		<item>AAE0 Meetei Mayek Extensions</item>
+		<item>AB00 Ethiopic Extended-A</item>
+		<item>AB30 Latin Extended-E</item>
+		<item>AB70 Cherokee Supplement</item>
+		<item>ABC0 Meetei Mayek</item>
+		<item>AC00 Hangul Syllables</item>
+		<item>D7B0 Hangul Jamo Extended-B</item>
+		<item>E000 Private Use Area</item>
+		<item>F900 CJK Compatibility Ideographs</item>
+		<item>FB00 Alphabetic Presentation Forms</item>
+		<item>FB50 Arabic Presentation Forms-A</item>
+		<item>FE00 Variation Selectors</item>
+		<item>FE10 Vertical Forms</item>
+		<item>FE20 Combining Half Marks</item>
+		<item>FE30 CJK Compatibility Forms</item>
+		<item>FE50 Small Form Variants</item>
+		<item>FE70 Arabic Presentation Forms-B</item>
+		<item>FF00 Halfwidth and Fullwidth Forms</item>
+		<item>FFF0 Specials</item>
+		<item>10000 Linear B Syllabary</item>
+		<item>10080 Linear B Ideograms</item>
+		<item>10100 Aegean Numbers</item>
+		<item>10140 Ancient Greek Numbers</item>
+		<item>10190 Ancient Symbols</item>
+		<item>101D0 Phaistos Disc</item>
+		<item>10280 Lycian</item>
+		<item>102A0 Carian</item>
+		<item>102E0 Coptic Epact Numbers</item>
+		<item>10300 Old Italic</item>
+		<item>10330 Gothic</item>
+		<item>10350 Old Permic</item>
+		<item>10380 Ugaritic</item>
+		<item>103A0 Old Persian</item>
+		<item>10400 Deseret</item>
+		<item>10450 Shavian</item>
+		<item>10480 Osmanya</item>
+		<item>104B0 Osage</item>
+		<item>10500 Elbasan</item>
+		<item>10530 Caucasian Albanian</item>
+		<item>10600 Linear A</item>
+		<item>10800 Cypriot Syllabary</item>
+		<item>10840 Imperial Aramaic</item>
+		<item>10860 Palmyrene</item>
+		<item>10880 Nabataean</item>
+		<item>108E0 Hatran</item>
+		<item>10900 Phoenician</item>
+		<item>10920 Lydian</item>
+		<item>10980 Meroitic Hieroglyphs</item>
+		<item>109A0 Meroitic Cursive</item>
+		<item>10A00 Kharoshthi</item>
+		<item>10A60 Old South Arabian</item>
+		<item>10A80 Old North Arabian</item>
+		<item>10AC0 Manichaean</item>
+		<item>10B00 Avestan</item>
+		<item>10B40 Inscriptional Parthian</item>
+		<item>10B60 Inscriptional Pahlavi</item>
+		<item>10B80 Psalter Pahlavi</item>
+		<item>10C00 Old Turkic</item>
+		<item>10C80 Old Hungarian</item>
+		<item>10E60 Rumi Numeral Symbols</item>
+		<item>11000 Brahmi</item>
+		<item>11080 Kaithi</item>
+		<item>110D0 Sora Sompeng</item>
+		<item>11100 Chakma</item>
+		<item>11150 Mahajani</item>
+		<item>11180 Sharada</item>
+		<item>111E0 Sinhala Archaic Numbers</item>
+		<item>11200 Khojki</item>
+		<item>11280 Multani</item>
+		<item>112B0 Khudawadi</item>
+		<item>11300 Grantha</item>
+		<item>11400 Newa</item>
+		<item>11480 Tirhuta</item>
+		<item>11580 Siddham</item>
+		<item>11600 Modi</item>
+		<item>11660 Mongolian Supplement</item>
+		<item>11680 Takri</item>
+		<item>11700 Ahom</item>
+		<item>118A0 Warang Citi</item>
+		<item>11A00 Zanabazar Square</item>
+		<item>11A50 Soyombo</item>
+		<item>11AC0 Pau Cin Hau</item>
+		<item>11C00 Bhaiksuki</item>
+		<item>11C70 Marchen</item>
+		<item>11D00 Masaram Gondi</item>
+		<item>12000 Cuneiform</item>
+		<item>12400 Cuneiform Numbers and Punctuation</item>
+		<item>12480 Early Dynastic Cuneiform</item>
+		<item>13000 Egyptian Hieroglyphs</item>
+		<item>14400 Anatolian Hieroglyphs</item>
+		<item>16800 Bamum Supplement</item>
+		<item>16A40 Mro</item>
+		<item>16AD0 Bassa Vah</item>
+		<item>16B00 Pahawh Hmong</item>
+		<item>16F00 Miao</item>
+		<item>16FE0 Ideographic Symbols and Punctuation</item>
+		<item>17000 Tangut</item>
+		<item>18800 Tangut Components</item>
+		<item>1B000 Kana Supplement</item>
+		<item>1B100 Kana Extended-A</item>
+		<item>1B170 Nushu</item>
+		<item>1BC00 Duployan</item>
+		<item>1BCA0 Shorthand Format Controls</item>
+		<item>1D000 Byzantine Musical Symbols</item>
+		<item>1D100 Musical Symbols</item>
+		<item>1D200 Ancient Greek Musical Notation</item>
+		<item>1D300 Tai Xuan Jing Symbols</item>
+		<item>1D360 Counting Rod Numerals</item>
+		<item>1D400 Mathematical Alphanumeric Symbols</item>
+		<item>1D800 Sutton SignWriting</item>
+		<item>1E000 Glagolitic Supplement</item>
+		<item>1E800 Mende Kikakui</item>
+		<item>1E900 Adlam</item>
+		<item>1EE00 Arabic Mathematical Alphabetic Symbols</item>
+		<item>1F000 Mahjong Tiles</item>
+		<item>1F030 Domino Tiles</item>
+		<item>1F0A0 Playing Cards</item>
+		<item>1F100 Enclosed Alphanumeric Supplement</item>
+		<item>1F200 Enclosed Ideographic Supplement</item>
+		<item>1F300 Miscellaneous Symbols and Pictographs</item>
+		<item>1F600 Emoticons</item>
+		<item>1F650 Ornamental Dingbats</item>
+		<item>1F680 Transport and Map Symbols</item>
+		<item>1F700 Alchemical Symbols</item>
+		<item>1F780 Geometric Shapes Extended</item>
+		<item>1F800 Supplemental Arrows-C</item>
+		<item>1F900 Supplemental Symbols and Pictographs</item>
+		<item>20000 CJK Unified Ideographs Extension B</item>
+		<item>2A700 CJK Unified Ideographs Extension C</item>
+		<item>2B740 CJK Unified Ideographs Extension D</item>
+		<item>2B820 CJK Unified Ideographs Extension E</item>
+		<item>2CEB0 CJK Unified Ideographs Extension F</item>
+		<item>2F800 CJK Compatibility Ideographs Supplement</item>
+		<item>E0000 Tags</item>
+		<item>E0100 Variation Selectors Supplement</item>
+		<item>F0000 Supplementary Private Use Area-A</item>
+		<item>100000 Supplementary Private Use Area-B</item>
+	</string-array>
+	<string name="general">General</string>
+	<string name="appearance">Appearance</string>
+	<string name="behaviour">Behaviour</string>
+	<string name="textsize_desc">Text size of edit box</string>
+	<string name="column_desc">Columns in grid</string>
+	<string name="columnl_desc">Columns in grid (landscape)</string>
+	<string-array name="column">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string name="version_desc">Unicode version</string>
+	<string-array name="version">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>Latest (10.0.0)</item>
+	</string-array>
+	<string-array name="version_val">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>Latest</item>
+	</string-array>
+	<string name="download_desc">Download Noto fonts…</string>
+	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="tabs_desc">Tabs settings…</string>
+	<string name="shown_desc">Shown tabs</string>
+	<string name="hidden_desc">Hidden tabs</string>
+	<string name="single_rec_desc">Columns in recent tab</string>
+	<string name="single_list_desc">Columns in list tab</string>
+	<string name="single_find_desc">Columns in find tab</string>
+	<string name="single_fav_desc">Columns in favorite tab</string>
+	<string name="single_edt_desc">Columns in input tab</string>
+	<string name="single_emoji_desc">Columns in emoji tab</string>
+	<string-array name="single">
+		<item>Multiple column only with character</item>
+		<item>Single column with description</item>
+	</string-array>
+	<string-array name="single_val">
+		<item>false</item>
+		<item>true</item>
+	</string-array>
+	<string name="padding_desc">Padding of grid</string>
+	<string name="gridsize_desc">Text size of grid</string>
+	<string name="viewsize_desc">Text size of large view</string>
+	<string name="emojisize_desc">Color emoji size of large view</string>
+	<string name="checker_desc">Checker opacity in large view (%)</string>
+	<string name="lines_desc">Show font metrics in large view</string>
+	<string name="shrink_desc">Shrink font to fit width</string>
+	<string name="recent_desc">Max number of recent list</string>
+	<string name="theme_desc">Theme</string>
+	<string-array name="theme">
+		<item>Dark</item>
+		<item>Light</item>
+		<item>Light + DarkTitle</item>
+	</string-array>
+	<string-array name="theme_val">
+		<item>2131492983</item>
+		<item>2131492984</item>
+		<item>2131492985</item>
+	</string-array>
+	<string name="theme_title">May be applied after restart</string>
+	<string name="list_title">List tab can\'t be hidden</string>
+	<string name="scroll_desc">UI scroll</string>
+	<string-array name="scroll">
+		<item>Never</item>
+		<item>Only in landscape</item>
+		<item>Always</item>
+	</string-array>
+	<string-array name="scroll_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string name="ime_desc">Disable IME</string>
+	<string name="clear_desc">Show clear button</string>
+</resources>

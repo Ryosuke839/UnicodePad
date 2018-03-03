@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+
+	<ImageButton
+		android:id="@+id/buttonlist"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:scaleType="center"
+		android:src="@android:drawable/ic_menu_preferences" />
+
+	<ImageButton
+		android:id="@+id/buttonup"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:src="@android:drawable/arrow_up_float" />
+
+	<ImageButton
+		android:id="@+id/buttondown"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:src="@android:drawable/arrow_down_float" />
+
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<attr name="backspace" format="reference" />
+	<attr name="cancel" format="reference" />
+	<attr name="search" format="reference" />
+</resources>

@@ -62,7 +62,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		if (recpage >= num_page)
 			recpage = -1;
 		adps[pref.getInt("ord_fav", 4)] = afav = new FavoriteAdapter(pref, db, bfav);
-		adps[pref.getInt("ord_edt", 5)] = aedt = new EditAdapter(pref, db, true, arg);
+		adps[pref.getInt("ord_edt", 5)] = aedt = new EditAdapter(pref, db, bedt, arg);
 		adps[pref.getInt("ord_emoji", 2)] = aemoji = new EmojiAdapter(pref, db, bemoji);
 		page = -1;
 		edit = arg;

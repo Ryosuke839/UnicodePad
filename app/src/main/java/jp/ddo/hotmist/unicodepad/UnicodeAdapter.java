@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -111,7 +110,7 @@ abstract class UnicodeAdapter extends BaseAdapter
 				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(0)).setText(String.format((" " + getItemString(arg0)).replace(" ", " U+").substring(1)));
 				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(1)).setText(db.get(getItemString(arg0), "name"));
 			}
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setPadding(padding, padding, padding, padding);
+			(((LinearLayout)arg1).getChildAt(0)).setPadding(padding, padding, padding, padding);
 			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setTextSize(fontsize);
 			((CharacterView)((LinearLayout)arg1).getChildAt(0)).shrinkWidth(shrink);
 			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setTypeface(tf);

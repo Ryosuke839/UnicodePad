@@ -25,14 +25,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.TextView;
 
 class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnScrollListener, OnCheckedChangeListener
 {
 	private Cursor cur;
 	private LinearLayout layout;
 	private Spinner jump;
-	private CheckBox modc;
 	private NameDatabase db;
 	private NavigableMap<Integer, Integer> map;
 	private List<String> grp;
@@ -69,7 +67,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		hl.setGravity(Gravity.CENTER);
 		jump = new Spinner(grid.getContext());
 		hl.addView(jump, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.f));
-		modc = new CheckBox(grid.getContext());
+		CheckBox modc = new CheckBox(grid.getContext());
 		modc.setText("Modifier");
 		modc.setPadding(0, 0, (int)(grd.getContext().getResources().getDisplayMetrics().density * 8.f), 0);
 		hl.addView(modc, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));

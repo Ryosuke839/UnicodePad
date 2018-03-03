@@ -220,7 +220,7 @@ class NameDatabase
 			{
 				if (e.getMessage() != null && e.getMessage().contains("attempt to write a readonly database"))
 				{
-					SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS).close();
+					SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.NO_LOCALIZED_COLLATORS).close();
 					return SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 				}
 				extractZipFiles("namedb.zip");
@@ -232,7 +232,7 @@ class NameDatabase
 				{
 					if (e.getMessage() != null && e.getMessage().contains("attempt to write a readonly database"))
 					{
-						SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS).close();
+						SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.NO_LOCALIZED_COLLATORS).close();
 						return SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 					}
 					throw e1;
@@ -272,10 +272,6 @@ class NameDatabase
 			catch (IOException e)
 			{
 				throw new Error("Cannot open database file from asset.");
-			}
-			catch (SQLiteException e)
-			{
-				throw e;
 			}
 		}
 	}

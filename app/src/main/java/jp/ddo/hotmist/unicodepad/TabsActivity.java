@@ -185,10 +185,10 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 			edit.putInt(single[idx + 1].getKey().replace("single_", "ord_"), idx + 1);
 			edit.putInt(single[idx].getKey().replace("single_", "ord_"), idx);
 			edit.commit();
-			if (idx != NUM_TABS - 1 || shownnum == NUM_TABS)
+			if (idx != NUM_TABS - 2 || shownnum == NUM_TABS)
 				break;
-			single[NUM_TABS - 1].setEnabled(true, true);
-			single[NUM_TABS].setEnabled(true, false);
+			single[NUM_TABS - 2].setEnabled(true, true);
+			single[NUM_TABS - 1].setEnabled(true, false);
 			break;
 		}
 	}

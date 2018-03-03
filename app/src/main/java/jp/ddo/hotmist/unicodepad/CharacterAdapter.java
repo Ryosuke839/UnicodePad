@@ -67,7 +67,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return (adapter.getItemId(position) != -1 ? String.format("U+%04X ", adapter.getItemId(position)) : adapter.getItemString(position) + " ") + (String)adapter.getItem(position);
+		return (adapter.getItemId(position) != -1 ? String.format("U+%04X ", adapter.getItemId(position)) : adapter.getItemString(position) + " ") + adapter.getItem(position);
 	}
 
 	static final String[] cols = {"name", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
@@ -172,13 +172,10 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				}
 				LinearLayout hl = new LinearLayout(context);
 				hl.setOrientation(LinearLayout.HORIZONTAL);
-//				if ((!emoji ? mods : mode)[i].length() > 0)
-//				{
 				TextView it = new TextView(context);
 				it.setGravity(Gravity.CENTER_VERTICAL);
 				it.setText((!emoji ? mods : mode)[i]);
 				hl.addView(it, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-//				}
 				if (i < 5)
 				{
 					TextView desc = new TextView(context);

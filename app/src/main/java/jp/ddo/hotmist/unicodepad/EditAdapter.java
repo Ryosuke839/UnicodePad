@@ -3,7 +3,6 @@ package jp.ddo.hotmist.unicodepad;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;

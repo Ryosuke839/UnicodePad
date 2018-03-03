@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
-//import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener, OnPreferenceChangeListener
@@ -36,7 +35,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		univer.setOnPreferenceChangeListener(this);
 		univer.setSummary(univer.getEntry());
 
-		Preference download = (Preference)findPreference("download");
+		Preference download = findPreference("download");
 		download.setOnPreferenceClickListener(this);
 
 		ListPreference theme = (ListPreference)findPreference("theme");
@@ -55,25 +54,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		columnl.setOnPreferenceChangeListener(this);
 		columnl.setSummary(columnl.getValue());
 
-		Preference tabs = (Preference)findPreference("tabs");
+		Preference tabs = findPreference("tabs");
 		tabs.setOnPreferenceClickListener(this);
-/*
-		ListPreference single_rec = (ListPreference)findPreference("single_rec");
-		single_rec.setOnPreferenceChangeListener(this);
-		single_rec.setSummary(single_rec.getEntry());
 
-		ListPreference single_list = (ListPreference)findPreference("single_list");
-		single_list.setOnPreferenceChangeListener(this);
-		single_list.setSummary(single_list.getEntry());
-
-		ListPreference single_find = (ListPreference)findPreference("single_find");
-		single_find.setOnPreferenceChangeListener(this);
-		single_find.setSummary(single_find.getEntry());
-
-		ListPreference single_fav = (ListPreference)findPreference("single_fav");
-		single_fav.setOnPreferenceChangeListener(this);
-		single_fav.setSummary(single_fav.getEntry());
-*/
 		EditTextPreference padding = (EditTextPreference)findPreference("padding");
 		padding.setOnPreferenceChangeListener(this);
 		padding.setSummary(padding.getText());

@@ -15,10 +15,7 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
-import java.util.HashMap;
 
 public class CharacterView extends View
 {
@@ -79,8 +76,6 @@ public class CharacterView extends View
 
 		emojicache = null;
 		invalid = true;
-
-//		setDrawingCacheEnabled(true);
 	}
 
 	public void setText(String str)

@@ -41,7 +41,6 @@ import android.widget.ImageButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -896,6 +895,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 										Toast.makeText(grid.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
 								} catch (NumberFormatException e)
 								{
+									Toast.makeText(grid.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
 								}
 						}
 					})
@@ -928,23 +928,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 				{
 				}
 			});
-/*			edit.setOnEditorActionListener(new OnEditorActionListener()
-			{
-				@Override
-				public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2)
-				{
-					if (arg2 != null && arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-					{
-						if (arg2.getAction() == KeyEvent.ACTION_DOWN)
-							btn.performClick();
-						return true;
-					}
-					return false;
-				}				
-			});*/
 			edit.setSelectAllOnFocus(true);
 			edit.requestFocus();
-//			edit.selectAll();
 		}
 	}
 

@@ -17,7 +17,6 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:gravity="center_vertical"
@@ -146,7 +145,7 @@
 					android:id="@+id/ctab"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_gravity="top"></android.support.v4.view.PagerTabStrip>
+					android:layout_gravity="top" />
 			</jp.ddo.hotmist.unicodepad.LockableViewPager>
 		</LinearLayout>
 

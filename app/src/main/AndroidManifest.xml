@@ -35,8 +35,8 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name="SettingActivity"></activity>
+		<activity android:name="SettingActivity" />
 
-		<activity android:name="TabsActivity"></activity>
+		<activity android:name="TabsActivity" />
 	</application>
 </manifest>

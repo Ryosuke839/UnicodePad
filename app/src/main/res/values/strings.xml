@@ -2,12 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">UnicodePad</string>
 	<string name="delete">Del</string>
-	<string name="paste">Paste</string>
 	<string name="desc">Detail</string>
 	<string name="find">Find</string>
 	<string name="fhint">Enter a character name</string>
 	<string name="inlist">Find in List</string>
-	<string name="copy">Copy</string>
 	<string name="copied">Copied to clipboard</string>
 	<string name="finish">Enter</string>
 	<string name="share">Share</string>
@@ -19,21 +17,15 @@
 	<string name="emoji">Emoji</string>
 	<string name="normal">Default</string>
 	<string name="input">Input</string>
-	<string name="addfav">Favorite</string>
-	<string name="remfav">Unfavorite</string>
 	<string name="remrec">Remove</string>
 	<string name="add">Select…</string>
 	<string name="mark">Mark</string>
-	<string name="addm">Add…</string>
 	<string name="rem">Remove…</string>
 	<string name="code">Codepoint</string>
 	<string name="nocode">Invalid codepoint</string>
-	<string name="name">Find by name</string>
 	<string name="cantopen">Cannot open the font</string>
 	<string name="cantread">Cannot access, The application may not have permission to read</string>
 	<string name="denied">You have denied the access. To browse SD card, please grant the Storage permission from Apps setting</string>
-	<string name="loaddb">Creating database…</string>
-	<string name="invalid">Invalid value</string>
 	<string-array name="codes" tools:ignore="MissingTranslation">
 		<item>0 Basic Latin</item>
 		<item>80 Latin-1 Supplement</item>
@@ -358,7 +350,6 @@
 	<string name="padding_desc">Padding of grid</string>
 	<string name="gridsize_desc">Text size of grid</string>
 	<string name="viewsize_desc">Text size of large view</string>
-	<string name="emojisize_desc">Color emoji size of large view</string>
 	<string name="checker_desc">Checker opacity in large view (%)</string>
 	<string name="lines_desc">Show font metrics in large view</string>
 	<string name="shrink_desc">Shrink font to fit width</string>
@@ -379,4 +370,11 @@
 	</string-array>
 	<string name="ime_desc">Disable IME</string>
 	<string name="clear_desc">Show clear button</string>
+	<string name="clear" translatable="false">⌧</string>
+	<string name="erase" translatable="false">⌫</string>
+	<string name="config" translatable="false">⚙</string>
+	<string name="up" translatable="false">⌃</string>
+	<string name="down" translatable="false">⌄</string>
+	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
+	<string name="modifier" translatable="false">Modifier</string>
 </resources>

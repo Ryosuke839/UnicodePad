@@ -6,15 +6,15 @@ import android.content.SharedPreferences;
 
 class RecentAdapter extends UnicodeAdapter
 {
-	ArrayList<Integer> list;
-	ArrayList<Integer> temp;
+	private ArrayList<Integer> list;
+	private ArrayList<Integer> temp;
 	static int maxitems = 16;
 
 	RecentAdapter(SharedPreferences pref, NameDatabase db, boolean single)
 	{
 		super(db, single);
 
-		list = new ArrayList<Integer>();
+		list = new ArrayList<>();
 		temp = list;
 		String str = pref.getString("rec", "");
 		int num = 0;
@@ -86,16 +86,16 @@ class RecentAdapter extends UnicodeAdapter
 			grid.invalidateViews();
 	}
 
-	void commit()
+	private void commit()
 	{
 		if (list != temp)
 			temp = list;
 	}
 
-	void trunc()
+	private void trunc()
 	{
 		if (list == temp)
-			temp = new ArrayList<Integer>(list);
+			temp = new ArrayList<>(list);
 	}
 
 	@Override

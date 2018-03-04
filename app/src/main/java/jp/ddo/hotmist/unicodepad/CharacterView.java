@@ -201,11 +201,10 @@ public class CharacterView extends View
 		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 		int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-		int heightNew = 0, heightOld = 0;
+		int heightNew, heightOld = 0;
 		float sizeu = size, sizeb = 0.f, size_ = size;
 		paint.setTextSize(size_);
-		FontMetrics fm = paint.getFontMetrics();
-		heightNew = (int)(-fm.top + fm.bottom);
+		FontMetrics fm;
 		while (true)
 		{
 			size_ = (sizeu + sizeb) / 2.f;

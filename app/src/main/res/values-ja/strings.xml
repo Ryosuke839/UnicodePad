@@ -2,12 +2,10 @@
 <resources>
 	<string name="app_name">UnicodePad</string>
  	<string name="delete">Del</string>
-	<string name="paste">貼り付け</string>
 	<string name="desc">詳細</string>
 	<string name="find">検索</string>
 	<string name="fhint">文字名称を入力</string>
 	<string name="inlist">リスト内表示</string>
-	<string name="copy">コピー</string>
 	<string name="copied">クリップボードにコピーしました</string>
 	<string name="finish">確定</string>
 	<string name="share">共有</string>
@@ -19,21 +17,15 @@
 	<string name="emoji">絵文字</string>
 	<string name="normal">デフォルト</string>
 	<string name="input">入力</string>
-	<string name="addfav">お気に入り</string>
-	<string name="remfav">削除</string>
 	<string name="remrec">削除</string>
 	<string name="add">選択…</string>
 	<string name="mark">マーク</string>
-	<string name="addm">追加…</string>
 	<string name="rem">削除…</string>
 	<string name="code">コードポイント</string>
 	<string name="nocode">無効なコードポイントです</string>
-	<string name="name">名前から検索</string>
 	<string name="cantopen">フォントを開けませんでした</string>
 	<string name="cantread">アクセスできませんでした　アプリに読み取り権限が与えられていないかもしれません</string>
 	<string name="denied">アクセスが拒否されています. SDカードにアクセスするにはアプリ設定からストレージ権限を付与してください</string>
-	<string name="loaddb">データベースの構築中…</string>
-	<string name="invalid">無効な値です</string>
 	<string-array name="codes">
 		<item>0 基本ラテン文字</item>
 		<item>80 ラテン1補助</item>
@@ -362,7 +354,6 @@
 	<string name="padding_desc">表の余白</string>
 	<string name="gridsize_desc">表のフォントサイズ</string>
 	<string name="viewsize_desc">拡大表示のフォントサイズ</string>
-	<string name="emojisize_desc">拡大表示のカラー絵文字サイズ</string>
 	<string name="checker_desc">拡大表示の格子模様の濃さ (%)</string>
 	<string name="lines_desc">拡大表示でフォントメトリックを表示</string>
 	<string name="shrink_desc">フォントを幅に合わせ縮小</string>

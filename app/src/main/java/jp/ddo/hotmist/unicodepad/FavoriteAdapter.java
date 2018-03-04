@@ -6,14 +6,14 @@ import android.content.SharedPreferences;
 
 class FavoriteAdapter extends UnicodeAdapter
 {
-	ArrayList<Integer> list;
-	ArrayList<Integer> temp;
+	private ArrayList<Integer> list;
+	private ArrayList<Integer> temp;
 
 	FavoriteAdapter(SharedPreferences pref, NameDatabase db, boolean single)
 	{
 		super(db, single);
 
-		list = new ArrayList<Integer>();
+		list = new ArrayList<>();
 		temp = list;
 		String str = pref.getString("fav", "");
 		for (int i = 0; i < str.length(); ++i)
@@ -70,7 +70,7 @@ class FavoriteAdapter extends UnicodeAdapter
 		list.remove(Integer.valueOf(code));
 	}
 
-	void commit()
+	private void commit()
 	{
 		if (list != temp)
 		{
@@ -78,10 +78,10 @@ class FavoriteAdapter extends UnicodeAdapter
 		}
 	}
 
-	void trunc()
+	private void trunc()
 	{
 		if (list == temp)
-			temp = new ArrayList<Integer>(list);
+			temp = new ArrayList<>(list);
 	}
 
 	boolean isfavorited(int code)

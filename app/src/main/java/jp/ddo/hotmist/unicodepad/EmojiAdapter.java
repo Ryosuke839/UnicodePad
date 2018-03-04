@@ -68,7 +68,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		jump = new Spinner(grid.getContext());
 		hl.addView(jump, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.f));
 		CheckBox modc = new CheckBox(grid.getContext());
-		modc.setText("Modifier");
+		modc.setText(R.string.modifier);
 		modc.setPadding(0, 0, (int)(grd.getContext().getResources().getDisplayMetrics().density * 8.f), 0);
 		hl.addView(modc, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		if (Build.VERSION.SDK_INT >= 21)
@@ -78,9 +78,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 
 		cur = db.emoji(UnicodeActivity.univer, modifier);
 
-		map = new TreeMap<Integer, Integer>();
-		grp = new ArrayList<String>();
-		idx = new ArrayList<Integer>();
+		map = new TreeMap<>();
+		grp = new ArrayList<>();
+		idx = new ArrayList<>();
 
 		String last = "";
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext())
@@ -96,7 +96,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		if (current >= grp.size())
 			current = grp.size() - 1;
 
-		ArrayAdapter<String> adp = new ArrayAdapter<String>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
+		ArrayAdapter<String> adp = new ArrayAdapter<>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
 		adp.setDropDownViewResource(R.layout.spinner_drop_down_item);
 		jump.setAdapter(adp);
 		grid.setSelection(idx.get(current));
@@ -177,7 +177,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		return res;
 	}
 
-	int guard = 0;
+	private int guard = 0;
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
@@ -256,9 +256,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 			cur.close();
 		cur = db.emoji(UnicodeActivity.univer, modifier);
 
-		map = new TreeMap<Integer, Integer>();
-		grp = new ArrayList<String>();
-		idx = new ArrayList<Integer>();
+		map = new TreeMap<>();
+		grp = new ArrayList<>();
+		idx = new ArrayList<>();
 
 		String last = "";
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext())
@@ -276,7 +276,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 
 		grid.invalidateViews();
 
-		ArrayAdapter<String> adp = new ArrayAdapter<String>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
+		ArrayAdapter<String> adp = new ArrayAdapter<>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
 		adp.setDropDownViewResource(R.layout.spinner_drop_down_item);
 		jump.setAdapter(adp);
 		jump.setSelection(current);

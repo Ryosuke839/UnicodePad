@@ -1,5 +1,6 @@
 package jp.ddo.hotmist.unicodepad;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 import android.annotation.SuppressLint;
@@ -35,9 +36,9 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	static float checker = 10f;
 	static boolean lines = true;
 	static boolean shrink = true;
-	int reslist;
+	private int reslist;
 
-	@SuppressLint("NewApi")
+	@SuppressLint({"NewApi", "PrivateResource"})
 	CharacterAdapter(UnicodeActivity context, UnicodeAdapter adapter, Typeface tf, NameDatabase db, FavoriteAdapter afav)
 	{
 		if (Build.VERSION.SDK_INT >= 11)
@@ -70,10 +71,10 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		return (adapter.getItemId(position) != -1 ? String.format("U+%04X ", adapter.getItemId(position)) : adapter.getItemString(position) + " ") + adapter.getItem(position);
 	}
 
-	static final String[] cols = {"name", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
-	static final String[] mods = {"", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
-	static final String[] emjs = {"name", "version", "grp", "subgrp", "", "id"};
-	static final String[] mode = {"", "from Unicode ", "Group: ", "Subgroup: ", "", ""};
+	private static final String[] cols = {"name", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
+	private static final String[] mods = {"", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
+	private static final String[] emjs = {"name", "version", "grp", "subgrp", "", "id"};
+	private static final String[] mode = {"", "from Unicode ", "Group: ", "Subgroup: ", "", ""};
 
 	@SuppressLint("NewApi")
 	@Override
@@ -119,7 +120,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			{
 				int v = !emoji ? db.getint(itemid, cols[i]) : db.getint(adapter.getItemString(position), emjs[i]);
 				TextView desc = new TextView(context);
-				desc.setText(mods[i] + String.format("%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : ""));
+				desc.setText(mods[i] + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : ""));
 				desc.setGravity(Gravity.CENTER_VERTICAL);
 				layout.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				continue;
@@ -128,7 +129,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			if (r == null && i == 0)
 			{
 				TextView desc = new TextView(context);
-				desc.setText("<not a character>");
+				desc.setText(R.string.notacharacter);
 				layout.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				break;
 			}

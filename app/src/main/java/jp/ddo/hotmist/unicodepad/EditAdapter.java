@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 class EditAdapter extends UnicodeAdapter implements TextWatcher
 {
-	EditText edit;
-	ArrayList<Integer> list;
+	private EditText edit;
+	private ArrayList<Integer> list;
 
 	EditAdapter(SharedPreferences pref, NameDatabase db, boolean single, EditText edit)
 	{
@@ -20,7 +20,7 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 
 		this.edit = edit;
 
-		list = new ArrayList<Integer>();
+		list = new ArrayList<>();
 	}
 
 	View instantiate(GridView grd)

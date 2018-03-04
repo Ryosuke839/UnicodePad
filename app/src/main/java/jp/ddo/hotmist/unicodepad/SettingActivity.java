@@ -94,11 +94,13 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				if (key.equals("column") ||
 						key.equals("padding") ||
 						key.equals("recentsize"))
+					//noinspection ResultOfMethodCallIgnored: check string with exception
 					Integer.valueOf(arg1.toString());
 				if (key.equals("textsize") ||
 						key.equals("gridsize") ||
 						key.equals("viewsize") ||
 						key.equals("checker"))
+					//noinspection ResultOfMethodCallIgnored: check string with exception
 					Float.valueOf(arg1.toString());
 			}
 			catch (NumberFormatException e)

@@ -18,6 +18,7 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 {
 	private final int NUM_TABS = 6;
 	private SharedPreferences pref;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PreferenceCategory catshown;
 	private PreferenceCategory cathidden;
 	private ButtonListPreference single[] = new ButtonListPreference[NUM_TABS];
@@ -107,7 +108,7 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 		for (int i = 0; i < NUM_TABS; ++i)
 		{
 			single[i].setSummary(single[i].getEntry());
-			single[i].setTag(Integer.valueOf(i));
+			single[i].setTag(i);
 			single[i].setOnClickListener(this);
 			if (i == 0)
 				single[i].setEnabled(false, true);
@@ -134,7 +135,7 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 					single[idx].setEnabled(true, true);
 				edit = pref.edit();
 				edit.putInt("cnt_shown", shownnum);
-				edit.commit();
+				edit.apply();
 				break;
 			}
 			if (idx == 0)
@@ -144,12 +145,12 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 			single[idx - 1] = tmp;
 			single[idx - 1].setOrder(idx * 2 - 1);
 			single[idx].setOrder(idx * 2 + 1);
-			single[idx - 1].setTag(Integer.valueOf(idx - 1));
-			single[idx].setTag(Integer.valueOf(idx));
+			single[idx - 1].setTag(idx - 1);
+			single[idx].setTag(idx);
 			edit = pref.edit();
 			edit.putInt(single[idx - 1].getKey().replace("single_", "ord_"), idx - 1);
 			edit.putInt(single[idx].getKey().replace("single_", "ord_"), idx);
-			edit.commit();
+			edit.apply();
 			if (idx != 1)
 				break;
 			single[0].setEnabled(false, true);
@@ -169,7 +170,7 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 					single[idx].setEnabled(true, false);
 				edit = pref.edit();
 				edit.putInt("cnt_shown", shownnum);
-				edit.commit();
+				edit.apply();
 				break;
 			}
 			if (idx == NUM_TABS - 1)
@@ -179,12 +180,12 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 			single[idx + 1] = tmp;
 			single[idx + 1].setOrder(idx * 2 + 3);
 			single[idx].setOrder(idx * 2 + 1);
-			single[idx + 1].setTag(Integer.valueOf(idx + 1));
-			single[idx].setTag(Integer.valueOf(idx));
+			single[idx + 1].setTag(idx + 1);
+			single[idx].setTag(idx);
 			edit = pref.edit();
 			edit.putInt(single[idx + 1].getKey().replace("single_", "ord_"), idx + 1);
 			edit.putInt(single[idx].getKey().replace("single_", "ord_"), idx);
-			edit.commit();
+			edit.apply();
 			if (idx != NUM_TABS - 2 || shownnum == NUM_TABS)
 				break;
 			single[NUM_TABS - 2].setEnabled(true, true);

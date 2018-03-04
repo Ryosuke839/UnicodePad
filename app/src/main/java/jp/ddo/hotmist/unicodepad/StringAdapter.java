@@ -2,15 +2,15 @@ package jp.ddo.hotmist.unicodepad;
 
 import java.util.ArrayList;
 
-public class StringAdapter extends UnicodeAdapter
+class StringAdapter extends UnicodeAdapter
 {
-	ArrayList<Integer> list;
+	private ArrayList<Integer> list;
 
 	StringAdapter(String str)
 	{
 		super(null, false);
 
-		list = new ArrayList<Integer>();
+		list = new ArrayList<>();
 		for (int i = 0; i < str.length(); ++i)
 		{
 			int code = str.codePointAt(i);

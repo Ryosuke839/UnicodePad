@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class ButtonListPreference extends ListPreference implements OnClickListener
+class ButtonListPreference extends ListPreference implements OnClickListener
 {
 	private View buttonup;
 	private View buttondown;

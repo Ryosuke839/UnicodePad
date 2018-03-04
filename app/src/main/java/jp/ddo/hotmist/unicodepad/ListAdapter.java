@@ -3,6 +3,7 @@ package jp.ddo.hotmist.unicodepad;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -50,11 +51,11 @@ import android.widget.Toast;
 class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnScrollListener, OnClickListener, OnTouchListener
 {
 	private int count;
-	private final NavigableMap<Integer, Pair<Integer, Integer>> emap = new TreeMap<Integer, Pair<Integer, Integer>>();
-	private final NavigableMap<Integer, Pair<Integer, Integer>> fmap = new TreeMap<Integer, Pair<Integer, Integer>>();
-	private final NavigableMap<Integer, Integer> imap = new TreeMap<Integer, Integer>();
-	private final List<Integer> jmap = new ArrayList<Integer>();
-	private final NavigableMap<Integer, String> mmap = new TreeMap<Integer, String>();
+	private final NavigableMap<Integer, Pair<Integer, Integer>> emap = new TreeMap<>();
+	private final NavigableMap<Integer, Pair<Integer, Integer>> fmap = new TreeMap<>();
+	private final NavigableMap<Integer, Integer> imap = new TreeMap<>();
+	private final List<Integer> jmap = new ArrayList<>();
+	private final NavigableMap<Integer, String> mmap = new TreeMap<>();
 	private LinearLayout layout;
 	private Spinner jump;
 	private Spinner mark;
@@ -190,6 +191,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		return R.string.list;
 	}
 
+	@SuppressLint("SetTextI18n")
 	@Override
 	View instantiate(GridView grd)
 	{
@@ -571,7 +573,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		layout.addView(hl, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		layout.addView(grid, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 		String[] jstr = new String[fmap.size()];
-		SparseArray<String> jmap = new SparseArray<String>();
+		SparseArray<String> jmap = new SparseArray<>();
 		for (String s : jump.getContext().getResources().getStringArray(R.array.codes))
 			jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1));
 		Iterator<Integer> jit = fmap.keySet().iterator();
@@ -580,7 +582,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			int c = jit.next();
 			jstr[i] = String.format("U+%04X %s", c, jmap.get(c));
 		}
-		ArrayAdapter<String> adp = new ArrayAdapter<String>(jump.getContext(), android.R.layout.simple_spinner_item, jstr);
+		ArrayAdapter<String> adp = new ArrayAdapter<>(jump.getContext(), android.R.layout.simple_spinner_item, jstr);
 		adp.setDropDownViewResource(R.layout.spinner_drop_down_item);
 		jump.setAdapter(adp);
 
@@ -652,7 +654,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		for (Iterator<Entry<Integer, String>> mit = mmap.entrySet().iterator(); mit.hasNext(); )
 		{
 			Entry<Integer, String> code = mit.next();
-			str += String.format("%d %s", code.getKey(), code.getValue());
+			str += String.format(Locale.US, "%d %s", code.getKey(), code.getValue());
 			if (mit.hasNext())
 				str += "\n";
 		}
@@ -661,8 +663,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 
 	private void add(int begin, int end)
 	{
-		emap.put(count, new Pair<Integer, Integer>(begin, emap.size()));
-		fmap.put(begin, new Pair<Integer, Integer>(count, end));
+		emap.put(count, new Pair<>(begin, emap.size()));
+		fmap.put(begin, new Pair<>(count, end));
 		imap.put(begin, imap.size());
 		jmap.add(count);
 		count += end + 1 - begin;
@@ -696,7 +698,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		return arg0 - e.getKey() + e.getValue().first;
 	}
 
-	int guard = 0;
+	private int guard = 0;
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
@@ -787,9 +789,9 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 							code.setText(String.format("U+%04X", head));
 						}
 					}
+					if (arg1 != 0)
+						scroll = arg1 - e.getKey() + e.getValue().first;
 				}
-				if (arg1 != 0)
-					scroll = arg1 - e.getKey() + e.getValue().first;
 			}
 		}
 	}
@@ -860,7 +862,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			p.setTextSize(edit.getTextSize());
 			layout.addView(edit, new LinearLayout.LayoutParams(edit.getPaddingLeft() + (int)p.measureText("10DDDD") + edit.getPaddingRight(), LayoutParams.WRAP_CONTENT));
 			layout.addView(del);
-			layout.setGravity(Gravity.RIGHT);
+			layout.setGravity(Gravity.END);
 			vl.addView(layout, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			//noinspection ResourceType: Error of Lint
 			ViewGroup.MarginLayoutParams mlp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
@@ -910,6 +912,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 				{
 					try
 					{
+						//noinspection ResultOfMethodCallIgnored: check string with exception
 						Integer.valueOf(arg0.toString(), 16);
 						btn.setEnabled(true);
 					} catch (NumberFormatException e)

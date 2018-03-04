@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 abstract class UnicodeAdapter extends BaseAdapter
 {
-	Typeface tf;
-	NameDatabase db;
+	private Typeface tf;
+	private NameDatabase db;
 	boolean single;
 	GridView grid;
 
@@ -23,7 +23,7 @@ abstract class UnicodeAdapter extends BaseAdapter
 	static float fontsize = 18f;
 	static boolean shrink = true;
 
-	public UnicodeAdapter(NameDatabase db, boolean single)
+	UnicodeAdapter(NameDatabase db, boolean single)
 	{
 		this.db = db;
 		this.single = single;

@@ -21,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLongClickListener
 {
-	UnicodeActivity activity;
+	private UnicodeActivity activity;
 	private final int MAX_VIEWS = 6;
 	private int num_page;
 	private View layout[] = new View[MAX_VIEWS];
@@ -173,7 +173,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		return true;
 	}
 
-	AlertDialog dlg;
+	private AlertDialog dlg;
 
 	void showDesc(final View view, int index, final UnicodeAdapter ua)
 	{
@@ -292,7 +292,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		return POSITION_NONE;
 	}
 
-	void find(int code)
+	private void find(int code)
 	{
 		activity.setPage(listpage);
 		alist.find(code);

@@ -47,11 +47,13 @@
 				android:id="@+id/clear"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="right|center_vertical"
+				android:layout_gravity="end|center_vertical"
+				android:layout_marginEnd="10dp"
 				android:layout_marginRight="10dp"
 				android:background="@null"
 				android:scaleType="centerInside"
-				app:srcCompat="?attr/cancel" />
+				app:srcCompat="?attr/cancel"
+				android:contentDescription="@string/clear"/>
 
 		</FrameLayout>
 
@@ -63,7 +65,8 @@
 			android:adjustViewBounds="false"
 			android:cropToPadding="false"
 			android:scaleType="centerInside"
-			app:srcCompat="?attr/backspace" />
+			app:srcCompat="?attr/backspace"
+			android:contentDescription="@string/erase"/>
 
 	</LinearLayout>
 
@@ -124,6 +127,9 @@
 					android:layout_height="match_parent"
 					android:gravity="center"
 					android:paddingLeft="8dp"
+					android:paddingRight="0dp"
+					android:paddingStart="8dp"
+					android:paddingEnd="0dp"
 					android:text="@string/font"
 					android:textAppearance="?android:attr/textAppearanceSmall" />
 

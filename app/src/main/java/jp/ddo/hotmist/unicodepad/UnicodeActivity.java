@@ -15,6 +15,7 @@ import java.util.zip.ZipFile;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -80,7 +81,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 	private String[] childs;
 	private ArrayList<String> fontpath;
 	private boolean disableime;
-	static float fontsize = 24.0f;
+	private static float fontsize = 24.0f;
 	static int univer = 1000;
 
 	@SuppressLint("NewApi")
@@ -123,7 +124,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		btnFinish = (Button)findViewById(R.id.finish);
 		btnFinish.setOnClickListener(this);
 		spnFont = (Spinner)findViewById(R.id.font);
-		adpFont = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+		adpFont = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
 		adpFont.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		adpFont.add(getResources().getString(R.string.normal));
 		adpFont.add(getResources().getString(R.string.add));
@@ -138,7 +139,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")) + (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 0) > 1);
 
 		cm = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-		fontpath = new ArrayList<String>();
+		fontpath = new ArrayList<>();
 		String fs = pref.getString("fontpath", "");
 		for (String s : fs.split("\n"))
 		{
@@ -149,7 +150,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		fidx = pref.getInt("fontidx", 0);
 		for (int i = 0; i < fontpath.size(); ++i)
 		{
-			Typeface tf = null;
+			Typeface tf;
 			try
 			{
 				tf = Typeface.createFromFile(fontpath.get(i));
@@ -241,7 +242,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		edit.putString("fontpath", fs);
 		edit.putInt("fontidx", spnFont.getSelectedItemId() > 2 ? (int)spnFont.getSelectedItemId() - 2 : 0);
 		edit.putInt("page", pager.getCurrentItem());
-		edit.commit();
+		edit.apply();
 		super.onPause();
 	}
 
@@ -453,7 +454,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 
 	@SuppressLint("Override")
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
 	{
 		if (requestCode == 1)
 			onClick(null, -1);
@@ -538,6 +539,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 			try
 			{
 				if (fontpath.get(arg1).startsWith(this.getFilesDir().getCanonicalPath()))
+					//noinspection ResultOfMethodCallIgnored
 					new File(fontpath.get(arg1)).delete();
 			}
 			catch (IOException e)
@@ -575,7 +577,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 						OutputStream os = new FileOutputStream(of);
 
 						byte[] buf = new byte[256];
-						int size = 0;
+						int size;
 						while ((size = is.read(buf)) > 0)
 							os.write(buf, 0, size);
 
@@ -601,8 +603,8 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 			{
 				if (path.length() != 1 && arg1 == 0)
 				{
-					for (int i = 0; i < roots.length; ++i)
-						if (path.equals('/' + roots[i]))
+					for (String root : roots)
+						if (path.equals('/' + root))
 							path = "";
 				}
 				if (path.length() == 0)
@@ -615,7 +617,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		if (path.charAt(path.length() - 1) != '/' && !path.endsWith(".zip"))
 		{
 			childs = null;
-			Typeface tf = null;
+			Typeface tf;
 			try
 			{
 				tf = Typeface.createFromFile(path);
@@ -658,23 +660,23 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 							if (i != j && dirs[i].length() > 0 && dirs[j].length() > 0 && dirs[i].startsWith(dirs[j]) && new File(dirs[j]).canRead())
 								dirs[i] = "";
 					int cnt = 0;
-					for (int i = 0; i < dirs.length; ++i)
+					for (String dir1 : dirs)
 					{
-						if (!(dirs[i].length() > 0))
+						if (!(dir1.length() > 0))
 							continue;
-						if (!new File(dirs[i]).canRead())
+						if (!new File(dir1).canRead())
 							continue;
 						++cnt;
 					}
 					roots = new String[cnt];
 					int j = 0;
-					for (int i = 0; i < dirs.length; ++i)
+					for (String dir : dirs)
 					{
-						if (!(dirs[i].length() > 0))
+						if (!(dir.length() > 0))
 							continue;
-						if (!new File(dirs[i]).canRead())
+						if (!new File(dir).canRead())
 							continue;
-						roots[j] = dirs[i].substring(1) + '/';
+						roots[j] = dir.substring(1) + '/';
 						++j;
 					}
 					Arrays.sort(roots);
@@ -726,18 +728,18 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 						return;
 					}
 					int cnt = 1;
-					for (int i = 0; i < fl.length; ++i)
-						if (fl[i].canRead())
+					for (File aFl1 : fl)
+						if (aFl1.canRead())
 							++cnt;
 					childs = new String[cnt];
 					childs[0] = "../";
 					int j = 1;
-					for (int i = 0; i < fl.length; ++i)
+					for (File aFl : fl)
 					{
-						if (!fl[i].canRead())
+						if (!aFl.canRead())
 							continue;
-						childs[j] = fl[i].getName();
-						if (fl[i].isDirectory())
+						childs[j] = aFl.getName();
+						if (aFl.isDirectory())
 							childs[j] += '/';
 						++j;
 					}
@@ -756,9 +758,9 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
 	}
 
-	Typeface oldtf = null;
+	private Typeface oldtf = null;
 
-	void setTypeface(Typeface tf)
+	private void setTypeface(Typeface tf)
 	{
 		if (tf == oldtf)
 			return;

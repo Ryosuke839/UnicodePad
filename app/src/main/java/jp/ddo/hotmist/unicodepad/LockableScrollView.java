@@ -9,10 +9,10 @@ import android.widget.ScrollView;
 
 public class LockableScrollView extends ScrollView
 {
-	boolean inmove = false;
-	PageAdapter adapter;
-	View lockview;
-	boolean over;
+	private boolean inmove = false;
+	private PageAdapter adapter;
+	private View lockview;
+	private boolean over;
 
 	public LockableScrollView(Context context)
 	{
@@ -102,7 +102,7 @@ public class LockableScrollView extends ScrollView
 		});
 	}
 
-	boolean scroll = false;
+	private boolean scroll = false;
 
 	@Override
 	public void requestChildFocus(View child, View focused)

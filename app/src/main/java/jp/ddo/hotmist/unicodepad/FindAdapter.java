@@ -83,7 +83,7 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 		fl.addView(text, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		lp.rightMargin = (int)(grid.getContext().getResources().getDisplayMetrics().density * 10.f);
-		lp.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+		lp.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
 		fl.addView(clear, lp);
 
 		find = new ImageButton(grid.getContext());

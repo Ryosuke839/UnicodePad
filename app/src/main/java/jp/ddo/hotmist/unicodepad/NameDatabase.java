@@ -22,6 +22,7 @@ class NameDatabase
 		db = new NameHelper(context).getReadableDatabase();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	String get(int code, String column)
 	{
 		if (column.equals("name"))
@@ -72,6 +73,7 @@ class NameDatabase
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	int getint(int code, String column)
 	{
 		if (column.equals("version"))

@@ -14,7 +14,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 
-public class CompleteAdapter extends BaseAdapter implements Filterable
+class CompleteAdapter extends BaseAdapter implements Filterable
 {
 	private final Object lock = new Object();
 	private CompleteFilter filter = null;
@@ -25,7 +25,7 @@ public class CompleteAdapter extends BaseAdapter implements Filterable
 
 	CompleteAdapter(Context context, SharedPreferences pref)
 	{
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		for (String s : pref.getString("comp", "").split("\n"))
 			if (s.length() > 0)
 				list.add(s);
@@ -105,7 +105,7 @@ public class CompleteAdapter extends BaseAdapter implements Filterable
 			{
 				synchronized (lock)
 				{
-					temp = new ArrayList<String>(list);
+					temp = new ArrayList<>(list);
 				}
 			}
 
@@ -116,7 +116,7 @@ public class CompleteAdapter extends BaseAdapter implements Filterable
 				ArrayList<String> res;
 				synchronized (lock)
 				{
-					res = new ArrayList<String>(temp);
+					res = new ArrayList<>(temp);
 				}
 				results.values = res;
 				results.count = res.size();
@@ -130,11 +130,11 @@ public class CompleteAdapter extends BaseAdapter implements Filterable
 				ArrayList<String> values;
 				synchronized (lock)
 				{
-					values = new ArrayList<String>(temp);
+					values = new ArrayList<>(temp);
 				}
 
 				final int count = values.size();
-				final ArrayList<String> newValues = new ArrayList<String>();
+				final ArrayList<String> newValues = new ArrayList<>();
 
 				for (int i = 0; i < count; i++)
 				{

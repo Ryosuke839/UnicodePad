@@ -139,7 +139,7 @@ class CompleteAdapter extends BaseAdapter implements Filterable
 				for (int i = 0; i < count; i++)
 				{
 					final String value = values.get(i);
-					final String valueText = value.toString().toUpperCase();
+					final String valueText = value.toUpperCase();
 
 					if (valueText.startsWith(prefixString))
 						newValues.add(value);

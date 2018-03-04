@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -72,13 +71,15 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	}
 
 	private static final String[] cols = {"name", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
-	private static final String[] mods = {"", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
+	@SuppressWarnings("MismatchedReadAndWriteOfArray")
+	private static final String[] mods = {null, "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
 	private static final String[] emjs = {"name", "version", "grp", "subgrp", "", "id"};
-	private static final String[] mode = {"", "from Unicode ", "Group: ", "Subgroup: ", "", ""};
+	@SuppressWarnings("MismatchedReadAndWriteOfArray")
+	private static final String[] mode = {null, "from Unicode ", "Group: ", "Subgroup: ", null, ""};
 
 	@SuppressLint("NewApi")
 	@Override
-	public Object instantiateItem(final View collection, final int position)
+	public Object instantiateItem(final ViewGroup collection, final int position)
 	{
 		CharacterView text = new CharacterView(context);
 		text.setText((String)adapter.getItem(position));
@@ -120,7 +121,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			{
 				int v = !emoji ? db.getint(itemid, cols[i]) : db.getint(adapter.getItemString(position), emjs[i]);
 				TextView desc = new TextView(context);
-				desc.setText(mods[i] + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : ""));
+				desc.setText((!emoji ? mods : mode)[i] + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : ""));
 				desc.setGravity(Gravity.CENTER_VERTICAL);
 				layout.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				continue;
@@ -259,16 +260,16 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		}
 		ScrollView scroll = new ScrollView(context);
 		scroll.addView(layout);
-		((ViewPager)collection).addView(scroll);
+		collection.addView(scroll);
 		collection.findViewById(R.id.TAB_ID).measure(MeasureSpec.makeMeasureSpec(10, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 		layout.setPadding(0, 0, 0, collection.findViewById(R.id.TAB_ID).getMeasuredHeight() * 2);
 		return scroll;
 	}
 
 	@Override
-	public void destroyItem(final View collection, final int position, final Object view)
+	public void destroyItem(final ViewGroup collection, final int position, final Object view)
 	{
-		((ViewPager)collection).removeView((View)view);
+		collection.removeView((View)view);
 	}
 
 	@Override
@@ -296,7 +297,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	@Override
 	public void onClick(View v)
 	{
-		String s = ((CharacterView)((LinearLayout)v).getChildAt(1)).getText().toString();
+		String s = ((CharacterView)((LinearLayout)v).getChildAt(1)).getText();
 		for (int i = 0; i < s.length(); ++i)
 		{
 			int code = s.codePointAt(i);

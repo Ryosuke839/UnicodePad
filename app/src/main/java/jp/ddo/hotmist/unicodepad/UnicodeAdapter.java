@@ -107,7 +107,7 @@ abstract class UnicodeAdapter extends BaseAdapter
 			}
 			else
 			{
-				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(0)).setText(String.format((" " + getItemString(arg0)).replace(" ", " U+").substring(1)));
+				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(0)).setText((" " + getItemString(arg0)).replace(" ", " U+").substring(1));
 				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(1)).setText(db.get(getItemString(arg0), "name"));
 			}
 			(((LinearLayout)arg1).getChildAt(0)).setPadding(padding, padding, padding, padding);

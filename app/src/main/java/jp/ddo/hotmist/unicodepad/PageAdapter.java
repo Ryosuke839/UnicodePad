@@ -105,7 +105,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 	}
 
 	@Override
-	public Object instantiateItem(final View collection, final int position)
+	public Object instantiateItem(final ViewGroup collection, final int position)
 	{
 		brec = pref.getString("single_rec", "false").equals("true");
 		arec.single = brec;
@@ -131,14 +131,14 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 
 		grids[position].setAdapter(adps[position]);
 		layout[position] = adps[position].instantiate(grids[position]);
-		((ViewPager)collection).addView(layout[position], 0);
+		collection.addView(layout[position], 0);
 		return layout[position];
 	}
 
 	@Override
-	public void destroyItem(final View collection, final int position, final Object view)
+	public void destroyItem(final ViewGroup collection, final int position, final Object view)
 	{
-		((ViewPager)collection).removeView((View)view);
+		collection.removeView((View)view);
 		adps[position].destroy();
 		layout[position] = null;
 		grids[position] = null;

@@ -20,7 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.content.Context;
@@ -55,8 +55,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-@SuppressWarnings("deprecation")
-public class UnicodeActivity extends ActionBarActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, ActivityCompat.OnRequestPermissionsResultCallback
+public class UnicodeActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, ActivityCompat.OnRequestPermissionsResultCallback
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
@@ -74,6 +73,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 	private LockableScrollView scroll;
 	private ViewPager pager;
 	PageAdapter adpPage;
+	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
 	private String path;
@@ -138,6 +138,7 @@ public class UnicodeActivity extends ActionBarActivity implements OnClickListene
 		scroll.setAdapter(adpPage);
 		scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")) + (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 0) > 1);
 
+		//noinspection deprecation
 		cm = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
 		fontpath = new ArrayList<>();
 		String fs = pref.getString("fontpath", "");

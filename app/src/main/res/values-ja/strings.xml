@@ -384,4 +384,5 @@
 	</string-array>
 	<string name="ime_desc">IMEを無効化</string>
 	<string name="clear_desc">全削除ボタンを表示</string>
+	<string name="malformed">ZIP内のファイル名が破損</string>
 </resources>

@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -569,6 +571,38 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 					try
 					{
 						ZipFile zf = new ZipFile(path);
+						try
+						{
+							zf.entries().nextElement();
+						}
+						catch (IllegalArgumentException e)
+						{
+							zf.close();
+							PASSED:
+							{
+								if (Build.VERSION.SDK_INT >= 24)
+								{
+									for (Charset charset : Charset.availableCharsets().values())
+									{
+										zf = new ZipFile(path, charset);
+										try
+										{
+											zf.entries().nextElement();
+										}
+										catch (IllegalArgumentException e2)
+										{
+											zf.close();
+											continue;
+										}
+										break PASSED;
+									}
+								}
+								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
+								spnFont.setSelection(0);
+								path = null;
+								return;
+							}
+						}
 						ZipEntry ze = zf.getEntry(childs[arg1]);
 						InputStream is = zf.getInputStream(ze);
 						File of = new File(this.getFilesDir(), Long.toHexString(ze.getCrc()) + "/" + new File(ze.getName()).getName());
@@ -688,6 +722,38 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 					try
 					{
 						ZipFile zf = new ZipFile(path);
+						try
+						{
+							zf.entries().nextElement();
+						}
+						catch (IllegalArgumentException e)
+						{
+							zf.close();
+							PASSED:
+							{
+								if (Build.VERSION.SDK_INT >= 24)
+								{
+									for (Charset charset : Charset.availableCharsets().values())
+									{
+										zf = new ZipFile(path, charset);
+										try
+										{
+											zf.entries().nextElement();
+										}
+										catch (IllegalArgumentException e2)
+										{
+											zf.close();
+											continue;
+										}
+										break PASSED;
+									}
+								}
+								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
+								spnFont.setSelection(0);
+								path = null;
+								return;
+							}
+						}
 						int cnt = 1;
 						for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
 							if (!e.nextElement().isDirectory())

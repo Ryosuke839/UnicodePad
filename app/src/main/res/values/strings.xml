@@ -377,4 +377,5 @@
 	<string name="down" translatable="false">⌄</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="modifier" translatable="false">Modifier</string>
+	<string name="malformed">Malformed file name in zip</string>
 </resources>

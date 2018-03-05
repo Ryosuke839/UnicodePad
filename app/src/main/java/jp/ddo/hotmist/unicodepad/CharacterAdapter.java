@@ -224,6 +224,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 					CharacterView ct = new CharacterView(context, null, android.R.attr.textAppearanceLarge);
 					ct.setPadding(0, 0, 0, 0);
 					ct.setPadding(UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding);
+					ct.drawSlash(false);
 					ct.setTextSize(UnicodeAdapter.fontsize);
 					ct.setText(cs);
 					ct.setTypeface(tf);

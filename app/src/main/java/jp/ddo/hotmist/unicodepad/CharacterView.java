@@ -223,7 +223,7 @@ public class CharacterView extends View
 		}
 		heightNew += getPaddingTop() + getPaddingBottom();
 
-		boolean measure = android.support.v4.graphics.PaintCompat.hasGlyph(paint, str) && validChar || !drawSlash;
+		boolean measure = (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash;
 
 		int widthNew;
 		widthNew = (int)(measure ? paint.measureText(str) : fm.descent - fm.ascent) + getPaddingLeft() + getPaddingRight();
@@ -283,7 +283,7 @@ public class CharacterView extends View
 			canvas.drawLine(0, ascent, width, ascent, paintln);
 			canvas.drawLine(0, offsety, width, offsety, paintln);
 			canvas.drawLine(0, descent, width, descent, paintln);
-			if (android.support.v4.graphics.PaintCompat.hasGlyph(paint, str) && validChar || !drawSlash)
+			if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash)
 			{
 				canvas.drawLine(offsetx, 0, offsetx, height, paintln);
 				canvas.drawLine(width - offsetx, 0, width - offsetx, height, paintln);
@@ -292,7 +292,7 @@ public class CharacterView extends View
 
 		if (str.length() > 0)
 		{
-			if (android.support.v4.graphics.PaintCompat.hasGlyph(paint, str) && validChar || !drawSlash)
+			if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash)
 			{
 				if (invalid)
 					getCache();
@@ -309,7 +309,7 @@ public class CharacterView extends View
 				canvas.drawLine(width / 2 - sz * .4f, ascent + sz * .1f, width / 2 + sz * .4f, ascent + sz * .1f, paint);
 				canvas.drawLine(width / 2 + sz * .4f, ascent + sz * .1f, width / 2 + sz * .4f, ascent + sz * .9f, paint);
 				canvas.drawLine(width / 2 - sz * .4f, ascent + sz * .9f, width / 2 + sz * .4f, ascent + sz * .9f, paint);
-				if (!android.support.v4.graphics.PaintCompat.hasGlyph(paint, str))
+				if (!(Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)))
 					canvas.drawLine(width / 2 - sz * .4f, ascent + sz * .1f, width / 2 + sz * .4f, ascent + sz * .9f, paint);
 				if (!validChar)
 					canvas.drawLine(width / 2 + sz * .4f, ascent + sz * .1f, width / 2 - sz * .4f, ascent + sz * .9f, paint);
@@ -321,7 +321,7 @@ public class CharacterView extends View
 	{
 		emojicache = null;
 
-		if (Build.VERSION.SDK_INT >= 12 && android.support.v4.graphics.PaintCompat.hasGlyph(paint, str) && validChar && paint.measureText(str) > 0.f)
+		if (Build.VERSION.SDK_INT >= 12 && (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0.f)
 		{
 			float w = paint.measureText(str);
 			if (w > 256.f)

@@ -11,6 +11,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.text.ClipboardManager;
 import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
@@ -120,7 +121,18 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		String key = arg0.getKey();
 		if (key.equals("download"))
 		{
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/get/noto/")));
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/get/noto/"));
+			if (this.getPackageManager().queryIntentActivities(intent, 0).size() > 0)
+			{
+				// Show webpage
+				startActivity(intent);
+			}
+			else
+			{
+				// Copy URI
+				((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setText("https://www.google.com/get/noto/");
+				Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show();
+			}
 			return true;
 		}
 		if (key.equals("tabs"))

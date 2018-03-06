@@ -105,4 +105,5 @@
 	</string-array>
 	<string name="ime_desc">Inaktivera tangentbord</string>
 	<string name="clear_desc">Visa rensa-knapp</string>
+	<string name="malformed">Felaktigt filnamn i zip</string>
 </resources>

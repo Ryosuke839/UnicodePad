@@ -572,30 +572,33 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 						ZipFile zf = new ZipFile(path);
 						try
 						{
-							zf.entries().nextElement();
+							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
 						}
-						catch (IllegalArgumentException e)
+						catch (IllegalArgumentException e1)
 						{
 							zf.close();
 							PASSED:
 							{
 								if (Build.VERSION.SDK_INT >= 24)
 								{
+									// Try to find valid charset
 									for (Charset charset : Charset.availableCharsets().values())
 									{
 										zf = new ZipFile(path, charset);
 										try
 										{
-											zf.entries().nextElement();
+											for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
 										}
 										catch (IllegalArgumentException e2)
 										{
 											zf.close();
 											continue;
 										}
+										// Found
 										break PASSED;
 									}
 								}
+								// Not found
 								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
 								spnFont.setSelection(0);
 								path = null;
@@ -723,30 +726,33 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 						ZipFile zf = new ZipFile(path);
 						try
 						{
-							zf.entries().nextElement();
+							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
 						}
-						catch (IllegalArgumentException e)
+						catch (IllegalArgumentException e1)
 						{
 							zf.close();
 							PASSED:
 							{
 								if (Build.VERSION.SDK_INT >= 24)
 								{
+									// Try to find valid charset
 									for (Charset charset : Charset.availableCharsets().values())
 									{
 										zf = new ZipFile(path, charset);
 										try
 										{
-											zf.entries().nextElement();
+											for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
 										}
 										catch (IllegalArgumentException e2)
 										{
 											zf.close();
 											continue;
 										}
+										// Found
 										break PASSED;
 									}
 								}
+								// Not found
 								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
 								spnFont.setSelection(0);
 								path = null;

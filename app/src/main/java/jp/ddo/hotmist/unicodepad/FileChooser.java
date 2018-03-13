@@ -14,12 +14,10 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -41,8 +39,8 @@ import java.util.zip.ZipFile;
 
 class FileChooser implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener, ActivityCompat.OnRequestPermissionsResultCallback
 {
-	private Activity activity;
-	private Listener listener;
+	private final Activity activity;
+	private final Listener listener;
 	private String path;
 	private String[] roots;
 	private String[] children;
@@ -50,6 +48,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 	interface Listener
 	{
 		void onFileChosen(String path);
+
 		void onFileCancel();
 	}
 
@@ -89,7 +88,8 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 		ZipFile zf = new ZipFile(path);
 		try
 		{
-			for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
+			for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement())
+				;
 		}
 		catch (IllegalArgumentException e1)
 		{
@@ -104,7 +104,8 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 						zf = new ZipFile(path, charset);
 						try
 						{
-							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
+							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement())
+								;
 						}
 						catch (IllegalArgumentException e2)
 						{
@@ -135,6 +136,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 					path = path.substring(0, path.lastIndexOf('/') + 1);
 				else
 				{
+					//noinspection EmptyCatchBlock
 					try
 					{
 						ZipFile zf = openZip(path);
@@ -200,6 +202,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 		}
 		else
 		{
+			//noinspection EmptyCatchBlock
 			try
 			{
 				if (path.length() == 1)

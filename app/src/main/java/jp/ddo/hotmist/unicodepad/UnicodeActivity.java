@@ -77,8 +77,6 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
-	private String path;
-	private String[] roots;
 	private String[] childs;
 	private ArrayList<String> fontpath;
 	private boolean disableime;
@@ -515,7 +513,6 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		if (arg1 == -2)
 		{
-			path = null;
 			childs = new String[fontpath.size()];
 			for (int i = 0; i < childs.length; ++i)
 				childs[i] = adpFont.getItem(i + 3);

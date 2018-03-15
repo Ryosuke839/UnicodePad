@@ -56,7 +56,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class UnicodeActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, FileChooser.Listener
+public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
@@ -68,17 +68,13 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private Button btnFind;
 	private Button btnPaste;
 	private Button btnFinish;
-	private Spinner spnFont;
-	private ArrayAdapter<String> adpFont;
-	private int fidx;
+	FontChooser chooser;
 	private LockableScrollView scroll;
 	private ViewPager pager;
 	PageAdapter adpPage;
 	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
-	private String[] childs;
-	private ArrayList<String> fontpath;
 	private boolean disableime;
 	private static float fontsize = 24.0f;
 	static int univer = 1000;
@@ -122,13 +118,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		btnPaste.setOnClickListener(this);
 		btnFinish = (Button)findViewById(R.id.finish);
 		btnFinish.setOnClickListener(this);
-		spnFont = (Spinner)findViewById(R.id.font);
-		adpFont = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-		adpFont.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		adpFont.add(getResources().getString(R.string.normal));
-		adpFont.add(getResources().getString(R.string.add));
-		spnFont.setAdapter(adpFont);
-		spnFont.setOnItemSelectedListener(this);
+		chooser = new FontChooser(this, (Spinner)findViewById(R.id.font), this);
 		scroll = (LockableScrollView)findViewById(R.id.scrollView);
 		pager = (ViewPager)findViewById(R.id.cpager);
 		pager.setOffscreenPageLimit(3);
@@ -139,45 +129,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 
 		//noinspection deprecation
 		cm = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-		fontpath = new ArrayList<>();
-		String fs = pref.getString("fontpath", "");
-		for (String s : fs.split("\n"))
-		{
-			if (s.length() > 0)
-				fontpath.add(s);
-		}
 		disableime = pref.getBoolean("ime", true);
-		fidx = pref.getInt("fontidx", 0);
-		for (int i = 0; i < fontpath.size(); ++i)
-		{
-			Typeface tf;
-			try
-			{
-				tf = Typeface.createFromFile(fontpath.get(i));
-			}
-			catch (RuntimeException e)
-			{
-				tf = null;
-			}
-			if (tf != null)
-			{
-				if (adpFont.getCount() < 3)
-					adpFont.add(getResources().getString(R.string.rem));
-				adpFont.add(new File(fontpath.get(i)).getName());
-			}
-			else
-			{
-				if (fidx == i + 1)
-					fidx = 0;
-				if (fidx > i + 1)
-					--fidx;
-				fontpath.remove(i);
-				--i;
-			}
-		}
-		if (fidx > fontpath.size())
-			fidx = 0;
-		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
 
 		pager.setCurrentItem(Math.min(pref.getInt("page", 1), adpPage.getCount() - 1), false);
 
@@ -236,11 +188,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		SharedPreferences.Editor edit = pref.edit();
 		adpPage.save(edit);
-		String fs = "";
-		for (String s : fontpath)
-			fs += s + "\n";
-		edit.putString("fontpath", fs);
-		edit.putInt("fontidx", spnFont.getSelectedItemId() > 2 ? (int)spnFont.getSelectedItemId() - 2 : 0);
+		chooser.Save(edit);
 		edit.putInt("page", pager.getCurrentItem());
 		edit.apply();
 		super.onPause();
@@ -452,134 +400,9 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		pager.setCurrentItem(page);
 	}
 
-	@SuppressLint("InlinedApi")
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+	public void onTypefaceChosen(Typeface typeface)
 	{
-		if (arg0 == spnFont)
-		{
-			switch (arg2)
-			{
-			case 0:
-				setTypeface(Typeface.DEFAULT);
-				fidx = 0;
-				break;
-			case 1:
-				new FileChooser(this, this).show();
-				break;
-			case 2:
-				onClick(null, -2);
-				break;
-			default:
-				fidx = arg2 - 2;
-				Typeface tf;
-				try
-				{
-					tf = Typeface.createFromFile(fontpath.get(arg2 - 3));
-				}
-				catch (RuntimeException e)
-				{
-					tf = null;
-					Toast.makeText(this, R.string.cantopen, Toast.LENGTH_SHORT).show();
-				}
-				if (tf != null)
-					setTypeface(tf);
-				else
-				{
-					spnFont.setSelection(0);
-					adpFont.remove(adpFont.getItem(arg2));
-					fontpath.remove(arg2 - 3);
-				}
-				break;
-			}
-		}
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0)
-	{
-	}
-
-	@Override
-	public void onClick(DialogInterface arg0, int arg1)
-	{
-		if (arg1 == -2)
-		{
-			childs = new String[fontpath.size()];
-			for (int i = 0; i < childs.length; ++i)
-				childs[i] = adpFont.getItem(i + 3);
-			new AlertDialog.Builder(this).setTitle(R.string.rem).setItems(childs, this).setOnCancelListener(this).show();
-		} else
-		{
-			childs = null;
-			adpFont.remove(adpFont.getItem(arg1 + 3));
-			try
-			{
-				if (fontpath.get(arg1).startsWith(this.getFilesDir().getCanonicalPath()))
-					//noinspection ResultOfMethodCallIgnored
-					new File(fontpath.get(arg1)).delete();
-			}
-			catch (IOException e)
-			{
-			}
-			fontpath.remove(arg1);
-			if (fidx == arg1 + 1)
-				fidx = 0;
-			if (fidx > arg1 + 1)
-				--fidx;
-			if (fontpath.size() == 0)
-				adpFont.remove(adpFont.getItem(2));
-			spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
-		}
-	}
-
-	@Override
-	public void onCancel(DialogInterface arg0)
-	{
-		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
-	}
-
-	public void onFileChosen(String path)
-	{
-		Typeface tf;
-		try
-		{
-			tf = Typeface.createFromFile(path);
-		}
-		catch (RuntimeException e)
-		{
-			tf = null;
-			Toast.makeText(this, R.string.cantopen, Toast.LENGTH_SHORT).show();
-			try
-			{
-				if (path.startsWith(this.getFilesDir().getCanonicalPath()))
-					//noinspection ResultOfMethodCallIgnored
-					new File(path).delete();
-			}
-			catch (IOException e2)
-			{
-			}
-		}
-		if (tf != null)
-		{
-			if (adpFont.getCount() < 3)
-				adpFont.add(getResources().getString(R.string.rem));
-			for (int i = 0; i < fontpath.size(); ++i)
-			{
-				if (!path.equals(fontpath.get(i)))
-					continue;
-				adpFont.remove(adpFont.getItem(i + 3));
-				fontpath.remove(i);
-			}
-			adpFont.add(new File(path).getName());
-			fontpath.add(path);
-		}
-		spnFont.setSelection(tf == null ? 0 : adpFont.getCount() - 1);
-	}
-
-	public void onFileCancel()
-	{
-		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
+		setTypeface(typeface);
 	}
 
 	private Typeface oldtf = null;

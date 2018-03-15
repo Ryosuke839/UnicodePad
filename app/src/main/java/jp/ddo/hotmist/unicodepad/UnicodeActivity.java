@@ -56,7 +56,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class UnicodeActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, ActivityCompat.OnRequestPermissionsResultCallback, FileChooser.Listener
+public class UnicodeActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, FileChooser.Listener
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
@@ -450,14 +450,6 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	void setPage(int page)
 	{
 		pager.setCurrentItem(page);
-	}
-
-	@SuppressLint("Override")
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-	{
-		if (requestCode == 1)
-			onClick(null, -1);
 	}
 
 	@SuppressLint("InlinedApi")

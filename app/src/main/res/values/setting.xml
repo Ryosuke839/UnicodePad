@@ -33,6 +33,7 @@
 		<item>8.0.0</item>
 		<item>9.0.0</item>
 		<item>10.0.0</item>
+		<item>11.0.0</item>
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def">Latest</string>

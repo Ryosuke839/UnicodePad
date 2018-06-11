@@ -72,7 +72,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class UnicodeActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnTouchListener, OnItemSelectedListener, OnEditorActionListener, ActivityCompat.OnRequestPermissionsResultCallback
+public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
@@ -84,19 +84,13 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private Button btnFind;
 	private Button btnPaste;
 	private Button btnFinish;
-	private Spinner spnFont;
-	private ArrayAdapter<String> adpFont;
-	private int fidx;
+	FontChooser chooser;
 	private LockableScrollView scroll;
 	private ViewPager pager;
 	PageAdapter adpPage;
 	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
-	private String path;
-	private String[] roots;
-	private String[] childs;
-	private ArrayList<String> fontpath;
 	private boolean disableime;
 	private static float fontsize = 24.0f;
 	static int univer = 1000;
@@ -140,13 +134,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		btnPaste.setOnClickListener(this);
 		btnFinish = (Button)findViewById(R.id.finish);
 		btnFinish.setOnClickListener(this);
-		spnFont = (Spinner)findViewById(R.id.font);
-		adpFont = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-		adpFont.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		adpFont.add(getResources().getString(R.string.normal));
-		adpFont.add(getResources().getString(R.string.add));
-		spnFont.setAdapter(adpFont);
-		spnFont.setOnItemSelectedListener(this);
+		chooser = new FontChooser(this, (Spinner)findViewById(R.id.font), this);
 		scroll = (LockableScrollView)findViewById(R.id.scrollView);
 		pager = (ViewPager)findViewById(R.id.cpager);
 		pager.setOffscreenPageLimit(3);
@@ -157,45 +145,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 
 		//noinspection deprecation
 		cm = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-		fontpath = new ArrayList<>();
-		String fs = pref.getString("fontpath", "");
-		for (String s : fs.split("\n"))
-		{
-			if (s.length() > 0)
-				fontpath.add(s);
-		}
 		disableime = pref.getBoolean("ime", true);
-		fidx = pref.getInt("fontidx", 0);
-		for (int i = 0; i < fontpath.size(); ++i)
-		{
-			Typeface tf;
-			try
-			{
-				tf = Typeface.createFromFile(fontpath.get(i));
-			}
-			catch (RuntimeException e)
-			{
-				tf = null;
-			}
-			if (tf != null)
-			{
-				if (adpFont.getCount() < 3)
-					adpFont.add(getResources().getString(R.string.rem));
-				adpFont.add(new File(fontpath.get(i)).getName());
-			}
-			else
-			{
-				if (fidx == i + 1)
-					fidx = 0;
-				if (fidx > i + 1)
-					--fidx;
-				fontpath.remove(i);
-				--i;
-			}
-		}
-		if (fidx > fontpath.size())
-			fidx = 0;
-		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
 
 		pager.setCurrentItem(Math.min(pref.getInt("page", 1), adpPage.getCount() - 1), false);
 
@@ -254,11 +204,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		SharedPreferences.Editor edit = pref.edit();
 		adpPage.save(edit);
-		String fs = "";
-		for (String s : fontpath)
-			fs += s + "\n";
-		edit.putString("fontpath", fs);
-		edit.putInt("fontidx", spnFont.getSelectedItemId() > 2 ? (int)spnFont.getSelectedItemId() - 2 : 0);
+		chooser.Save(edit);
 		edit.putInt("page", pager.getCurrentItem());
 		edit.apply();
 		super.onPause();
@@ -470,380 +416,9 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		pager.setCurrentItem(page);
 	}
 
-	@SuppressLint("Override")
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	public void onTypefaceChosen(Typeface typeface)
 	{
-		if (requestCode == 1)
-			onClick(null, -1);
-	}
-
-	@SuppressLint("InlinedApi")
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-	{
-		if (arg0 == spnFont)
-		{
-			switch (arg2)
-			{
-			case 0:
-				setTypeface(Typeface.DEFAULT);
-				fidx = 0;
-				break;
-			case 1:
-				if (Build.VERSION.SDK_INT >= 23)
-				{
-					if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-					{
-						if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE))
-						{
-							ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-							break;
-						}
-						Toast.makeText(this, R.string.denied, Toast.LENGTH_LONG).show();
-					}
-				}
-				onClick(null, -1);
-				break;
-			case 2:
-				onClick(null, -2);
-				break;
-			default:
-				fidx = arg2 - 2;
-				Typeface tf;
-				try
-				{
-					tf = Typeface.createFromFile(fontpath.get(arg2 - 3));
-				}
-				catch (RuntimeException e)
-				{
-					tf = null;
-					Toast.makeText(this, R.string.cantopen, Toast.LENGTH_SHORT).show();
-				}
-				if (tf != null)
-					setTypeface(tf);
-				else
-				{
-					spnFont.setSelection(0);
-					adpFont.remove(adpFont.getItem(arg2));
-					fontpath.remove(arg2 - 3);
-				}
-				break;
-			}
-		}
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0)
-	{
-	}
-
-	@Override
-	public void onClick(DialogInterface arg0, int arg1)
-	{
-		if (arg1 == -2)
-		{
-			path = null;
-			childs = new String[fontpath.size()];
-			for (int i = 0; i < childs.length; ++i)
-				childs[i] = adpFont.getItem(i + 3);
-			new AlertDialog.Builder(this).setTitle(R.string.rem).setItems(childs, this).setOnCancelListener(this).show();
-			return;
-		}
-		if (arg1 != -1 && path == null)
-		{
-			childs = null;
-			adpFont.remove(adpFont.getItem(arg1 + 3));
-			try
-			{
-				if (fontpath.get(arg1).startsWith(this.getFilesDir().getCanonicalPath()))
-					//noinspection ResultOfMethodCallIgnored
-					new File(fontpath.get(arg1)).delete();
-			}
-			catch (IOException e)
-			{
-			}
-			fontpath.remove(arg1);
-			if (fidx == arg1 + 1)
-				fidx = 0;
-			if (fidx > arg1 + 1)
-				--fidx;
-			if (fontpath.size() == 0)
-				adpFont.remove(adpFont.getItem(2));
-			spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
-			return;
-		}
-		if (arg1 == -1)
-			path = "/";
-		else
-		{
-			if (path.endsWith(".zip"))
-			{
-				if (arg1 == 0)
-					path = path.substring(0, path.lastIndexOf('/') + 1);
-				else
-				{
-					try
-					{
-						ZipFile zf = new ZipFile(path);
-						try
-						{
-							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
-						}
-						catch (IllegalArgumentException e1)
-						{
-							zf.close();
-							PASSED:
-							{
-								if (Build.VERSION.SDK_INT >= 24)
-								{
-									// Try to find valid charset
-									for (Charset charset : Charset.availableCharsets().values())
-									{
-										zf = new ZipFile(path, charset);
-										try
-										{
-											for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
-										}
-										catch (IllegalArgumentException e2)
-										{
-											zf.close();
-											continue;
-										}
-										// Found
-										break PASSED;
-									}
-								}
-								// Not found
-								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
-								spnFont.setSelection(0);
-								path = null;
-								return;
-							}
-						}
-						ZipEntry ze = zf.getEntry(childs[arg1]);
-						InputStream is = zf.getInputStream(ze);
-						File of = new File(this.getFilesDir(), Long.toHexString(ze.getCrc()) + "/" + new File(ze.getName()).getName());
-
-						of.getParentFile().mkdirs();
-
-						OutputStream os = new FileOutputStream(of);
-
-						byte[] buf = new byte[256];
-						int size;
-						while ((size = is.read(buf)) > 0)
-							os.write(buf, 0, size);
-
-						os.close();
-						is.close();
-						zf.close();
-
-						path = of.getCanonicalPath();
-					}
-					catch (ZipException e)
-					{
-						Toast.makeText(this, R.string.cantread, Toast.LENGTH_SHORT).show();
-						spnFont.setSelection(0);
-						path = null;
-						return;
-					}
-					catch (IOException e)
-					{
-					}
-				}
-			}
-			else
-			{
-				if (path.length() != 1 && arg1 == 0)
-				{
-					for (String root : roots)
-						if (path.equals('/' + root))
-							path = "";
-				}
-				if (path.length() == 0)
-					path = "/";
-				else
-					path += childs[arg1];
-			}
-		}
-
-		if (path.charAt(path.length() - 1) != '/' && !path.endsWith(".zip"))
-		{
-			childs = null;
-			Typeface tf;
-			try
-			{
-				tf = Typeface.createFromFile(path);
-			}
-			catch (RuntimeException e)
-			{
-				tf = null;
-				Toast.makeText(this, R.string.cantopen, Toast.LENGTH_SHORT).show();
-			}
-			if (tf != null)
-			{
-				if (adpFont.getCount() < 3)
-					adpFont.add(getResources().getString(R.string.rem));
-				for (int i = 0; i < fontpath.size(); ++i)
-				{
-					if (!path.equals(fontpath.get(i)))
-						continue;
-					adpFont.remove(adpFont.getItem(i + 3));
-					fontpath.remove(i);
-				}
-				adpFont.add(new File(path).getName());
-				fontpath.add(path);
-			}
-			spnFont.setSelection(tf == null ? 0 : adpFont.getCount() - 1);
-			path = null;
-		}
-		else
-		{
-			try
-			{
-				if (path.length() == 1)
-				{
-					String[] dirs = new String[4];
-					dirs[0] = Environment.getExternalStorageDirectory().getCanonicalPath();
-					dirs[1] = Environment.getDataDirectory().getCanonicalPath();
-					dirs[2] = Environment.getDownloadCacheDirectory().getCanonicalPath();
-					dirs[3] = Environment.getRootDirectory().getCanonicalPath();
-					for (int i = 0; i < dirs.length; ++i)
-						for (int j = 0; j < dirs.length; ++j)
-							if (i != j && dirs[i].length() > 0 && dirs[j].length() > 0 && dirs[i].startsWith(dirs[j]) && new File(dirs[j]).canRead())
-								dirs[i] = "";
-					int cnt = 0;
-					for (String dir1 : dirs)
-					{
-						if (!(dir1.length() > 0))
-							continue;
-						if (!new File(dir1).canRead())
-							continue;
-						++cnt;
-					}
-					roots = new String[cnt];
-					int j = 0;
-					for (String dir : dirs)
-					{
-						if (!(dir.length() > 0))
-							continue;
-						if (!new File(dir).canRead())
-							continue;
-						roots[j] = dir.substring(1) + '/';
-						++j;
-					}
-					Arrays.sort(roots);
-					childs = roots;
-				}
-				else if (path.endsWith(".zip"))
-				{
-					try
-					{
-						ZipFile zf = new ZipFile(path);
-						try
-						{
-							for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
-						}
-						catch (IllegalArgumentException e1)
-						{
-							zf.close();
-							PASSED:
-							{
-								if (Build.VERSION.SDK_INT >= 24)
-								{
-									// Try to find valid charset
-									for (Charset charset : Charset.availableCharsets().values())
-									{
-										zf = new ZipFile(path, charset);
-										try
-										{
-											for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); e.nextElement());
-										}
-										catch (IllegalArgumentException e2)
-										{
-											zf.close();
-											continue;
-										}
-										// Found
-										break PASSED;
-									}
-								}
-								// Not found
-								Toast.makeText(this, R.string.malformed, Toast.LENGTH_SHORT).show();
-								spnFont.setSelection(0);
-								path = null;
-								return;
-							}
-						}
-						int cnt = 1;
-						for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
-							if (!e.nextElement().isDirectory())
-								++cnt;
-						childs = new String[cnt];
-						childs[0] = "../";
-						int j = 1;
-						for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
-						{
-							ZipEntry entry = e.nextElement();
-							if (entry.isDirectory())
-								continue;
-							childs[j] = entry.getName();
-							++j;
-						}
-						zf.close();
-					}
-					catch (ZipException e)
-					{
-						Toast.makeText(this, R.string.cantread, Toast.LENGTH_SHORT).show();
-						spnFont.setSelection(0);
-						path = null;
-						return;
-					}
-				}
-				else
-				{
-					File f = new File(path);
-					path = f.getCanonicalPath();
-					if (!path.endsWith("/"))
-						path += '/';
-					File[] fl = f.listFiles();
-
-					if (fl == null)
-					{
-						Toast.makeText(this, R.string.cantread, Toast.LENGTH_SHORT).show();
-						spnFont.setSelection(0);
-						path = null;
-						return;
-					}
-					int cnt = 1;
-					for (File aFl1 : fl)
-						if (aFl1.canRead())
-							++cnt;
-					childs = new String[cnt];
-					childs[0] = "../";
-					int j = 1;
-					for (File aFl : fl)
-					{
-						if (!aFl.canRead())
-							continue;
-						childs[j] = aFl.getName();
-						if (aFl.isDirectory())
-							childs[j] += '/';
-						++j;
-					}
-				}
-				new AlertDialog.Builder(this).setTitle(path).setItems(childs, this).setOnCancelListener(this).show();
-			}
-			catch (IOException e)
-			{
-			}
-		}
-	}
-
-	@Override
-	public void onCancel(DialogInterface arg0)
-	{
-		spnFont.setSelection(fidx == 0 ? 0 : fidx + 2);
+		setTypeface(typeface);
 	}
 
 	private Typeface oldtf = null;

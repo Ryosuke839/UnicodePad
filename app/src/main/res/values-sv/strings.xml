@@ -69,7 +69,8 @@
 		<item>8.0.0</item>
 		<item>9.0.0</item>
 		<item>10.0.0</item>
-		<item>Senaste (10.0.0)</item>
+		<item>11.0.0</item>
+		<item>Senaste (11.0.0)</item>
 	</string-array>
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>

@@ -105,6 +105,7 @@
 		<item>1C00 Lepcha</item>
 		<item>1C50 Ol Chiki</item>
 		<item>1C80 Cyrillic Extended-C</item>
+		<item>1C90 Georgian Extended</item>
 		<item>1CC0 Sundanese Supplement</item>
 		<item>1CD0 Vedic Extensions</item>
 		<item>1D00 Phonetic Extensions</item>
@@ -241,7 +242,10 @@
 		<item>10B80 Psalter Pahlavi</item>
 		<item>10C00 Old Turkic</item>
 		<item>10C80 Old Hungarian</item>
+		<item>10D00 Hanifi Rohingya</item>
 		<item>10E60 Rumi Numeral Symbols</item>
+		<item>10F00 Old Sogdian</item>
+		<item>10F30 Sogdian</item>
 		<item>11000 Brahmi</item>
 		<item>11080 Kaithi</item>
 		<item>110D0 Sora Sompeng</item>
@@ -260,6 +264,7 @@
 		<item>11660 Mongolian Supplement</item>
 		<item>11680 Takri</item>
 		<item>11700 Ahom</item>
+		<item>11800 Dogra</item>
 		<item>118A0 Warang Citi</item>
 		<item>11A00 Zanabazar Square</item>
 		<item>11A50 Soyombo</item>
@@ -267,6 +272,8 @@
 		<item>11C00 Bhaiksuki</item>
 		<item>11C70 Marchen</item>
 		<item>11D00 Masaram Gondi</item>
+		<item>11D60 Gunjala Gondi</item>
+		<item>11EE0 Makasar</item>
 		<item>12000 Cuneiform</item>
 		<item>12400 Cuneiform Numbers and Punctuation</item>
 		<item>12480 Early Dynastic Cuneiform</item>
@@ -276,6 +283,7 @@
 		<item>16A40 Mro</item>
 		<item>16AD0 Bassa Vah</item>
 		<item>16B00 Pahawh Hmong</item>
+		<item>16E40 Medefaidrin</item>
 		<item>16F00 Miao</item>
 		<item>16FE0 Ideographic Symbols and Punctuation</item>
 		<item>17000 Tangut</item>
@@ -288,6 +296,7 @@
 		<item>1D000 Byzantine Musical Symbols</item>
 		<item>1D100 Musical Symbols</item>
 		<item>1D200 Ancient Greek Musical Notation</item>
+		<item>1D2E0 Mayan Numerals</item>
 		<item>1D300 Tai Xuan Jing Symbols</item>
 		<item>1D360 Counting Rod Numerals</item>
 		<item>1D400 Mathematical Alphanumeric Symbols</item>
@@ -295,6 +304,7 @@
 		<item>1E000 Glagolitic Supplement</item>
 		<item>1E800 Mende Kikakui</item>
 		<item>1E900 Adlam</item>
+		<item>1EC70 Indic Siyaq Numbers</item>
 		<item>1EE00 Arabic Mathematical Alphabetic Symbols</item>
 		<item>1F000 Mahjong Tiles</item>
 		<item>1F030 Domino Tiles</item>
@@ -309,6 +319,7 @@
 		<item>1F780 Geometric Shapes Extended</item>
 		<item>1F800 Supplemental Arrows-C</item>
 		<item>1F900 Supplemental Symbols and Pictographs</item>
+		<item>1FA00 Chess Symbols</item>
 		<item>20000 CJK Unified Ideographs Extension B</item>
 		<item>2A700 CJK Unified Ideographs Extension C</item>
 		<item>2B740 CJK Unified Ideographs Extension D</item>
@@ -345,7 +356,8 @@
 		<item>8.0.0</item>
 		<item>9.0.0</item>
 		<item>10.0.0</item>
-		<item>Latest (10.0.0)</item>
+		<item>11.0.0</item>
+		<item>Latest (11.0.0)</item>
 	</string-array>
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>

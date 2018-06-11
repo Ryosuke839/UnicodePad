@@ -98,6 +98,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		scroll.setOnPreferenceChangeListener(this);
 		scroll.setSummary(scroll.getEntry());
 
+		Preference legal_app = findPreference("legal_app");
+		legal_app.setOnPreferenceClickListener(this);
+
+		Preference legal_uni = findPreference("legal_uni");
+		legal_uni.setOnPreferenceClickListener(this);
+
 	}
 
 	@Override
@@ -131,30 +137,43 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		return true;
 	}
 
+	private boolean openPage(String uri)
+	{
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+		if (this.getPackageManager().queryIntentActivities(intent, 0).size() > 0)
+		{
+			// Show webpage
+			startActivity(intent);
+		}
+		else
+		{
+			// Copy URI
+			((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setText(uri);
+			Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show();
+		}
+		return true;
+	}
+
 	@Override
 	public boolean onPreferenceClick(Preference arg0)
 	{
 		String key = arg0.getKey();
 		if (key.equals("download"))
 		{
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/get/noto/"));
-			if (this.getPackageManager().queryIntentActivities(intent, 0).size() > 0)
-			{
-				// Show webpage
-				startActivity(intent);
-			}
-			else
-			{
-				// Copy URI
-				((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setText("https://www.google.com/get/noto/");
-				Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show();
-			}
-			return true;
+			return openPage("https://www.google.com/get/noto/");
 		}
 		if (key.equals("tabs"))
 		{
 			startActivity(new Intent(this, TabsActivity.class));
 			return true;
+		}
+		if (key.equals("legal_app"))
+		{
+			return openPage("https://github.com/Ryosuke839/UnicodePad");
+		}
+		if (key.equals("legal_uni"))
+		{
+			return openPage("https://unicode.org/");
 		}
 
 		return false;

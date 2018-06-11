@@ -169,5 +169,17 @@
 			android:summary=""
 			android:title="@string/recent_desc" />
 	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="legal"
+		android:title="@string/legal">
+		<Preference
+			android:key="legal_app"
+			android:summary="@string/legal_app2"
+			android:title="@string/legal_app" />
+		<Preference
+			android:key="legal_uni"
+			android:summary="@string/legal_uni2"
+			android:title="@string/legal_uni" />
+	</PreferenceCategory>
 
 </PreferenceScreen>

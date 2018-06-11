@@ -393,4 +393,13 @@
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="modifier" translatable="false">Modifier</string>
 	<string name="malformed">Malformed file name in zip</string>
+	<string name="legal">Legal</string>
+	<string name="legal_uni">Unicode®</string>
+	<string name="legal_uni2">This application includes a modified version of Unicode Data File.
+Copyright © 1991-2018 Unicode, Inc. All rights reserved.
+Distributed under the Terms of Use in
+http://www.unicode.org/copyright.html.</string>
+	<string name="legal_app">UnicodePad 2.4.0</string>
+	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
+https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

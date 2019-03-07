@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright 2018 Ryosuke839
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<string name="app_name">UnicodePad</string>
+	<string name="delete">删除</string>
+	<string name="desc">详情</string>
+	<string name="find">查找</string>
+	<string name="fhint">输入字符名称</string>
+	<string name="inlist">转到列表</string>
+	<string name="copied">复制到剪贴板</string>
+	<string name="finish">完成</string>
+	<string name="share">分享</string>
+	<string name="font">字体</string>
+	<string name="favorite">收藏</string>
+	<string name="recent">最近使用</string>
+	<string name="list">列表</string>
+	<string name="edit">输入</string>
+	<string name="emoji">绘文字</string>
+	<string name="normal">默认</string>
+	<string name="input">输入</string>
+	<string name="remrec">移除</string>
+	<string name="add">选择…</string>
+	<string name="mark">标记</string>
+	<string name="rem">移除…</string>
+	<string name="code">码位</string>
+	<string name="nocode">无效码位</string>
+	<string name="cantopen">无法打开字体</string>
+	<string name="cantread">无法读取；应用可能没有获得读取权限。</string>
+	<string name="denied">请求被拒绝。为浏览内部存储，请在权限设置中允许应用读取手机存储。</string>
+	<string-array name="codes" tools:ignore="MissingTranslation">
+		<item>0 基本拉丁字母</item>
+		<item>80 拉丁字母补充1</item>
+		<item>100 拉丁字母扩展A</item>
+		<item>180 拉丁字母扩展B</item>
+		<item>250 国际音标扩展</item>
+		<item>2B0 广袤修饰字符</item>
+		<item>300 组合附加记号</item>
+		<item>370 希腊字母及科普特字母</item>
+		<item>400 西里尔字母</item>
+		<item>500 西里尔字母补充</item>
+		<item>530 亚美尼亚字母</item>
+		<item>590 希伯来字母</item>
+		<item>600 阿拉伯字母</item>
+		<item>700 叙利亚字母</item>
+		<item>750 阿拉伯字母补充</item>
+		<item>780 它拿字母</item>
+		<item>7C0 西非书面字母</item>
+		<item>800 撒马利亚字母</item>
+		<item>840 曼达安字母</item>
+		<item>860 叙利亚字母补充</item>
+		<item>8A0 阿拉伯字母扩展A</item>
+		<item>900 天城文</item>
+		<item>980 孟加拉文</item>
+		<item>A00 古木基文</item>
+		<item>A80 古吉拉特文</item>
+		<item>B00 奥里亚文</item>
+		<item>B80 泰米尔文</item>
+		<item>C00 泰卢固文</item>
+		<item>C80 卡纳达文</item>
+		<item>D00 马拉雅拉姆文</item>
+		<item>D80 僧伽罗文</item>
+		<item>E00 泰文</item>
+		<item>E80 老挝文</item>
+		<item>F00 藏文</item>
+		<item>1000 缅甸文</item>
+		<item>10A0 格鲁吉亚字母</item>
+		<item>1100 谚文字母</item>
+		<item>1200 埃塞俄比亚字母</item>
+		<item>1380 埃塞俄比亚字母补充</item>
+		<item>13A0 切罗基文</item>
+		<item>1400 统一加拿大原住民音节文字</item>
+		<item>1680 欧甘字母</item>
+		<item>16A0 卢恩字母</item>
+		<item>1700 他加禄语字母</item>
+		<item>1720 哈努诺文</item>
+		<item>1740 布希德文</item>
+		<item>1760 塔格巴努瓦字母</item>
+		<item>1780 高棉文</item>
+		<item>1800 传统蒙古文</item>
+		<item>18B0 统一加拿大原住民音节文字扩展</item>
+		<item>1900 林布文</item>
+		<item>1950 德宏傣文</item>
+		<item>1980 西双版纳新傣文</item>
+		<item>19E0 高棉文符号</item>
+		<item>1A00 布吉文</item>
+		<item>1A20 老傣文</item>
+		<item>1AB0 组合附加记号扩展</item>
+		<item>1B00 巴厘文</item>
+		<item>1B80 巽他文</item>
+		<item>1BC0 巴塔克文</item>
+		<item>1C00 绒巴文</item>
+		<item>1C50 桑塔利语文字</item>
+		<item>1C80 西里尔字母扩展C</item>
+		<item>1C90 格鲁吉亚字母扩展</item>
+		<item>1CC0 巽他文补充</item>
+		<item>1CD0 吠陀梵语文字扩展</item>
+		<item>1D00 语音学文字扩展</item>
+		<item>1D80 语音学文字扩展补充</item>
+		<item>1DC0 组合附加记号补充</item>
+		<item>1E00 拉丁字母扩展补充</item>
+		<item>1F00 希腊文扩展</item>
+		<item>2000 常用标点符号</item>
+		<item>2070 上标及下标</item>
+		<item>20A0 货币符号</item>
+		<item>20D0 标志型组合附加记号</item>
+		<item>2100 类字母符号</item>
+		<item>2150 数字形式</item>
+		<item>2190 箭头</item>
+		<item>2200 数学运算符</item>
+		<item>2300 杂类技术符号</item>
+		<item>2400 控制符号</item>
+		<item>2440 光学识别符号</item>
+		<item>2460 包围式字母数字</item>
+		<item>2500 制表符</item>
+		<item>2580 块元素</item>
+		<item>25A0 几何形状</item>
+		<item>2600 杂类标志</item>
+		<item>2700 印刷符号</item>
+		<item>27C0 杂类数学符号A</item>
+		<item>27F0 补充箭头A</item>
+		<item>2800 盲文点字</item>
+		<item>2900 补充箭头B</item>
+		<item>2980 杂类数学符号B</item>
+		<item>2A00 补充数学运算符</item>
+		<item>2B00 杂类标志与箭头</item>
+		<item>2C00 格拉哥里字母</item>
+		<item>2C60 拉丁字母扩展C</item>
+		<item>2C80 科普特字母</item>
+		<item>2D00 格鲁吉亚字母补充</item>
+		<item>2D30 提非纳字母</item>
+		<item>2D80 埃塞俄比亚字母扩展</item>
+		<item>2DE0 西里尔字母扩展A</item>
+		<item>2E00 补充标点符号</item>
+		<item>2E80 中日韩汉字部首补充</item>
+		<item>2F00 康熙部首</item>
+		<item>2FF0 表意文字描述字符</item>
+		<item>3000 中日韩符号和标点</item>
+		<item>3040 平假名</item>
+		<item>30A0 片假名</item>
+		<item>3100 注音符号</item>
+		<item>3130 谚文兼容字母</item>
+		<item>3190 汉文训读返点</item>
+		<item>31A0 注音符号扩展</item>
+		<item>31C0 中日韩笔划</item>
+		<item>31F0 片假名拼音扩展</item>
+		<item>3200 包围式中日韩字符及月份</item>
+		<item>3300 中日韩兼容字符</item>
+		<item>3400 中日韩统一表意文字扩展A</item>
+		<item>4DC0 易经六十四卦符号</item>
+		<item>4E00 中日韩统一表意文字</item>
+		<item>A000 彝文音节</item>
+		<item>A490 彝文字根</item>
+		<item>A4D0 老傈僳文</item>
+		<item>A500 瓦伊文</item>
+		<item>A640 西里尔字母扩展B</item>
+		<item>A6A0 巴姆穆文字</item>
+		<item>A700 修饰用声调符号</item>
+		<item>A720 拉丁字母扩展D</item>
+		<item>A800 锡尔赫特文</item>
+		<item>A830 通用印度数字格式</item>
+		<item>A840 八思巴文</item>
+		<item>A880 索拉什特拉文</item>
+		<item>A8E0 天城文扩展</item>
+		<item>A900 克耶里字母</item>
+		<item>A930 勒姜文</item>
+		<item>A960 谚文字母扩展A</item>
+		<item>A980 爪哇文</item>
+		<item>A9E0 缅甸文扩展B</item>
+		<item>AA00 占城字母</item>
+		<item>AA60 缅甸文扩展A</item>
+		<item>AA80 越南傣文</item>
+		<item>AAE0 曼尼普尔语文字扩展</item>
+		<item>AB00 埃塞俄比亚字母扩展A</item>
+		<item>AB30 拉丁字母扩展E</item>
+		<item>AB70 切罗基文补充</item>
+		<item>ABC0 曼尼普尔语文字</item>
+		<item>AC00 谚文音节</item>
+		<item>D7B0 谚文字母扩展B</item>
+		<item>E000 私用区</item>
+		<item>F900 中日韩兼容表意文字</item>
+		<item>FB00 字母表现形式</item>
+		<item>FB50 阿拉伯字母表现形式A</item>
+		<item>FE00 异体选择符</item>
+		<item>FE10 竖排形式</item>
+		<item>FE20 组合用半符号</item>
+		<item>FE30 中日韩兼容形式</item>
+		<item>FE50 小写变体形式</item>
+		<item>FE70 阿拉伯字母表现形式B</item>
+		<item>FF00 半角及全角形式</item>
+		<item>FFF0 特殊</item>
+		<item>10000 线形文字B音节文字</item>
+		<item>10080 线形文字B表意文字</item>
+		<item>10100 爱琴数字</item>
+		<item>10140 古希腊数字</item>
+		<item>10190 古代符号</item>
+		<item>101D0 费斯托斯圆盘</item>
+		<item>10280 吕基亚字母</item>
+		<item>102A0 卡利亚字母</item>
+		<item>102E0 科普特闰余数字</item>
+		<item>10300 古意大利字母</item>
+		<item>10330 哥特字母</item>
+		<item>10350 古彼尔姆文</item>
+		<item>10380 乌加里特字母</item>
+		<item>103A0 古波斯楔形文字</item>
+		<item>10400 德赛莱特字母</item>
+		<item>10450 萧伯纳字母</item>
+		<item>10480 奥斯曼亚字母</item>
+		<item>104B0 欧塞奇字母</item>
+		<item>10500 爱尔巴桑字母</item>
+		<item>10530 高加索阿尔巴尼亚字母</item>
+		<item>10600 线形文字A</item>
+		<item>10800 塞浦路斯音节文字</item>
+		<item>10840 皇室亚拉姆字母</item>
+		<item>10860 帕尔迈拉文</item>
+		<item>10880 纳巴泰文</item>
+		<item>108E0 哈特拉字母</item>
+		<item>10900 腓尼基字母</item>
+		<item>10920 吕底亚文</item>
+		<item>10980 麦罗埃象形文字</item>
+		<item>109A0 麦罗埃草书</item>
+		<item>10A00 卡罗须提文</item>
+		<item>10A60 古南阿拉伯字母</item>
+		<item>10A80 古北阿拉伯字母</item>
+		<item>10AC0 摩尼教文</item>
+		<item>10B00 阿维斯陀文</item>
+		<item>10B40 帕提亚文碑铭体</item>
+		<item>10B60 巴列维文碑铭体</item>
+		<item>10B80 巴列维文圣诗体</item>
+		<item>10C00 古突厥文</item>
+		<item>10C80 古匈牙利文</item>
+		<item>10D00 哈乃斐罗兴亚文</item>
+		<item>10E60 鲁米数字符号</item>
+		<item>10F00 老粟特文</item>
+		<item>10F30 粟特文</item>
+		<item>11000 婆罗米文字</item>
+		<item>11080 凯提文</item>
+		<item>110D0 索朗桑朋文</item>
+		<item>11100 查克马文</item>
+		<item>11150 马哈佳尼文</item>
+		<item>11180 夏拉达文</item>
+		<item>111E0 僧伽罗古代数字</item>
+		<item>11200 克吉奇文字</item>
+		<item>11280 穆尔塔尼文</item>
+		<item>112B0 信德文</item>
+		<item>11300 格兰塔文</item>
+		<item>11400 尼瓦尔语文字</item>
+		<item>11480 迈蒂利文</item>
+		<item>11580 悉昙文</item>
+		<item>11600 莫迪文</item>
+		<item>11660 蒙古文补充</item>
+		<item>11680 泰克里文</item>
+		<item>11700 阿洪姆文</item>
+		<item>11800 多格拉文</item>
+		<item>118A0 瓦兰齐地文</item>
+		<item>11A00 札那巴札尔方形字母</item>
+		<item>11A50 索永布字母</item>
+		<item>11AC0 包钦豪文</item>
+		<item>11C00 拜克舒基文</item>
+		<item>11C70 象雄语玛钦文</item>
+		<item>11D00 马萨拉姆贡德文</item>
+		<item>11D60 贡贾拉贡德文</item>
+		<item>11EE0 望加锡文</item>
+		<item>12000 楔形文字</item>
+		<item>12400 楔形文字数字和标点符号</item>
+		<item>12480 早期王朝楔形文字</item>
+		<item>13000 埃及象形文字</item>
+		<item>14400 安纳托利亚象形文字</item>
+		<item>16800 巴姆穆文字补充</item>
+		<item>16A40 谬文</item>
+		<item>16AD0 巴萨文</item>
+		<item>16B00 杨松录苗文</item>
+		<item>16E40 梅德法伊德林文</item>
+		<item>16F00 柏格理苗文</item>
+		<item>16FE0 表意文字符号及标点</item>
+		<item>17000 西夏文</item>
+		<item>18800 西夏文部首</item>
+		<item>1B000 假名补充</item>
+		<item>1B100 假名扩展A</item>
+		<item>1B170 女书</item>
+		<item>1BC00 杜普雷速记</item>
+		<item>1BCA0 速记格式控制符</item>
+		<item>1D000 拜占庭音乐符号</item>
+		<item>1D100 音乐符号</item>
+		<item>1D200 古希腊音乐记号</item>
+		<item>1D2E0 玛雅数字</item>
+		<item>1D300 太玄经符号</item>
+		<item>1D360 算筹数字</item>
+		<item>1D400 数学字母数字符号</item>
+		<item>1D800 萨顿书写符号</item>
+		<item>1E000 格拉哥里字母补充</item>
+		<item>1E800 门德基卡库文</item>
+		<item>1E900 阿德拉姆字母</item>
+		<item>1EC70 印度西亚克数字</item>
+		<item>1EE00 阿拉伯数学字母数字符号</item>
+		<item>1F000 麻将牌</item>
+		<item>1F030 多米诺骨牌</item>
+		<item>1F0A0 扑克牌</item>
+		<item>1F100 包围式字母数字补充</item>
+		<item>1F200 包围式表意文字补充</item>
+		<item>1F300 杂类符号及图形标记</item>
+		<item>1F600 表情符号</item>
+		<item>1F650 装饰印刷符号</item>
+		<item>1F680 交通与地图符号</item>
+		<item>1F700 炼金术符号</item>
+		<item>1F780 几何图形扩展</item>
+		<item>1F800 补充箭头C</item>
+		<item>1F900 补充符号及图形标记</item>
+		<item>1FA00 象棋符号</item>
+		<item>20000 中日韩统一表意文字扩展B</item>
+		<item>2A700 中日韩统一表意文字扩展C</item>
+		<item>2B740 中日韩统一表意文字扩展D</item>
+		<item>2B820 中日韩统一表意文字扩展E</item>
+		<item>2CEB0 中日韩统一表意文字扩展F</item>
+		<item>2F800 中日韩兼容表意文字增补</item>
+		<item>E0000 标签</item>
+		<item>E0100 异体选择符补充</item>
+		<item>F0000 补充私用区A</item>
+		<item>100000 补充私用区B</item>
+	</string-array>
+	<string name="general">常规</string>
+	<string name="appearance">外观</string>
+	<string name="behaviour">行为</string>
+	<string name="textsize_desc">文本框文字大小</string>
+	<string name="column_desc">网格列数</string>
+	<string name="columnl_desc">网格列数（横屏）</string>
+	<string-array name="column">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string name="version_desc">Unicode 版本</string>
+	<string-array name="version">
+		<item>6.0.0</item>
+		<item>6.1.0</item>
+		<item>6.2.0</item>
+		<item>6.3.0</item>
+		<item>7.0.0</item>
+		<item>8.0.0</item>
+		<item>9.0.0</item>
+		<item>10.0.0</item>
+		<item>11.0.0</item>
+		<item>最新 (11.0.0)</item>
+	</string-array>
+	<string name="download_desc">下载 Noto 字体…</string>
+	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="tabs_desc">标签设置…</string>
+	<string name="shown_desc">已显示标签</string>
+	<string name="hidden_desc">已隐藏标签</string>
+	<string name="single_rec_desc">“最近使用”标签列数</string>
+	<string name="single_list_desc">“列表”标签列数</string>
+	<string name="single_find_desc">“查找”标签列数</string>
+	<string name="single_fav_desc">“收藏”标签列数</string>
+	<string name="single_edt_desc">“输入”标签列数</string>
+	<string name="single_emoji_desc">“绘文字”标签列数</string>
+	<string-array name="single">
+		<item>多列，仅显示字符</item>
+		<item>单列，显示描述</item>
+	</string-array>
+	<string name="padding_desc">网格内留白</string>
+	<string name="gridsize_desc">网格文字大小</string>
+	<string name="viewsize_desc">大视图文字大小</string>
+	<string name="checker_desc">大视图方格不透明度（百分比）</string>
+	<string name="lines_desc">大视图显示字体参考线</string>
+	<string name="shrink_desc">缩小字体以适应宽度</string>
+	<string name="recent_desc">“最近使用”列表最大数量</string>
+	<string name="theme_desc">主题</string>
+	<string-array name="theme">
+		<item>暗色</item>
+		<item>亮色</item>
+		<item>亮色 + 暗色标题</item>
+	</string-array>
+	<string name="theme_title">应用重启后生效</string>
+	<string name="list_title">“列表”标签不能隐藏</string>
+	<string name="scroll_desc">界面滚动</string>
+	<string-array name="scroll">
+		<item>从不</item>
+		<item>仅横屏</item>
+		<item>总是</item>
+	</string-array>
+	<string name="ime_desc">禁用输入法</string>
+	<string name="clear_desc">显示清除按钮</string>
+	<string name="clear" translatable="false">⌧</string>
+	<string name="erase" translatable="false">⌫</string>
+	<string name="config" translatable="false">⚙</string>
+	<string name="up" translatable="false">⌃</string>
+	<string name="down" translatable="false">⌄</string>
+	<string name="notacharacter" translatable="false">&lt;未定义字符&gt;</string>
+	<string name="modifier" translatable="false">修饰</string>
+	<string name="malformed">压缩包中包含畸形文件名</string>
+	<string name="legal">法律信息</string>
+	<string name="legal_uni">Unicode®</string>
+	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。
+Copyright © 1991-2018 Unicode, Inc. 保留所有权利。
+根据以下使用条款分发
+http://www.unicode.org/copyright.html.</string>
+	<string name="legal_app">UnicodePad 2.4.0</string>
+	<string name="legal_app2">UnicodePad 使用 Apache 2.0 许可证
+https://github.com/Ryosuke839/UnicodePad</string>
+</resources>

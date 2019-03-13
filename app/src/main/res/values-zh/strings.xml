@@ -42,77 +42,77 @@
 	<string name="cantread">无法读取；应用可能没有获得读取权限。</string>
 	<string name="denied">请求被拒绝。为浏览内部存储，请在权限设置中允许应用读取手机存储。</string>
 	<string-array name="codes" tools:ignore="MissingTranslation">
-		<item>0 基本拉丁字母</item>
-		<item>80 拉丁字母补充1</item>
-		<item>100 拉丁字母扩展A</item>
-		<item>180 拉丁字母扩展B</item>
+		<item>0 基本拉丁文字</item>
+		<item>80 拉丁文字补充1</item>
+		<item>100 拉丁文字扩展A</item>
+		<item>180 拉丁文字扩展B</item>
 		<item>250 国际音标扩展</item>
-		<item>2B0 间隔修饰字符</item>
+		<item>2B0 占位修饰字符</item>
 		<item>300 组合附加记号</item>
-		<item>370 希腊字母及科普特字母</item>
-		<item>400 西里尔字母</item>
-		<item>500 西里尔字母补充</item>
-		<item>530 亚美尼亚字母</item>
-		<item>590 希伯来字母</item>
-		<item>600 阿拉伯字母</item>
-		<item>700 叙利亚字母</item>
-		<item>750 阿拉伯字母补充</item>
-		<item>780 它拿字母</item>
-		<item>7C0 西非书面字母</item>
-		<item>800 撒马利亚字母</item>
-		<item>840 曼达安字母</item>
-		<item>860 叙利亚字母补充</item>
-		<item>8A0 阿拉伯字母扩展A</item>
-		<item>900 天城文</item>
-		<item>980 孟加拉文</item>
-		<item>A00 古木基文</item>
-		<item>A80 古吉拉特文</item>
-		<item>B00 奥里亚文</item>
-		<item>B80 泰米尔文</item>
-		<item>C00 泰卢固文</item>
-		<item>C80 卡纳达文</item>
-		<item>D00 马拉雅拉姆文</item>
-		<item>D80 僧伽罗文</item>
+		<item>370 希腊文字及科普特文字</item>
+		<item>400 西里尔文字</item>
+		<item>500 西里尔文字补充</item>
+		<item>530 亚美尼亚文字</item>
+		<item>590 希伯来文字</item>
+		<item>600 阿拉伯文字</item>
+		<item>700 叙利亚文字</item>
+		<item>750 阿拉伯文字补充</item>
+		<item>780 它拿文字</item>
+		<item>7C0 西非书面文字</item>
+		<item>800 撒马利亚文字</item>
+		<item>840 曼达安文字</item>
+		<item>860 叙利亚文字补充</item>
+		<item>8A0 阿拉伯文字扩展A</item>
+		<item>900 天城文字</item>
+		<item>980 孟加拉文字</item>
+		<item>A00 古木基文字</item>
+		<item>A80 古吉拉特文字</item>
+		<item>B00 奥里亚文字</item>
+		<item>B80 泰米尔文字</item>
+		<item>C00 泰卢固文字</item>
+		<item>C80 卡纳达文字</item>
+		<item>D00 马拉雅拉姆文字</item>
+		<item>D80 僧伽罗文字</item>
 		<item>E00 泰文</item>
-		<item>E80 老挝文</item>
+		<item>E80 老挝文字</item>
 		<item>F00 藏文</item>
-		<item>1000 缅甸文</item>
-		<item>10A0 格鲁吉亚字母</item>
+		<item>1000 缅甸文字</item>
+		<item>10A0 格鲁吉亚文字</item>
 		<item>1100 谚文字母</item>
-		<item>1200 埃塞俄比亚字母</item>
-		<item>1380 埃塞俄比亚字母补充</item>
-		<item>13A0 切罗基文</item>
+		<item>1200 埃塞俄比亚文字</item>
+		<item>1380 埃塞俄比亚文字补充</item>
+		<item>13A0 切罗基文字</item>
 		<item>1400 统一加拿大原住民音节文字</item>
-		<item>1680 欧甘字母</item>
-		<item>16A0 卢恩字母</item>
-		<item>1700 他加禄语字母</item>
-		<item>1720 哈努诺文</item>
-		<item>1740 布希德文</item>
-		<item>1760 塔格巴努瓦字母</item>
-		<item>1780 高棉文</item>
-		<item>1800 传统蒙古文</item>
+		<item>1680 欧甘文字</item>
+		<item>16A0 卢恩文字</item>
+		<item>1700 他加禄文字</item>
+		<item>1720 哈努诺文字</item>
+		<item>1740 布希德文字</item>
+		<item>1760 塔格巴努瓦文字</item>
+		<item>1780 高棉文字</item>
+		<item>1800 蒙古文字</item>
 		<item>18B0 统一加拿大原住民音节文字扩展</item>
-		<item>1900 林布文</item>
+		<item>1900 林布文字</item>
 		<item>1950 德宏傣文</item>
-		<item>1980 西双版纳新傣文</item>
+		<item>1980 新傣仂文</item>
 		<item>19E0 高棉文符号</item>
-		<item>1A00 布吉文</item>
-		<item>1A20 老傣文</item>
+		<item>1A00 布吉文字</item>
+		<item>1A20 兰纳文字</item>
 		<item>1AB0 组合附加记号扩展</item>
-		<item>1B00 巴厘文</item>
-		<item>1B80 巽他文</item>
-		<item>1BC0 巴塔克文</item>
-		<item>1C00 绒巴文</item>
+		<item>1B00 巴厘文字</item>
+		<item>1B80 巽他文字</item>
+		<item>1BC0 巴塔克文字</item>
+		<item>1C00 雷布查文字</item>
 		<item>1C50 桑塔利语文字</item>
-		<item>1C80 西里尔字母扩展C</item>
-		<item>1C90 格鲁吉亚字母扩展</item>
-		<item>1CC0 巽他文补充</item>
-		<item>1CD0 吠陀梵语文字扩展</item>
+		<item>1C80 西里尔文字扩展C</item>
+		<item>1C90 格鲁吉亚文字扩展</item>
+		<item>1CC0 巽他文字补充</item>
+		<item>1CD0 吠陀文字扩展</item>
 		<item>1D00 语音学文字扩展</item>
 		<item>1D80 语音学文字扩展补充</item>
 		<item>1DC0 组合附加记号补充</item>
 		<item>1E00 拉丁字母扩展补充</item>
-		<item>1F00 希腊文扩展</item>
+		<item>1F00 希腊文字扩展</item>
 		<item>2000 常用标点符号</item>
 		<item>2070 上标及下标</item>
 		<item>20A0 货币符号</item>
@@ -122,7 +122,7 @@
 		<item>2190 箭头</item>
 		<item>2200 数学运算符</item>
 		<item>2300 杂类技术符号</item>
-		<item>2400 控制符号</item>
+		<item>2400 控制图</item>
 		<item>2440 光学识别符号</item>
 		<item>2460 包围式字母数字</item>
 		<item>2500 制表符</item>
@@ -137,13 +137,13 @@
 		<item>2980 杂类数学符号B</item>
 		<item>2A00 补充数学运算符</item>
 		<item>2B00 杂类标志与箭头</item>
-		<item>2C00 格拉哥里字母</item>
+		<item>2C00 格拉哥里文字</item>
 		<item>2C60 拉丁字母扩展C</item>
-		<item>2C80 科普特字母</item>
-		<item>2D00 格鲁吉亚字母补充</item>
-		<item>2D30 提非纳字母</item>
-		<item>2D80 埃塞俄比亚字母扩展</item>
-		<item>2DE0 西里尔字母扩展A</item>
+		<item>2C80 科普特文字</item>
+		<item>2D00 格鲁吉亚文字补充</item>
+		<item>2D30 提非纳文字</item>
+		<item>2D80 埃塞俄比亚文字扩展</item>
+		<item>2DE0 西里尔文字扩展A</item>
 		<item>2E00 补充标点符号</item>
 		<item>2E80 中日韩汉字部首补充</item>
 		<item>2F00 康熙部首</item>
@@ -155,143 +155,143 @@
 		<item>3130 谚文兼容字母</item>
 		<item>3190 汉文训读返点</item>
 		<item>31A0 注音符号扩展</item>
-		<item>31C0 中日韩笔划</item>
+		<item>31C0 中日韩汉字笔划</item>
 		<item>31F0 片假名拼音扩展</item>
 		<item>3200 包围式中日韩字符及月份</item>
 		<item>3300 中日韩兼容字符</item>
-		<item>3400 中日韩统一表意文字扩展A</item>
+		<item>3400 中日韩统一汉字扩展A</item>
 		<item>4DC0 易经六十四卦符号</item>
-		<item>4E00 中日韩统一表意文字</item>
+		<item>4E00 中日韩统一汉字</item>
 		<item>A000 彝文音节</item>
 		<item>A490 彝文字根</item>
 		<item>A4D0 老傈僳文</item>
-		<item>A500 瓦伊文</item>
-		<item>A640 西里尔字母扩展B</item>
+		<item>A500 瓦伊文字</item>
+		<item>A640 西里尔文字扩展B</item>
 		<item>A6A0 巴姆穆文字</item>
 		<item>A700 修饰用声调符号</item>
 		<item>A720 拉丁字母扩展D</item>
-		<item>A800 锡尔赫特文</item>
+		<item>A800 锡尔赫特文字</item>
 		<item>A830 通用印度数字格式</item>
-		<item>A840 八思巴文</item>
-		<item>A880 索拉什特拉文</item>
-		<item>A8E0 天城文扩展</item>
-		<item>A900 克耶里字母</item>
-		<item>A930 勒姜文</item>
+		<item>A840 八思巴文字</item>
+		<item>A880 索拉什特拉文字</item>
+		<item>A8E0 天城文字扩展</item>
+		<item>A900 克耶里文字</item>
+		<item>A930 勒姜文字</item>
 		<item>A960 谚文字母扩展A</item>
-		<item>A980 爪哇文</item>
-		<item>A9E0 缅甸文扩展B</item>
-		<item>AA00 占城字母</item>
-		<item>AA60 缅甸文扩展A</item>
+		<item>A980 爪哇文字</item>
+		<item>A9E0 缅甸文字扩展B</item>
+		<item>AA00 占城文字</item>
+		<item>AA60 缅甸文字扩展A</item>
 		<item>AA80 越南傣文</item>
-		<item>AAE0 曼尼普尔语文字扩展</item>
-		<item>AB00 埃塞俄比亚字母扩展A</item>
+		<item>AAE0 曼尼普尔文字扩展</item>
+		<item>AB00 埃塞俄比亚文字扩展A</item>
 		<item>AB30 拉丁字母扩展E</item>
-		<item>AB70 切罗基文补充</item>
-		<item>ABC0 曼尼普尔语文字</item>
+		<item>AB70 切罗基文字补充</item>
+		<item>ABC0 曼尼普尔文字</item>
 		<item>AC00 谚文音节</item>
 		<item>D7B0 谚文字母扩展B</item>
 		<item>E000 私用区</item>
-		<item>F900 中日韩兼容表意文字</item>
-		<item>FB00 字母表现形式</item>
-		<item>FB50 阿拉伯字母表现形式A</item>
+		<item>F900 中日韩兼容汉字</item>
+		<item>FB00 字母变体</item>
+		<item>FB50 阿拉伯文字变体A</item>
 		<item>FE00 异体选择符</item>
 		<item>FE10 竖排形式</item>
-		<item>FE20 组合用半符号</item>
+		<item>FE20 组合用半记号</item>
 		<item>FE30 中日韩兼容形式</item>
 		<item>FE50 小写变体形式</item>
-		<item>FE70 阿拉伯字母表现形式B</item>
+		<item>FE70 阿拉伯文字变体B</item>
 		<item>FF00 半角及全角形式</item>
-		<item>FFF0 特殊</item>
+		<item>FFF0 特殊字符</item>
 		<item>10000 线形文字B音节文字</item>
 		<item>10080 线形文字B表意文字</item>
 		<item>10100 爱琴数字</item>
 		<item>10140 古希腊数字</item>
 		<item>10190 古代符号</item>
 		<item>101D0 费斯托斯圆盘</item>
-		<item>10280 吕基亚字母</item>
-		<item>102A0 卡利亚字母</item>
+		<item>10280 吕基亚文字</item>
+		<item>102A0 卡利亚文字</item>
 		<item>102E0 科普特闰余数字</item>
-		<item>10300 古意大利字母</item>
-		<item>10330 哥特字母</item>
-		<item>10350 古彼尔姆文</item>
-		<item>10380 乌加里特字母</item>
+		<item>10300 古意大利文字</item>
+		<item>10330 哥特文字</item>
+		<item>10350 古彼尔姆文字</item>
+		<item>10380 乌加里特文字</item>
 		<item>103A0 古波斯楔形文字</item>
-		<item>10400 德赛莱特字母</item>
-		<item>10450 萧伯纳字母</item>
-		<item>10480 奥斯曼亚字母</item>
-		<item>104B0 欧塞奇字母</item>
-		<item>10500 爱尔巴桑字母</item>
-		<item>10530 高加索阿尔巴尼亚字母</item>
+		<item>10400 德塞雷特文字</item>
+		<item>10450 萧伯纳文字</item>
+		<item>10480 奥斯曼亚文字</item>
+		<item>104B0 欧塞奇文字</item>
+		<item>10500 爱尔巴桑文字</item>
+		<item>10530 高加索阿尔巴尼亚文字</item>
 		<item>10600 线形文字A</item>
 		<item>10800 塞浦路斯音节文字</item>
-		<item>10840 皇室亚拉姆字母</item>
-		<item>10860 帕尔迈拉文</item>
-		<item>10880 纳巴泰文</item>
-		<item>108E0 哈特拉字母</item>
-		<item>10900 腓尼基字母</item>
-		<item>10920 吕底亚文</item>
-		<item>10980 麦罗埃象形文字</item>
-		<item>109A0 麦罗埃草书</item>
-		<item>10A00 卡罗须提文</item>
-		<item>10A60 古南阿拉伯字母</item>
-		<item>10A80 古北阿拉伯字母</item>
-		<item>10AC0 摩尼教文</item>
-		<item>10B00 阿维斯陀文</item>
-		<item>10B40 帕提亚文碑铭体</item>
-		<item>10B60 巴列维文碑铭体</item>
-		<item>10B80 巴列维文圣诗体</item>
-		<item>10C00 古突厥文</item>
-		<item>10C80 古匈牙利文</item>
-		<item>10D00 哈乃斐罗兴亚文</item>
+		<item>10840 皇室亚拉姆文字</item>
+		<item>10860 帕尔迈拉文字</item>
+		<item>10880 纳巴泰文字</item>
+		<item>108E0 哈特拉文字</item>
+		<item>10900 腓尼基文字</item>
+		<item>10920 吕底亚文字</item>
+		<item>10980 麦罗埃圣书体文字</item>
+		<item>109A0 麦罗埃草书体文字</item>
+		<item>10A00 佉卢虱咤文字</item>
+		<item>10A60 古南阿拉伯文字</item>
+		<item>10A80 古北阿拉伯文字</item>
+		<item>10AC0 摩尼文字</item>
+		<item>10B00 阿维斯陀文字</item>
+		<item>10B40 帕提亚碑铭体文字</item>
+		<item>10B60 巴列维碑铭体文字</item>
+		<item>10B80 巴列维圣诗体文字</item>
+		<item>10C00 古突厥文字</item>
+		<item>10C80 古匈牙利文字</item>
+		<item>10D00 哈乃斐罗兴亚文字</item>
 		<item>10E60 鲁米数字符号</item>
-		<item>10F00 老粟特文</item>
-		<item>10F30 粟特文</item>
+		<item>10F00 古粟特文字</item>
+		<item>10F30 粟特文字</item>
 		<item>11000 婆罗米文字</item>
-		<item>11080 凯提文</item>
-		<item>110D0 索朗桑朋文</item>
-		<item>11100 查克马文</item>
-		<item>11150 马哈佳尼文</item>
-		<item>11180 夏拉达文</item>
+		<item>11080 凯提文字</item>
+		<item>110D0 索拉僧平文字</item>
+		<item>11100 查克马文字</item>
+		<item>11150 马哈佳尼文字</item>
+		<item>11180 夏拉达文字</item>
 		<item>111E0 僧伽罗古代数字</item>
 		<item>11200 克吉奇文字</item>
-		<item>11280 穆尔塔尼文</item>
-		<item>112B0 信德文</item>
-		<item>11300 格兰塔文</item>
-		<item>11400 尼瓦尔语文字</item>
-		<item>11480 迈蒂利文</item>
-		<item>11580 悉昙文</item>
-		<item>11600 莫迪文</item>
-		<item>11660 蒙古文补充</item>
-		<item>11680 泰克里文</item>
-		<item>11700 阿洪姆文</item>
-		<item>11800 多格拉文</item>
-		<item>118A0 瓦兰齐地文</item>
-		<item>11A00 札那巴札尔方形字母</item>
-		<item>11A50 索永布字母</item>
-		<item>11AC0 包钦豪文</item>
-		<item>11C00 拜克舒基文</item>
-		<item>11C70 象雄语玛钦文</item>
-		<item>11D00 马萨拉姆贡德文</item>
-		<item>11D60 贡贾拉贡德文</item>
-		<item>11EE0 望加锡文</item>
+		<item>11280 穆尔塔尼文字</item>
+		<item>112B0 信德文字</item>
+		<item>11300 格兰塔文字</item>
+		<item>11400 尼瓦文字</item>
+		<item>11480 迈蒂利文字</item>
+		<item>11580 悉昙文字</item>
+		<item>11600 莫迪文字</item>
+		<item>11660 蒙古文字补充</item>
+		<item>11680 泰克里文字</item>
+		<item>11700 阿洪姆文字</item>
+		<item>11800 多格拉文字</item>
+		<item>118A0 瓦兰齐地文字</item>
+		<item>11A00 札那巴札尔方形文字</item>
+		<item>11A50 索永布文字</item>
+		<item>11AC0 包钦豪文字</item>
+		<item>11C00 拜克舒基文字</item>
+		<item>11C70 玛钦文字</item>
+		<item>11D00 马萨拉姆贡德文字</item>
+		<item>11D60 贡贾拉贡德文字</item>
+		<item>11EE0 望加锡文字</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
 		<item>12480 早期王朝楔形文字</item>
-		<item>13000 埃及象形文字</item>
+		<item>13000 埃及圣书体文字</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
-		<item>16A40 谬文</item>
-		<item>16AD0 巴萨文</item>
+		<item>16A40 默文</item>
+		<item>16AD0 巴萨文字</item>
 		<item>16B00 杨松录苗文</item>
-		<item>16E40 梅德法伊德林文</item>
+		<item>16E40 梅德法伊德林文字</item>
 		<item>16F00 柏格理苗文</item>
 		<item>16FE0 表意文字符号及标点</item>
-		<item>17000 西夏文</item>
-		<item>18800 西夏文部首</item>
+		<item>17000 西夏文字</item>
+		<item>18800 西夏文字部首</item>
 		<item>1B000 假名补充</item>
 		<item>1B100 假名扩展A</item>
 		<item>1B170 女书</item>
-		<item>1BC00 杜普雷速记</item>
+		<item>1BC00 杜普雷速记文字</item>
 		<item>1BCA0 速记格式控制符</item>
 		<item>1D000 拜占庭音乐符号</item>
 		<item>1D100 音乐符号</item>
@@ -301,11 +301,11 @@
 		<item>1D360 算筹数字</item>
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿书写符号</item>
-		<item>1E000 格拉哥里字母补充</item>
-		<item>1E800 门德基卡库文</item>
-		<item>1E900 阿德拉姆字母</item>
+		<item>1E000 格拉哥里文字补充</item>
+		<item>1E800 门德基卡库文字</item>
+		<item>1E900 阿德拉姆文字</item>
 		<item>1EC70 印度西亚克数字</item>
-		<item>1EE00 阿拉伯数学字母数字符号</item>
+		<item>1EE00 阿拉伯数学用字母符号</item>
 		<item>1F000 麻将牌</item>
 		<item>1F030 多米诺骨牌</item>
 		<item>1F0A0 扑克牌</item>
@@ -316,16 +316,16 @@
 		<item>1F650 装饰印刷符号</item>
 		<item>1F680 交通与地图符号</item>
 		<item>1F700 炼金术符号</item>
-		<item>1F780 几何图形扩展</item>
+		<item>1F780 几何形状扩展</item>
 		<item>1F800 补充箭头C</item>
 		<item>1F900 补充符号及图形标记</item>
 		<item>1FA00 象棋符号</item>
-		<item>20000 中日韩统一表意文字扩展B</item>
-		<item>2A700 中日韩统一表意文字扩展C</item>
-		<item>2B740 中日韩统一表意文字扩展D</item>
-		<item>2B820 中日韩统一表意文字扩展E</item>
-		<item>2CEB0 中日韩统一表意文字扩展F</item>
-		<item>2F800 中日韩兼容表意文字增补</item>
+		<item>20000 中日韩统一汉字扩展B</item>
+		<item>2A700 中日韩统一汉字扩展C</item>
+		<item>2B740 中日韩统一汉字扩展D</item>
+		<item>2B820 中日韩统一汉字扩展E</item>
+		<item>2CEB0 中日韩统一汉字扩展F</item>
+		<item>2F800 中日韩兼容汉字补充</item>
 		<item>E0000 标签</item>
 		<item>E0100 异体选择符补充</item>
 		<item>F0000 补充私用区A</item>

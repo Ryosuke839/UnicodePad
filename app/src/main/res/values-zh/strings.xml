@@ -116,7 +116,7 @@
 		<item>2000 常用标点符号</item>
 		<item>2070 上标及下标</item>
 		<item>20A0 货币符号</item>
-		<item>20D0 标志型组合附加记号</item>
+		<item>20D0 标志用组合附加记号</item>
 		<item>2100 类字母符号</item>
 		<item>2150 数字形式</item>
 		<item>2190 箭头</item>
@@ -230,7 +230,7 @@
 		<item>108E0 哈特拉文字</item>
 		<item>10900 腓尼基文字</item>
 		<item>10920 吕底亚文字</item>
-		<item>10980 麦罗埃圣书体文字</item>
+		<item>10980 麦罗埃象形文字</item>
 		<item>109A0 麦罗埃草书体文字</item>
 		<item>10A00 佉卢虱咤文字</item>
 		<item>10A60 古南阿拉伯文字</item>
@@ -277,7 +277,7 @@
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
 		<item>12480 早期王朝楔形文字</item>
-		<item>13000 埃及圣书体文字</item>
+		<item>13000 埃及象形文字</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
 		<item>16A40 默文</item>
@@ -298,7 +298,7 @@
 		<item>1D200 古希腊音乐记号</item>
 		<item>1D2E0 玛雅数字</item>
 		<item>1D300 太玄经符号</item>
-		<item>1D360 算筹数字</item>
+		<item>1D360 算筹</item>
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿手语符号</item>
 		<item>1E000 格拉哥里文字补充</item>

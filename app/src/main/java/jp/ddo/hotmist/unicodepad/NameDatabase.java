@@ -219,7 +219,7 @@ class NameDatabase
 				cur.close();
 				Cursor cur2 = db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null);
 				cur2.moveToFirst();
-				if (cur2.getInt(0) != 32304)
+				if (cur2.getInt(0) != 32853)
 				{
 					cur2.close();
 					db.close();
@@ -228,7 +228,7 @@ class NameDatabase
 				cur2.close();
 				Cursor cur3 = db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null);
 				cur3.moveToFirst();
-				if (cur3.getInt(0) != 2709)
+				if (cur3.getInt(0) != 3010)
 				{
 					cur3.close();
 					db.close();

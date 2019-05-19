@@ -16,11 +16,11 @@
  -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">UnicodePad</string>
-	<string name="delete">Del</string>
+	<string name="delete">Delete</string>
 	<string name="desc">Detail</string>
 	<string name="find">Find</string>
 	<string name="fhint">Enter a character name</string>
-	<string name="inlist">Find in List</string>
+	<string name="inlist">Find in list</string>
 	<string name="copied">Copied to clipboard</string>
 	<string name="finish">Enter</string>
 	<string name="share">Share</string>
@@ -39,8 +39,8 @@
 	<string name="code">Codepoint</string>
 	<string name="nocode">Invalid codepoint</string>
 	<string name="cantopen">Cannot open the font</string>
-	<string name="cantread">Cannot access, The application may not have permission to read</string>
-	<string name="denied">You have denied the access. To browse SD card, please grant the Storage permission from Apps setting</string>
+	<string name="cantread">Cannot access; the application may not have permission to read</string>
+	<string name="denied">You have denied access. To browse SD card, please grant the storage permission from Apps setting.</string>
 	<string-array name="codes" tools:ignore="MissingTranslation">
 		<item>0 Basic Latin</item>
 		<item>80 Latin-1 Supplement</item>
@@ -371,7 +371,7 @@
 	<string name="single_edt_desc">Columns in input tab</string>
 	<string name="single_emoji_desc">Columns in emoji tab</string>
 	<string-array name="single">
-		<item>Multiple column only with character</item>
+		<item>Multiple columns only with characters</item>
 		<item>Single column with description</item>
 	</string-array>
 	<string name="padding_desc">Padding of grid</string>
@@ -380,7 +380,7 @@
 	<string name="checker_desc">Checker opacity in large view (%)</string>
 	<string name="lines_desc">Show font metrics in large view</string>
 	<string name="shrink_desc">Shrink font to fit width</string>
-	<string name="recent_desc">Max number of recent list</string>
+	<string name="recent_desc">Maximum number of recent list</string>
 	<string name="theme_desc">Theme</string>
 	<string-array name="theme">
 		<item>Dark</item>

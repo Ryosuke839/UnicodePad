@@ -408,13 +408,6 @@
 	</string-array>
 	<string name="ime_desc">禁用输入法</string>
 	<string name="clear_desc">显示清除按钮</string>
-	<string name="clear" translatable="false">⌧</string>
-	<string name="erase" translatable="false">⌫</string>
-	<string name="config" translatable="false">⚙</string>
-	<string name="up" translatable="false">⌃</string>
-	<string name="down" translatable="false">⌄</string>
-	<string name="notacharacter" translatable="false">&lt;未定义字符&gt;</string>
-	<string name="modifier" translatable="false">修饰</string>
 	<string name="malformed">压缩包中包含非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni">Unicode®</string>

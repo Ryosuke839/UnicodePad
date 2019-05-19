@@ -16,6 +16,7 @@
 
 package jp.ddo.hotmist.unicodepad;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -24,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -86,12 +88,12 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		return (adapter.getItemId(position) != -1 ? String.format("U+%04X ", adapter.getItemId(position)) : adapter.getItemString(position) + " ") + adapter.getItem(position);
 	}
 
-	private static final String[] cols = {"name", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
+	private static final String[] cols = {"name", "utf8", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat"};
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
-	private static final String[] mods = {null, "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
-	private static final String[] emjs = {"name", "version", "grp", "subgrp", "", "id"};
+	private static final String[] mods = {null, "UTF-8: ", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
+	private static final String[] emjs = {"name", "utf8", "version", "grp", "subgrp", "", "id"};
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
-	private static final String[] mode = {null, "from Unicode ", "Group: ", "Subgroup: ", null, ""};
+	private static final String[] mode = {null, "UTF-8: ", "from Unicode ", "Group: ", "Subgroup: ", null, ""};
 
 	@SuppressLint("NewApi")
 	@Override
@@ -129,11 +131,11 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				return true;
 			}
 		};
-		for (int i = 0; i < (!emoji ? 9 : 6); ++i)
+		for (int i = 0; i < (!emoji ? 10 : 7); ++i)
 		{
-			if (emoji && i == 4)
+			if (emoji && i == 5)
 				continue;
-			if (i == 1)
+			if (i == 2)
 			{
 				int v = !emoji ? db.getint(itemid, cols[i]) : db.getint(adapter.getItemString(position), emjs[i]);
 				TextView desc = new TextView(context);
@@ -142,7 +144,19 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				layout.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				continue;
 			}
-			String r = !emoji ? db.get(itemid, cols[i]) : db.get(adapter.getItemString(position), emjs[i]);
+			String r;
+			if (i == 1)
+			{
+				byte[] a = ((String)adapter.getItem(position)).getBytes(StandardCharsets.UTF_8);
+				StringBuilder sb = new StringBuilder(a.length * 3);
+				for(byte b : a)
+					sb.append(String.format("%02X ", b));
+				sb.deleteCharAt(a.length * 3 - 1);
+				r = sb.toString();
+			} else
+			{
+				r = !emoji ? db.get(itemid, cols[i]) : db.get(adapter.getItemString(position), emjs[i]);
+			}
 			if (r == null && i == 0)
 			{
 				TextView desc = new TextView(context);
@@ -152,7 +166,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			}
 			if (r == null)
 				continue;
-			String[] l = r.split(emoji && i == 5 ? " " : "\n");
+			String[] l = r.split(emoji && i == 6 ? " " : "\n");
 			for (String s : l)
 			{
 				if (i == 0)
@@ -194,11 +208,11 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				it.setGravity(Gravity.CENTER_VERTICAL);
 				it.setText((!emoji ? mods : mode)[i]);
 				hl.addView(it, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-				if (i < 5)
+				if (i < 6)
 				{
 					TextView desc = new TextView(context);
 					desc.setText(s);
-					if (i != 2 && Build.VERSION.SDK_INT >= 11)
+					if (Build.VERSION.SDK_INT >= 11)
 						desc.setTextIsSelectable(true);
 					hl.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
 				}
@@ -210,7 +224,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 					Scanner sc = new Scanner(s);
 					for (int j = 0; sc.hasNext(); ++j)
 					{
-						if (i == 8 && j == 0 && s.charAt(0) == '<')
+						if (i == 9 && j == 0 && s.charAt(0) == '<')
 						{
 							ns = sc.next();
 							continue;
@@ -218,13 +232,13 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 						int tgt = sc.nextInt(16);
 						cs += String.valueOf(Character.toChars(tgt));
 						ps += String.format("U+%04X ", tgt);
-						if (i == 5)
+						if (i == 6)
 						{
 							String n = db.get(tgt, "name");
 							ns = n != null ? n : "<not a character>";
 							break;
 						}
-						if (i == 6 && j == 1)
+						if (i == 7 && j == 1)
 						{
 							sc.useDelimiter("\n");
 							sc.skip(" ");

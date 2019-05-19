@@ -246,6 +246,7 @@
 		<item>10E60 Rumi Numeral Symbols</item>
 		<item>10F00 Old Sogdian</item>
 		<item>10F30 Sogdian</item>
+		<item>10FE0 Elymaic</item>
 		<item>11000 Brahmi</item>
 		<item>11080 Kaithi</item>
 		<item>110D0 Sora Sompeng</item>
@@ -266,6 +267,7 @@
 		<item>11700 Ahom</item>
 		<item>11800 Dogra</item>
 		<item>118A0 Warang Citi</item>
+		<item>119A0 Nandinagari</item>
 		<item>11A00 Zanabazar Square</item>
 		<item>11A50 Soyombo</item>
 		<item>11AC0 Pau Cin Hau</item>
@@ -274,10 +276,12 @@
 		<item>11D00 Masaram Gondi</item>
 		<item>11D60 Gunjala Gondi</item>
 		<item>11EE0 Makasar</item>
+		<item>11FC0 Tamil Supplement</item>
 		<item>12000 Cuneiform</item>
 		<item>12400 Cuneiform Numbers and Punctuation</item>
 		<item>12480 Early Dynastic Cuneiform</item>
 		<item>13000 Egyptian Hieroglyphs</item>
+		<item>13430 Egyptian Hieroglyph Format Controls</item>
 		<item>14400 Anatolian Hieroglyphs</item>
 		<item>16800 Bamum Supplement</item>
 		<item>16A40 Mro</item>
@@ -290,6 +294,7 @@
 		<item>18800 Tangut Components</item>
 		<item>1B000 Kana Supplement</item>
 		<item>1B100 Kana Extended-A</item>
+		<item>1B130 Small Kana Extension</item>
 		<item>1B170 Nushu</item>
 		<item>1BC00 Duployan</item>
 		<item>1BCA0 Shorthand Format Controls</item>
@@ -302,9 +307,12 @@
 		<item>1D400 Mathematical Alphanumeric Symbols</item>
 		<item>1D800 Sutton SignWriting</item>
 		<item>1E000 Glagolitic Supplement</item>
+		<item>1E100 Nyiakeng Puachue Hmong</item>
+		<item>1E2C0 Wancho</item>
 		<item>1E800 Mende Kikakui</item>
 		<item>1E900 Adlam</item>
 		<item>1EC70 Indic Siyaq Numbers</item>
+		<item>1ED00 Ottoman Siyaq Numbers</item>
 		<item>1EE00 Arabic Mathematical Alphabetic Symbols</item>
 		<item>1F000 Mahjong Tiles</item>
 		<item>1F030 Domino Tiles</item>
@@ -320,6 +328,7 @@
 		<item>1F800 Supplemental Arrows-C</item>
 		<item>1F900 Supplemental Symbols and Pictographs</item>
 		<item>1FA00 Chess Symbols</item>
+		<item>1FA70 Symbols and Pictographs Extended-A</item>
 		<item>20000 CJK Unified Ideographs Extension B</item>
 		<item>2A700 CJK Unified Ideographs Extension C</item>
 		<item>2B740 CJK Unified Ideographs Extension D</item>
@@ -357,7 +366,9 @@
 		<item>9.0.0</item>
 		<item>10.0.0</item>
 		<item>11.0.0</item>
-		<item>Latest (11.0.0)</item>
+		<item>12.0.0</item>
+		<item>12.1.0</item>
+		<item>Latest (12.1.0)</item>
 	</string-array>
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
@@ -411,7 +422,7 @@
 Copyright © 1991-2018 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.4.0</string>
+	<string name="legal_app">UnicodePad 2.5.0</string>
 	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

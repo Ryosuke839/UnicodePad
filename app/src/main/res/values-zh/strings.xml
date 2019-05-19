@@ -246,6 +246,7 @@
 		<item>10E60 鲁米数字符号</item>
 		<item>10F00 古粟特文字</item>
 		<item>10F30 粟特文字</item>
+		<item>10FE0 Elymaic</item>
 		<item>11000 婆罗米文字</item>
 		<item>11080 凯提文字</item>
 		<item>110D0 索拉僧平文字</item>
@@ -266,6 +267,7 @@
 		<item>11700 阿洪姆文字</item>
 		<item>11800 多格拉文字</item>
 		<item>118A0 瓦兰齐地文字</item>
+		<item>119A0 Nandinagari</item>
 		<item>11A00 札那巴札尔方形文字</item>
 		<item>11A50 索永布文字</item>
 		<item>11AC0 包钦豪文字</item>
@@ -274,10 +276,12 @@
 		<item>11D00 马萨拉姆贡德文字</item>
 		<item>11D60 贡贾拉贡德文字</item>
 		<item>11EE0 望加锡文字</item>
+		<item>11FC0 Tamil Supplement</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
 		<item>12480 早期王朝楔形文字</item>
 		<item>13000 埃及象形文字</item>
+		<item>13430 Egyptian Hieroglyph Format Controls</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
 		<item>16A40 目若文字</item>
@@ -290,6 +294,7 @@
 		<item>18800 西夏文字部首</item>
 		<item>1B000 假名补充</item>
 		<item>1B100 假名扩展A</item>
+		<item>1B130 Small Kana Extension</item>
 		<item>1B170 女书</item>
 		<item>1BC00 杜普雷速记文字</item>
 		<item>1BCA0 速记格式控制符</item>
@@ -302,9 +307,12 @@
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿手语符号</item>
 		<item>1E000 格拉哥里文字补充</item>
+		<item>1E100 Nyiakeng Puachue Hmong</item>
+		<item>1E2C0 Wancho</item>
 		<item>1E800 门德基卡库文字</item>
 		<item>1E900 阿德拉姆文字</item>
 		<item>1EC70 印度西亚克数字</item>
+		<item>1ED00 Ottoman Siyaq Numbers</item>
 		<item>1EE00 阿拉伯数学用字母符号</item>
 		<item>1F000 麻将牌</item>
 		<item>1F030 多米诺骨牌</item>
@@ -320,6 +328,7 @@
 		<item>1F800 补充箭头C</item>
 		<item>1F900 补充符号与图形标记</item>
 		<item>1FA00 棋类符号</item>
+		<item>1FA70 Symbols and Pictographs Extended-A</item>
 		<item>20000 中日韩统一汉字扩展B</item>
 		<item>2A700 中日韩统一汉字扩展C</item>
 		<item>2B740 中日韩统一汉字扩展D</item>
@@ -357,7 +366,9 @@
 		<item>9.0.0</item>
 		<item>10.0.0</item>
 		<item>11.0.0</item>
-		<item>最新 (11.0.0)</item>
+		<item>12.0.0</item>
+		<item>12.1.0</item>
+		<item>最新 (12.1.0)</item>
 	</string-array>
 	<string name="download_desc">下载 Noto 字体…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
@@ -397,13 +408,6 @@
 	</string-array>
 	<string name="ime_desc">禁用输入法</string>
 	<string name="clear_desc">显示清除按钮</string>
-	<string name="clear" translatable="false">⌧</string>
-	<string name="erase" translatable="false">⌫</string>
-	<string name="config" translatable="false">⚙</string>
-	<string name="up" translatable="false">⌃</string>
-	<string name="down" translatable="false">⌄</string>
-	<string name="notacharacter" translatable="false">&lt;未定义字符&gt;</string>
-	<string name="modifier" translatable="false">修饰</string>
 	<string name="malformed">压缩包中包含非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni">Unicode®</string>
@@ -411,7 +415,7 @@
 Copyright © 1991-2018 Unicode, Inc. 保留所有权利。
 根据以下使用条款分发
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.4.0</string>
+	<string name="legal_app">UnicodePad 2.5.0</string>
 	<string name="legal_app2">UnicodePad 使用 Apache 2.0 许可证
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

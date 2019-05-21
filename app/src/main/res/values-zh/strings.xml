@@ -21,7 +21,7 @@
 	<string name="find">查找</string>
 	<string name="fhint">输入字符名称</string>
 	<string name="inlist">转到列表</string>
-	<string name="copied">复制到剪贴板</string>
+	<string name="copied">已复制到剪贴板</string>
 	<string name="finish">完成</string>
 	<string name="share">分享</string>
 	<string name="font">字体</string>
@@ -408,7 +408,7 @@
 	</string-array>
 	<string name="ime_desc">禁用输入法</string>
 	<string name="clear_desc">显示清除按钮</string>
-	<string name="malformed">压缩包中包含非法文件名</string>
+	<string name="malformed">压缩包中文件含有非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。

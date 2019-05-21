@@ -207,7 +207,7 @@
 		<item>10100 爱琴数字</item>
 		<item>10140 古希腊数字</item>
 		<item>10190 古代符号</item>
-		<item>101D0 费斯托斯圆盘</item>
+		<item>101D0 费斯托斯圆盘文字</item>
 		<item>10280 吕基亚文字</item>
 		<item>102A0 卡利亚文字</item>
 		<item>102E0 科普特闰余数字</item>
@@ -232,7 +232,7 @@
 		<item>10920 吕底亚文字</item>
 		<item>10980 麦罗埃象形文字</item>
 		<item>109A0 麦罗埃草书文字</item>
-		<item>10A00 佉卢虱咤文字</item>
+		<item>10A00 佉卢虱吒文字</item>
 		<item>10A60 古南阿拉伯文字</item>
 		<item>10A80 古北阿拉伯文字</item>
 		<item>10AC0 摩尼文字</item>
@@ -246,7 +246,7 @@
 		<item>10E60 鲁米数字符号</item>
 		<item>10F00 古粟特文字</item>
 		<item>10F30 粟特文字</item>
-		<item>10FE0 Elymaic</item>
+		<item>10FE0 埃兰文字</item>
 		<item>11000 婆罗米文字</item>
 		<item>11080 凯提文字</item>
 		<item>110D0 索拉僧平文字</item>
@@ -267,7 +267,7 @@
 		<item>11700 阿洪姆文字</item>
 		<item>11800 多格拉文字</item>
 		<item>118A0 瓦兰齐地文字</item>
-		<item>119A0 Nandinagari</item>
+		<item>119A0 吉城文字</item>
 		<item>11A00 札那巴札尔方形文字</item>
 		<item>11A50 索永布文字</item>
 		<item>11AC0 包钦豪文字</item>
@@ -276,12 +276,12 @@
 		<item>11D00 马萨拉姆贡德文字</item>
 		<item>11D60 贡贾拉贡德文字</item>
 		<item>11EE0 望加锡文字</item>
-		<item>11FC0 Tamil Supplement</item>
+		<item>11FC0 泰米尔文字补充</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
 		<item>12480 早期王朝楔形文字</item>
 		<item>13000 埃及象形文字</item>
-		<item>13430 Egyptian Hieroglyph Format Controls</item>
+		<item>13430 埃及象形文字格式控制符</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
 		<item>16A40 目若文字</item>
@@ -294,7 +294,7 @@
 		<item>18800 西夏文字部首</item>
 		<item>1B000 假名补充</item>
 		<item>1B100 假名扩展A</item>
-		<item>1B130 Small Kana Extension</item>
+		<item>1B130 小型假名扩展</item>
 		<item>1B170 女书</item>
 		<item>1BC00 杜普雷速记文字</item>
 		<item>1BCA0 速记格式控制符</item>
@@ -307,12 +307,12 @@
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿手语符号</item>
 		<item>1E000 格拉哥里文字补充</item>
-		<item>1E100 Nyiakeng Puachue Hmong</item>
-		<item>1E2C0 Wancho</item>
+		<item>1E100 尼亚肯蒲丘苗文</item>
+		<item>1E2C0 万却文字</item>
 		<item>1E800 门德基卡库文字</item>
 		<item>1E900 阿德拉姆文字</item>
 		<item>1EC70 印度西亚克数字</item>
-		<item>1ED00 Ottoman Siyaq Numbers</item>
+		<item>1ED00 奥斯曼西亚克数字</item>
 		<item>1EE00 阿拉伯数学用字母符号</item>
 		<item>1F000 麻将牌</item>
 		<item>1F030 多米诺骨牌</item>
@@ -328,7 +328,7 @@
 		<item>1F800 补充箭头C</item>
 		<item>1F900 补充符号与图形标记</item>
 		<item>1FA00 棋类符号</item>
-		<item>1FA70 Symbols and Pictographs Extended-A</item>
+		<item>1FA70 符号及图形标记扩展A</item>
 		<item>20000 中日韩统一汉字扩展B</item>
 		<item>2A700 中日韩统一汉字扩展C</item>
 		<item>2B740 中日韩统一汉字扩展D</item>
@@ -371,7 +371,7 @@
 		<item>最新 (12.1.0)</item>
 	</string-array>
 	<string name="download_desc">下载 Noto 字体…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://www.google.cn/get/noto/</string>
 	<string name="tabs_desc">标签设置…</string>
 	<string name="shown_desc">已显示标签</string>
 	<string name="hidden_desc">已隐藏标签</string>

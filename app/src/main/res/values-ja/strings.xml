@@ -246,6 +246,7 @@
 		<item>10E60 ルーミー数字</item>
 		<item>10F00 古代ソグド文字</item>
 		<item>10F30 ソグド文字</item>
+		<item>10FE0 エリマイス文字</item>
 		<item>11000 ブラーフミー文字</item>
 		<item>11080 カイティ文字</item>
 		<item>110D0 ソラ・ソンペン文字</item>
@@ -266,6 +267,7 @@
 		<item>11700 アーホム文字</item>
 		<item>11800 ドーグラー文字</item>
 		<item>118A0 ワラング・クシティ文字</item>
+		<item>119A0 ナンディナーガリー文字</item>
 		<item>11A00 ザナバザル方形文字</item>
 		<item>11A50 ソヨンボ文字</item>
 		<item>11AC0 パウ・チン・ハウ表語文字</item>
@@ -274,10 +276,12 @@
 		<item>11D00 マサラム・ゴーンディー文字</item>
 		<item>11D60 グンジャラ・ゴーンディー文字</item>
 		<item>11EE0 マカサル文字</item>
+		<item>11FC0 タミル文字補助</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字の数字及び句読点</item>
 		<item>12480 シュメール楔形文字</item>
 		<item>13000 エジプト・ヒエログリフ</item>
+		<item>13430 エジプト・ヒエログリフ制御</item>
 		<item>14400 アナトリア・ヒエログリフ</item>
 		<item>16800 バムン文字補助</item>
 		<item>16A40 ムロ文字</item>
@@ -290,6 +294,7 @@
 		<item>18800 西夏文字構成要素</item>
 		<item>1B000 仮名文字補助</item>
 		<item>1B100 仮名文字拡張A</item>
+		<item>1B130 小書き仮名拡張</item>
 		<item>1B170 女書</item>
 		<item>1BC00 デュブロワエ式速記</item>
 		<item>1BCA0 速記方式制御</item>
@@ -302,9 +307,12 @@
 		<item>1D400 数学用英数字記号</item>
 		<item>1D800 サットン手話表記法</item>
 		<item>1E000 グラゴル文字補助</item>
+		<item>1E100 Nyiakeng Puachue Hmong</item>
+		<item>1E2C0 Wancho</item>
 		<item>1E800 メンデ文字</item>
 		<item>1E900 アドラム文字</item>
 		<item>1EC70 インド・シアク数字</item>
+		<item>1ED00 オスマン・シヤク数字</item>
 		<item>1EE00 アラビア数学用文字記号</item>
 		<item>1F000 麻雀牌</item>
 		<item>1F030 ドミノ牌</item>
@@ -320,6 +328,7 @@
 		<item>1F800 補助矢印C</item>
 		<item>1F900 補助記号及び絵文字</item>
 		<item>1FA00 チェス記号</item>
+		<item>1FA70 記号及び絵文字拡張A</item>
 		<item>20000 CJK統合漢字拡張B</item>
 		<item>2A700 CJK統合漢字拡張C</item>
 		<item>2B740 CJK統合漢字拡張D</item>
@@ -374,7 +383,9 @@
 		<item>9.0.0</item>
 		<item>10.0.0</item>
 		<item>11.0.0</item>
-		<item>最新 (11.0.0)</item>
+		<item>12.0.0</item>
+		<item>12.1.0</item>
+		<item>最新 (12.1.0)</item>
 	</string-array>
 	<string name="download_desc">Notoフォントをダウンロード…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
@@ -418,7 +429,7 @@
 Copyright © 1991-2018 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.4.0</string>
+	<string name="legal_app">UnicodePad 2.5.0</string>
 	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

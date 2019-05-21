@@ -2,7 +2,7 @@
 <!-- translation by Dennis Fluttershy https://play.google.com/store/apps/developer?id=Dennis%20Fluttershy -->
 <resources>
 	<string name="app_name">UnicodePad</string>
-	<string name="delete">Del</string>
+	<string name="delete">Radera</string>
 	<string name="desc">Detaljer</string>
 	<string name="find">Sök</string>
 	<string name="fhint">Mata in namn på tecken</string>
@@ -42,23 +42,6 @@
 		<item>32</item>
 		<item>64</item>
 	</string-array>
-	<string name="tabs_desc">Flikinställningar …</string>
-	<string name="shown_desc">Synliga flikar</string>
-	<string name="hidden_desc">Dolda flikar</string>
-	<string name="single_rec_desc">Kolumner i senast använda</string>
-	<string name="single_list_desc">Kolumner i listan</string>
-	<string name="single_find_desc">Kolumner i sök</string>
-	<string name="single_fav_desc">Kolumner i favoriter</string>
-	<string name="single_edt_desc">Kolumner i input</string>
-	<string name="single_emoji_desc">Kolumner i emoji</string>
-	<string-array name="single">
-		<item>Flera kolumner med endast tecken</item>
-		<item>En kolumn med beskrivning</item>
-	</string-array>
-	<string-array name="single_val">
-		<item>false</item>
-		<item>true</item>
-	</string-array>
 	<string name="version_desc">Unicode-version</string>
 	<string-array name="version">
 		<item>6.0.0</item>
@@ -76,6 +59,19 @@
 	</string-array>
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="tabs_desc">Flikinställningar …</string>
+	<string name="shown_desc">Synliga flikar</string>
+	<string name="hidden_desc">Dolda flikar</string>
+	<string name="single_rec_desc">Kolumner i senast använda</string>
+	<string name="single_list_desc">Kolumner i listan</string>
+	<string name="single_find_desc">Kolumner i sök</string>
+	<string name="single_fav_desc">Kolumner i favoriter</string>
+	<string name="single_edt_desc">Kolumner i input</string>
+	<string name="single_emoji_desc">Kolumner i emoji</string>
+	<string-array name="single">
+		<item>Flera kolumner med endast tecken</item>
+		<item>En kolumn med beskrivning</item>
+	</string-array>
 	<string name="padding_desc">Avstånd i rutnät</string>
 	<string name="gridsize_desc">Textstorlek i rutnät</string>
 	<string name="viewsize_desc">Textstorlek i stor vy</string>
@@ -89,11 +85,6 @@
 		<item>Ljust</item>
 		<item>Ljust + mörk list</item>
 	</string-array>
-	<string-array name="theme_val">
-		<item>2131492983</item>
-		<item>2131492984</item>
-		<item>2131492985</item>
-	</string-array>
 	<string name="theme_title">Tillämpas efter omstart</string>
 	<string name="list_title">Listan kan inte döljas</string>
 	<string name="scroll_desc">Autoscrolla</string>
@@ -102,12 +93,18 @@
 		<item>Alltid i liggande läge</item>
 		<item>Alltid</item>
 	</string-array>
-	<string-array name="scroll_val">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-	</string-array>
 	<string name="ime_desc">Inaktivera tangentbord</string>
 	<string name="clear_desc">Visa rensa-knapp</string>
-	<string name="malformed">Felaktigt filnamn i zip</string>
+	<string name="notacharacter">&lt;inte ett tecken&gt;</string>
+	<string name="modifier">Varianter</string>
+	<string name="malformed">Felaktigt filnamn på zip-fil</string>
+	<string name="legal">Juridisk information</string>
+	<string name="legal_uni">Unicode®</string>
+	<string name="legal_uni2">Denna applikation innehåller en modifierad version av Unicode Data File.
+Upphovsrätt © 1991-2018 Unicode, Inc. Alla rättigheter förbehållna.
+Distribueras enligt användarvillkoren i
+http://www.unicode.org/copyright.html.</string>
+	<string name="legal_app">UnicodePad 2.5.0</string>
+	<string name="legal_app2">UnicodePad är licensierad under Apache-licensen, version2.0
+https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

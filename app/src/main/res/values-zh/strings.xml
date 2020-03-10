@@ -43,7 +43,7 @@
 	<string name="denied">请求被拒绝。为浏览内部存储，请在权限设置中允许应用读取手机存储。</string>
 	<string-array name="codes" tools:ignore="MissingTranslation">
 		<item>0 基本拉丁文字</item>
-		<item>80 拉丁文字补充1</item>
+		<item>80 拉丁文字西欧语言补充</item>
 		<item>100 拉丁文字扩展A</item>
 		<item>180 拉丁文字扩展B</item>
 		<item>250 国际音标扩展</item>
@@ -108,8 +108,8 @@
 		<item>1C90 格鲁吉亚文字扩展</item>
 		<item>1CC0 巽他文字补充</item>
 		<item>1CD0 吠陀文字扩展</item>
-		<item>1D00 拉丁文字音标扩展</item>
-		<item>1D80 拉丁文字音标扩展补充</item>
+		<item>1D00 音标扩展</item>
+		<item>1D80 音标扩展补充</item>
 		<item>1DC0 组合附加记号补充</item>
 		<item>1E00 拉丁文字附加扩展</item>
 		<item>1F00 希腊文字扩展</item>
@@ -169,8 +169,8 @@
 		<item>A640 西里尔文字扩展B</item>
 		<item>A6A0 巴姆穆文字</item>
 		<item>A700 声调修饰符号</item>
-		<item>A720 拉丁字母扩展D</item>
-		<item>A800 锡尔赫特纳格里文字</item>
+		<item>A720 拉丁文字扩展D</item>
+		<item>A800 锡尔赫特城文字</item>
 		<item>A830 通用印度数字</item>
 		<item>A840 八思巴文字</item>
 		<item>A880 索拉什特拉文字</item>
@@ -180,12 +180,12 @@
 		<item>A960 谚文字母扩展A</item>
 		<item>A980 爪哇文字</item>
 		<item>A9E0 缅甸文字扩展B</item>
-		<item>AA00 占城文字</item>
+		<item>AA00 占文</item>
 		<item>AA60 缅甸文字扩展A</item>
 		<item>AA80 越南傣文</item>
 		<item>AAE0 曼尼普尔文字扩展</item>
 		<item>AB00 埃塞俄比亚文字扩展A</item>
-		<item>AB30 拉丁字母扩展E</item>
+		<item>AB30 拉丁文字扩展E</item>
 		<item>AB70 切罗基文字补充</item>
 		<item>ABC0 曼尼普尔文字</item>
 		<item>AC00 谚文</item>
@@ -207,7 +207,7 @@
 		<item>10100 爱琴数字</item>
 		<item>10140 古希腊数字</item>
 		<item>10190 古代符号</item>
-		<item>101D0 费斯托斯圆盘文字</item>
+		<item>101D0 费斯托斯圆盘符号</item>
 		<item>10280 吕基亚文字</item>
 		<item>102A0 卡利亚文字</item>
 		<item>102E0 科普特闰余数字</item>
@@ -244,8 +244,10 @@
 		<item>10C80 古匈牙利文字</item>
 		<item>10D00 哈乃斐罗兴亚文字</item>
 		<item>10E60 鲁米数字符号</item>
+		<item>10E80 雅兹迪文字</item>
 		<item>10F00 古粟特文字</item>
 		<item>10F30 粟特文字</item>
+		<item>10FB0 花剌子模文字</item>
 		<item>10FE0 埃兰文字</item>
 		<item>11000 婆罗米文字</item>
 		<item>11080 凯提文字</item>
@@ -259,7 +261,7 @@
 		<item>112B0 信德文字</item>
 		<item>11300 格兰塔文字</item>
 		<item>11400 尼瓦文字</item>
-		<item>11480 迈蒂利文字</item>
+		<item>11480 提尔胡塔文字</item>
 		<item>11580 悉昙文字</item>
 		<item>11600 莫迪文字</item>
 		<item>11660 蒙古文字补充</item>
@@ -267,7 +269,8 @@
 		<item>11700 阿洪姆文字</item>
 		<item>11800 多格拉文字</item>
 		<item>118A0 瓦兰齐地文字</item>
-		<item>119A0 吉城文字</item>
+		<item>11900 迪维希文字</item>
+		<item>119A0 喜城文字</item>
 		<item>11A00 札那巴札尔方形文字</item>
 		<item>11A50 索永布文字</item>
 		<item>11AC0 包钦豪文字</item>
@@ -276,6 +279,7 @@
 		<item>11D00 马萨拉姆贡德文字</item>
 		<item>11D60 贡贾拉贡德文字</item>
 		<item>11EE0 望加锡文字</item>
+		<item>11FB0 傈僳文字补充</item>
 		<item>11FC0 泰米尔文字补充</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
@@ -284,7 +288,7 @@
 		<item>13430 埃及象形文字格式控制符</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
-		<item>16A40 目若文字</item>
+		<item>16A40 木如文字</item>
 		<item>16AD0 巴萨文字</item>
 		<item>16B00 杨松录苗文</item>
 		<item>16E40 梅德法伊德林文字</item>
@@ -292,9 +296,11 @@
 		<item>16FE0 表意文字符号及标点</item>
 		<item>17000 西夏文字</item>
 		<item>18800 西夏文字部首</item>
+		<item>18B00 契丹小字</item>
+		<item>18D00 西夏文字补充</item>
 		<item>1B000 假名补充</item>
 		<item>1B100 假名扩展A</item>
-		<item>1B130 小型假名扩展</item>
+		<item>1B130 小写假名扩展</item>
 		<item>1B170 女书</item>
 		<item>1BC00 杜普雷速记文字</item>
 		<item>1BCA0 速记格式控制符</item>
@@ -303,11 +309,11 @@
 		<item>1D200 古希腊乐谱记号</item>
 		<item>1D2E0 玛雅数字</item>
 		<item>1D300 太玄经符号</item>
-		<item>1D360 算筹</item>
+		<item>1D360 算筹数字</item>
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿手语符号</item>
 		<item>1E000 格拉哥里文字补充</item>
-		<item>1E100 尼亚肯蒲丘苗文</item>
+		<item>1E100 花布苗文</item>
 		<item>1E2C0 万却文字</item>
 		<item>1E800 门德基卡库文字</item>
 		<item>1E900 阿德拉姆文字</item>
@@ -329,12 +335,14 @@
 		<item>1F900 补充符号与图形标记</item>
 		<item>1FA00 棋类符号</item>
 		<item>1FA70 符号及图形标记扩展A</item>
+		<item>1FB00 传统计算机符号</item>
 		<item>20000 中日韩统一汉字扩展B</item>
 		<item>2A700 中日韩统一汉字扩展C</item>
 		<item>2B740 中日韩统一汉字扩展D</item>
 		<item>2B820 中日韩统一汉字扩展E</item>
 		<item>2CEB0 中日韩统一汉字扩展F</item>
 		<item>2F800 中日韩兼容汉字补充</item>
+		<item>30000 中日韩统一汉字扩展G</item>
 		<item>E0000 标签</item>
 		<item>E0100 异体选择符补充</item>
 		<item>F0000 补充私用区A</item>

@@ -160,7 +160,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		String key = arg0.getKey();
 		if (key.equals("download"))
 		{
-			return openPage("https://www.google.com/get/noto/");
+			return openPage(getString(R.string.download_uri));
 		}
 		if (key.equals("tabs"))
 		{

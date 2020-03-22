@@ -172,7 +172,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			DisplayMetrics outMetrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
 			adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
-			adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+			adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
 			((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
 			AdRequest adRequest = new AdRequest.Builder().build();
 			adView.loadAd(adRequest);
@@ -426,7 +426,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 					DisplayMetrics outMetrics = new DisplayMetrics();
 					getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
 					adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
-					adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+					adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
 					((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
 					AdRequest adRequest = new AdRequest.Builder().build();
 					adView.loadAd(adRequest);

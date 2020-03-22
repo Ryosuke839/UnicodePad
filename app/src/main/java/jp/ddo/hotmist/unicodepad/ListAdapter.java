@@ -446,11 +446,15 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		if (univer >= 1100)
 			add(0x10D00, 0x10D3F);
 		add(0x10E60, 0x10E7F);
+		if (univer >= 1300)
+			add(0x10E80, 0x10EBF);
 		if (univer >= 1100)
 		{
 			add(0x10F00, 0x10F2F);
 			add(0x10F30, 0x10F6F);
 		}
+		if (univer >= 1300)
+			add(0x10FB0, 0x10FDF);
 		add(0x11000, 0x1107F);
 		add(0x11080, 0x110CF);
 		if (univer >= 610)
@@ -483,6 +487,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 				add(0x11800, 0x1184F);
 			if (univer >= 700)
 				add(0x118A0, 0x118FF);
+			if (univer >= 1300)
+				add(0x11900, 0x1195F);
 			if (univer >= 1200)
 				add(0x119A0, 0x119FF);
 			if (univer >= 1000)
@@ -502,6 +508,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 				add(0x11D60, 0x11DAF);
 				add(0x11EE0, 0x11EFF);
 			}
+			if (univer >= 1300)
+				add(0x11FB0, 0x11FBF);
 			if (univer >= 1200)
 				add(0x11FC0, 0x11FFF);
 		}
@@ -530,6 +538,11 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			add(0x16FE0, 0x16FFF);
 			add(0x17000, 0x187FF);
 			add(0x18800, 0x18AFF);
+		}
+		if (univer >= 1300)
+		{
+			add(0x18B00, 0x18CFF);
+			add(0x18D00, 0x18D8F);
 		}
 		add(0x1B000, 0x1B0FF);
 		if (univer >= 1000)
@@ -589,6 +602,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			add(0x1FA00, 0x1FA6F);
 		if (univer >= 1200)
 			add(0x1FA70, 0x1FAFF);
+		if (univer >= 1300)
+			add(0x1FB00, 0x1FBFF);
 		add(0x20000, 0x2A6DF);
 		add(0x2A700, 0x2B73F);
 		add(0x2B740, 0x2B81F);
@@ -597,6 +612,8 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		if (univer >= 1000)
 			add(0x2CEB0, 0x2EBEF);
 		add(0x2F800, 0x2FA1F);
+		if (univer >= 1300)
+			add(0x30000, 0x3134F);
 		add(0xE0000, 0xE007F);
 		add(0xE0100, 0xE01EF);
 		add(0xF0000, 0xFFFFF);

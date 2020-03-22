@@ -16,41 +16,22 @@
 
 package jp.ddo.hotmist.unicodepad;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,16 +42,21 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
@@ -88,6 +74,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private LockableScrollView scroll;
 	private ViewPager pager;
 	PageAdapter adpPage;
+	private AdView adView;
 	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
@@ -170,6 +157,25 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			String str = it.getStringExtra(Intent.EXTRA_TEXT);
 			if (str != null)
 				editText.append(str);
+		}
+
+		if (!pref.getBoolean("no-ad", false))
+		{
+			MobileAds.initialize(this, new OnInitializationCompleteListener()
+			{
+				@Override
+				public void onInitializationComplete(InitializationStatus initializationStatus)
+				{
+				}
+			});
+			adView = new AdView(this);
+			DisplayMetrics outMetrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+			adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+			adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+			((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+			AdRequest adRequest = new AdRequest.Builder().build();
+			adView.loadAd(adRequest);
 		}
 	}
 
@@ -330,6 +336,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		super.onActivityResult(requestCode, resultCode, data);
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));
@@ -401,6 +408,38 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			adpPage.notifyDataSetChanged();
 		if (scroll != null)
 			scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")) + (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 0) > 1);
+		LinearLayout adConteiner = (LinearLayout)findViewById(R.id.adContainer);
+		if (adConteiner != null)
+		{
+			if (!pref.getBoolean("no-ad", false))
+			{
+				if (adConteiner.getChildCount() == 0)
+				{
+					MobileAds.initialize(this, new OnInitializationCompleteListener()
+					{
+						@Override
+						public void onInitializationComplete(InitializationStatus initializationStatus)
+						{
+						}
+					});
+					adView = new AdView(this);
+					DisplayMetrics outMetrics = new DisplayMetrics();
+					getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+					adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+					adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+					((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+					AdRequest adRequest = new AdRequest.Builder().build();
+					adView.loadAd(adRequest);
+				}
+			}
+			else
+			{
+				if (adConteiner.getChildCount() > 0)
+				{
+					adConteiner.removeAllViews();
+				}
+			}
+		}
 	}
 
 	private void replace(String result)

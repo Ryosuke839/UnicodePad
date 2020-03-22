@@ -24,8 +24,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.view.PagerAdapter;
-import android.text.TextUtils;
+import androidx.viewpager.widget.PagerAdapter;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -66,7 +65,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		}
 		else
 		{
-			reslist = android.support.v7.appcompat.R.drawable.abc_list_selector_holo_dark;
+			reslist = androidx.appcompat.R.drawable.abc_list_selector_holo_dark;
 		}
 
 		this.context = context;
@@ -93,7 +92,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	private static final String[] mods = {null, "UTF-8: ", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 "};
 	private static final String[] emjs = {"name", "utf8", "version", "grp", "subgrp", "", "id"};
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
-	private static final String[] mode = {null, "UTF-8: ", "from Unicode ", "Group: ", "Subgroup: ", null, ""};
+	private static final String[] mode = {null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ", null, ""};
 
 	@SuppressLint("NewApi")
 	@Override
@@ -139,7 +138,9 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			{
 				int v = !emoji ? db.getint(itemid, cols[i]) : db.getint(adapter.getItemString(position), emjs[i]);
 				TextView desc = new TextView(context);
-				desc.setText((!emoji ? mods : mode)[i] + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : ""));
+				desc.setText((!emoji ?
+						mods[i] + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (v == 600 ? " or earlier" : "") :
+						mode[i] + String.format(Locale.US, "%d.%d", v / 100, v / 10 % 10)));
 				desc.setGravity(Gravity.CENTER_VERTICAL);
 				layout.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				continue;

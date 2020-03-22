@@ -94,7 +94,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	public void onCreate(Bundle savedInstanceState)
 	{
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		onActivityResult(0, 0, null);
+		onActivityResult(-1, 0, null);
 		int[] themelist =
 				{
 						R.style.Theme,
@@ -336,7 +336,8 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode != -1)
+			super.onActivityResult(requestCode, resultCode, data);
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));
@@ -408,35 +409,38 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			adpPage.notifyDataSetChanged();
 		if (scroll != null)
 			scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")) + (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 0) > 1);
-		LinearLayout adConteiner = (LinearLayout)findViewById(R.id.adContainer);
-		if (adConteiner != null)
+		if (requestCode != -1)
 		{
-			if (!pref.getBoolean("no-ad", false))
+			LinearLayout adConteiner = (LinearLayout)findViewById(R.id.adContainer);
+			if (adConteiner != null)
 			{
-				if (adConteiner.getChildCount() == 0)
+				if (!pref.getBoolean("no-ad", false))
 				{
-					MobileAds.initialize(this, new OnInitializationCompleteListener()
+					if (adConteiner.getChildCount() == 0)
 					{
-						@Override
-						public void onInitializationComplete(InitializationStatus initializationStatus)
+						MobileAds.initialize(this, new OnInitializationCompleteListener()
 						{
-						}
-					});
-					adView = new AdView(this);
-					DisplayMetrics outMetrics = new DisplayMetrics();
-					getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-					adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
-					adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
-					((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
-					AdRequest adRequest = new AdRequest.Builder().build();
-					adView.loadAd(adRequest);
+							@Override
+							public void onInitializationComplete(InitializationStatus initializationStatus)
+							{
+							}
+						});
+						adView = new AdView(this);
+						DisplayMetrics outMetrics = new DisplayMetrics();
+						getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+						adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+						adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
+						((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+						AdRequest adRequest = new AdRequest.Builder().build();
+						adView.loadAd(adRequest);
+					}
 				}
-			}
-			else
-			{
-				if (adConteiner.getChildCount() > 0)
+				else
 				{
-					adConteiner.removeAllViews();
+					if (adConteiner.getChildCount() > 0)
+					{
+						adConteiner.removeAllViews();
+					}
 				}
 			}
 		}

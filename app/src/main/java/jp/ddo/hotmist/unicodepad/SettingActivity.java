@@ -39,9 +39,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		int[] themelist =
 				{
-						android.support.v7.appcompat.R.style.Theme_AppCompat,
-						android.support.v7.appcompat.R.style.Theme_AppCompat_Light,
-						android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar,
+						androidx.appcompat.R.style.Theme_AppCompat,
+						androidx.appcompat.R.style.Theme_AppCompat_Light,
+						androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar,
 				};
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);

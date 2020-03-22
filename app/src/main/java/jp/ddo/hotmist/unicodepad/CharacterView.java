@@ -29,7 +29,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.RectF;
 import android.os.Build;
-import android.support.v4.graphics.ColorUtils;
+import androidx.core.graphics.ColorUtils;
 import android.util.AttributeSet;
 import android.view.View;
 

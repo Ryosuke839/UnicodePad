@@ -24,8 +24,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.view.PagerAdapter;
-import android.text.TextUtils;
+import androidx.viewpager.widget.PagerAdapter;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -66,7 +65,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		}
 		else
 		{
-			reslist = android.support.v7.appcompat.R.drawable.abc_list_selector_holo_dark;
+			reslist = androidx.appcompat.R.drawable.abc_list_selector_holo_dark;
 		}
 
 		this.context = context;

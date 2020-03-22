@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 36
+        versionCode 37
         versionName "2.6.0"
     }
 

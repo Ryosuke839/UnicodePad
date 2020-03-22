@@ -376,7 +376,8 @@
 		<item>11.0.0</item>
 		<item>12.0.0</item>
 		<item>12.1.0</item>
-		<item>Latest (12.1.0)</item>
+		<item>13.0.0</item>
+		<item>Latest (13.0.0)</item>
 	</string-array>
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>

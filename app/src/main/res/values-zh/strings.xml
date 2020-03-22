@@ -244,8 +244,10 @@
 		<item>10C80 古匈牙利文字</item>
 		<item>10D00 哈乃斐罗兴亚文字</item>
 		<item>10E60 鲁米数字符号</item>
+		<item>10E80 Yezidi</item>
 		<item>10F00 古粟特文字</item>
 		<item>10F30 粟特文字</item>
+		<item>10FB0 Chorasmian</item>
 		<item>10FE0 Elymaic</item>
 		<item>11000 婆罗米文字</item>
 		<item>11080 凯提文字</item>
@@ -267,6 +269,7 @@
 		<item>11700 阿洪姆文字</item>
 		<item>11800 多格拉文字</item>
 		<item>118A0 瓦兰齐地文字</item>
+		<item>11900 Dives Akuru</item>
 		<item>119A0 Nandinagari</item>
 		<item>11A00 札那巴札尔方形文字</item>
 		<item>11A50 索永布文字</item>
@@ -276,6 +279,7 @@
 		<item>11D00 马萨拉姆贡德文字</item>
 		<item>11D60 贡贾拉贡德文字</item>
 		<item>11EE0 望加锡文字</item>
+		<item>11FB0 Lisu Supplement</item>
 		<item>11FC0 Tamil Supplement</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
@@ -292,7 +296,9 @@
 		<item>16FE0 表意文字符号及标点</item>
 		<item>17000 西夏文字</item>
 		<item>18800 西夏文字部首</item>
+		<item>18B00 Khitan Small Script</item>
 		<item>1B000 假名补充</item>
+		<item>18D00 Tangut Supplement</item>
 		<item>1B100 假名扩展A</item>
 		<item>1B130 Small Kana Extension</item>
 		<item>1B170 女书</item>
@@ -329,12 +335,14 @@
 		<item>1F900 补充符号与图形标记</item>
 		<item>1FA00 棋类符号</item>
 		<item>1FA70 Symbols and Pictographs Extended-A</item>
+		<item>1FB00 Symbols for Legacy Computing</item>
 		<item>20000 中日韩统一汉字扩展B</item>
 		<item>2A700 中日韩统一汉字扩展C</item>
 		<item>2B740 中日韩统一汉字扩展D</item>
 		<item>2B820 中日韩统一汉字扩展E</item>
 		<item>2CEB0 中日韩统一汉字扩展F</item>
 		<item>2F800 中日韩兼容汉字补充</item>
+		<item>30000 中日韩统一汉字扩展G</item>
 		<item>E0000 标签</item>
 		<item>E0100 异体选择符补充</item>
 		<item>F0000 补充私用区A</item>
@@ -368,7 +376,8 @@
 		<item>11.0.0</item>
 		<item>12.0.0</item>
 		<item>12.1.0</item>
-		<item>最新 (12.1.0)</item>
+		<item>13.0.0</item>
+		<item>最新 (13.0.0)</item>
 	</string-array>
 	<string name="download_desc">下载 Noto 字体…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>

@@ -178,6 +178,21 @@ class NameDatabase
 
 	Cursor emoji(int version, boolean mod)
 	{
+		switch (version)
+		{
+		case 600:
+		case 610:
+		case 620:
+		case 630:
+			version = 60;
+			break;
+		case 700:
+			version = 70;
+			break;
+		case 800:
+			version = 100;
+			break;
+		}
 		String query = "SELECT id, grp, subgrp FROM emoji_table WHERE version <= " + version + (mod ? ";" : " AND mod = 0;");
 		try
 		{

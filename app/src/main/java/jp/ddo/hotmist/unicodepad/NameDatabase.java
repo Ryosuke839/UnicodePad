@@ -47,17 +47,18 @@ class NameDatabase
 				0xFFF80 <= code && code <= 0xFFFFD ||
 				0x10FF80 <= code && code <= 0x10FFFD)
 				return "Private Use";
-			if (0x3400 <= code && code <= 0x4DB5 ||
-				0x4E00 <= code && code <= 0x9FEF ||
-				0x20000 <= code && code <= 0x2A6D6 ||
+			if (0x3400 <= code && code <= 0x4DBF ||
+				0x4E00 <= code && code <= 0x9FFC ||
+				0x20000 <= code && code <= 0x2A6DD ||
 				0x2A700 <= code && code <= 0x2B734 ||
 				0x2B740 <= code && code <= 0x2B81D ||
 				0x2B820 <= code && code <= 0x2CEA1 ||
-				0x2CEB0 <= code && code <= 0x2EBE0)
+				0x2CEB0 <= code && code <= 0x2EBE0 ||
+				0x30000 <= code && code <= 0x3134A)
 				return "CJK Unified Ideograph";
 			if (0xAC00 <= code && code <= 0xD7A3)
 				return "Hangul Syllable";
-			if (0x17000 <= code && code <= 0x187F1)
+			if (0x17000 <= code && code <= 0x187F7)
 				return "Tangut Character";
 		}
 		return get("name_table", String.valueOf(code), column);
@@ -119,6 +120,13 @@ class NameDatabase
 				return 1100;
 			if (0xAC00 <= code && code <= 0xD7A3)
 				return 600;
+			if (0x187F2 <= code && code <= 0x187F7)
+				return 1200;
+			if (0x4DB6 <= code && code <= 0x4DBF ||
+				0x9FF0 <= code && code <= 0x9FFC ||
+				0x2A6D7 <= code && code <= 0x2A6DD ||
+				0x30000 <= code && code <= 0x3134A)
+				return 1300;
 		}
 		return getint("name_table", String.valueOf(code), column);
 	}
@@ -219,7 +227,7 @@ class NameDatabase
 				cur.close();
 				Cursor cur2 = db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null);
 				cur2.moveToFirst();
-				if (cur2.getInt(0) != 32853)
+				if (cur2.getInt(0) != 33805)
 				{
 					cur2.close();
 					db.close();
@@ -228,7 +236,7 @@ class NameDatabase
 				cur2.close();
 				Cursor cur3 = db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null);
 				cur3.moveToFirst();
-				if (cur3.getInt(0) != 3010)
+				if (cur3.getInt(0) != 3295)
 				{
 					cur3.close();
 					db.close();

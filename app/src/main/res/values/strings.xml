@@ -244,8 +244,10 @@
 		<item>10C80 Old Hungarian</item>
 		<item>10D00 Hanifi Rohingya</item>
 		<item>10E60 Rumi Numeral Symbols</item>
+		<item>10E80 Yezidi</item>
 		<item>10F00 Old Sogdian</item>
 		<item>10F30 Sogdian</item>
+		<item>10FB0 Chorasmian</item>
 		<item>10FE0 Elymaic</item>
 		<item>11000 Brahmi</item>
 		<item>11080 Kaithi</item>
@@ -267,6 +269,7 @@
 		<item>11700 Ahom</item>
 		<item>11800 Dogra</item>
 		<item>118A0 Warang Citi</item>
+		<item>11900 Dives Akuru</item>
 		<item>119A0 Nandinagari</item>
 		<item>11A00 Zanabazar Square</item>
 		<item>11A50 Soyombo</item>
@@ -276,6 +279,7 @@
 		<item>11D00 Masaram Gondi</item>
 		<item>11D60 Gunjala Gondi</item>
 		<item>11EE0 Makasar</item>
+		<item>11FB0 Lisu Supplement</item>
 		<item>11FC0 Tamil Supplement</item>
 		<item>12000 Cuneiform</item>
 		<item>12400 Cuneiform Numbers and Punctuation</item>
@@ -292,6 +296,8 @@
 		<item>16FE0 Ideographic Symbols and Punctuation</item>
 		<item>17000 Tangut</item>
 		<item>18800 Tangut Components</item>
+		<item>18B00 Khitan Small Script</item>
+		<item>18D00 Tangut Supplement</item>
 		<item>1B000 Kana Supplement</item>
 		<item>1B100 Kana Extended-A</item>
 		<item>1B130 Small Kana Extension</item>
@@ -329,12 +335,14 @@
 		<item>1F900 Supplemental Symbols and Pictographs</item>
 		<item>1FA00 Chess Symbols</item>
 		<item>1FA70 Symbols and Pictographs Extended-A</item>
+		<item>1FB00 Symbols for Legacy Computing</item>
 		<item>20000 CJK Unified Ideographs Extension B</item>
 		<item>2A700 CJK Unified Ideographs Extension C</item>
 		<item>2B740 CJK Unified Ideographs Extension D</item>
 		<item>2B820 CJK Unified Ideographs Extension E</item>
 		<item>2CEB0 CJK Unified Ideographs Extension F</item>
 		<item>2F800 CJK Compatibility Ideographs Supplement</item>
+		<item>30000 CJK Unified Ideographs Extension G</item>
 		<item>E0000 Tags</item>
 		<item>E0100 Variation Selectors Supplement</item>
 		<item>F0000 Supplementary Private Use Area-A</item>

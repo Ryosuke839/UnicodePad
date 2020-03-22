@@ -244,8 +244,10 @@
 		<item>10C80 ロヴァーシュ文字</item>
 		<item>10D00 ハニーフィー・ロヒンギャ文字</item>
 		<item>10E60 ルーミー数字</item>
+		<item>10E80 ヤズィーディー文字</item>
 		<item>10F00 古代ソグド文字</item>
 		<item>10F30 ソグド文字</item>
+		<item>10FB0 コレズム文字</item>
 		<item>10FE0 エリマイス文字</item>
 		<item>11000 ブラーフミー文字</item>
 		<item>11080 カイティ文字</item>
@@ -267,6 +269,7 @@
 		<item>11700 アーホム文字</item>
 		<item>11800 ドーグラー文字</item>
 		<item>118A0 ワラング・クシティ文字</item>
+		<item>11900 ディヴェ文字</item>
 		<item>119A0 ナンディナーガリー文字</item>
 		<item>11A00 ザナバザル方形文字</item>
 		<item>11A50 ソヨンボ文字</item>
@@ -276,6 +279,7 @@
 		<item>11D00 マサラム・ゴーンディー文字</item>
 		<item>11D60 グンジャラ・ゴーンディー文字</item>
 		<item>11EE0 マカサル文字</item>
+		<item>11FB0 リス文字補助</item>
 		<item>11FC0 タミル文字補助</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字の数字及び句読点</item>
@@ -292,6 +296,8 @@
 		<item>16FE0 漢字の記号及び句読点</item>
 		<item>17000 西夏文字</item>
 		<item>18800 西夏文字構成要素</item>
+		<item>18B00 契丹小字</item>
+		<item>18D00 西夏文字補助</item>
 		<item>1B000 仮名文字補助</item>
 		<item>1B100 仮名文字拡張A</item>
 		<item>1B130 小書き仮名拡張</item>
@@ -329,12 +335,14 @@
 		<item>1F900 補助記号及び絵文字</item>
 		<item>1FA00 チェス記号</item>
 		<item>1FA70 記号及び絵文字拡張A</item>
+		<item>1FB00 レガシーシステム用記号</item>
 		<item>20000 CJK統合漢字拡張B</item>
 		<item>2A700 CJK統合漢字拡張C</item>
 		<item>2B740 CJK統合漢字拡張D</item>
 		<item>2B820 CJK統合漢字拡張E</item>
 		<item>2CEB0 CJK統合漢字拡張F</item>
 		<item>2F800 CJK互換漢字補助</item>
+		<item>30000 CJK統合漢字拡張G</item>
 		<item>E0000 タグ</item>
 		<item>E0100 字形選択子補助</item>
 		<item>F0000 私用領域補助A</item>

@@ -21,7 +21,7 @@
 	<string name="find">查找</string>
 	<string name="fhint">输入字符名称</string>
 	<string name="inlist">转到列表</string>
-	<string name="copied">复制到剪贴板</string>
+	<string name="copied">已复制到剪贴板</string>
 	<string name="finish">完成</string>
 	<string name="share">分享</string>
 	<string name="font">字体</string>
@@ -43,7 +43,7 @@
 	<string name="denied">请求被拒绝。为浏览内部存储，请在权限设置中允许应用读取手机存储。</string>
 	<string-array name="codes" tools:ignore="MissingTranslation">
 		<item>0 基本拉丁文字</item>
-		<item>80 拉丁文字补充1</item>
+		<item>80 拉丁文字西欧语言补充</item>
 		<item>100 拉丁文字扩展A</item>
 		<item>180 拉丁文字扩展B</item>
 		<item>250 国际音标扩展</item>
@@ -108,8 +108,8 @@
 		<item>1C90 格鲁吉亚文字扩展</item>
 		<item>1CC0 巽他文字补充</item>
 		<item>1CD0 吠陀文字扩展</item>
-		<item>1D00 拉丁文字音标扩展</item>
-		<item>1D80 拉丁文字音标扩展补充</item>
+		<item>1D00 音标扩展</item>
+		<item>1D80 音标扩展补充</item>
 		<item>1DC0 组合附加记号补充</item>
 		<item>1E00 拉丁文字附加扩展</item>
 		<item>1F00 希腊文字扩展</item>
@@ -169,8 +169,8 @@
 		<item>A640 西里尔文字扩展B</item>
 		<item>A6A0 巴姆穆文字</item>
 		<item>A700 声调修饰符号</item>
-		<item>A720 拉丁字母扩展D</item>
-		<item>A800 锡尔赫特纳格里文字</item>
+		<item>A720 拉丁文字扩展D</item>
+		<item>A800 锡尔赫特城文字</item>
 		<item>A830 通用印度数字</item>
 		<item>A840 八思巴文字</item>
 		<item>A880 索拉什特拉文字</item>
@@ -180,12 +180,12 @@
 		<item>A960 谚文字母扩展A</item>
 		<item>A980 爪哇文字</item>
 		<item>A9E0 缅甸文字扩展B</item>
-		<item>AA00 占城文字</item>
+		<item>AA00 占文</item>
 		<item>AA60 缅甸文字扩展A</item>
 		<item>AA80 越南傣文</item>
 		<item>AAE0 曼尼普尔文字扩展</item>
 		<item>AB00 埃塞俄比亚文字扩展A</item>
-		<item>AB30 拉丁字母扩展E</item>
+		<item>AB30 拉丁文字扩展E</item>
 		<item>AB70 切罗基文字补充</item>
 		<item>ABC0 曼尼普尔文字</item>
 		<item>AC00 谚文</item>
@@ -207,7 +207,7 @@
 		<item>10100 爱琴数字</item>
 		<item>10140 古希腊数字</item>
 		<item>10190 古代符号</item>
-		<item>101D0 费斯托斯圆盘</item>
+		<item>101D0 费斯托斯圆盘符号</item>
 		<item>10280 吕基亚文字</item>
 		<item>102A0 卡利亚文字</item>
 		<item>102E0 科普特闰余数字</item>
@@ -232,7 +232,7 @@
 		<item>10920 吕底亚文字</item>
 		<item>10980 麦罗埃象形文字</item>
 		<item>109A0 麦罗埃草书文字</item>
-		<item>10A00 佉卢虱咤文字</item>
+		<item>10A00 佉卢虱吒文字</item>
 		<item>10A60 古南阿拉伯文字</item>
 		<item>10A80 古北阿拉伯文字</item>
 		<item>10AC0 摩尼文字</item>
@@ -244,11 +244,11 @@
 		<item>10C80 古匈牙利文字</item>
 		<item>10D00 哈乃斐罗兴亚文字</item>
 		<item>10E60 鲁米数字符号</item>
-		<item>10E80 Yezidi</item>
+		<item>10E80 雅兹迪文字</item>
 		<item>10F00 古粟特文字</item>
 		<item>10F30 粟特文字</item>
-		<item>10FB0 Chorasmian</item>
-		<item>10FE0 Elymaic</item>
+		<item>10FB0 花剌子模文字</item>
+		<item>10FE0 埃兰文字</item>
 		<item>11000 婆罗米文字</item>
 		<item>11080 凯提文字</item>
 		<item>110D0 索拉僧平文字</item>
@@ -261,7 +261,7 @@
 		<item>112B0 信德文字</item>
 		<item>11300 格兰塔文字</item>
 		<item>11400 尼瓦文字</item>
-		<item>11480 迈蒂利文字</item>
+		<item>11480 提尔胡塔文字</item>
 		<item>11580 悉昙文字</item>
 		<item>11600 莫迪文字</item>
 		<item>11660 蒙古文字补充</item>
@@ -269,8 +269,8 @@
 		<item>11700 阿洪姆文字</item>
 		<item>11800 多格拉文字</item>
 		<item>118A0 瓦兰齐地文字</item>
-		<item>11900 Dives Akuru</item>
-		<item>119A0 Nandinagari</item>
+		<item>11900 迪维希文字</item>
+		<item>119A0 喜城文字</item>
 		<item>11A00 札那巴札尔方形文字</item>
 		<item>11A50 索永布文字</item>
 		<item>11AC0 包钦豪文字</item>
@@ -279,16 +279,16 @@
 		<item>11D00 马萨拉姆贡德文字</item>
 		<item>11D60 贡贾拉贡德文字</item>
 		<item>11EE0 望加锡文字</item>
-		<item>11FB0 Lisu Supplement</item>
-		<item>11FC0 Tamil Supplement</item>
+		<item>11FB0 傈僳文字补充</item>
+		<item>11FC0 泰米尔文字补充</item>
 		<item>12000 楔形文字</item>
 		<item>12400 楔形文字数字和标点符号</item>
 		<item>12480 早期王朝楔形文字</item>
 		<item>13000 埃及象形文字</item>
-		<item>13430 Egyptian Hieroglyph Format Controls</item>
+		<item>13430 埃及象形文字格式控制符</item>
 		<item>14400 安纳托利亚象形文字</item>
 		<item>16800 巴姆穆文字补充</item>
-		<item>16A40 目若文字</item>
+		<item>16A40 木如文字</item>
 		<item>16AD0 巴萨文字</item>
 		<item>16B00 杨松录苗文</item>
 		<item>16E40 梅德法伊德林文字</item>
@@ -296,11 +296,11 @@
 		<item>16FE0 表意文字符号及标点</item>
 		<item>17000 西夏文字</item>
 		<item>18800 西夏文字部首</item>
-		<item>18B00 Khitan Small Script</item>
+		<item>18B00 契丹小字</item>
+		<item>18D00 西夏文字补充</item>
 		<item>1B000 假名补充</item>
-		<item>18D00 Tangut Supplement</item>
 		<item>1B100 假名扩展A</item>
-		<item>1B130 Small Kana Extension</item>
+		<item>1B130 小写假名扩展</item>
 		<item>1B170 女书</item>
 		<item>1BC00 杜普雷速记文字</item>
 		<item>1BCA0 速记格式控制符</item>
@@ -309,16 +309,16 @@
 		<item>1D200 古希腊乐谱记号</item>
 		<item>1D2E0 玛雅数字</item>
 		<item>1D300 太玄经符号</item>
-		<item>1D360 算筹</item>
+		<item>1D360 算筹数字</item>
 		<item>1D400 数学字母数字符号</item>
 		<item>1D800 萨顿手语符号</item>
 		<item>1E000 格拉哥里文字补充</item>
-		<item>1E100 Nyiakeng Puachue Hmong</item>
-		<item>1E2C0 Wancho</item>
+		<item>1E100 花布苗文</item>
+		<item>1E2C0 万却文字</item>
 		<item>1E800 门德基卡库文字</item>
 		<item>1E900 阿德拉姆文字</item>
 		<item>1EC70 印度西亚克数字</item>
-		<item>1ED00 Ottoman Siyaq Numbers</item>
+		<item>1ED00 奥斯曼西亚克数字</item>
 		<item>1EE00 阿拉伯数学用字母符号</item>
 		<item>1F000 麻将牌</item>
 		<item>1F030 多米诺骨牌</item>
@@ -334,8 +334,8 @@
 		<item>1F800 补充箭头C</item>
 		<item>1F900 补充符号与图形标记</item>
 		<item>1FA00 棋类符号</item>
-		<item>1FA70 Symbols and Pictographs Extended-A</item>
-		<item>1FB00 Symbols for Legacy Computing</item>
+		<item>1FA70 符号及图形标记扩展A</item>
+		<item>1FB00 传统计算机符号</item>
 		<item>20000 中日韩统一汉字扩展B</item>
 		<item>2A700 中日韩统一汉字扩展C</item>
 		<item>2B740 中日韩统一汉字扩展D</item>
@@ -380,7 +380,7 @@
 		<item>最新 (13.0.0)</item>
 	</string-array>
 	<string name="download_desc">下载 Noto 字体…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://www.google.cn/get/noto/</string>
 	<string name="tabs_desc">标签设置…</string>
 	<string name="shown_desc">已显示标签</string>
 	<string name="hidden_desc">已隐藏标签</string>
@@ -417,7 +417,7 @@
 	</string-array>
 	<string name="ime_desc">禁用输入法</string>
 	<string name="clear_desc">显示清除按钮</string>
-	<string name="malformed">压缩包中包含非法文件名</string>
+	<string name="malformed">压缩包中文件含有非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。

@@ -381,6 +381,7 @@
 	</string-array>
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="no_ad_desc">Opt-out ads</string>
 	<string name="tabs_desc">Tabs settings…</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>

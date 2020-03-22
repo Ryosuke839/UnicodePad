@@ -9,8 +9,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 38
-        versionName "2.6.0"
+        versionCode 39
+        versionName "2.6.1"
     }
 
     buildTypes {

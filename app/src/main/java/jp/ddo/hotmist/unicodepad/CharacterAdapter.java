@@ -16,7 +16,7 @@
 
 package jp.ddo.hotmist.unicodepad;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -148,7 +148,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			String r;
 			if (i == 1)
 			{
-				byte[] a = ((String)adapter.getItem(position)).getBytes(StandardCharsets.UTF_8);
+				byte[] a = ((String)adapter.getItem(position)).getBytes(Charset.defaultCharset());
 				StringBuilder sb = new StringBuilder(a.length * 3);
 				for(byte b : a)
 					sb.append(String.format("%02X ", b));

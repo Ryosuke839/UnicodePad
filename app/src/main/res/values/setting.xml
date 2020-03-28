@@ -39,7 +39,7 @@
 		<item>13.0.0</item>
 		<item>Latest</item>
 	</string-array>
-	<string name="version_def">Latest</string>
+	<string name="version_def" translatable="false">Latest</string>
 	<string-array name="single_val">
 		<item>false</item>
 		<item>true</item>
@@ -54,8 +54,8 @@
 		<item>1</item>
 		<item>2</item>
 	</string-array>
-	<string name="gridsize_def">24.0</string>
-	<string name="textsize_def">24.0</string>
-	<string name="viewsize_def">120.0</string>
-	<string name="checker_def">15.0</string>
+	<string name="gridsize_def" translatable="false">24.0</string>
+	<string name="textsize_def" translatable="false">24.0</string>
+	<string name="viewsize_def" translatable="false">120.0</string>
+	<string name="checker_def" translatable="false">15.0</string>
 </resources>

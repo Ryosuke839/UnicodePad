@@ -352,28 +352,8 @@
 	<string name="column_desc">网格列数</string>
 	<string name="columnl_desc">网格列数（横屏）</string>
 
-	<string name="column_1">1</string>
-	<string name="column_2">2</string>
-	<string name="column_4">4</string>
-	<string name="column_8">8</string>
-	<string name="column_16">16</string>
-	<string name="column_32">32</string>
-	<string name="column_64">64</string>
-
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_600">6.0.0</string>
-	<string name="version_610">6.1.0</string>
-	<string name="version_620">6.2.0</string>
-	<string name="version_630">6.3.0</string>
-	<string name="version_700">7.0.0</string>
-	<string name="version_800">8.0.0</string>
-	<string name="version_900">9.0.0</string>
-	<string name="version_1000">10.0.0</string>
-	<string name="version_1100">11.0.0</string>
-	<string name="version_1200">12.0.0</string>
-	<string name="version_1210">12.1.0</string>
-	<string name="version_1300">13.0.0</string>
 	<string name="version_latest">最新 (%1$s)</string>
 
 	<string name="download_desc">下载 Noto 字体…</string>

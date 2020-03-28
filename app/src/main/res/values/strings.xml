@@ -352,28 +352,28 @@
 	<string name="column_desc">Columns in grid</string>
 	<string name="columnl_desc">Columns in grid (landscape)</string>
 
-	<string name="column_1">1</string>
-	<string name="column_2">2</string>
-	<string name="column_4">4</string>
-	<string name="column_8">8</string>
-	<string name="column_16">16</string>
-	<string name="column_32">32</string>
-	<string name="column_64">64</string>
+	<string name="column_1" translatable="false">1</string>
+	<string name="column_2" translatable="false">2</string>
+	<string name="column_4" translatable="false">4</string>
+	<string name="column_8" translatable="false">8</string>
+	<string name="column_16" translatable="false">16</string>
+	<string name="column_32" translatable="false">32</string>
+	<string name="column_64" translatable="false">64</string>
 
 	<string name="version_desc">Unicode version</string>
 
-	<string name="version_600">6.0.0</string>
-	<string name="version_610">6.1.0</string>
-	<string name="version_620">6.2.0</string>
-	<string name="version_630">6.3.0</string>
-	<string name="version_700">7.0.0</string>
-	<string name="version_800">8.0.0</string>
-	<string name="version_900">9.0.0</string>
-	<string name="version_1000">10.0.0</string>
-	<string name="version_1100">11.0.0</string>
-	<string name="version_1200">12.0.0</string>
-	<string name="version_1210">12.1.0</string>
-	<string name="version_1300">13.0.0</string>
+	<string name="version_600" translatable="false">6.0.0</string>
+	<string name="version_610" translatable="false">6.1.0</string>
+	<string name="version_620" translatable="false">6.2.0</string>
+	<string name="version_630" translatable="false">6.3.0</string>
+	<string name="version_700" translatable="false">7.0.0</string>
+	<string name="version_800" translatable="false">8.0.0</string>
+	<string name="version_900" translatable="false">9.0.0</string>
+	<string name="version_1000" translatable="false">10.0.0</string>
+	<string name="version_1100" translatable="false">11.0.0</string>
+	<string name="version_1200" translatable="false">12.0.0</string>
+	<string name="version_1210" translatable="false">12.1.0</string>
+	<string name="version_1300" translatable="false">13.0.0</string>
 	<string name="version_latest">Latest (%1$s)</string>
 
 	<string name="download_desc">Download Noto fonts…</string>

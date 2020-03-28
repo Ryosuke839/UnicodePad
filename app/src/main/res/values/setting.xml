@@ -15,6 +15,15 @@
    limitations under the License.
  -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+	<string-array name="column" tools:ignore="MissingTranslation">
+		<item>@string/column_1</item>
+		<item>@string/column_2</item>
+		<item>@string/column_4</item>
+		<item>@string/column_8</item>
+		<item>@string/column_16</item>
+		<item>@string/column_32</item>
+		<item>@string/column_64</item>
+	</string-array>
 	<string-array name="column_val">
 		<item>1</item>
 		<item>2</item>
@@ -23,6 +32,21 @@
 		<item>16</item>
 		<item>32</item>
 		<item>64</item>
+	</string-array>
+	<string-array name="version" tools:ignore="MissingTranslation">
+		<item>@string/version_600</item>
+		<item>@string/version_610</item>
+		<item>@string/version_620</item>
+		<item>@string/version_630</item>
+		<item>@string/version_700</item>
+		<item>@string/version_800</item>
+		<item>@string/version_900</item>
+		<item>@string/version_1000</item>
+		<item>@string/version_1100</item>
+		<item>@string/version_1200</item>
+		<item>@string/version_1210</item>
+		<item>@string/version_1300</item>
+		<item>@string/version_latest</item>
 	</string-array>
 	<string-array name="version_val">
 		<item>6.0.0</item>
@@ -40,14 +64,28 @@
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def" translatable="false">Latest</string>
+	<string-array name="single" tools:ignore="MissingTranslation">
+		<item>@string/multiplecolumns</item>
+		<item>@string/singlecolumn</item>
+	</string-array>
 	<string-array name="single_val">
 		<item>false</item>
 		<item>true</item>
+	</string-array>
+	<string-array name="theme" tools:ignore="MissingTranslation">
+		<item>@string/theme_dark</item>
+		<item>@string/theme_light</item>
+		<item>@string/theme_darktitle</item>
 	</string-array>
 	<string-array name="theme_val">
 		<item>2131492983</item>
 		<item>2131492984</item>
 		<item>2131492985</item>
+	</string-array>
+	<string-array name="scroll" tools:ignore="MissingTranslation">
+		<item>@string/scroll_never</item>
+		<item>@string/scroll_landscape</item>
+		<item>@string/scroll_always</item>
 	</string-array>
 	<string-array name="scroll_val">
 		<item>0</item>

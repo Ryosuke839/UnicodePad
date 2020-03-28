@@ -341,29 +341,29 @@
 	<string name="column_desc">Antal kolumner i rutnät</string>
 	<string name="columnl_desc">Antal kolumner i rutnät (liggande)</string>
 
-	<item name="column_1">1</item>
-	<item name="column_2">2</item>
-	<item name="column_4">4</item>
-	<item name="column_8">8</item>
-	<item name="column_16">16</item>
-	<item name="column_32">32</item>
-	<item name="column_64">64</item>
+	<string name="column_1">1</string>
+	<string name="column_2">2</string>
+	<string name="column_4">4</string>
+	<string name="column_8">8</string>
+	<string name="column_16">16</string>
+	<string name="column_32">32</string>
+	<string name="column_64">64</string>
 
 	<string name="version_desc">Unicode-version</string>
 
-	<item name="version_600">6.0.0</item>
-	<item name="version_610">6.1.0</item>
-	<item name="version_620">6.2.0</item>
-	<item name="version_630">6.3.0</item>
-	<item name="version_700">7.0.0</item>
-	<item name="version_800">8.0.0</item>
-	<item name="version_900">9.0.0</item>
-	<item name="version_1000">10.0.0</item>
-	<item name="version_1100">11.0.0</item>
-	<item name="version_1200">12.0.0</item>
-	<item name="version_1210">12.1.0</item>
-	<item name="version_1300">13.0.0</item>
-	<item name="version_latest">Senaste (%1$s)</item>
+	<string name="version_600">6.0.0</string>
+	<string name="version_610">6.1.0</string>
+	<string name="version_620">6.2.0</string>
+	<string name="version_630">6.3.0</string>
+	<string name="version_700">7.0.0</string>
+	<string name="version_800">8.0.0</string>
+	<string name="version_900">9.0.0</string>
+	<string name="version_1000">10.0.0</string>
+	<string name="version_1100">11.0.0</string>
+	<string name="version_1200">12.0.0</string>
+	<string name="version_1210">12.1.0</string>
+	<string name="version_1300">13.0.0</string>
+	<string name="version_latest">Senaste (%1$s)</string>
 
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
@@ -377,8 +377,8 @@
 	<string name="single_edt_desc">Kolumner i input</string>
 	<string name="single_emoji_desc">Kolumner i emoji</string>
 
-	<string name="multiplecolumns">Flera kolumner med endast tecken</item>
-	<string name="singlecolumn">En kolumn med beskrivning</item>
+	<string name="multiplecolumns">Flera kolumner med endast tecken</string>
+	<string name="singlecolumn">En kolumn med beskrivning</string>
 
 	<string name="padding_desc">Avstånd i rutnät</string>
 	<string name="gridsize_desc">Textstorlek i rutnät</string>
@@ -389,17 +389,17 @@
 	<string name="recent_desc">Antalet senast använda tecken</string>
 	<string name="theme_desc">Tema</string>
 
-	<string name="theme_dark">Mörkt</item>
-	<string name="theme_light">Ljust</item>
-	<string name="theme_darktitle">Ljust + mörk list</item>
+	<string name="theme_dark">Mörkt</string>
+	<string name="theme_light">Ljust</string>
+	<string name="theme_darktitle">Ljust + mörk list</string>
 
 	<string name="theme_title">Tillämpas efter omstart</string>
 	<string name="list_title">Listan kan inte döljas</string>
 	<string name="scroll_desc">Autoscrolla</string>
 
-	<string name="scroll_never">Aldrig</item>
-	<string name="scroll_landscape">Alltid i liggande läge</item>
-	<string name="scroll_always">Alltid</item>
+	<string name="scroll_never">Aldrig</string>
+	<string name="scroll_landscape">Alltid i liggande läge</string>
+	<string name="scroll_always">Alltid</string>
 
 	<string name="ime_desc">Inaktivera tangentbord</string>
 	<string name="clear_desc">Visa rensa-knapp</string>

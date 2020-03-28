@@ -352,29 +352,29 @@
 	<string name="column_desc">Columns in grid</string>
 	<string name="columnl_desc">Columns in grid (landscape)</string>
 
-	<item name="column_1">1</item>
-	<item name="column_2">2</item>
-	<item name="column_4">4</item>
-	<item name="column_8">8</item>
-	<item name="column_16">16</item>
-	<item name="column_32">32</item>
-	<item name="column_64">64</item>
+	<string name="column_1">1</string>
+	<string name="column_2">2</string>
+	<string name="column_4">4</string>
+	<string name="column_8">8</string>
+	<string name="column_16">16</string>
+	<string name="column_32">32</string>
+	<string name="column_64">64</string>
 
 	<string name="version_desc">Unicode version</string>
 
-	<item name="version_600">6.0.0</item>
-	<item name="version_610">6.1.0</item>
-	<item name="version_620">6.2.0</item>
-	<item name="version_630">6.3.0</item>
-	<item name="version_700">7.0.0</item>
-	<item name="version_800">8.0.0</item>
-	<item name="version_900">9.0.0</item>
-	<item name="version_1000">10.0.0</item>
-	<item name="version_1100">11.0.0</item>
-	<item name="version_1200">12.0.0</item>
-	<item name="version_1210">12.1.0</item>
-	<item name="version_1300">13.0.0</item>
-	<item name="version_latest">Latest (%1$s)</item>
+	<string name="version_600">6.0.0</string>
+	<string name="version_610">6.1.0</string>
+	<string name="version_620">6.2.0</string>
+	<string name="version_630">6.3.0</string>
+	<string name="version_700">7.0.0</string>
+	<string name="version_800">8.0.0</string>
+	<string name="version_900">9.0.0</string>
+	<string name="version_1000">10.0.0</string>
+	<string name="version_1100">11.0.0</string>
+	<string name="version_1200">12.0.0</string>
+	<string name="version_1210">12.1.0</string>
+	<string name="version_1300">13.0.0</string>
+	<string name="version_latest">Latest (%1$s)</string>
 
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
@@ -389,8 +389,8 @@
 	<string name="single_edt_desc">Columns in input tab</string>
 	<string name="single_emoji_desc">Columns in emoji tab</string>
 
-	<string name="multiplecolumns">Multiple columns only with characters</item>
-	<string name="singlecolumn">Single column with description</item>
+	<string name="multiplecolumns">Multiple columns only with characters</string>
+	<string name="singlecolumn">Single column with description</string>
 
 	<string name="padding_desc">Padding of grid</string>
 	<string name="gridsize_desc">Text size of grid</string>
@@ -401,17 +401,17 @@
 	<string name="recent_desc">Maximum number of recent list</string>
 	<string name="theme_desc">Theme</string>
 
-	<string name="theme_dark">Dark</item>
-	<string name="theme_light">Light</item>
-	<string name="theme_darktitle">Light + DarkTitle</item>
+	<string name="theme_dark">Dark</string>
+	<string name="theme_light">Light</string>
+	<string name="theme_darktitle">Light + DarkTitle</string>
 
 	<string name="theme_title">May be applied after restart</string>
 	<string name="list_title">List tab can\'t be hidden</string>
 	<string name="scroll_desc">UI scroll</string>
 
-	<string name="scroll_never">Never</item>
-	<string name="scroll_landscape">Only in landscape</item>
-	<string name="scroll_always">Always</item>
+	<string name="scroll_never">Never</string>
+	<string name="scroll_landscape">Only in landscape</string>
+	<string name="scroll_always">Always</string>
 
 	<string name="ime_desc">Disable IME</string>
 	<string name="clear_desc">Show clear button</string>

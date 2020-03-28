@@ -82,12 +82,9 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private static float fontsize = 24.0f;
 	static int univer = 1000;
 
-	@SuppressLint("NewApi")
 	public View onCreateView(View parent, String name, Context context, AttributeSet attrs)
 	{
-		if (Build.VERSION.SDK_INT >= 11)
-			return super.onCreateView(parent, name, context, attrs);
-		return null;
+		return super.onCreateView(parent, name, context, attrs);
 	}
 
 	@Override

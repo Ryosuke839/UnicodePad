@@ -874,7 +874,6 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 	{
 	}
 
-	@SuppressLint("InlinedApi")
 	@Override
 	public void onClick(final View arg0)
 	{
@@ -903,7 +902,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			};
 			edit.setText(String.format("%04X", head));
 			edit.setSingleLine();
-			edit.setImeOptions(Build.VERSION.SDK_INT >= 16 ? EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_FORCE_ASCII : EditorInfo.IME_ACTION_GO);
+			edit.setImeOptions(EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_FORCE_ASCII);
 			edit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			edit.setGravity(Gravity.CENTER_VERTICAL);
 			edit.setOnTouchListener(new OnTouchListener()

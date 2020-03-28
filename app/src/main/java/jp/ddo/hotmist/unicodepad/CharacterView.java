@@ -337,7 +337,7 @@ public class CharacterView extends View
 	{
 		emojicache = null;
 
-		if (Build.VERSION.SDK_INT >= 12 && (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0.f)
+		if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0.f)
 		{
 			float w = paint.measureText(str);
 			if (w > 256.f)

@@ -393,4 +393,5 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="legal_app">UnicodePad 2.6.1</string>
 	<string name="legal_app2">UnicodePad är licensierad under Apache-licensen, version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
+	<string name="no_ad_desc">Visa inte annonser</string>
 </resources>

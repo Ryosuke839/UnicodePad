@@ -11,7 +11,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<string name="app_name">UnicodePad</string>
 	<string name="delete">删除</string>
 	<string name="desc">详情</string>
@@ -404,4 +404,5 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="legal_app">UnicodePad 2.6.1</string>
 	<string name="legal_app2">UnicodePad 使用 Apache 2.0 许可证
 https://github.com/Ryosuke839/UnicodePad</string>
+	<string name="no_ad_desc">不显示广告</string>
 </resources>

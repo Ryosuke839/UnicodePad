@@ -158,21 +158,27 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 
 		if (!pref.getBoolean("no-ad", false))
 		{
-			MobileAds.initialize(this, new OnInitializationCompleteListener()
+			try
 			{
-				@Override
-				public void onInitializationComplete(InitializationStatus initializationStatus)
+				MobileAds.initialize(this, new OnInitializationCompleteListener()
 				{
-				}
-			});
-			adView = new AdView(this);
-			DisplayMetrics outMetrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-			adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
-			adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
-			((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
-			AdRequest adRequest = new AdRequest.Builder().build();
-			adView.loadAd(adRequest);
+					@Override
+					public void onInitializationComplete(InitializationStatus initializationStatus)
+					{
+					}
+				});
+				adView = new AdView(this);
+				DisplayMetrics outMetrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+				adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+				adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
+				((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+				AdRequest adRequest = new AdRequest.Builder().build();
+				adView.loadAd(adRequest);
+			}
+			catch (NullPointerException e)
+			{
+			}
 		}
 	}
 

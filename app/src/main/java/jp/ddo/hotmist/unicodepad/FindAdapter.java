@@ -67,7 +67,6 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 		return R.string.find;
 	}
 
-	@SuppressLint("InlinedApi")
 	@Override
 	View instantiate(GridView grd)
 	{
@@ -79,7 +78,7 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 		text.setSingleLine();
 		text.setText(saved);
 		text.setHint(R.string.fhint);
-		text.setImeOptions(Build.VERSION.SDK_INT >= 16 ? EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_FORCE_ASCII : EditorInfo.IME_ACTION_SEARCH);
+		text.setImeOptions(EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_FORCE_ASCII);
 		text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 		text.setOnEditorActionListener(this);
 		if (adapter == null)

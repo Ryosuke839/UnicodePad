@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
    Copyright 2018 Ryosuke839
-
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-
        http://www.apache.org/licenses/LICENSE-2.0
-
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,344 +38,344 @@
 	<string name="cantopen">Cannot open the font</string>
 	<string name="cantread">Cannot access; the application may not have permission to read</string>
 	<string name="denied">You have denied access. To browse SD card, please grant the storage permission from Apps setting.</string>
-	<string-array name="codes" tools:ignore="MissingTranslation">
-		<item>0 Basic Latin</item>
-		<item>80 Latin-1 Supplement</item>
-		<item>100 Latin Extended-A</item>
-		<item>180 Latin Extended-B</item>
-		<item>250 IPA Extensions</item>
-		<item>2B0 Spacing Modifier Letters</item>
-		<item>300 Combining Diacritical Marks</item>
-		<item>370 Greek and Coptic</item>
-		<item>400 Cyrillic</item>
-		<item>500 Cyrillic Supplement</item>
-		<item>530 Armenian</item>
-		<item>590 Hebrew</item>
-		<item>600 Arabic</item>
-		<item>700 Syriac</item>
-		<item>750 Arabic Supplement</item>
-		<item>780 Thaana</item>
-		<item>7C0 NKo</item>
-		<item>800 Samaritan</item>
-		<item>840 Mandaic</item>
-		<item>860 Syriac Supplement</item>
-		<item>8A0 Arabic Extended-A</item>
-		<item>900 Devanagari</item>
-		<item>980 Bengali</item>
-		<item>A00 Gurmukhi</item>
-		<item>A80 Gujarati</item>
-		<item>B00 Oriya</item>
-		<item>B80 Tamil</item>
-		<item>C00 Telugu</item>
-		<item>C80 Kannada</item>
-		<item>D00 Malayalam</item>
-		<item>D80 Sinhala</item>
-		<item>E00 Thai</item>
-		<item>E80 Lao</item>
-		<item>F00 Tibetan</item>
-		<item>1000 Myanmar</item>
-		<item>10A0 Georgian</item>
-		<item>1100 Hangul Jamo</item>
-		<item>1200 Ethiopic</item>
-		<item>1380 Ethiopic Supplement</item>
-		<item>13A0 Cherokee</item>
-		<item>1400 Unified Canadian Aboriginal Syllabics</item>
-		<item>1680 Ogham</item>
-		<item>16A0 Runic</item>
-		<item>1700 Tagalog</item>
-		<item>1720 Hanunoo</item>
-		<item>1740 Buhid</item>
-		<item>1760 Tagbanwa</item>
-		<item>1780 Khmer</item>
-		<item>1800 Mongolian</item>
-		<item>18B0 Unified Canadian Aboriginal Syllabics Extended</item>
-		<item>1900 Limbu</item>
-		<item>1950 Tai Le</item>
-		<item>1980 New Tai Lue</item>
-		<item>19E0 Khmer Symbols</item>
-		<item>1A00 Buginese</item>
-		<item>1A20 Tai Tham</item>
-		<item>1AB0 Combining Diacritical Marks Extended</item>
-		<item>1B00 Balinese</item>
-		<item>1B80 Sundanese</item>
-		<item>1BC0 Batak</item>
-		<item>1C00 Lepcha</item>
-		<item>1C50 Ol Chiki</item>
-		<item>1C80 Cyrillic Extended-C</item>
-		<item>1C90 Georgian Extended</item>
-		<item>1CC0 Sundanese Supplement</item>
-		<item>1CD0 Vedic Extensions</item>
-		<item>1D00 Phonetic Extensions</item>
-		<item>1D80 Phonetic Extensions Supplement</item>
-		<item>1DC0 Combining Diacritical Marks Supplement</item>
-		<item>1E00 Latin Extended Additional</item>
-		<item>1F00 Greek Extended</item>
-		<item>2000 General Punctuation</item>
-		<item>2070 Superscripts and Subscripts</item>
-		<item>20A0 Currency Symbols</item>
-		<item>20D0 Combining Diacritical Marks for Symbols</item>
-		<item>2100 Letterlike Symbols</item>
-		<item>2150 Number Forms</item>
-		<item>2190 Arrows</item>
-		<item>2200 Mathematical Operators</item>
-		<item>2300 Miscellaneous Technical</item>
-		<item>2400 Control Pictures</item>
-		<item>2440 Optical Character Recognition</item>
-		<item>2460 Enclosed Alphanumerics</item>
-		<item>2500 Box Drawing</item>
-		<item>2580 Block Elements</item>
-		<item>25A0 Geometric Shapes</item>
-		<item>2600 Miscellaneous Symbols</item>
-		<item>2700 Dingbats</item>
-		<item>27C0 Miscellaneous Mathematical Symbols-A</item>
-		<item>27F0 Supplemental Arrows-A</item>
-		<item>2800 Braille Patterns</item>
-		<item>2900 Supplemental Arrows-B</item>
-		<item>2980 Miscellaneous Mathematical Symbols-B</item>
-		<item>2A00 Supplemental Mathematical Operators</item>
-		<item>2B00 Miscellaneous Symbols and Arrows</item>
-		<item>2C00 Glagolitic</item>
-		<item>2C60 Latin Extended-C</item>
-		<item>2C80 Coptic</item>
-		<item>2D00 Georgian Supplement</item>
-		<item>2D30 Tifinagh</item>
-		<item>2D80 Ethiopic Extended</item>
-		<item>2DE0 Cyrillic Extended-A</item>
-		<item>2E00 Supplemental Punctuation</item>
-		<item>2E80 CJK Radicals Supplement</item>
-		<item>2F00 Kangxi Radicals</item>
-		<item>2FF0 Ideographic Description Characters</item>
-		<item>3000 CJK Symbols and Punctuation</item>
-		<item>3040 Hiragana</item>
-		<item>30A0 Katakana</item>
-		<item>3100 Bopomofo</item>
-		<item>3130 Hangul Compatibility Jamo</item>
-		<item>3190 Kanbun</item>
-		<item>31A0 Bopomofo Extended</item>
-		<item>31C0 CJK Strokes</item>
-		<item>31F0 Katakana Phonetic Extensions</item>
-		<item>3200 Enclosed CJK Letters and Months</item>
-		<item>3300 CJK Compatibility</item>
-		<item>3400 CJK Unified Ideographs Extension A</item>
-		<item>4DC0 Yijing Hexagram Symbols</item>
-		<item>4E00 CJK Unified Ideographs</item>
-		<item>A000 Yi Syllables</item>
-		<item>A490 Yi Radicals</item>
-		<item>A4D0 Lisu</item>
-		<item>A500 Vai</item>
-		<item>A640 Cyrillic Extended-B</item>
-		<item>A6A0 Bamum</item>
-		<item>A700 Modifier Tone Letters</item>
-		<item>A720 Latin Extended-D</item>
-		<item>A800 Syloti Nagri</item>
-		<item>A830 Common Indic Number Forms</item>
-		<item>A840 Phags-pa</item>
-		<item>A880 Saurashtra</item>
-		<item>A8E0 Devanagari Extended</item>
-		<item>A900 Kayah Li</item>
-		<item>A930 Rejang</item>
-		<item>A960 Hangul Jamo Extended-A</item>
-		<item>A980 Javanese</item>
-		<item>A9E0 Myanmar Extended-B</item>
-		<item>AA00 Cham</item>
-		<item>AA60 Myanmar Extended-A</item>
-		<item>AA80 Tai Viet</item>
-		<item>AAE0 Meetei Mayek Extensions</item>
-		<item>AB00 Ethiopic Extended-A</item>
-		<item>AB30 Latin Extended-E</item>
-		<item>AB70 Cherokee Supplement</item>
-		<item>ABC0 Meetei Mayek</item>
-		<item>AC00 Hangul Syllables</item>
-		<item>D7B0 Hangul Jamo Extended-B</item>
-		<item>E000 Private Use Area</item>
-		<item>F900 CJK Compatibility Ideographs</item>
-		<item>FB00 Alphabetic Presentation Forms</item>
-		<item>FB50 Arabic Presentation Forms-A</item>
-		<item>FE00 Variation Selectors</item>
-		<item>FE10 Vertical Forms</item>
-		<item>FE20 Combining Half Marks</item>
-		<item>FE30 CJK Compatibility Forms</item>
-		<item>FE50 Small Form Variants</item>
-		<item>FE70 Arabic Presentation Forms-B</item>
-		<item>FF00 Halfwidth and Fullwidth Forms</item>
-		<item>FFF0 Specials</item>
-		<item>10000 Linear B Syllabary</item>
-		<item>10080 Linear B Ideograms</item>
-		<item>10100 Aegean Numbers</item>
-		<item>10140 Ancient Greek Numbers</item>
-		<item>10190 Ancient Symbols</item>
-		<item>101D0 Phaistos Disc</item>
-		<item>10280 Lycian</item>
-		<item>102A0 Carian</item>
-		<item>102E0 Coptic Epact Numbers</item>
-		<item>10300 Old Italic</item>
-		<item>10330 Gothic</item>
-		<item>10350 Old Permic</item>
-		<item>10380 Ugaritic</item>
-		<item>103A0 Old Persian</item>
-		<item>10400 Deseret</item>
-		<item>10450 Shavian</item>
-		<item>10480 Osmanya</item>
-		<item>104B0 Osage</item>
-		<item>10500 Elbasan</item>
-		<item>10530 Caucasian Albanian</item>
-		<item>10600 Linear A</item>
-		<item>10800 Cypriot Syllabary</item>
-		<item>10840 Imperial Aramaic</item>
-		<item>10860 Palmyrene</item>
-		<item>10880 Nabataean</item>
-		<item>108E0 Hatran</item>
-		<item>10900 Phoenician</item>
-		<item>10920 Lydian</item>
-		<item>10980 Meroitic Hieroglyphs</item>
-		<item>109A0 Meroitic Cursive</item>
-		<item>10A00 Kharoshthi</item>
-		<item>10A60 Old South Arabian</item>
-		<item>10A80 Old North Arabian</item>
-		<item>10AC0 Manichaean</item>
-		<item>10B00 Avestan</item>
-		<item>10B40 Inscriptional Parthian</item>
-		<item>10B60 Inscriptional Pahlavi</item>
-		<item>10B80 Psalter Pahlavi</item>
-		<item>10C00 Old Turkic</item>
-		<item>10C80 Old Hungarian</item>
-		<item>10D00 Hanifi Rohingya</item>
-		<item>10E60 Rumi Numeral Symbols</item>
-		<item>10E80 Yezidi</item>
-		<item>10F00 Old Sogdian</item>
-		<item>10F30 Sogdian</item>
-		<item>10FB0 Chorasmian</item>
-		<item>10FE0 Elymaic</item>
-		<item>11000 Brahmi</item>
-		<item>11080 Kaithi</item>
-		<item>110D0 Sora Sompeng</item>
-		<item>11100 Chakma</item>
-		<item>11150 Mahajani</item>
-		<item>11180 Sharada</item>
-		<item>111E0 Sinhala Archaic Numbers</item>
-		<item>11200 Khojki</item>
-		<item>11280 Multani</item>
-		<item>112B0 Khudawadi</item>
-		<item>11300 Grantha</item>
-		<item>11400 Newa</item>
-		<item>11480 Tirhuta</item>
-		<item>11580 Siddham</item>
-		<item>11600 Modi</item>
-		<item>11660 Mongolian Supplement</item>
-		<item>11680 Takri</item>
-		<item>11700 Ahom</item>
-		<item>11800 Dogra</item>
-		<item>118A0 Warang Citi</item>
-		<item>11900 Dives Akuru</item>
-		<item>119A0 Nandinagari</item>
-		<item>11A00 Zanabazar Square</item>
-		<item>11A50 Soyombo</item>
-		<item>11AC0 Pau Cin Hau</item>
-		<item>11C00 Bhaiksuki</item>
-		<item>11C70 Marchen</item>
-		<item>11D00 Masaram Gondi</item>
-		<item>11D60 Gunjala Gondi</item>
-		<item>11EE0 Makasar</item>
-		<item>11FB0 Lisu Supplement</item>
-		<item>11FC0 Tamil Supplement</item>
-		<item>12000 Cuneiform</item>
-		<item>12400 Cuneiform Numbers and Punctuation</item>
-		<item>12480 Early Dynastic Cuneiform</item>
-		<item>13000 Egyptian Hieroglyphs</item>
-		<item>13430 Egyptian Hieroglyph Format Controls</item>
-		<item>14400 Anatolian Hieroglyphs</item>
-		<item>16800 Bamum Supplement</item>
-		<item>16A40 Mro</item>
-		<item>16AD0 Bassa Vah</item>
-		<item>16B00 Pahawh Hmong</item>
-		<item>16E40 Medefaidrin</item>
-		<item>16F00 Miao</item>
-		<item>16FE0 Ideographic Symbols and Punctuation</item>
-		<item>17000 Tangut</item>
-		<item>18800 Tangut Components</item>
-		<item>18B00 Khitan Small Script</item>
-		<item>18D00 Tangut Supplement</item>
-		<item>1B000 Kana Supplement</item>
-		<item>1B100 Kana Extended-A</item>
-		<item>1B130 Small Kana Extension</item>
-		<item>1B170 Nushu</item>
-		<item>1BC00 Duployan</item>
-		<item>1BCA0 Shorthand Format Controls</item>
-		<item>1D000 Byzantine Musical Symbols</item>
-		<item>1D100 Musical Symbols</item>
-		<item>1D200 Ancient Greek Musical Notation</item>
-		<item>1D2E0 Mayan Numerals</item>
-		<item>1D300 Tai Xuan Jing Symbols</item>
-		<item>1D360 Counting Rod Numerals</item>
-		<item>1D400 Mathematical Alphanumeric Symbols</item>
-		<item>1D800 Sutton SignWriting</item>
-		<item>1E000 Glagolitic Supplement</item>
-		<item>1E100 Nyiakeng Puachue Hmong</item>
-		<item>1E2C0 Wancho</item>
-		<item>1E800 Mende Kikakui</item>
-		<item>1E900 Adlam</item>
-		<item>1EC70 Indic Siyaq Numbers</item>
-		<item>1ED00 Ottoman Siyaq Numbers</item>
-		<item>1EE00 Arabic Mathematical Alphabetic Symbols</item>
-		<item>1F000 Mahjong Tiles</item>
-		<item>1F030 Domino Tiles</item>
-		<item>1F0A0 Playing Cards</item>
-		<item>1F100 Enclosed Alphanumeric Supplement</item>
-		<item>1F200 Enclosed Ideographic Supplement</item>
-		<item>1F300 Miscellaneous Symbols and Pictographs</item>
-		<item>1F600 Emoticons</item>
-		<item>1F650 Ornamental Dingbats</item>
-		<item>1F680 Transport and Map Symbols</item>
-		<item>1F700 Alchemical Symbols</item>
-		<item>1F780 Geometric Shapes Extended</item>
-		<item>1F800 Supplemental Arrows-C</item>
-		<item>1F900 Supplemental Symbols and Pictographs</item>
-		<item>1FA00 Chess Symbols</item>
-		<item>1FA70 Symbols and Pictographs Extended-A</item>
-		<item>1FB00 Symbols for Legacy Computing</item>
-		<item>20000 CJK Unified Ideographs Extension B</item>
-		<item>2A700 CJK Unified Ideographs Extension C</item>
-		<item>2B740 CJK Unified Ideographs Extension D</item>
-		<item>2B820 CJK Unified Ideographs Extension E</item>
-		<item>2CEB0 CJK Unified Ideographs Extension F</item>
-		<item>2F800 CJK Compatibility Ideographs Supplement</item>
-		<item>30000 CJK Unified Ideographs Extension G</item>
-		<item>E0000 Tags</item>
-		<item>E0100 Variation Selectors Supplement</item>
-		<item>F0000 Supplementary Private Use Area-A</item>
-		<item>100000 Supplementary Private Use Area-B</item>
-	</string-array>
+
+	<string name="script_0">0 Basic Latin</string>
+	<string name="script_80">80 Latin-1 Supplement</string>
+	<string name="script_100">100 Latin Extended-A</string>
+	<string name="script_180">180 Latin Extended-B</string>
+	<string name="script_250">250 IPA Extensions</string>
+	<string name="script_2B0">2B0 Spacing Modifier Letters</string>
+	<string name="script_300">300 Combining Diacritical Marks</string>
+	<string name="script_370">370 Greek and Coptic</string>
+	<string name="script_400">400 Cyrillic</string>
+	<string name="script_500">500 Cyrillic Supplement</string>
+	<string name="script_530">530 Armenian</string>
+	<string name="script_590">590 Hebrew</string>
+	<string name="script_600">600 Arabic</string>
+	<string name="script_700">700 Syriac</string>
+	<string name="script_750">750 Arabic Supplement</string>
+	<string name="script_780">780 Thaana</string>
+	<string name="script_7C0">7C0 NKo</string>
+	<string name="script_800">800 Samaritan</string>
+	<string name="script_840">840 Mandaic</string>
+	<string name="script_860">860 Syriac Supplement</string>
+	<string name="script_8A0">8A0 Arabic Extended-A</string>
+	<string name="script_900">900 Devanagari</string>
+	<string name="script_980">980 Bengali</string>
+	<string name="script_A00">A00 Gurmukhi</string>
+	<string name="script_A80">A80 Gujarati</string>
+	<string name="script_B00">B00 Oriya</string>
+	<string name="script_B80">B80 Tamil</string>
+	<string name="script_C00">C00 Telugu</string>
+	<string name="script_C80">C80 Kannada</string>
+	<string name="script_D00">D00 Malayalam</string>
+	<string name="script_D80">D80 Sinhala</string>
+	<string name="script_E00">E00 Thai</string>
+	<string name="script_E80">E80 Lao</string>
+	<string name="script_F00">F00 Tibetan</string>
+	<string name="script_1000">1000 Myanmar</string>
+	<string name="script_10A0">10A0 Georgian</string>
+	<string name="script_1100">1100 Hangul Jamo</string>
+	<string name="script_1200">1200 Ethiopic</string>
+	<string name="script_1380">1380 Ethiopic Supplement</string>
+	<string name="script_13A0">13A0 Cherokee</string>
+	<string name="script_1400">1400 Unified Canadian Aboriginal Syllabics</string>
+	<string name="script_1680">1680 Ogham</string>
+	<string name="script_16A0">16A0 Runic</string>
+	<string name="script_1700">1700 Tagalog</string>
+	<string name="script_1720">1720 Hanunoo</string>
+	<string name="script_1740">1740 Buhid</string>
+	<string name="script_1760">1760 Tagbanwa</string>
+	<string name="script_1780">1780 Khmer</string>
+	<string name="script_1800">1800 Mongolian</string>
+	<string name="script_18B0">18B0 Unified Canadian Aboriginal Syllabics Extended</string>
+	<string name="script_1900">1900 Limbu</string>
+	<string name="script_1950">1950 Tai Le</string>
+	<string name="script_1980">1980 New Tai Lue</string>
+	<string name="script_19E0">19E0 Khmer Symbols</string>
+	<string name="script_1A00">1A00 Buginese</string>
+	<string name="script_1A20">1A20 Tai Tham</string>
+	<string name="script_1AB0">1AB0 Combining Diacritical Marks Extended</string>
+	<string name="script_1B00">1B00 Balinese</string>
+	<string name="script_1B80">1B80 Sundanese</string>
+	<string name="script_1BC0">1BC0 Batak</string>
+	<string name="script_1C00">1C00 Lepcha</string>
+	<string name="script_1C50">1C50 Ol Chiki</string>
+	<string name="script_1C80">1C80 Cyrillic Extended-C</string>
+	<string name="script_1C90">1C90 Georgian Extended</string>
+	<string name="script_1CC0">1CC0 Sundanese Supplement</string>
+	<string name="script_1CD0">1CD0 Vedic Extensions</string>
+	<string name="script_1D00">1D00 Phonetic Extensions</string>
+	<string name="script_1D80">1D80 Phonetic Extensions Supplement</string>
+	<string name="script_1DC0">1DC0 Combining Diacritical Marks Supplement</string>
+	<string name="script_1E00">1E00 Latin Extended Additional</string>
+	<string name="script_1F00">1F00 Greek Extended</string>
+	<string name="script_2000">2000 General Punctuation</string>
+	<string name="script_2070">2070 Superscripts and Subscripts</string>
+	<string name="script_20A0">20A0 Currency Symbols</string>
+	<string name="script_20D0">20D0 Combining Diacritical Marks for Symbols</string>
+	<string name="script_2100">2100 Letterlike Symbols</string>
+	<string name="script_2150">2150 Number Forms</string>
+	<string name="script_2190">2190 Arrows</string>
+	<string name="script_2200">2200 Mathematical Operators</string>
+	<string name="script_2300">2300 Miscellaneous Technical</string>
+	<string name="script_2400">2400 Control Pictures</string>
+	<string name="script_2440">2440 Optical Character Recognition</string>
+	<string name="script_2460">2460 Enclosed Alphanumerics</string>
+	<string name="script_2500">2500 Box Drawing</string>
+	<string name="script_2580">2580 Block Elements</string>
+	<string name="script_25A0">25A0 Geometric Shapes</string>
+	<string name="script_2600">2600 Miscellaneous Symbols</string>
+	<string name="script_2700">2700 Dingbats</string>
+	<string name="script_27C0">27C0 Miscellaneous Mathematical Symbols-A</string>
+	<string name="script_27F0">27F0 Supplemental Arrows-A</string>
+	<string name="script_2800">2800 Braille Patterns</string>
+	<string name="script_2900">2900 Supplemental Arrows-B</string>
+	<string name="script_2980">2980 Miscellaneous Mathematical Symbols-B</string>
+	<string name="script_2A00">2A00 Supplemental Mathematical Operators</string>
+	<string name="script_2B00">2B00 Miscellaneous Symbols and Arrows</string>
+	<string name="script_2C00">2C00 Glagolitic</string>
+	<string name="script_2C60">2C60 Latin Extended-C</string>
+	<string name="script_2C80">2C80 Coptic</string>
+	<string name="script_2D00">2D00 Georgian Supplement</string>
+	<string name="script_2D30">2D30 Tifinagh</string>
+	<string name="script_2D80">2D80 Ethiopic Extended</string>
+	<string name="script_2DE0">2DE0 Cyrillic Extended-A</string>
+	<string name="script_2E00">2E00 Supplemental Punctuation</string>
+	<string name="script_2E80">2E80 CJK Radicals Supplement</string>
+	<string name="script_2F00">2F00 Kangxi Radicals</string>
+	<string name="script_2FF0">2FF0 Ideographic Description Characters</string>
+	<string name="script_3000">3000 CJK Symbols and Punctuation</string>
+	<string name="script_3040">3040 Hiragana</string>
+	<string name="script_30A0">30A0 Katakana</string>
+	<string name="script_3100">3100 Bopomofo</string>
+	<string name="script_3130">3130 Hangul Compatibility Jamo</string>
+	<string name="script_3190">3190 Kanbun</string>
+	<string name="script_31A0">31A0 Bopomofo Extended</string>
+	<string name="script_31C0">31C0 CJK Strokes</string>
+	<string name="script_31F0">31F0 Katakana Phonetic Extensions</string>
+	<string name="script_3200">3200 Enclosed CJK Letters and Months</string>
+	<string name="script_3300">3300 CJK Compatibility</string>
+	<string name="script_3400">3400 CJK Unified Ideographs Extension A</string>
+	<string name="script_4DC0">4DC0 Yijing Hexagram Symbols</string>
+	<string name="script_4E00">4E00 CJK Unified Ideographs</string>
+	<string name="script_A000">A000 Yi Syllables</string>
+	<string name="script_A490">A490 Yi Radicals</string>
+	<string name="script_A4D0">A4D0 Lisu</string>
+	<string name="script_A500">A500 Vai</string>
+	<string name="script_A640">A640 Cyrillic Extended-B</string>
+	<string name="script_A6A0">A6A0 Bamum</string>
+	<string name="script_A700">A700 Modifier Tone Letters</string>
+	<string name="script_A720">A720 Latin Extended-D</string>
+	<string name="script_A800">A800 Syloti Nagri</string>
+	<string name="script_A830">A830 Common Indic Number Forms</string>
+	<string name="script_A840">A840 Phags-pa</string>
+	<string name="script_A880">A880 Saurashtra</string>
+	<string name="script_A8E0">A8E0 Devanagari Extended</string>
+	<string name="script_A900">A900 Kayah Li</string>
+	<string name="script_A930">A930 Rejang</string>
+	<string name="script_A960">A960 Hangul Jamo Extended-A</string>
+	<string name="script_A980">A980 Javanese</string>
+	<string name="script_A9E0">A9E0 Myanmar Extended-B</string>
+	<string name="script_AA00">AA00 Cham</string>
+	<string name="script_AA60">AA60 Myanmar Extended-A</string>
+	<string name="script_AA80">AA80 Tai Viet</string>
+	<string name="script_AAE0">AAE0 Meetei Mayek Extensions</string>
+	<string name="script_AB00">AB00 Ethiopic Extended-A</string>
+	<string name="script_AB30">AB30 Latin Extended-E</string>
+	<string name="script_AB70">AB70 Cherokee Supplement</string>
+	<string name="script_ABC0">ABC0 Meetei Mayek</string>
+	<string name="script_AC00">AC00 Hangul Syllables</string>
+	<string name="script_D7B0">D7B0 Hangul Jamo Extended-B</string>
+	<string name="script_E000">E000 Private Use Area</string>
+	<string name="script_F900">F900 CJK Compatibility Ideographs</string>
+	<string name="script_FB00">FB00 Alphabetic Presentation Forms</string>
+	<string name="script_FB50">FB50 Arabic Presentation Forms-A</string>
+	<string name="script_FE00">FE00 Variation Selectors</string>
+	<string name="script_FE10">FE10 Vertical Forms</string>
+	<string name="script_FE20">FE20 Combining Half Marks</string>
+	<string name="script_FE30">FE30 CJK Compatibility Forms</string>
+	<string name="script_FE50">FE50 Small Form Variants</string>
+	<string name="script_FE70">FE70 Arabic Presentation Forms-B</string>
+	<string name="script_FF00">FF00 Halfwidth and Fullwidth Forms</string>
+	<string name="script_FFF0">FFF0 Specials</string>
+	<string name="script_10000">10000 Linear B Syllabary</string>
+	<string name="script_10080">10080 Linear B Ideograms</string>
+	<string name="script_10100">10100 Aegean Numbers</string>
+	<string name="script_10140">10140 Ancient Greek Numbers</string>
+	<string name="script_10190">10190 Ancient Symbols</string>
+	<string name="script_101D0">101D0 Phaistos Disc</string>
+	<string name="script_10280">10280 Lycian</string>
+	<string name="script_102A0">102A0 Carian</string>
+	<string name="script_102E0">102E0 Coptic Epact Numbers</string>
+	<string name="script_10300">10300 Old Italic</string>
+	<string name="script_10330">10330 Gothic</string>
+	<string name="script_10350">10350 Old Permic</string>
+	<string name="script_10380">10380 Ugaritic</string>
+	<string name="script_103A0">103A0 Old Persian</string>
+	<string name="script_10400">10400 Deseret</string>
+	<string name="script_10450">10450 Shavian</string>
+	<string name="script_10480">10480 Osmanya</string>
+	<string name="script_104B0">104B0 Osage</string>
+	<string name="script_10500">10500 Elbasan</string>
+	<string name="script_10530">10530 Caucasian Albanian</string>
+	<string name="script_10600">10600 Linear A</string>
+	<string name="script_10800">10800 Cypriot Syllabary</string>
+	<string name="script_10840">10840 Imperial Aramaic</string>
+	<string name="script_10860">10860 Palmyrene</string>
+	<string name="script_10880">10880 Nabataean</string>
+	<string name="script_108E0">108E0 Hatran</string>
+	<string name="script_10900">10900 Phoenician</string>
+	<string name="script_10920">10920 Lydian</string>
+	<string name="script_10980">10980 Meroitic Hieroglyphs</string>
+	<string name="script_109A0">109A0 Meroitic Cursive</string>
+	<string name="script_10A00">10A00 Kharoshthi</string>
+	<string name="script_10A60">10A60 Old South Arabian</string>
+	<string name="script_10A80">10A80 Old North Arabian</string>
+	<string name="script_10AC0">10AC0 Manichaean</string>
+	<string name="script_10B00">10B00 Avestan</string>
+	<string name="script_10B40">10B40 Inscriptional Parthian</string>
+	<string name="script_10B60">10B60 Inscriptional Pahlavi</string>
+	<string name="script_10B80">10B80 Psalter Pahlavi</string>
+	<string name="script_10C00">10C00 Old Turkic</string>
+	<string name="script_10C80">10C80 Old Hungarian</string>
+	<string name="script_10D00">10D00 Hanifi Rohingya</string>
+	<string name="script_10E60">10E60 Rumi Numeral Symbols</string>
+	<string name="script_10E80">10E80 Yezidi</string>
+	<string name="script_10F00">10F00 Old Sogdian</string>
+	<string name="script_10F30">10F30 Sogdian</string>
+	<string name="script_10FB0">10FB0 Chorasmian</string>
+	<string name="script_10FE0">10FE0 Elymaic</string>
+	<string name="script_11000">11000 Brahmi</string>
+	<string name="script_11080">11080 Kaithi</string>
+	<string name="script_110D0">110D0 Sora Sompeng</string>
+	<string name="script_11100">11100 Chakma</string>
+	<string name="script_11150">11150 Mahajani</string>
+	<string name="script_11180">11180 Sharada</string>
+	<string name="script_111E0">111E0 Sinhala Archaic Numbers</string>
+	<string name="script_11200">11200 Khojki</string>
+	<string name="script_11280">11280 Multani</string>
+	<string name="script_112B0">112B0 Khudawadi</string>
+	<string name="script_11300">11300 Grantha</string>
+	<string name="script_11400">11400 Newa</string>
+	<string name="script_11480">11480 Tirhuta</string>
+	<string name="script_11580">11580 Siddham</string>
+	<string name="script_11600">11600 Modi</string>
+	<string name="script_11660">11660 Mongolian Supplement</string>
+	<string name="script_11680">11680 Takri</string>
+	<string name="script_11700">11700 Ahom</string>
+	<string name="script_11800">11800 Dogra</string>
+	<string name="script_118A0">118A0 Warang Citi</string>
+	<string name="script_11900">11900 Dives Akuru</string>
+	<string name="script_119A0">119A0 Nandinagari</string>
+	<string name="script_11A00">11A00 Zanabazar Square</string>
+	<string name="script_11A50">11A50 Soyombo</string>
+	<string name="script_11AC0">11AC0 Pau Cin Hau</string>
+	<string name="script_11C00">11C00 Bhaiksuki</string>
+	<string name="script_11C70">11C70 Marchen</string>
+	<string name="script_11D00">11D00 Masaram Gondi</string>
+	<string name="script_11D60">11D60 Gunjala Gondi</string>
+	<string name="script_11EE0">11EE0 Makasar</string>
+	<string name="script_11FB0">11FB0 Lisu Supplement</string>
+	<string name="script_11FC0">11FC0 Tamil Supplement</string>
+	<string name="script_12000">12000 Cuneiform</string>
+	<string name="script_12400">12400 Cuneiform Numbers and Punctuation</string>
+	<string name="script_12480">12480 Early Dynastic Cuneiform</string>
+	<string name="script_13000">13000 Egyptian Hieroglyphs</string>
+	<string name="script_13430">13430 Egyptian Hieroglyph Format Controls</string>
+	<string name="script_14400">14400 Anatolian Hieroglyphs</string>
+	<string name="script_16800">16800 Bamum Supplement</string>
+	<string name="script_16A40">16A40 Mro</string>
+	<string name="script_16AD0">16AD0 Bassa Vah</string>
+	<string name="script_16B00">16B00 Pahawh Hmong</string>
+	<string name="script_16E40">16E40 Medefaidrin</string>
+	<string name="script_16F00">16F00 Miao</string>
+	<string name="script_16FE0">16FE0 Ideographic Symbols and Punctuation</string>
+	<string name="script_17000">17000 Tangut</string>
+	<string name="script_18800">18800 Tangut Components</string>
+	<string name="script_18B00">18B00 Khitan Small Script</string>
+	<string name="script_18D00">18D00 Tangut Supplement</string>
+	<string name="script_1B000">1B000 Kana Supplement</string>
+	<string name="script_1B100">1B100 Kana Extended-A</string>
+	<string name="script_1B130">1B130 Small Kana Extension</string>
+	<string name="script_1B170">1B170 Nushu</string>
+	<string name="script_1BC00">1BC00 Duployan</string>
+	<string name="script_1BCA0">1BCA0 Shorthand Format Controls</string>
+	<string name="script_1D000">1D000 Byzantine Musical Symbols</string>
+	<string name="script_1D100">1D100 Musical Symbols</string>
+	<string name="script_1D200">1D200 Ancient Greek Musical Notation</string>
+	<string name="script_1D2E0">1D2E0 Mayan Numerals</string>
+	<string name="script_1D300">1D300 Tai Xuan Jing Symbols</string>
+	<string name="script_1D360">1D360 Counting Rod Numerals</string>
+	<string name="script_1D400">1D400 Mathematical Alphanumeric Symbols</string>
+	<string name="script_1D800">1D800 Sutton SignWriting</string>
+	<string name="script_1E000">1E000 Glagolitic Supplement</string>
+	<string name="script_1E100">1E100 Nyiakeng Puachue Hmong</string>
+	<string name="script_1E2C0">1E2C0 Wancho</string>
+	<string name="script_1E800">1E800 Mende Kikakui</string>
+	<string name="script_1E900">1E900 Adlam</string>
+	<string name="script_1EC70">1EC70 Indic Siyaq Numbers</string>
+	<string name="script_1ED00">1ED00 Ottoman Siyaq Numbers</string>
+	<string name="script_1EE00">1EE00 Arabic Mathematical Alphabetic Symbols</string>
+	<string name="script_1F000">1F000 Mahjong Tiles</string>
+	<string name="script_1F030">1F030 Domino Tiles</string>
+	<string name="script_1F0A0">1F0A0 Playing Cards</string>
+	<string name="script_1F100">1F100 Enclosed Alphanumeric Supplement</string>
+	<string name="script_1F200">1F200 Enclosed Ideographic Supplement</string>
+	<string name="script_1F300">1F300 Miscellaneous Symbols and Pictographs</string>
+	<string name="script_1F600">1F600 Emoticons</string>
+	<string name="script_1F650">1F650 Ornamental Dingbats</string>
+	<string name="script_1F680">1F680 Transport and Map Symbols</string>
+	<string name="script_1F700">1F700 Alchemical Symbols</string>
+	<string name="script_1F780">1F780 Geometric Shapes Extended</string>
+	<string name="script_1F800">1F800 Supplemental Arrows-C</string>
+	<string name="script_1F900">1F900 Supplemental Symbols and Pictographs</string>
+	<string name="script_1FA00">1FA00 Chess Symbols</string>
+	<string name="script_1FA70">1FA70 Symbols and Pictographs Extended-A</string>
+	<string name="script_1FB00">1FB00 Symbols for Legacy Computing</string>
+	<string name="script_20000">20000 CJK Unified Ideographs Extension B</string>
+	<string name="script_2A700">2A700 CJK Unified Ideographs Extension C</string>
+	<string name="script_2B740">2B740 CJK Unified Ideographs Extension D</string>
+	<string name="script_2B820">2B820 CJK Unified Ideographs Extension E</string>
+	<string name="script_2CEB0">2CEB0 CJK Unified Ideographs Extension F</string>
+	<string name="script_2F800">2F800 CJK Compatibility Ideographs Supplement</string>
+	<string name="script_30000">30000 CJK Unified Ideographs Extension G</string>
+	<string name="script_E0000">E0000 Tags</string>
+	<string name="script_E0100">E0100 Variation Selectors Supplement</string>
+	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>
+	<string name="script_100000">100000 Supplementary Private Use Area-B</string>
+
 	<string name="general">General</string>
 	<string name="appearance">Appearance</string>
 	<string name="behaviour">Behaviour</string>
 	<string name="textsize_desc">Text size of edit box</string>
 	<string name="column_desc">Columns in grid</string>
 	<string name="columnl_desc">Columns in grid (landscape)</string>
-	<string-array name="column">
-		<item>1</item>
-		<item>2</item>
-		<item>4</item>
-		<item>8</item>
-		<item>16</item>
-		<item>32</item>
-		<item>64</item>
-	</string-array>
+
+	<string name="column_1" translatable="false">1</string>
+	<string name="column_2" translatable="false">2</string>
+	<string name="column_4" translatable="false">4</string>
+	<string name="column_8" translatable="false">8</string>
+	<string name="column_16" translatable="false">16</string>
+	<string name="column_32" translatable="false">32</string>
+	<string name="column_64" translatable="false">64</string>
+
 	<string name="version_desc">Unicode version</string>
-	<string-array name="version">
-		<item>6.0.0</item>
-		<item>6.1.0</item>
-		<item>6.2.0</item>
-		<item>6.3.0</item>
-		<item>7.0.0</item>
-		<item>8.0.0</item>
-		<item>9.0.0</item>
-		<item>10.0.0</item>
-		<item>11.0.0</item>
-		<item>12.0.0</item>
-		<item>12.1.0</item>
-		<item>13.0.0</item>
-		<item>Latest (13.0.0)</item>
-	</string-array>
+
+	<string name="version_600" translatable="false">6.0.0</string>
+	<string name="version_610" translatable="false">6.1.0</string>
+	<string name="version_620" translatable="false">6.2.0</string>
+	<string name="version_630" translatable="false">6.3.0</string>
+	<string name="version_700" translatable="false">7.0.0</string>
+	<string name="version_800" translatable="false">8.0.0</string>
+	<string name="version_900" translatable="false">9.0.0</string>
+	<string name="version_1000" translatable="false">10.0.0</string>
+	<string name="version_1100" translatable="false">11.0.0</string>
+	<string name="version_1200" translatable="false">12.0.0</string>
+	<string name="version_1210" translatable="false">12.1.0</string>
+	<string name="version_1300" translatable="false">13.0.0</string>
+	<string name="version_latest">Latest (13.0.0)</string>
+
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
 	<string name="no_ad_desc">Opt-out ads</string>
@@ -391,10 +388,10 @@
 	<string name="single_fav_desc">Columns in favorite tab</string>
 	<string name="single_edt_desc">Columns in input tab</string>
 	<string name="single_emoji_desc">Columns in emoji tab</string>
-	<string-array name="single">
-		<item>Multiple columns only with characters</item>
-		<item>Single column with description</item>
-	</string-array>
+
+	<string name="multiplecolumns">Multiple columns only with characters</string>
+	<string name="singlecolumn">Single column with description</string>
+
 	<string name="padding_desc">Padding of grid</string>
 	<string name="gridsize_desc">Text size of grid</string>
 	<string name="viewsize_desc">Text size of large view</string>
@@ -403,19 +400,19 @@
 	<string name="shrink_desc">Shrink font to fit width</string>
 	<string name="recent_desc">Maximum number of recent list</string>
 	<string name="theme_desc">Theme</string>
-	<string-array name="theme">
-		<item>Dark</item>
-		<item>Light</item>
-		<item>Light + DarkTitle</item>
-	</string-array>
+
+	<string name="theme_dark">Dark</string>
+	<string name="theme_light">Light</string>
+	<string name="theme_darktitle">Light + DarkTitle</string>
+
 	<string name="theme_title">May be applied after restart</string>
 	<string name="list_title">List tab can\'t be hidden</string>
 	<string name="scroll_desc">UI scroll</string>
-	<string-array name="scroll">
-		<item>Never</item>
-		<item>Only in landscape</item>
-		<item>Always</item>
-	</string-array>
+
+	<string name="scroll_never">Never</string>
+	<string name="scroll_landscape">Only in landscape</string>
+	<string name="scroll_always">Always</string>
+
 	<string name="ime_desc">Disable IME</string>
 	<string name="clear_desc">Show clear button</string>
 	<string name="clear" translatable="false">⌧</string>
@@ -432,7 +429,7 @@
 Copyright © 1991-2020 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.6.1</string>
+	<string name="legal_app">UnicodePad 2.7.0</string>
 	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

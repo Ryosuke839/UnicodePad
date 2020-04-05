@@ -27,37 +27,324 @@
 	<string name="cantopen">Det gick inte att öppna typsnittet</string>
 	<string name="cantread">Åtkomst nekad. Appen har inte behörigheten att läsa.</string>
 	<string name="denied">Åtkomst nekad. För åtkomst till SD-kortet, ge behörighet till lagring i appinställningar</string>
+
+	<string name="script_0">0 grundläggande latinska</string>
+	<string name="script_80">80 latinska-1, tillägg</string>
+	<string name="script_100">100 latinska, utökad-A</string>
+	<string name="script_180">180 latinska, utökad-B</string>
+	<string name="script_250">250 IPA-tillägg</string>
+	<string name="script_2B0">2B0 modifierande avståndstecken</string>
+	<string name="script_300">300 kombinerande diakritiska tecken</string>
+	<string name="script_370">370 grekiska och koptiska</string>
+	<string name="script_400">400 kyrilliska</string>
+	<string name="script_500">500 kyrilliska, tillägg</string>
+	<string name="script_530">530 armeniska</string>
+	<string name="script_590">590 hebreiska</string>
+	<string name="script_600">600 arabiska</string>
+	<string name="script_700">700 syriska</string>
+	<string name="script_750">750 arabiska, tillägg</string>
+	<string name="script_780">780 taana</string>
+	<string name="script_7C0">7C0 n-kå</string>
+	<string name="script_800">800 samaritiska</string>
+	<string name="script_840">840 mandeiska</string>
+	<string name="script_860">860 syriska, tillägg</string>
+	<string name="script_8A0">8A0 arabiska, utökad-A</string>
+	<string name="script_900">900 devanagari</string>
+	<string name="script_980">980 bengaliska</string>
+	<string name="script_A00">A00 gurmukhiska</string>
+	<string name="script_A80">A80 gujarati</string>
+	<string name="script_B00">B00 oriya</string>
+	<string name="script_B80">B80 tamilska</string>
+	<string name="script_C00">C00 telugu</string>
+	<string name="script_C80">C80 kanaresiska</string>
+	<string name="script_D00">D00 malayalam</string>
+	<string name="script_D80">D80 singalesiska</string>
+	<string name="script_E00">E00 thailändska</string>
+	<string name="script_E80">E80 laotiska</string>
+	<string name="script_F00">F00 tibetanska</string>
+	<string name="script_1000">1000 burmesiska</string>
+	<string name="script_10A0">10A0 georgiska</string>
+	<string name="script_1100">1100 hangul jamo</string>
+	<string name="script_1200">1200 etiopiska</string>
+	<string name="script_1380">1380 etiopiska, tillägg</string>
+	<string name="script_13A0">13A0 cherokee</string>
+	<string name="script_1400">1400 kanadensiska stavelsetecken</string>
+	<string name="script_1680">1680 ogham</string>
+	<string name="script_16A0">16A0 runor</string>
+	<string name="script_1700">1700 tagalog</string>
+	<string name="script_1720">1720 hanunó’o</string>
+	<string name="script_1740">1740 buhid</string>
+	<string name="script_1760">1760 tagbanwa</string>
+	<string name="script_1780">1780 khmeriska</string>
+	<string name="script_1800">1800 mongoliska</string>
+	<string name="script_18B0">18B0 kanadensiska stavelsetecken, utökad</string>
+	<string name="script_1900">1900 limbu</string>
+	<string name="script_1950">1950 tai le</string>
+	<string name="script_1980">1980 tai lue</string>
+	<string name="script_19E0">19E0 khmeriska symboler</string>
+	<string name="script_1A00">1A00 buginesiska</string>
+	<string name="script_1A20">1A20 lanna</string>
+	<string name="script_1AB0">1AB0 kombinerande diakritiska tecken, utökad</string>
+	<string name="script_1B00">1B00 balinesiska</string>
+	<string name="script_1B80">1B80 sundanesiska</string>
+	<string name="script_1BC0">1BC0 batak</string>
+	<string name="script_1C00">1C00 rong</string>
+	<string name="script_1C50">1C50 ol-chiki</string>
+	<string name="script_1C80">1C80 kyrilliska, utökad-C</string>
+	<string name="script_1C90">1C90 georgiska, utökad</string>
+	<string name="script_1CC0">1CC0 sundanesiska, tillägg</string>
+	<string name="script_1CD0">1CD0 veda-tillägg</string>
+	<string name="script_1D00">1D00 fonetik-tillägg</string>
+	<string name="script_1D80">1D80 fonetik-tillägg, tillägg</string>
+	<string name="script_1DC0">1DC0 kombinerande diakritiska tecken, tillägg</string>
+	<string name="script_1E00">1E00 latinska, utökad ytterligare</string>
+	<string name="script_1F00">1F00 grekiska, utökad</string>
+	<string name="script_2000">2000 allmänna skiljetecken</string>
+	<string name="script_2070">2070 upphöjt och nedsänkt</string>
+	<string name="script_20A0">20A0 valutasymboler</string>
+	<string name="script_20D0">20D0 kombinerande diakritiska tecken for symboler</string>
+	<string name="script_2100">2100 bokstavsliknande symboler</string>
+	<string name="script_2150">2150 sifferformer</string>
+	<string name="script_2190">2190 pilar</string>
+	<string name="script_2200">2200 matematiska operatorer</string>
+	<string name="script_2300">2300 diverse tekniska symboler</string>
+	<string name="script_2400">2400 kontrollbilder</string>
+	<string name="script_2440">2440 optisk teckenigenkänning</string>
+	<string name="script_2460">2460 omslutna alfanumeriska tecken</string>
+	<string name="script_2500">2500 ramtecken</string>
+	<string name="script_2580">2580 blockelement</string>
+	<string name="script_25A0">25A0 geometriska former</string>
+	<string name="script_2600">2600 diverse symboler</string>
+	<string name="script_2700">2700 dingbats</string>
+	<string name="script_27C0">27C0 diverse matematiska symboler-A</string>
+	<string name="script_27F0">27F0 kompletterande pilar-A</string>
+	<string name="script_2800">2800 punktskrift</string>
+	<string name="script_2900">2900 kompletterande pilar-B</string>
+	<string name="script_2980">2980 diverse matematiska symboler-B</string>
+	<string name="script_2A00">2A00 kompletterande matematiska operatorer</string>
+	<string name="script_2B00">2B00 diverse symboler och pilar</string>
+	<string name="script_2C00">2C00 glagolitiska</string>
+	<string name="script_2C60">2C60 latinska, utökad-C</string>
+	<string name="script_2C80">2C80 koptiska</string>
+	<string name="script_2D00">2D00 georgiska, tillägg</string>
+	<string name="script_2D30">2D30 tifinaghiska</string>
+	<string name="script_2D80">2D80 etiopiska, utökad</string>
+	<string name="script_2DE0">2DE0 kyrilliska, utökad-A</string>
+	<string name="script_2E00">2E00 kompletterande skiljetecken</string>
+	<string name="script_2E80">2E80 CJK-radikaler, tillägg</string>
+	<string name="script_2F00">2F00 kangxi-radikaler</string>
+	<string name="script_2FF0">2FF0 ideografiska beskrivningstecken</string>
+	<string name="script_3000">3000 CJK-symboler och -skiljetecken</string>
+	<string name="script_3040">3040 hiragana</string>
+	<string name="script_30A0">30A0 katakana</string>
+	<string name="script_3100">3100 bopomofo</string>
+	<string name="script_3130">3130 hangul kompatibilitet-jamo</string>
+	<string name="script_3190">3190 kanbun</string>
+	<string name="script_31A0">31A0 bopomofo, utökad</string>
+	<string name="script_31C0">31C0 CJK-streck</string>
+	<string name="script_31F0">31F0 katakana fonetik-tillägg</string>
+	<string name="script_3200">3200 omslutna CJK-bokstäver och -månader</string>
+	<string name="script_3300">3300 CJK-kompatibilitet</string>
+	<string name="script_3400">3400 CJK-förenade ideografer, utökning A</string>
+	<string name="script_4DC0">4DC0 yijing-hexagramsymboler</string>
+	<string name="script_4E00">4E00 CJK-förenade ideografer</string>
+	<string name="script_A000">A000 yi-stavelser</string>
+	<string name="script_A490">A490 yi-radikaler</string>
+	<string name="script_A4D0">A4D0 lisu</string>
+	<string name="script_A500">A500 vaj</string>
+	<string name="script_A640">A640 kyrilliska, utökad-B</string>
+	<string name="script_A6A0">A6A0 bamunska</string>
+	<string name="script_A700">A700 modifierande tonbokstäver</string>
+	<string name="script_A720">A720 latinska, utökad-D</string>
+	<string name="script_A800">A800 syloti nagri</string>
+	<string name="script_A830">A830 gemensamma indiska sifferformer</string>
+	<string name="script_A840">A840 phags-pa</string>
+	<string name="script_A880">A880 saurashtra</string>
+	<string name="script_A8E0">A8E0 devanagari, utökad</string>
+	<string name="script_A900">A900 kaya li</string>
+	<string name="script_A930">A930 rejang</string>
+	<string name="script_A960">A960 hangul jamo, utökad-A</string>
+	<string name="script_A980">A980 javanska</string>
+	<string name="script_A9E0">A9E0 burmesiska, utökad-B</string>
+	<string name="script_AA00">AA00 cham</string>
+	<string name="script_AA60">AA60 burmesiska, utökad-A</string>
+	<string name="script_AA80">AA80 tai viet</string>
+	<string name="script_AAE0">AAE0 meetei mayek-tillägg</string>
+	<string name="script_AB00">AB00 etiopiska, utökad-A</string>
+	<string name="script_AB30">AB30 latinska, utökad-E</string>
+	<string name="script_AB70">AB70 cherokee, tillägg</string>
+	<string name="script_ABC0">ABC0 meetei mayek</string>
+	<string name="script_AC00">AC00 hangul-stavelser</string>
+	<string name="script_D7B0">D7B0 hangul jamo, utökad-B</string>
+	<string name="script_E000">E000 tecken för privat bruk</string>
+	<string name="script_F900">F900 CJK-kompatibilitetsideografier</string>
+	<string name="script_FB00">FB00 alfabetiska presentationsformer</string>
+	<string name="script_FB50">FB50 arabiska presentationsformer-A</string>
+	<string name="script_FE00">FE00 variationsväljare</string>
+	<string name="script_FE10">FE10 vertikala former</string>
+	<string name="script_FE20">FE20 kombinerande halvtecken</string>
+	<string name="script_FE30">FE30 CJK-kompatibilitetsformer</string>
+	<string name="script_FE50">FE50 små formvarianter</string>
+	<string name="script_FE70">FE70 arabiska presentationsformer-B</string>
+	<string name="script_FF00">FF00 halvbredd och fullbredd</string>
+	<string name="script_FFF0">FFF0 special</string>
+	<string name="script_10000">10000 linjär B-stavelser</string>
+	<string name="script_10080">10080 linjär B-ideogram</string>
+	<string name="script_10100">10100 egeiska siffor</string>
+	<string name="script_10140">10140 forngrekiska siffor</string>
+	<string name="script_10190">10190 forntida symboler</string>
+	<string name="script_101D0">101D0 phistosskiva</string>
+	<string name="script_10280">10280 lykiska</string>
+	<string name="script_102A0">102A0 kariska</string>
+	<string name="script_102E0">102E0 koptiska epaktsiffor</string>
+	<string name="script_10300">10300 fornitaliska</string>
+	<string name="script_10330">10330 gotiska</string>
+	<string name="script_10350">10350 fornpermiska</string>
+	<string name="script_10380">10380 ugaritiska</string>
+	<string name="script_103A0">103A0 fornpersiska</string>
+	<string name="script_10400">10400 deseret</string>
+	<string name="script_10450">10450 shawiska</string>
+	<string name="script_10480">10480 osmanja</string>
+	<string name="script_104B0">104B0 osage</string>
+	<string name="script_10500">10500 elbasiska</string>
+	<string name="script_10530">10530 kaukasiska albanska</string>
+	<string name="script_10600">10600 linjär A</string>
+	<string name="script_10800">10800 cypriotiska stavelser</string>
+	<string name="script_10840">10840 imperisk arameiska</string>
+	<string name="script_10860">10860 palmyreniska</string>
+	<string name="script_10880">10880 nabateiska</string>
+	<string name="script_108E0">108E0 hatran</string>
+	<string name="script_10900">10900 feniciska</string>
+	<string name="script_10920">10920 lydiska</string>
+	<string name="script_10980">10980 meroitiska hieroglyfer</string>
+	<string name="script_109A0">109A0 kursiv-meroitiska</string>
+	<string name="script_10A00">10A00 kharoshti</string>
+	<string name="script_10A60">10A60 fornsydarabiska</string>
+	<string name="script_10A80">10A80 fornnordarabiska</string>
+	<string name="script_10AC0">10AC0 manikeanska</string>
+	<string name="script_10B00">10B00 avestiska</string>
+	<string name="script_10B40">10B40 tidig parthianska</string>
+	<string name="script_10B60">10B60 tidig pahlavi</string>
+	<string name="script_10B80">10B80 psaltaren-pahlavi</string>
+	<string name="script_10C00">10C00 fornturkiska</string>
+	<string name="script_10C80">10C80 fornungerska</string>
+	<string name="script_10D00">10D00 hanifiska</string>
+	<string name="script_10E60">10E60 rumi-siffersymboler</string>
+	<string name="script_10E80">10E80 yazidi</string>
+	<string name="script_10F00">10F00 gammalsogdiska</string>
+	<string name="script_10F30">10F30 sogdiska</string>
+	<string name="script_10FB0">10FB0 choresmiska</string>
+	<string name="script_10FE0">10FE0 elymaiska</string>
+	<string name="script_11000">11000 brami</string>
+	<string name="script_11080">11080 kaithiska</string>
+	<string name="script_110D0">110D0 sora sompeng</string>
+	<string name="script_11100">11100 chakma</string>
+	<string name="script_11150">11150 mahajaniska</string>
+	<string name="script_11180">11180 sharada</string>
+	<string name="script_111E0">111E0 singalesiska arkaiska siffor</string>
+	<string name="script_11200">11200 khojkiska</string>
+	<string name="script_11280">11280 multaniska</string>
+	<string name="script_112B0">112B0 sindhiska</string>
+	<string name="script_11300">11300 gammaltamilska</string>
+	<string name="script_11400">11400 newariska</string>
+	<string name="script_11480">11480 tirhuta</string>
+	<string name="script_11580">11580 siddhamska</string>
+	<string name="script_11600">11600 modiska</string>
+	<string name="script_11660">11660 mongoliska, tillägg</string>
+	<string name="script_11680">11680 takritiska</string>
+	<string name="script_11700">11700 ahom</string>
+	<string name="script_11800">11800 dogriska</string>
+	<string name="script_118A0">118A0 varang kshiti</string>
+	<string name="script_11900">11900 dives akuru</string>
+	<string name="script_119A0">119A0 nandinagari</string>
+	<string name="script_11A00">11A00 zanabazar kvadratisk skrift</string>
+	<string name="script_11A50">11A50 soyombo</string>
+	<string name="script_11AC0">11AC0 Pau Cin Hau-skrift</string>
+	<string name="script_11C00">11C00 bhaiksukiska</string>
+	<string name="script_11C70">11C70 marchenska</string>
+	<string name="script_11D00">11D00 masaram-gondi</string>
+	<string name="script_11D60">11D60 gunjalgondiska</string>
+	<string name="script_11EE0">11EE0 makasariska</string>
+	<string name="script_11FB0">11FB0 lisu, tillägg</string>
+	<string name="script_11FC0">11FC0 tamilska, tillägg</string>
+	<string name="script_12000">12000 kilskrift</string>
+	<string name="script_12400">12400 kilskriftssiffor och -skiljetecken</string>
+	<string name="script_12480">12480 forndynastisk kilskrift</string>
+	<string name="script_13000">13000 egyptiska hieroglyfer</string>
+	<string name="script_13430">13430 egyptiska hieroglyfformattecken</string>
+	<string name="script_14400">14400 hittitiska hieroglyfer</string>
+	<string name="script_16800">16800 bamunska, tillägg</string>
+	<string name="script_16A40">16A40 mru</string>
+	<string name="script_16AD0">16AD0 bassaiska vah</string>
+	<string name="script_16B00">16B00 pahaw mong</string>
+	<string name="script_16E40">16E40 medefaidrin</string>
+	<string name="script_16F00">16F00 miao</string>
+	<string name="script_16FE0">16FE0 ideografiska symboler och skiljetecken</string>
+	<string name="script_17000">17000 tangutiska</string>
+	<string name="script_18800">18800 tangutiska komponenter</string>
+	<string name="script_18B00">18B00 khitansk liten skrift</string>
+	<string name="script_18D00">18D00 tangutiska, tillägg</string>
+	<string name="script_1B000">1B000 kana, tillägg</string>
+	<string name="script_1B100">1B100 kana, utökad-A</string>
+	<string name="script_1B130">1B130 små kana, utökning</string>
+	<string name="script_1B170">1B170 nüshu</string>
+	<string name="script_1BC00">1BC00 duployéstenografiska</string>
+	<string name="script_1BCA0">1BCA0 snabbskrift-formatkontroller</string>
+	<string name="script_1D000">1D000 byzantin-musikaliska symboler</string>
+	<string name="script_1D100">1D100 musikaliska symboler</string>
+	<string name="script_1D200">1D200 forngrekiska musikalisk notation</string>
+	<string name="script_1D2E0">1D2E0 mayasiffror</string>
+	<string name="script_1D300">1D300 taixuanjing-symboler</string>
+	<string name="script_1D360">1D360 stavsiffror</string>
+	<string name="script_1D400">1D400 matematiska alfanumeriska symboler</string>
+	<string name="script_1D800">1D800 sutton-teckningsskrift</string>
+	<string name="script_1E000">1E000 glagolitiska, tillägg</string>
+	<string name="script_1E100">1E100 nyiakeng puachue hmong</string>
+	<string name="script_1E2C0">1E2C0 wancho</string>
+	<string name="script_1E800">1E800 mende kikakui</string>
+	<string name="script_1E900">1E900 adlamiska</string>
+	<string name="script_1EC70">1EC70 indiska siyaq-siffror</string>
+	<string name="script_1ED00">1ED00 osmanska siyaq-siffror</string>
+	<string name="script_1EE00">1EE00 arabiska matematiska alfabetiska symboler</string>
+	<string name="script_1F000">1F000 mahjongbrickor</string>
+	<string name="script_1F030">1F030 dominobrickor</string>
+	<string name="script_1F0A0">1F0A0 spelkort</string>
+	<string name="script_1F100">1F100 omslutna alfanumeriska, tillägg</string>
+	<string name="script_1F200">1F200 omslutna ideografiska, tillägg</string>
+	<string name="script_1F300">1F300 diverse symboler och bildtecken</string>
+	<string name="script_1F600">1F600 uttryckssymboler </string>
+	<string name="script_1F650">1F650 dekorativa dingbats</string>
+	<string name="script_1F680">1F680 transport- och kartsymboler</string>
+	<string name="script_1F700">1F700 alkemiska symboler</string>
+	<string name="script_1F780">1F780 geometriska former, utökad</string>
+	<string name="script_1F800">1F800 kompletterande pilar-C</string>
+	<string name="script_1F900">1F900 kompletterande symboler och bildtecken</string>
+	<string name="script_1FA00">1FA00 schacksymboler</string>
+	<string name="script_1FA70">1FA70 symboler och bildtecken, utökad-A</string>
+	<string name="script_1FB00">1FB00 symboler for äldre datoranvändning</string>
+	<string name="script_20000">20000 CJK-förenade ideografer, utökning B</string>
+	<string name="script_2A700">2A700 CJK-förenade ideografer, utökning C</string>
+	<string name="script_2B740">2B740 CJK-förenade ideografer, utökning D</string>
+	<string name="script_2B820">2B820 CJK-förenade ideografer, utökning E</string>
+	<string name="script_2CEB0">2CEB0 CJK-förenade ideografer, utökning F</string>
+	<string name="script_2F800">2F800 CJK-kompatibilitetsideografier, tillägg</string>
+	<string name="script_30000">30000 CJK-förenade ideografer, utökning G</string>
+	<string name="script_E0000">E0000 etiketter</string>
+	<string name="script_E0100">E0100 variationsväljare, tillägg</string>
+	<string name="script_F0000">F0000 kompletterande tecken för privat bruk-A</string>
+	<string name="script_100000">100000 kompletterande tecken för privat bruk-B</string>
+
 	<string name="general">Allmänt</string>
 	<string name="appearance">Utseende</string>
 	<string name="behaviour">Beteende</string>
 	<string name="textsize_desc">Textstorlek på input</string>
 	<string name="column_desc">Antal kolumner i rutnät</string>
 	<string name="columnl_desc">Antal kolumner i rutnät (liggande)</string>
-	<string-array name="column">
-		<item>1</item>
-		<item>2</item>
-		<item>4</item>
-		<item>8</item>
-		<item>16</item>
-		<item>32</item>
-		<item>64</item>
-	</string-array>
+
 	<string name="version_desc">Unicode-version</string>
-	<string-array name="version">
-		<item>6.0.0</item>
-		<item>6.1.0</item>
-		<item>6.2.0</item>
-		<item>6.3.0</item>
-		<item>7.0.0</item>
-		<item>8.0.0</item>
-		<item>9.0.0</item>
-		<item>10.0.0</item>
-		<item>11.0.0</item>
-		<item>12.0.0</item>
-		<item>12.1.0</item>
-		<item>13.0.0</item>
-		<item>Senaste (13.0.0)</item>
-	</string-array>
+
+	<string name="version_latest">Senaste (13.0.0)</string>
+
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
 	<string name="tabs_desc">Flikinställningar …</string>
@@ -69,10 +356,10 @@
 	<string name="single_fav_desc">Kolumner i favoriter</string>
 	<string name="single_edt_desc">Kolumner i input</string>
 	<string name="single_emoji_desc">Kolumner i emoji</string>
-	<string-array name="single">
-		<item>Flera kolumner med endast tecken</item>
-		<item>En kolumn med beskrivning</item>
-	</string-array>
+
+	<string name="multiplecolumns">Flera kolumner med endast tecken</string>
+	<string name="singlecolumn">En kolumn med beskrivning</string>
+
 	<string name="padding_desc">Avstånd i rutnät</string>
 	<string name="gridsize_desc">Textstorlek i rutnät</string>
 	<string name="viewsize_desc">Textstorlek i stor vy</string>
@@ -81,23 +368,21 @@
 	<string name="shrink_desc">Krymp tecken till bredd</string>
 	<string name="recent_desc">Antalet senast använda tecken</string>
 	<string name="theme_desc">Tema</string>
-	<string-array name="theme">
-		<item>Mörkt</item>
-		<item>Ljust</item>
-		<item>Ljust + mörk list</item>
-	</string-array>
+
+	<string name="theme_dark">Mörkt</string>
+	<string name="theme_light">Ljust</string>
+	<string name="theme_darktitle">Ljust + mörk list</string>
+
 	<string name="theme_title">Tillämpas efter omstart</string>
 	<string name="list_title">Listan kan inte döljas</string>
 	<string name="scroll_desc">Autoscrolla</string>
-	<string-array name="scroll">
-		<item>Aldrig</item>
-		<item>Alltid i liggande läge</item>
-		<item>Alltid</item>
-	</string-array>
+
+	<string name="scroll_never">Aldrig</string>
+	<string name="scroll_landscape">Alltid i liggande läge</string>
+	<string name="scroll_always">Alltid</string>
+
 	<string name="ime_desc">Inaktivera tangentbord</string>
 	<string name="clear_desc">Visa rensa-knapp</string>
-	<string name="notacharacter">&lt;inte ett tecken&gt;</string>
-	<string name="modifier">Varianter</string>
 	<string name="malformed">Felaktigt filnamn på zip-fil</string>
 	<string name="legal">Juridisk information</string>
 	<string name="legal_uni">Unicode®</string>
@@ -105,7 +390,8 @@
 Upphovsrätt © 1991-2020 Unicode, Inc. Alla rättigheter förbehållna.
 Distribueras enligt användarvillkoren i
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.6.1</string>
+	<string name="legal_app">UnicodePad 2.7.0</string>
 	<string name="legal_app2">UnicodePad är licensierad under Apache-licensen, version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
+	<string name="no_ad_desc">Visa inte annonser</string>
 </resources>

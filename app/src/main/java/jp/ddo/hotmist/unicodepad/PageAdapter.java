@@ -136,14 +136,11 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		bemoji = pref.getString("single_emoji", "false").equals("true");
 		aemoji.single = bemoji;
 
-		if (grids[position] == null)
-		{
-			grids[position] = new GridView(activity);
-			grids[position].setOnItemClickListener(this);
-			grids[position].setOnItemLongClickListener(this);
-			grids[position].setNumColumns(adps[position].single ? 1 : column);
-			grids[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		}
+		grids[position] = new GridView(activity);
+		grids[position].setOnItemClickListener(this);
+		grids[position].setOnItemLongClickListener(this);
+		grids[position].setNumColumns(adps[position].single ? 1 : column);
+		grids[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
 		grids[position].setAdapter(adps[position]);
 		layout[position] = adps[position].instantiate(grids[position]);

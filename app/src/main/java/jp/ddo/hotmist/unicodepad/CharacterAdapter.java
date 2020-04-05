@@ -16,7 +16,7 @@
 
 package jp.ddo.hotmist.unicodepad;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -54,19 +54,11 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	static boolean shrink = true;
 	private int reslist;
 
-	@SuppressLint({"NewApi", "PrivateResource"})
 	CharacterAdapter(UnicodeActivity context, UnicodeAdapter adapter, Typeface tf, NameDatabase db, FavoriteAdapter afav)
 	{
-		if (Build.VERSION.SDK_INT >= 11)
-		{
-			TypedValue tv = new TypedValue();
-			context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, tv, true);
-			reslist = tv.resourceId;
-		}
-		else
-		{
-			reslist = androidx.appcompat.R.drawable.abc_list_selector_holo_dark;
-		}
+		TypedValue tv = new TypedValue();
+		context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, tv, true);
+		reslist = tv.resourceId;
 
 		this.context = context;
 		this.adapter = adapter;
@@ -94,7 +86,6 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
 	private static final String[] mode = {null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ", null, ""};
 
-	@SuppressLint("NewApi")
 	@Override
 	public Object instantiateItem(final ViewGroup collection, final int position)
 	{
@@ -103,8 +94,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 		text.setTextSize(fontsize);
 		text.setTypeface(tf);
 		text.drawSlash(false);
-		if (Build.VERSION.SDK_INT >= 11)
-			text.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		text.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		text.setTextColor(Color.BLACK);
 		text.setBackgroundColor(Color.WHITE);
 		text.setSquareAlpha((int)Math.min(Math.max(checker * 2.55f, 0), 255));
@@ -148,7 +138,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 			String r;
 			if (i == 1)
 			{
-				byte[] a = ((String)adapter.getItem(position)).getBytes(StandardCharsets.UTF_8);
+				byte[] a = ((String)adapter.getItem(position)).getBytes(Charset.defaultCharset());
 				StringBuilder sb = new StringBuilder(a.length * 3);
 				for(byte b : a)
 					sb.append(String.format("%02X ", b));
@@ -174,8 +164,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				{
 					TextView desc = new TextView(context, null, android.R.attr.textAppearanceMedium);
 					desc.setText(s);
-					if (Build.VERSION.SDK_INT >= 11)
-						desc.setTextIsSelectable(true);
+					desc.setTextIsSelectable(true);
 					desc.setGravity(Gravity.CENTER_VERTICAL);
 					if (!emoji)
 					{
@@ -213,8 +202,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 				{
 					TextView desc = new TextView(context);
 					desc.setText(s);
-					if (Build.VERSION.SDK_INT >= 11)
-						desc.setTextIsSelectable(true);
+					desc.setTextIsSelectable(true);
 					hl.addView(desc, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
 				}
 				else

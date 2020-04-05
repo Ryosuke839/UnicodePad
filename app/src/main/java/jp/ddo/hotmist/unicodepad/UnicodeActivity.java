@@ -82,12 +82,9 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private static float fontsize = 24.0f;
 	static int univer = 1000;
 
-	@SuppressLint("NewApi")
 	public View onCreateView(View parent, String name, Context context, AttributeSet attrs)
 	{
-		if (Build.VERSION.SDK_INT >= 11)
-			return super.onCreateView(parent, name, context, attrs);
-		return null;
+		return super.onCreateView(parent, name, context, attrs);
 	}
 
 	@Override
@@ -161,21 +158,27 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 
 		if (!pref.getBoolean("no-ad", false))
 		{
-			MobileAds.initialize(this, new OnInitializationCompleteListener()
+			try
 			{
-				@Override
-				public void onInitializationComplete(InitializationStatus initializationStatus)
+				MobileAds.initialize(this, new OnInitializationCompleteListener()
 				{
-				}
-			});
-			adView = new AdView(this);
-			DisplayMetrics outMetrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-			adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
-			adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
-			((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
-			AdRequest adRequest = new AdRequest.Builder().build();
-			adView.loadAd(adRequest);
+					@Override
+					public void onInitializationComplete(InitializationStatus initializationStatus)
+					{
+					}
+				});
+				adView = new AdView(this);
+				DisplayMetrics outMetrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+				adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+				adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
+				((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+				AdRequest adRequest = new AdRequest.Builder().build();
+				adView.loadAd(adRequest);
+			}
+			catch (NullPointerException e)
+			{
+			}
 		}
 	}
 

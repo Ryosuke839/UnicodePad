@@ -17,8 +17,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,6 +40,8 @@ public class FontChooser implements DialogInterface.OnClickListener, DialogInter
 	private final ArrayAdapter<String> adapter;
 	private int fidx;
 	private final ArrayList<String> fontpath;
+
+	static int FONT_REQUEST_CODE = 42;
 
 	interface Listener
 	{
@@ -155,7 +159,14 @@ public class FontChooser implements DialogInterface.OnClickListener, DialogInter
 			fidx = 0;
 			break;
 		case 1:
-			new FileChooser(activity, this).show();
+			if (Build.VERSION.SDK_INT >= 19)
+			{
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+				intent.setType("*/*");
+				activity.startActivityForResult(intent, FONT_REQUEST_CODE);
+			} else
+				new FileChooser(activity, this, "/").show();
 			break;
 		case 2:
 			onClick(null, -1);
@@ -201,6 +212,11 @@ public class FontChooser implements DialogInterface.OnClickListener, DialogInter
 
 	public void onFileChosen(String path)
 	{
+		if (path.endsWith(".zip"))
+		{
+			new FileChooser(activity, this, path).onClick(null, -1);
+			return;
+		}
 		if (Add(path))
 		{
 			spinner.setSelection(adapter.getCount() - 1);

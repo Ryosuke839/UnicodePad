@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import androidx.annotation.NonNull;
@@ -52,10 +53,11 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 		void onFileCancel();
 	}
 
-	FileChooser(Activity activity, Listener listener)
+	FileChooser(Activity activity, Listener listener, String path)
 	{
 		this.activity = activity;
 		this.listener = listener;
+		this.path = path;
 	}
 
 	public boolean show()
@@ -126,13 +128,11 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 	@Override
 	public void onClick(DialogInterface dialog, int which)
 	{
-		if (which == -1)
-			path = "/";
-		else
+		if (which != -1)
 		{
 			if (path.endsWith(".zip"))
 			{
-				if (which == 0)
+				if (children[which].equals(("../")))
 					path = path.substring(0, path.lastIndexOf('/') + 1);
 				else
 				{
@@ -143,7 +143,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 
 						ZipEntry ze = zf.getEntry(children[which]);
 						InputStream is = zf.getInputStream(ze);
-						File of = new File(activity.getFilesDir(), Long.toHexString(ze.getCrc()) + "/" + new File(ze.getName()).getName());
+						File of = new File(activity.getFilesDir(), String.format("%08x", ze.getCrc()) + "/" + new File(ze.getName()).getName());
 
 						of.getParentFile().mkdirs();
 
@@ -194,7 +194,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 			}
 		}
 
-		if (path.charAt(path.length() - 1) != '/' && !path.endsWith(".zip"))
+		if (which != -1 && path.charAt(path.length() - 1) != '/' && !path.endsWith(".zip"))
 		{
 			children = null;
 			listener.onFileChosen(path);
@@ -244,13 +244,14 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 					try
 					{
 						ZipFile zf = openZip(path);
-						int cnt = 1;
+						int cnt = which != -1 ? 1 : 0;
 						for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
 							if (!e.nextElement().isDirectory())
 								++cnt;
 						children = new String[cnt];
-						children[0] = "../";
-						int j = 1;
+						int j = 0;
+						if (which != -1)
+							children[j++] = "../";
 						for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
 						{
 							ZipEntry entry = e.nextElement();

@@ -320,7 +320,7 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 						++j;
 					}
 				}
-				new AlertDialog.Builder(activity).setTitle(path).setItems(children, this).setOnCancelListener(this).show();
+				new AlertDialog.Builder(activity).setTitle(path.startsWith(activity.getFilesDir().getCanonicalPath()) ? path.substring(path.lastIndexOf('/') + 1) : path).setItems(children, this).setOnCancelListener(this).show();
 			}
 			catch (IOException e)
 			{

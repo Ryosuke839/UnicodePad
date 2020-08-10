@@ -114,7 +114,7 @@
 		android:key="beh"
 		android:title="@string/behaviour">
 		<CheckBoxPreference
-			android:defaultValue="true"
+			android:defaultValue="false"
 			android:key="ime"
 			android:title="@string/ime_desc" />
 		<CheckBoxPreference

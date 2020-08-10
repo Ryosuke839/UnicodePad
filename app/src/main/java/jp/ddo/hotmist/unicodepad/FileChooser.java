@@ -158,6 +158,17 @@ class FileChooser implements DialogInterface.OnClickListener, DialogInterface.On
 						is.close();
 						zf.close();
 
+						//noinspection EmptyCatchBlock
+						try
+						{
+							if (path.startsWith(activity.getFilesDir().getCanonicalPath()))
+								//noinspection ResultOfMethodCallIgnored
+								new File(path).delete();
+						}
+						catch (IOException e)
+						{
+						}
+
 						path = of.getCanonicalPath();
 					}
 					catch (ZipException e)

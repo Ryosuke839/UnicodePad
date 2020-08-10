@@ -50,42 +50,6 @@
 		<Preference
 			android:key="tabs"
 			android:title="@string/tabs_desc" />
-		<!-- 	    <ListPreference
-					android:key="single_rec"
-					android:title="@string/single_rec_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_rec_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_list"
-					android:title="@string/single_list_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_list_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_find"
-					android:title="@string/single_find_desc"
-					android:summary=""
-					android:defaultValue="true"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_find_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_fav"
-					android:title="@string/single_fav_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_fav_desc"
-					android:widgetLayout="@layout/spinwidget" /> -->
 		<EditTextPreference
 			android:defaultValue="@string/gridsize_def"
 			android:dialogTitle="@string/gridsize_desc"

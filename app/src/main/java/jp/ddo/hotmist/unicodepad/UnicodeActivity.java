@@ -20,6 +20,11 @@ import android.annotation.SuppressLint;
 import androidx.core.view.MenuItemCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.content.Context;
@@ -27,11 +32,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +60,13 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.CRC32;
 
 public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
@@ -339,6 +349,59 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		if (requestCode == FontChooser.FONT_REQUEST_CODE)
+			if (resultCode == Activity.RESULT_OK && data != null)
+			{
+				Uri uri = data.getData();
+				String name = uri.getPath();
+				while (name.endsWith("/"))
+					name = name.substring(0, name.length() - 1);
+				if (name.contains(("/")))
+					name = name.substring(name.lastIndexOf("/") + 1);
+				Cursor cursor = getContentResolver().query( data.getData(), null, null, null, null);
+				if (cursor != null)
+				{
+					if (cursor.moveToFirst())
+						name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+					cursor.close();
+				}
+				name.replaceAll("[?:\"*|/\\\\<>]", "_");
+
+				try
+				{
+					InputStream is = getContentResolver().openInputStream(uri);
+					File of = new File(getFilesDir(), "00000000/" + name);
+					of.getParentFile().mkdirs();
+					try
+					{
+						OutputStream os = new FileOutputStream(of);
+						CRC32 crc = new CRC32();
+						byte[] buf = new byte[256];
+						int size;
+						while ((size = is.read(buf)) > 0)
+						{
+							os.write(buf, 0, size);
+							crc.update(buf, 0, size);
+						}
+						os.close();
+						File mf = new File(getFilesDir(), String.format("%08x", crc.getValue()) + "/" + name);
+						mf.getParentFile().mkdirs();
+						of.renameTo(mf);
+						chooser.onFileChosen(mf.getCanonicalPath());
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+					is.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+				chooser.onFileCancel();
 		if (requestCode != -1)
 			super.onActivityResult(requestCode, resultCode, data);
 		try

@@ -17,7 +17,11 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+
+import androidx.core.provider.FontRequest;
 import androidx.core.view.MenuItemCompat;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -102,6 +106,27 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		onActivityResult(-1, 0, null);
+		String useEmoji = pref.getString("emojicompat", "false");
+		if (!useEmoji.equals("null"))
+		{
+			EmojiCompat.init(new FontRequestEmojiCompatConfig(this, new FontRequest(
+					"com.google.android.gms.fonts",
+					"com.google.android.gms",
+					"Noto Color Emoji Compat",
+					R.array.com_google_android_gms_fonts_certs))
+					.setReplaceAll(useEmoji.equals("true"))
+					.registerInitCallback(new EmojiCompat.InitCallback()
+					{
+						@Override
+						public void onInitialized()
+						{
+							super.onInitialized();
+							Typeface tf = oldtf;
+							oldtf = null;
+							setTypeface(tf);
+						}
+					}));
+		}
 		int[] themelist =
 				{
 						R.style.Theme,

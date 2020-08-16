@@ -136,7 +136,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		setContentView(R.layout.main);
+		setContentView(useEmoji.equals("null") ? R.layout.main : R.layout.main_emojicompat);
 		editText = (EditText)findViewById(R.id.text);
 		editText.setOnTouchListener(this);
 		editText.setTextSize(fontsize);

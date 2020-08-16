@@ -410,7 +410,7 @@
 	<string name="theme_light">Light</string>
 	<string name="theme_darktitle">Light + DarkTitle</string>
 
-	<string name="theme_title">May be applied after restart</string>
+	<string name="theme_title">Applied after restart</string>
 	<string name="list_title">List tab can\'t be hidden</string>
 	<string name="scroll_desc">UI scroll</string>
 

@@ -76,6 +76,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
+	private static final String PID_KEY = "pid_key";
 	private boolean isMush;
 	private EditText editText;
 	private ImageButton btnClear;
@@ -429,6 +430,18 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 				chooser.onFileCancel();
 		if (requestCode != -1)
 			super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_FIRST_USER)
+		{
+			Intent intent = new Intent();
+			intent.setClassName(getPackageName(), RestartActivity.class.getName());
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(PID_KEY, android.os.Process.myPid());
+			startActivity(intent);
+			finish();
+			return;
+		}
+
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));

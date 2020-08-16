@@ -62,5 +62,7 @@
 		<activity android:name="SettingActivity" />
 
 		<activity android:name="TabsActivity" />
+
+		<activity android:name="RestartActivity" />
 	</application>
 </manifest>

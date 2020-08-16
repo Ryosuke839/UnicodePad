@@ -390,7 +390,7 @@
 	<string name="theme_light">白基調</string>
 	<string name="theme_darktitle">白基調 + 黒タイトル</string>
 
-	<string name="theme_title">再起動後に適用されることがあります</string>
+	<string name="theme_title">再起動後に適用されます</string>
 	<string name="list_title">一覧タブは非表示にできません</string>
 	<string name="scroll_desc">画面のスクロール</string>
 

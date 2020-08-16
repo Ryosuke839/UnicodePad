@@ -17,9 +17,18 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+
+import androidx.core.provider.FontRequest;
 import androidx.core.view.MenuItemCompat;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.content.Context;
@@ -27,11 +36,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,10 +65,18 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.CRC32;
+
 public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
+	private static final String PID_KEY = "pid_key";
 	private boolean isMush;
 	private EditText editText;
 	private ImageButton btnClear;
@@ -92,6 +107,27 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		onActivityResult(-1, 0, null);
+		String useEmoji = pref.getString("emojicompat", "false");
+		if (!useEmoji.equals("null"))
+		{
+			EmojiCompat.init(new FontRequestEmojiCompatConfig(this, new FontRequest(
+					"com.google.android.gms.fonts",
+					"com.google.android.gms",
+					"Noto Color Emoji Compat",
+					R.array.com_google_android_gms_fonts_certs))
+					.setReplaceAll(useEmoji.equals("true"))
+					.registerInitCallback(new EmojiCompat.InitCallback()
+					{
+						@Override
+						public void onInitialized()
+						{
+							super.onInitialized();
+							Typeface tf = oldtf;
+							oldtf = null;
+							setTypeface(tf);
+						}
+					}));
+		}
 		int[] themelist =
 				{
 						R.style.Theme,
@@ -101,7 +137,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		setContentView(R.layout.main);
+		setContentView(useEmoji.equals("null") ? R.layout.main : R.layout.main_emojicompat);
 		editText = (EditText)findViewById(R.id.text);
 		editText.setOnTouchListener(this);
 		editText.setTextSize(fontsize);
@@ -339,8 +375,73 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		if (requestCode == FontChooser.FONT_REQUEST_CODE)
+			if (resultCode == Activity.RESULT_OK && data != null)
+			{
+				Uri uri = data.getData();
+				String name = uri.getPath();
+				while (name.endsWith("/"))
+					name = name.substring(0, name.length() - 1);
+				if (name.contains(("/")))
+					name = name.substring(name.lastIndexOf("/") + 1);
+				Cursor cursor = getContentResolver().query( data.getData(), null, null, null, null);
+				if (cursor != null)
+				{
+					if (cursor.moveToFirst())
+						name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+					cursor.close();
+				}
+				name.replaceAll("[?:\"*|/\\\\<>]", "_");
+
+				try
+				{
+					InputStream is = getContentResolver().openInputStream(uri);
+					File of = new File(getFilesDir(), "00000000/" + name);
+					of.getParentFile().mkdirs();
+					try
+					{
+						OutputStream os = new FileOutputStream(of);
+						CRC32 crc = new CRC32();
+						byte[] buf = new byte[256];
+						int size;
+						while ((size = is.read(buf)) > 0)
+						{
+							os.write(buf, 0, size);
+							crc.update(buf, 0, size);
+						}
+						os.close();
+						File mf = new File(getFilesDir(), String.format("%08x", crc.getValue()) + "/" + name);
+						mf.getParentFile().mkdirs();
+						of.renameTo(mf);
+						chooser.onFileChosen(mf.getCanonicalPath());
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+					is.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+				chooser.onFileCancel();
 		if (requestCode != -1)
 			super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_FIRST_USER)
+		{
+			Intent intent = new Intent();
+			intent.setClassName(getPackageName(), RestartActivity.class.getName());
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(PID_KEY, android.os.Process.myPid());
+			startActivity(intent);
+			finish();
+			return;
+		}
+
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));

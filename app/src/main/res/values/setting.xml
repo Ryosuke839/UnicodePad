@@ -64,6 +64,17 @@
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def" translatable="false">Latest</string>
+	<string-array name="emojicompat">
+		<item>@string/emojicompat_null</item>
+		<item>@string/emojicompat_false</item>
+		<item>@string/emojicompat_true</item>
+	</string-array>
+	<string-array name="emojicompat_val">
+		<item>null</item>
+		<item>false</item>
+		<item>true</item>
+	</string-array>
+	<string name="emojicompat_def" translatable="false">false</string>
 	<string-array name="single" tools:ignore="MissingTranslation">
 		<item>@string/multiplecolumns</item>
 		<item>@string/singlecolumn</item>

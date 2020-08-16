@@ -52,6 +52,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		univer.setOnPreferenceChangeListener(this);
 		univer.setSummary(univer.getEntry());
 
+		ListPreference emojicompat = (ListPreference)findPreference("emojicompat");
+		emojicompat.setOnPreferenceChangeListener(this);
+		emojicompat.setSummary(emojicompat.getEntry());
+
 		Preference download = findPreference("download");
 		download.setOnPreferenceClickListener(this);
 
@@ -104,6 +108,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		Preference legal_uni = findPreference("legal_uni");
 		legal_uni.setOnPreferenceClickListener(this);
 
+		setResult(RESULT_OK);
 	}
 
 	@Override
@@ -130,8 +135,11 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			{
 				return false;
 			}
-			if (key.equals("theme"))
+			if (key.equals("theme") || key.equals("emojicompat"))
+			{
 				Toast.makeText(this, R.string.theme_title, Toast.LENGTH_SHORT).show();
+				setResult(RESULT_FIRST_USER);
+			}
 		}
 		arg0.setSummary(arg0 instanceof ListPreference ? ((ListPreference)arg0).getEntries()[((ListPreference)arg0).findIndexOfValue(arg1.toString())] : arg1.toString());
 		return true;

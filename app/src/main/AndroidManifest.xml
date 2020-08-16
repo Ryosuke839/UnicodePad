@@ -31,6 +31,10 @@
 		<meta-data
 			android:name="com.google.android.gms.ads.APPLICATION_ID"
 			android:value="ca-app-pub-8779692709020298~3817697917"/>
+		<meta-data
+			android:name="preloaded_fonts"
+			android:resource="@array/preloaded_fonts" />
+
 		<activity
 			android:name="jp.ddo.hotmist.unicodepad.UnicodeActivity"
 			android:label="@string/app_name"
@@ -58,5 +62,7 @@
 		<activity android:name="SettingActivity" />
 
 		<activity android:name="TabsActivity" />
+
+		<activity android:name="RestartActivity" />
 	</application>
 </manifest>

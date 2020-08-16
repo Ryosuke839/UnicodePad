@@ -30,6 +30,10 @@ import android.graphics.Typeface;
 import android.graphics.RectF;
 import android.os.Build;
 import androidx.core.graphics.ColorUtils;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.EmojiSpan;
+
+import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -40,6 +44,7 @@ public class CharacterView extends View
 	private Paint paintsq = null;
 	private Paint paintln = null;
 	private String str;
+	private EmojiSpan span = null;
 	private int offsetx;
 	private int offsety;
 	private int ascent;
@@ -100,6 +105,27 @@ public class CharacterView extends View
 			invalid = true;
 
 		this.str = str;
+
+		this.span = null;
+		try
+		{
+			EmojiCompat emojiCompat = EmojiCompat.get();
+			if (emojiCompat != null)
+			{
+				CharSequence spanned = emojiCompat.process(str);
+				if (spanned instanceof Spannable)
+				{
+					EmojiSpan[] spans = ((Spannable)spanned).getSpans(0, str.length(), EmojiSpan.class);
+					if (spans.length > 0)
+					{
+						this.span = spans[0];
+					}
+				}
+			}
+		}
+		catch (IllegalStateException e)
+		{
+		}
 
 		requestLayout();
 	}
@@ -221,11 +247,13 @@ public class CharacterView extends View
 		float sizeu = size, sizeb = 0.f, size_ = size;
 		paint.setTextSize(size_);
 		FontMetrics fm;
+		Paint.FontMetricsInt fmi;
 		while (true)
 		{
 			size_ = (sizeu + sizeb) / 2.f;
 			paint.setTextSize(size_);
 			fm = paint.getFontMetrics();
+			fmi = paint.getFontMetricsInt();
 			heightNew = (int)(-fm.top + fm.bottom);
 			if (heightNew > 0)
 			{
@@ -244,6 +272,11 @@ public class CharacterView extends View
 		int widthNew;
 		widthNew = (int)(measure ? paint.measureText(str) : fm.descent - fm.ascent) + getPaddingLeft() + getPaddingRight();
 
+		if (span != null && Build.VERSION.SDK_INT >= 19)
+		{
+			widthNew = span.getSize(paint, str, 0, str.length(), fmi) + getPaddingLeft() + getPaddingRight();
+		}
+
 		if (widthMode != MeasureSpec.EXACTLY)
 			if (widthMode == MeasureSpec.UNSPECIFIED || widthSize > widthNew)
 				widthSize = widthNew;
@@ -259,7 +292,12 @@ public class CharacterView extends View
 				size_ = size_ * widthSize / (widthNew - getPaddingLeft() - getPaddingRight());
 				paint.setTextSize(size_);
 				fm = paint.getFontMetrics();
+				fmi = paint.getFontMetricsInt();
 				widthNew = (int)(measure ? paint.measureText(str) : fm.descent - fm.ascent) + getPaddingLeft() + getPaddingRight();
+				if (span != null && Build.VERSION.SDK_INT >= 19)
+				{
+					widthNew = span.getSize(paint, str, 0, str.length(), fmi) + getPaddingLeft() + getPaddingRight();
+				}
 				heightNew = (int)(-fm.top + fm.bottom);
 				heightNew += getPaddingTop() + getPaddingBottom();
 			}
@@ -308,7 +346,17 @@ public class CharacterView extends View
 
 		if (str.length() > 0)
 		{
-			if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash)
+			if (span != null)
+			{
+				if (invalid)
+					getCache();
+
+				if (emojicache == null)
+					span.draw(canvas, str, 0, str.length(), offsetx, ascent, offsety, descent, paint);
+				else
+					canvas.drawBitmap(emojicache, new Rect(0, 0, emojicache.getWidth(), emojicache.getHeight()), new RectF(offsetx, getPaddingTop(), width - offsetx + getPaddingLeft() - getPaddingRight(), height - getPaddingBottom()), paint);
+			}
+			else if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash)
 			{
 				if (invalid)
 					getCache();
@@ -337,27 +385,47 @@ public class CharacterView extends View
 	{
 		emojicache = null;
 
-		if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0.f)
+		if (span != null || (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0.f)
 		{
 			float w = paint.measureText(str);
+			if (span != null && Build.VERSION.SDK_INT >= 19)
+			{
+				Paint.FontMetricsInt fmi = paint.getFontMetricsInt();
+				w = span.getSize(paint, str, 0, str.length(), fmi);
+			}
 			if (w > 256.f)
 			{
 				float size_ = paint.getTextSize();
 				paint.setTextSize(size_ * 256.f / w);
 				FontMetrics fm = paint.getFontMetrics();
-				Bitmap bm = Bitmap.createBitmap((int)paint.measureText(str), (int)(-fm.top + fm.bottom), Bitmap.Config.ARGB_8888);
-				Bitmap tr = Bitmap.createBitmap((int)paint.measureText(str), (int)(-fm.top + fm.bottom), Bitmap.Config.ARGB_8888);
+				int w2 = (int)paint.measureText(str);
+				if (span != null && Build.VERSION.SDK_INT >= 19)
+				{
+					Paint.FontMetricsInt fmi = paint.getFontMetricsInt();
+					w2 = span.getSize(paint, str, 0, str.length(), fmi);
+				}
+				Bitmap bm = Bitmap.createBitmap(w2, (int)(-fm.top + fm.bottom), Bitmap.Config.ARGB_8888);
+				Bitmap tr = Bitmap.createBitmap(w2, (int)(-fm.top + fm.bottom), Bitmap.Config.ARGB_8888);
 				Canvas cv = new Canvas(bm);
-				cv.drawText(str, 0, -fm.top, paint);
+				if (span != null && Build.VERSION.SDK_INT >= 19)
+					span.draw(cv, str, 0, str.length(), 0, 0, (int)(-fm.top), (int)(-fm.top + fm.descent), paint);
+				else
+					cv.drawText(str, 0, -fm.top, paint);
 				if (!bm.sameAs(tr))
 				{
 					cv.drawColor(0, PorterDuff.Mode.CLEAR);
 					paint.setStyle(Style.STROKE);
-					cv.drawText(str, 0, -fm.top, paint);
+					if (span != null && Build.VERSION.SDK_INT >= 19)
+						span.draw(cv, str, 0, str.length(), 0, 0, (int)(-fm.top), (int)(-fm.top + fm.descent), paint);
+					else
+						cv.drawText(str, 0, -fm.top, paint);
 					if (bm.sameAs(tr))
 					{
 						paint.setStyle(Style.FILL);
-						cv.drawText(str, 0, -fm.top, paint);
+						if (span != null && Build.VERSION.SDK_INT >= 19)
+							span.draw(cv, str, 0, str.length(), 0, 0, (int)(-fm.top), (int)(-fm.top + fm.descent), paint);
+						else
+							cv.drawText(str, 0, -fm.top, paint);
 						emojicache = bm;
 					}
 					else

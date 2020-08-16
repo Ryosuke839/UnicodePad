@@ -356,6 +356,11 @@
 
 	<string name="version_latest">最新 (13.0.0)</string>
 
+	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
+	<string name="emojicompat_null">使用しない</string>
+	<string name="emojicompat_false">表示できない文字に使用</string>
+	<string name="emojicompat_true">全ての絵文字に使用</string>
+
 	<string name="download_desc">Notoフォントをダウンロード…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
 	<string name="no_ad_desc">広告を非表示</string>
@@ -385,7 +390,7 @@
 	<string name="theme_light">白基調</string>
 	<string name="theme_darktitle">白基調 + 黒タイトル</string>
 
-	<string name="theme_title">再起動後に適用されることがあります</string>
+	<string name="theme_title">再起動後に適用されます</string>
 	<string name="list_title">一覧タブは非表示にできません</string>
 	<string name="scroll_desc">画面のスクロール</string>
 

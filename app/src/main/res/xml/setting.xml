@@ -27,6 +27,14 @@
 			android:key="universion"
 			android:summary=""
 			android:title="@string/version_desc" />
+		<ListPreference
+			android:defaultValue="@string/emojicompat_def"
+			android:dialogTitle="@string/emojicompat_desc"
+			android:entries="@array/emojicompat"
+			android:entryValues="@array/emojicompat_val"
+			android:key="emojicompat"
+			android:summary=""
+			android:title="@string/emojicompat_desc" />
 		<Preference
 			android:key="download"
 			android:summary="@string/download_uri"

@@ -17,7 +17,11 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+
+import androidx.core.provider.FontRequest;
 import androidx.core.view.MenuItemCompat;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -72,6 +76,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
+	private static final String PID_KEY = "pid_key";
 	private boolean isMush;
 	private EditText editText;
 	private ImageButton btnClear;
@@ -102,6 +107,27 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	{
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		onActivityResult(-1, 0, null);
+		String useEmoji = pref.getString("emojicompat", "false");
+		if (!useEmoji.equals("null"))
+		{
+			EmojiCompat.init(new FontRequestEmojiCompatConfig(this, new FontRequest(
+					"com.google.android.gms.fonts",
+					"com.google.android.gms",
+					"Noto Color Emoji Compat",
+					R.array.com_google_android_gms_fonts_certs))
+					.setReplaceAll(useEmoji.equals("true"))
+					.registerInitCallback(new EmojiCompat.InitCallback()
+					{
+						@Override
+						public void onInitialized()
+						{
+							super.onInitialized();
+							Typeface tf = oldtf;
+							oldtf = null;
+							setTypeface(tf);
+						}
+					}));
+		}
 		int[] themelist =
 				{
 						R.style.Theme,
@@ -111,7 +137,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		setContentView(R.layout.main);
+		setContentView(useEmoji.equals("null") ? R.layout.main : R.layout.main_emojicompat);
 		editText = (EditText)findViewById(R.id.text);
 		editText.setOnTouchListener(this);
 		editText.setTextSize(fontsize);
@@ -404,6 +430,18 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 				chooser.onFileCancel();
 		if (requestCode != -1)
 			super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_FIRST_USER)
+		{
+			Intent intent = new Intent();
+			intent.setClassName(getPackageName(), RestartActivity.class.getName());
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(PID_KEY, android.os.Process.myPid());
+			startActivity(intent);
+			finish();
+			return;
+		}
+
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));

@@ -8,8 +8,8 @@ android {
         applicationId "jp.ddo.hotmist.unicodepad"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 41
-        versionName "2.7.0"
+        versionCode 42
+        versionName "2.8.0"
     }
 
     buildTypes {
@@ -27,7 +27,7 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.emoji:emoji-appcompat:1.1.0'
-    implementation 'com.google.android.gms:play-services-ads-lite:19.0.1'
+    implementation 'com.google.android.gms:play-services-ads-lite:19.3.0'
 }

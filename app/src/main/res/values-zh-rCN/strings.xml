@@ -355,6 +355,11 @@
 	<string name="version_desc">Unicode 版本</string>
 
 	<string name="version_latest">最新 (13.0.0)</string>
+	
+	<string name="emojicompat_desc">使用EmojiCompat方式显示Emoji</string>
+	<string name="emojicompat_null">禁用</string>
+	<string name="emojicompat_false">仅限缺失字符</string>
+	<string name="emojicompat_true">全部</string>
 
 	<string name="download_desc">下载 Noto 字体…</string>
 	<string name="download_uri">https://www.google.cn/get/noto/</string>

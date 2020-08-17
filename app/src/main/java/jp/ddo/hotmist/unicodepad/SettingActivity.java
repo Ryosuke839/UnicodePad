@@ -39,9 +39,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		int[] themelist =
 				{
-						android.support.v7.appcompat.R.style.Theme_AppCompat,
-						android.support.v7.appcompat.R.style.Theme_AppCompat_Light,
-						android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar,
+						androidx.appcompat.R.style.Theme_AppCompat,
+						androidx.appcompat.R.style.Theme_AppCompat_Light,
+						androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar,
 				};
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);
@@ -51,6 +51,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		ListPreference univer = (ListPreference)findPreference("universion");
 		univer.setOnPreferenceChangeListener(this);
 		univer.setSummary(univer.getEntry());
+
+		ListPreference emojicompat = (ListPreference)findPreference("emojicompat");
+		emojicompat.setOnPreferenceChangeListener(this);
+		emojicompat.setSummary(emojicompat.getEntry());
 
 		Preference download = findPreference("download");
 		download.setOnPreferenceClickListener(this);
@@ -104,6 +108,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		Preference legal_uni = findPreference("legal_uni");
 		legal_uni.setOnPreferenceClickListener(this);
 
+		setResult(RESULT_OK);
 	}
 
 	@Override
@@ -130,8 +135,11 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			{
 				return false;
 			}
-			if (key.equals("theme"))
+			if (key.equals("theme") || key.equals("emojicompat"))
+			{
 				Toast.makeText(this, R.string.theme_title, Toast.LENGTH_SHORT).show();
+				setResult(RESULT_FIRST_USER);
+			}
 		}
 		arg0.setSummary(arg0 instanceof ListPreference ? ((ListPreference)arg0).getEntries()[((ListPreference)arg0).findIndexOfValue(arg1.toString())] : arg1.toString());
 		return true;
@@ -160,7 +168,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		String key = arg0.getKey();
 		if (key.equals("download"))
 		{
-			return openPage("https://www.google.com/get/noto/");
+			return openPage(getString(R.string.download_uri));
 		}
 		if (key.equals("tabs"))
 		{

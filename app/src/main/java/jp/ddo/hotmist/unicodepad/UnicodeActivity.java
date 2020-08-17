@@ -16,41 +16,29 @@
 
 package jp.ddo.hotmist.unicodepad;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.core.provider.FontRequest;
+import androidx.core.view.MenuItemCompat;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,21 +49,34 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.CRC32;
+
 public class UnicodeActivity extends AppCompatActivity implements OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener
 {
 	private static final String ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT";
 	private static final String REPLACE_KEY = "replace_key";
+	private static final String PID_KEY = "pid_key";
 	private boolean isMush;
 	private EditText editText;
 	private ImageButton btnClear;
@@ -88,6 +89,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private LockableScrollView scroll;
 	private ViewPager pager;
 	PageAdapter adpPage;
+	private AdView adView;
 	@SuppressWarnings("deprecation")
 	private ClipboardManager cm;
 	private SharedPreferences pref;
@@ -95,19 +97,37 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private static float fontsize = 24.0f;
 	static int univer = 1000;
 
-	@SuppressLint("NewApi")
 	public View onCreateView(View parent, String name, Context context, AttributeSet attrs)
 	{
-		if (Build.VERSION.SDK_INT >= 11)
-			return super.onCreateView(parent, name, context, attrs);
-		return null;
+		return super.onCreateView(parent, name, context, attrs);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		onActivityResult(0, 0, null);
+		onActivityResult(-1, 0, null);
+		String useEmoji = pref.getString("emojicompat", "false");
+		if (!useEmoji.equals("null"))
+		{
+			EmojiCompat.init(new FontRequestEmojiCompatConfig(this, new FontRequest(
+					"com.google.android.gms.fonts",
+					"com.google.android.gms",
+					"Noto Color Emoji Compat",
+					R.array.com_google_android_gms_fonts_certs))
+					.setReplaceAll(useEmoji.equals("true"))
+					.registerInitCallback(new EmojiCompat.InitCallback()
+					{
+						@Override
+						public void onInitialized()
+						{
+							super.onInitialized();
+							Typeface tf = oldtf;
+							oldtf = null;
+							setTypeface(tf);
+						}
+					}));
+		}
 		int[] themelist =
 				{
 						R.style.Theme,
@@ -117,7 +137,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		setContentView(R.layout.main);
+		setContentView(useEmoji.equals("null") ? R.layout.main : R.layout.main_emojicompat);
 		editText = (EditText)findViewById(R.id.text);
 		editText.setOnTouchListener(this);
 		editText.setTextSize(fontsize);
@@ -170,6 +190,31 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			String str = it.getStringExtra(Intent.EXTRA_TEXT);
 			if (str != null)
 				editText.append(str);
+		}
+
+		if (!pref.getBoolean("no-ad", false))
+		{
+			try
+			{
+				MobileAds.initialize(this, new OnInitializationCompleteListener()
+				{
+					@Override
+					public void onInitializationComplete(InitializationStatus initializationStatus)
+					{
+					}
+				});
+				adView = new AdView(this);
+				DisplayMetrics outMetrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+				adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+				adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
+				((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+				AdRequest adRequest = new AdRequest.Builder().build();
+				adView.loadAd(adRequest);
+			}
+			catch (NullPointerException e)
+			{
+			}
 		}
 	}
 
@@ -330,6 +375,73 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		if (requestCode == FontChooser.FONT_REQUEST_CODE)
+			if (resultCode == Activity.RESULT_OK && data != null)
+			{
+				Uri uri = data.getData();
+				String name = uri.getPath();
+				while (name.endsWith("/"))
+					name = name.substring(0, name.length() - 1);
+				if (name.contains(("/")))
+					name = name.substring(name.lastIndexOf("/") + 1);
+				Cursor cursor = getContentResolver().query( data.getData(), null, null, null, null);
+				if (cursor != null)
+				{
+					if (cursor.moveToFirst())
+						name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+					cursor.close();
+				}
+				name.replaceAll("[?:\"*|/\\\\<>]", "_");
+
+				try
+				{
+					InputStream is = getContentResolver().openInputStream(uri);
+					File of = new File(getFilesDir(), "00000000/" + name);
+					of.getParentFile().mkdirs();
+					try
+					{
+						OutputStream os = new FileOutputStream(of);
+						CRC32 crc = new CRC32();
+						byte[] buf = new byte[256];
+						int size;
+						while ((size = is.read(buf)) > 0)
+						{
+							os.write(buf, 0, size);
+							crc.update(buf, 0, size);
+						}
+						os.close();
+						File mf = new File(getFilesDir(), String.format("%08x", crc.getValue()) + "/" + name);
+						mf.getParentFile().mkdirs();
+						of.renameTo(mf);
+						chooser.onFileChosen(mf.getCanonicalPath());
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+					is.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+				chooser.onFileCancel();
+		if (requestCode != -1)
+			super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_FIRST_USER)
+		{
+			Intent intent = new Intent();
+			intent.setClassName(getPackageName(), RestartActivity.class.getName());
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(PID_KEY, android.os.Process.myPid());
+			startActivity(intent);
+			finish();
+			return;
+		}
+
 		try
 		{
 			fontsize = Float.valueOf(pref.getString("textsize", "24.0"));
@@ -401,6 +513,41 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			adpPage.notifyDataSetChanged();
 		if (scroll != null)
 			scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")) + (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 0) > 1);
+		if (requestCode != -1)
+		{
+			LinearLayout adConteiner = (LinearLayout)findViewById(R.id.adContainer);
+			if (adConteiner != null)
+			{
+				if (!pref.getBoolean("no-ad", false))
+				{
+					if (adConteiner.getChildCount() == 0)
+					{
+						MobileAds.initialize(this, new OnInitializationCompleteListener()
+						{
+							@Override
+							public void onInitializationComplete(InitializationStatus initializationStatus)
+							{
+							}
+						});
+						adView = new AdView(this);
+						DisplayMetrics outMetrics = new DisplayMetrics();
+						getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+						adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (int)(outMetrics.widthPixels / outMetrics.density)));
+						adView.setAdUnitId("ca-app-pub-8779692709020298/6882844952");
+						((LinearLayout)findViewById(R.id.adContainer)).addView(adView);
+						AdRequest adRequest = new AdRequest.Builder().build();
+						adView.loadAd(adRequest);
+					}
+				}
+				else
+				{
+					if (adConteiner.getChildCount() > 0)
+					{
+						adConteiner.removeAllViews();
+					}
+				}
+			}
+		}
 	}
 
 	private void replace(String result)

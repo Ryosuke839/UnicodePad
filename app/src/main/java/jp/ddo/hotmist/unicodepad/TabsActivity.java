@@ -44,9 +44,16 @@ public class TabsActivity extends PreferenceActivity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
-
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+		int[] themelist =
+				{
+						androidx.appcompat.R.style.Theme_AppCompat,
+						androidx.appcompat.R.style.Theme_AppCompat_Light,
+						androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar,
+				};
+		setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")) - 2131492983]);
+		super.onCreate(savedInstanceState);
 
 		shownnum = pref.getInt("cnt_shown", 6);
 

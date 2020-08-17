@@ -20,9 +20,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.PagerAdapter;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.PagerAdapter;
 import android.text.style.TextAppearanceSpan;
 import android.view.Gravity;
 import android.view.View;
@@ -136,14 +136,11 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		bemoji = pref.getString("single_emoji", "false").equals("true");
 		aemoji.single = bemoji;
 
-		if (grids[position] == null)
-		{
-			grids[position] = new GridView(activity);
-			grids[position].setOnItemClickListener(this);
-			grids[position].setOnItemLongClickListener(this);
-			grids[position].setNumColumns(adps[position].single ? 1 : column);
-			grids[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		}
+		grids[position] = new GridView(activity);
+		grids[position].setOnItemClickListener(this);
+		grids[position].setOnItemLongClickListener(this);
+		grids[position].setNumColumns(adps[position].single ? 1 : column);
+		grids[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
 		grids[position].setAdapter(adps[position]);
 		layout[position] = adps[position].instantiate(grids[position]);

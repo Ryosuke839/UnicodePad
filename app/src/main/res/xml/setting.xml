@@ -27,6 +27,14 @@
 			android:key="universion"
 			android:summary=""
 			android:title="@string/version_desc" />
+		<ListPreference
+			android:defaultValue="@string/emojicompat_def"
+			android:dialogTitle="@string/emojicompat_desc"
+			android:entries="@array/emojicompat"
+			android:entryValues="@array/emojicompat_val"
+			android:key="emojicompat"
+			android:summary=""
+			android:title="@string/emojicompat_desc" />
 		<Preference
 			android:key="download"
 			android:summary="@string/download_uri"
@@ -43,57 +51,25 @@
 			android:key="theme"
 			android:summary="@string/theme_title"
 			android:title="@string/theme_desc" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="no-ad"
+			android:title="@string/no_ad_desc" />
 		<Preference
 			android:key="tabs"
 			android:title="@string/tabs_desc" />
-		<!-- 	    <ListPreference
-					android:key="single_rec"
-					android:title="@string/single_rec_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_rec_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_list"
-					android:title="@string/single_list_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_list_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_find"
-					android:title="@string/single_find_desc"
-					android:summary=""
-					android:defaultValue="true"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_find_desc"
-					android:widgetLayout="@layout/spinwidget" />
-				<ListPreference
-					android:key="single_fav"
-					android:title="@string/single_fav_desc"
-					android:summary=""
-					android:defaultValue="false"
-					android:entries="@array/single"
-					android:entryValues="@array/single_val"
-					android:dialogTitle="@string/single_fav_desc"
-					android:widgetLayout="@layout/spinwidget" /> -->
 		<EditTextPreference
 			android:defaultValue="@string/gridsize_def"
 			android:dialogTitle="@string/gridsize_desc"
 			android:key="gridsize"
-			android:numeric="decimal"
+			android:inputType="numberDecimal"
 			android:summary=""
 			android:title="@string/gridsize_desc" />
 		<EditTextPreference
 			android:defaultValue="4"
 			android:dialogTitle="@string/padding_desc"
 			android:key="padding"
-			android:numeric="integer"
+			android:inputType="number"
 			android:summary=""
 			android:title="@string/padding_desc" />
 		<ListPreference
@@ -116,21 +92,21 @@
 			android:defaultValue="@string/textsize_def"
 			android:dialogTitle="@string/textsize_desc"
 			android:key="textsize"
-			android:numeric="decimal"
+			android:inputType="numberDecimal"
 			android:summary=""
 			android:title="@string/textsize_desc" />
 		<EditTextPreference
 			android:defaultValue="@string/viewsize_def"
 			android:dialogTitle="@string/viewsize_desc"
 			android:key="viewsize"
-			android:numeric="decimal"
+			android:inputType="numberDecimal"
 			android:summary=""
 			android:title="@string/viewsize_desc" />
 		<EditTextPreference
 			android:defaultValue="@string/checker_def"
 			android:dialogTitle="@string/checker_desc"
 			android:key="checker"
-			android:numeric="decimal"
+			android:inputType="numberDecimal"
 			android:summary=""
 			android:title="@string/checker_desc" />
 		<CheckBoxPreference
@@ -146,7 +122,7 @@
 		android:key="beh"
 		android:title="@string/behaviour">
 		<CheckBoxPreference
-			android:defaultValue="true"
+			android:defaultValue="false"
 			android:key="ime"
 			android:title="@string/ime_desc" />
 		<CheckBoxPreference
@@ -165,7 +141,7 @@
 			android:defaultValue="256"
 			android:dialogTitle="@string/recent_desc"
 			android:key="recentsize"
-			android:numeric="integer"
+			android:inputType="number"
 			android:summary=""
 			android:title="@string/recent_desc" />
 	</PreferenceCategory>

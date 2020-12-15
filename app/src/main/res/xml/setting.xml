@@ -121,6 +121,12 @@
 	<PreferenceCategory
 		android:key="beh"
 		android:title="@string/behaviour">
+		<Preference
+			android:key="clear_recents"
+			android:title="Clear recents" />
+		<Preference
+			android:key="clear_favorites"
+			android:title="Clear favorites" />
 		<CheckBoxPreference
 			android:defaultValue="false"
 			android:key="ime"

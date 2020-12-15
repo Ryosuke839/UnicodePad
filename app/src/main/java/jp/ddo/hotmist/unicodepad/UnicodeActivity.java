@@ -79,11 +79,11 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 	private static final String PID_KEY = "pid_key";
 	private boolean isMush;
 	private EditText editText;
-	private ImageButton btnClear;
 	private ImageButton btnDelete;
-	private Button btnCopy;
-	private Button btnFind;
 	private Button btnPaste;
+	private Button btnCopy;
+	private Button btnClear;
+	private Button btnFind;
 	private Button btnFinish;
 	FontChooser chooser;
 	private LockableScrollView scroll;
@@ -141,7 +141,7 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 		editText = (EditText)findViewById(R.id.text);
 		editText.setOnTouchListener(this);
 		editText.setTextSize(fontsize);
-		btnClear = (ImageButton)findViewById(R.id.clear);
+		btnClear = (Button)findViewById(R.id.clear);
 		btnClear.setOnClickListener(this);
 		btnClear.setVisibility(pref.getBoolean("clear", false) ? View.VISIBLE : View.GONE);
 		btnDelete = (ImageButton)findViewById(R.id.delete);
@@ -440,6 +440,21 @@ public class UnicodeActivity extends AppCompatActivity implements OnClickListene
 			startActivity(intent);
 			finish();
 			return;
+		}
+
+		if (requestCode == -3)
+		{
+			SharedPreferences.Editor editor = pref.edit();
+			adpPage.clearRecents();
+			adpPage.save(editor);
+			editor.apply();
+		}
+		if (requestCode == -4)
+		{
+			SharedPreferences.Editor editor = pref.edit();
+			adpPage.clearFavorites();
+			adpPage.save(editor);
+			editor.apply();
 		}
 
 		try

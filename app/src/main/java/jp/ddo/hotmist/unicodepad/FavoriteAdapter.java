@@ -86,6 +86,11 @@ class FavoriteAdapter extends UnicodeAdapter
 		list.remove(Integer.valueOf(code));
 	}
 
+	void clear()
+	{
+		list.clear();
+	}
+
 	private void commit()
 	{
 		if (list != temp)

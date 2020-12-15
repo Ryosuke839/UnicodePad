@@ -33,10 +33,12 @@ import android.widget.Toast;
 @SuppressWarnings("deprecation")
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener, OnPreferenceChangeListener
 {
+	SharedPreferences pref;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		int[] themelist =
 				{
 						androidx.appcompat.R.style.Theme_AppCompat,
@@ -77,6 +79,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 
 		Preference tabs = findPreference("tabs");
 		tabs.setOnPreferenceClickListener(this);
+
+		Preference clearRecents = findPreference("clear_recents");
+		clearRecents.setOnPreferenceClickListener(this);
+
+		Preference clearFavorites = findPreference("clear_favorites");
+		clearFavorites.setOnPreferenceClickListener(this);
 
 		EditTextPreference padding = (EditTextPreference)findPreference("padding");
 		padding.setOnPreferenceChangeListener(this);
@@ -173,6 +181,20 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if (key.equals("tabs"))
 		{
 			startActivity(new Intent(this, TabsActivity.class));
+			return true;
+		}
+		if (key.equals("clear_recents"))
+		{
+			Toast.makeText(this, "Recents Cleared", Toast.LENGTH_SHORT).show();
+			pref.edit().putString("rec", "").apply();
+			startActivityForResult(new Intent(this, UnicodeActivity.class), -3);
+			return true;
+		}
+		if (key.equals("clear_favorites"))
+		{
+			Toast.makeText(this, "Favorites Cleared", Toast.LENGTH_SHORT).show();
+			pref.edit().putString("fav", "").apply();
+			startActivityForResult(new Intent(this, UnicodeActivity.class), -4);
 			return true;
 		}
 		if (key.equals("legal_app"))

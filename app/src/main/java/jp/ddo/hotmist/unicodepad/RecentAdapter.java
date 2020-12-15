@@ -102,6 +102,16 @@ class RecentAdapter extends UnicodeAdapter
 			grid.invalidateViews();
 	}
 
+	void clear()
+	{
+		temp.clear();
+		list.clear();
+		if (grid != null)
+		{
+			grid.invalidateViews();
+		}
+	}
+
 	private void commit()
 	{
 		if (list != temp)

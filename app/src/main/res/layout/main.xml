@@ -1,35 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-   Copyright 2018 Ryosuke839
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
- -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:gravity="center_vertical"
 	android:orientation="vertical">
-
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
-
 		<FrameLayout
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1">
-
 			<EditText
 				android:id="@+id/text"
 				android:layout_width="match_parent"
@@ -38,12 +20,9 @@
 				android:ems="10"
 				android:inputType="text"
 				android:maxLines="1">
-
 				<requestFocus />
 			</EditText>
-
 		</FrameLayout>
-
 		<ImageButton
 			android:id="@+id/delete"
 			android:layout_width="wrap_content"
@@ -54,24 +33,19 @@
 			android:cropToPadding="false"
 			android:scaleType="centerInside"
 			app:srcCompat="?attr/backspace" />
-
 	</LinearLayout>
-
 	<jp.ddo.hotmist.unicodepad.LockableScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1">
-
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
-
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
-
 				<Button
 					android:id="@+id/paste"
 					android:layout_width="wrap_content"
@@ -79,7 +53,6 @@
 					android:layout_weight="1"
 					android:maxLines="1"
 					android:text="@android:string/paste" />
-
 				<Button
 					android:id="@+id/clear"
 					android:layout_width="wrap_content"
@@ -87,7 +60,6 @@
 					android:layout_weight="1"
 					android:maxLines="1"
 					android:text="@string/clear" />
-
 				<Button
 					android:id="@+id/find"
 					android:layout_width="wrap_content"
@@ -95,7 +67,6 @@
 					android:layout_weight="1"
 					android:maxLines="1"
 					android:text="@string/desc" />
-
 				<Button
 					android:id="@+id/copy"
 					android:layout_width="wrap_content"
@@ -103,21 +74,17 @@
 					android:layout_weight="1"
 					android:maxLines="1"
 					android:text="@android:string/copy" />
-
 				<Button
-					android:id="@+id/finish"
+					android:id="@+id/share"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:maxLines="1"
-					android:text="@string/finish" />
-
+					android:text="@string/share" />
 			</LinearLayout>
-
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
-
 				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
@@ -128,21 +95,17 @@
 					android:paddingStart="8dp"
 					android:text="@string/font"
 					android:textAppearance="?android:attr/textAppearanceSmall" />
-
 				<Spinner
 					android:id="@+id/font"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
 					android:layout_weight="1" />
-
 			</LinearLayout>
-
 			<jp.ddo.hotmist.unicodepad.LockableViewPager
 				android:id="@+id/cpager"
 				android:layout_width="match_parent"
 				android:layout_height="128dp">
-
 				<androidx.viewpager.widget.PagerTabStrip
 					android:id="@+id/ctab"
 					android:layout_width="match_parent"
@@ -150,14 +113,11 @@
 					android:layout_gravity="top" />
 			</jp.ddo.hotmist.unicodepad.LockableViewPager>
 		</LinearLayout>
-
 	</jp.ddo.hotmist.unicodepad.LockableScrollView>
-
 	<LinearLayout
 		android:id="@+id/adContainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical">
 	</LinearLayout>
-
 </LinearLayout>

@@ -11,7 +11,11 @@ android {
         versionCode 43
         versionName "2.8.0"
     }
-
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "unicode-pad.apk"
+        }
+    }
     buildTypes {
         release {
             shrinkResources true

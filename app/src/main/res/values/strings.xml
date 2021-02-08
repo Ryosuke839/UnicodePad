@@ -420,7 +420,7 @@
 
 	<string name="ime_desc">Disable IME</string>
 	<string name="clear_desc">Show clear button</string>
-	<string name="clear" translatable="false">⌧</string>
+	<string name="clear" translatable="false">Clear</string>
 	<string name="erase" translatable="false">⌫</string>
 	<string name="config" translatable="false">⚙</string>
 	<string name="up" translatable="false">⌃</string>

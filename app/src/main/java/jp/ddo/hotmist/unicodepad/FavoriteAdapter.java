@@ -1,117 +1,102 @@
-/*
-   Copyright 2018 Ryosuke839
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
 package jp.ddo.hotmist.unicodepad;
-
-import java.util.ArrayList;
 
 import android.content.SharedPreferences;
 
-class FavoriteAdapter extends UnicodeAdapter
-{
-	private ArrayList<Integer> list;
-	private ArrayList<Integer> temp;
+import java.util.ArrayList;
+import java.util.Collections;
 
-	FavoriteAdapter(SharedPreferences pref, NameDatabase db, boolean single)
-	{
-		super(db, single);
+class FavoriteAdapter extends UnicodeAdapter {
+    private ArrayList<Integer> list;
+    private ArrayList<Integer> temp;
+    boolean sorted;
 
-		list = new ArrayList<>();
-		temp = list;
-		String str = pref.getString("fav", "");
-		for (int i = 0; i < str.length(); ++i)
-		{
-			int code = str.codePointAt(i);
-			if (code > 0xFFFF)
-				++i;
-			list.add(code);
-		}
-	}
+    FavoriteAdapter(SharedPreferences pref, NameDatabase db, boolean single) {
+        super(db, single);
+        sorted = pref.getBoolean("sort_favorites", true);
 
-	@Override
-	int name()
-	{
-		return R.string.favorite;
-	}
+        list = new ArrayList<>();
+        temp = list;
+        String fav = pref.getString("fav", "");
+        for (int i = 0; i < fav.length(); ++i) {
+            int code = fav.codePointAt(i);
+	        if (code > 0xFFFF) {
+		        ++i;
+	        }
+            list.add(code);
+        }
+    }
 
-	@Override
-	void show()
-	{
-		trunc();
-		if (grid != null)
-			grid.invalidateViews();
-	}
+    @Override
+    int name() {
+        return R.string.favorite;
+    }
 
-	@Override
-	void leave()
-	{
-		commit();
-		if (grid != null)
-			grid.invalidateViews();
-	}
+    @Override
+    void show() {
+        truncate();
+	    if (grid != null) {
+		    grid.invalidateViews();
+	    }
+    }
 
-	@Override
-	public int getCount()
-	{
-		return temp.size();
-	}
+    @Override
+    void leave() {
+        commit();
+	    if (grid != null) {
+		    grid.invalidateViews();
+	    }
+    }
 
-	@Override
-	public long getItemId(int arg0)
-	{
-		return temp.get(arg0);
-	}
+    @Override
+    public int getCount() {
+        return temp.size();
+    }
 
-	void add(int code)
-	{
-		list.remove(Integer.valueOf(code));
-		list.add(code);
-	}
+    @Override
+    public long getItemId(int arg0) {
+        return temp.get(arg0);
+    }
 
-	void remove(int code)
-	{
-		list.remove(Integer.valueOf(code));
-	}
+    void add(int code) {
+        list.remove(Integer.valueOf(code));
+        list.add(code);
+        if (sorted) {
+            Collections.sort(list);
+            // Collections.reverse(list);
+        }
+    }
 
-	private void commit()
-	{
-		if (list != temp)
-		{
-			temp = list;
-		}
-	}
+    void remove(int code) {
+        list.remove(Integer.valueOf(code));
+    }
 
-	private void trunc()
-	{
-		if (list == temp)
-			temp = new ArrayList<>(list);
-	}
+    void clear() {
+        list.clear();
+    }
 
-	boolean isfavorited(int code)
-	{
-		return list.contains(code);
-	}
+    private void commit() {
+        if (list != temp) {
+            temp = list;
+        }
+    }
 
-	@Override
-	void save(SharedPreferences.Editor edit)
-	{
-		String str = "";
-		for (Integer i : list)
-			str += String.valueOf(Character.toChars(i));
-		edit.putString("fav", str);
-	}
+    private void truncate() {
+	    if (list == temp) {
+		    temp = new ArrayList<>(list);
+	    }
+    }
+
+    boolean isFavorited(int code) {
+        return list.contains(code);
+    }
+
+    @Override
+    void save(SharedPreferences.Editor editor) {
+        StringBuilder str = new StringBuilder();
+	    for (Integer i : list) {
+		    str.append(String.valueOf(Character.toChars(i)));
+	    }
+        editor.putString("fav", str.toString());
+    }
 
 }

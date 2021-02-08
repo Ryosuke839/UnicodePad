@@ -186,6 +186,15 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		return true;
 	}
 
+	public void clearRecents()
+	{
+		arec.clear();
+	}
+	public void clearFavorites()
+	{
+		afav.clear();
+	}
+
 	private AlertDialog dlg;
 
 	void showDesc(final View view, int index, final UnicodeAdapter ua)

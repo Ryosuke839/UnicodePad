@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-   Copyright 2018 Ryosuke839
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
- -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
 	<PreferenceCategory
 		android:key="gen"
 		android:title="@string/general">
@@ -52,7 +36,7 @@
 			android:summary="@string/theme_title"
 			android:title="@string/theme_desc" />
 		<CheckBoxPreference
-			android:defaultValue="false"
+			android:defaultValue="true"
 			android:key="no-ad"
 			android:title="@string/no_ad_desc" />
 		<Preference
@@ -122,6 +106,20 @@
 		android:key="beh"
 		android:title="@string/behaviour">
 		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="sort_recents"
+			android:title="Maintain sorted recents" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="sort_favorites"
+			android:title="Maintain sorted favorites" />
+		<Preference
+			android:key="clear_recents"
+			android:title="Clear recents" />
+		<Preference
+			android:key="clear_favorites"
+			android:title="Clear favorites" />
+		<CheckBoxPreference
 			android:defaultValue="false"
 			android:key="ime"
 			android:title="@string/ime_desc" />
@@ -157,5 +155,4 @@
 			android:summary="@string/legal_uni2"
 			android:title="@string/legal_uni" />
 	</PreferenceCategory>
-
 </PreferenceScreen>

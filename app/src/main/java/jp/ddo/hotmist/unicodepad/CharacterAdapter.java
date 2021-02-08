@@ -20,10 +20,9 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Scanner;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
+
 import androidx.viewpager.widget.PagerAdapter;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -171,7 +170,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 						CheckBox fav = new CheckBox(context);
 						fav.setButtonDrawable(android.R.drawable.btn_star);
 						fav.setGravity(Gravity.TOP);
-						fav.setChecked(afav.isfavorited(itemid));
+						fav.setChecked(afav.isFavorited(itemid));
 						fav.setOnCheckedChangeListener(new OnCheckedChangeListener()
 						{
 							public void onCheckedChanged(CompoundButton arg0, boolean arg1)

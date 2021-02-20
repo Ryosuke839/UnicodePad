@@ -28,11 +28,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLongClickListener
@@ -41,7 +43,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 	private final int MAX_VIEWS = 6;
 	private int num_page;
 	private View layout[] = new View[MAX_VIEWS];
-	private GridView grids[] = new GridView[MAX_VIEWS];
+	private AbsListView views[] = new AbsListView[MAX_VIEWS];
 	private EditText edit;
 	private ListAdapter alist;
 	private FindAdapter afind;
@@ -85,9 +87,9 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		tf = null;
 	}
 
-	public GridView getGridView()
+	public View getView()
 	{
-		return grids[page];
+		return views[page];
 	}
 
 	@Override
@@ -136,14 +138,23 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		bemoji = pref.getString("single_emoji", "false").equals("true");
 		aemoji.single = bemoji;
 
-		grids[position] = new GridView(activity);
-		grids[position].setOnItemClickListener(this);
-		grids[position].setOnItemLongClickListener(this);
-		grids[position].setNumColumns(adps[position].single ? 1 : column);
-		grids[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		if (adps[position].single)
+		{
+			ListView view = new ListView(activity);
+			views[position] = view;
+		} else
+		{
+			GridView view = new GridView(activity);
+			view.setNumColumns(column);
+			view.setAdapter(adps[position]);
+			views[position] = view;
+		}
+		views[position].setOnItemClickListener(this);
+		views[position].setOnItemLongClickListener(this);
+		views[position].setAdapter(adps[position]);
+		views[position].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-		grids[position].setAdapter(adps[position]);
-		layout[position] = adps[position].instantiate(grids[position]);
+		layout[position] = adps[position].instantiate(views[position]);
 		collection.addView(layout[position], 0);
 		return layout[position];
 	}
@@ -154,7 +165,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		collection.removeView((View)view);
 		adps[position].destroy();
 		layout[position] = null;
-		grids[position] = null;
+		views[position] = null;
 	}
 
 	@Override
@@ -169,8 +180,8 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		if (arg3 != -1)
 		{
 			arec.add((int)arg3);
-			if (recpage != -1 && page != recpage && grids[recpage] != null)
-				grids[recpage].invalidateViews();
+			if (recpage != -1 && page != recpage && views[recpage] != null)
+				views[recpage].invalidateViews();
 		}
 		int start = edit.getSelectionStart();
 		int end = edit.getSelectionEnd();
@@ -219,8 +230,8 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 					if (adapter.getId() != -1)
 					{
 						arec.add((int)adapter.getId());
-						if (recpage != -1 && page != recpage && grids[recpage] != null)
-							grids[recpage].invalidateViews();
+						if (recpage != -1 && page != recpage && views[recpage] != null)
+							views[recpage].invalidateViews();
 					}
 					int start = edit.getSelectionStart();
 					int end = edit.getSelectionEnd();
@@ -229,7 +240,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 					edit.getEditableText().replace(Math.min(start, end), Math.max(start, end), (String)ua.getItem(adapter.getIndex()));
 				}
 			});
-		if (!(view instanceof GridView) || ((GridView)view).getAdapter() != aemoji)
+		if (!(view instanceof AbsListView) || ((AbsListView)view).getAdapter() != aemoji)
 			builder.setNeutralButton(R.string.inlist, new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -238,18 +249,18 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 					find((int)adapter.getId());
 				}
 			});
-		if (view instanceof GridView && ((GridView)view).getAdapter() == arec)
+		if (view instanceof AbsListView && ((AbsListView)view).getAdapter() == arec)
 			builder.setNegativeButton(R.string.remrec, new DialogInterface.OnClickListener()
 			{
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
-					arec.remove((int)adapter.getId());
-					if (grids[recpage] != null)
-						grids[recpage].invalidateViews();
+					arec.rem((int)adapter.getId());
+					if (views[recpage] != null)
+						views[recpage].invalidateViews();
 				}
 			});
-		if (view instanceof GridView && ((GridView)view).getAdapter() == aedt)
+		if (view instanceof AbsListView && ((AbsListView)view).getAdapter() == aedt)
 			builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -260,7 +271,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 					edit.getEditableText().delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1));
 				}
 			});
-		if (view instanceof GridView && ((GridView)view).getAdapter() == alist)
+		if (view instanceof AbsListView && ((AbsListView)view).getAdapter() == alist)
 			builder.setNegativeButton(R.string.mark, new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -331,7 +342,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		aedt.setTypeface(tf);
 		aemoji.setTypeface(tf);
 		for (int i = 0; i < MAX_VIEWS; ++i)
-			if (grids[i] != null)
-				grids[i].invalidateViews();
+			if (views[i] != null)
+				views[i].invalidateViews();
 	}
 }

@@ -70,7 +70,9 @@ public class LockableViewPager extends ViewPager
 				float dx = Math.abs(event.getX() - x);
 				float dy = Math.abs(event.getY() - y);
 				if (dx > slop && dx * .5 > dy)
-					return true;
+					// no need of lock anymore?
+					//return true;
+					break;
 				break;
 			}
 			return inmove;

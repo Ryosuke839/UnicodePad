@@ -51,16 +51,16 @@ class FavoriteAdapter extends UnicodeAdapter
 	void show()
 	{
 		trunc();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
 	void leave()
 	{
 		commit();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
@@ -81,7 +81,7 @@ class FavoriteAdapter extends UnicodeAdapter
 		list.add(code);
 	}
 
-	void remove(int code)
+	void rem(int code)
 	{
 		list.remove(Integer.valueOf(code));
 	}

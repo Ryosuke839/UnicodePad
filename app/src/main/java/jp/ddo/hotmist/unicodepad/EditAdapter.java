@@ -20,8 +20,8 @@ import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
-import android.widget.GridView;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,8 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 		list = new ArrayList<>();
 	}
 
-	View instantiate(GridView grd)
+	@Override
+	View instantiate(AbsListView grd)
 	{
 		list.clear();
 		String str = edit.getEditableText().toString();
@@ -95,7 +96,7 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 				++i;
 			list.add(code);
 		}
-		grid.invalidateViews();
+		view.invalidateViews();
 	}
 
 	public void beforeTextChanged(CharSequence s, int start, int count, int after)

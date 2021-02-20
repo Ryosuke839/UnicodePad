@@ -72,25 +72,25 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 
 	@SuppressLint("InlinedApi")
 	@Override
-	View instantiate(GridView grd)
+	View instantiate(AbsListView grd)
 	{
 		super.instantiate(grd);
 
-		layout = new LinearLayout(grid.getContext());
+		layout = new LinearLayout(view.getContext());
 		layout.setOrientation(LinearLayout.VERTICAL);
-		LinearLayout hl = new LinearLayout(grid.getContext());
+		LinearLayout hl = new LinearLayout(view.getContext());
 		hl.setOrientation(LinearLayout.HORIZONTAL);
 		hl.setGravity(Gravity.CENTER);
-		jump = new Spinner(grid.getContext());
+		jump = new Spinner(view.getContext());
 		hl.addView(jump, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.f));
-		CheckBox modc = new CheckBox(grid.getContext());
+		CheckBox modc = new CheckBox(view.getContext());
 		modc.setText(R.string.modifier);
 		modc.setPadding(0, 0, (int)(grd.getContext().getResources().getDisplayMetrics().density * 8.f), 0);
 		hl.addView(modc, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		if (Build.VERSION.SDK_INT >= 21)
 			hl.setPadding(0, (int)(grd.getContext().getResources().getDisplayMetrics().density * 8.f), 0, (int)(grd.getContext().getResources().getDisplayMetrics().density * 8.f));
 		layout.addView(hl, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		layout.addView(grid, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
+		layout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 
 		cur = db.emoji(UnicodeActivity.univer, modifier);
 
@@ -115,9 +115,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		ArrayAdapter<String> adp = new ArrayAdapter<>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
 		adp.setDropDownViewResource(R.layout.spinner_drop_down_item);
 		jump.setAdapter(adp);
-		grid.setSelection(idx.get(current));
+		view.setSelection(idx.get(current));
 		jump.setSelection(current);
-		grid.setOnScrollListener(this);
+		view.setOnScrollListener(this);
 		jump.setOnItemSelectedListener(this);
 		modc.setChecked(modifier);
 		modc.setOnCheckedChangeListener(this);
@@ -128,7 +128,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 	@Override
 	void destroy()
 	{
-		grid.setOnScrollListener(null);
+		view.setOnScrollListener(null);
 		layout = null;
 		jump = null;
 
@@ -201,9 +201,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		if (arg0 == jump)
 		{
 			current = arg2;
-			if (grid != null)
+			if (view != null)
 				if (guard == 0)
-					grid.setSelection(idx.get(arg2));
+					view.setSelection(idx.get(arg2));
 		}
 	}
 
@@ -215,9 +215,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 	@Override
 	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3)
 	{
-		if (arg0 == grid)
+		if (arg0 == view)
 		{
-			if (grid.getChildAt(0) != null && grid.getChildAt(0).getTop() * -2 > grid.getChildAt(0).getHeight())
+			if (view.getChildAt(0) != null && view.getChildAt(0).getTop() * -2 > view.getChildAt(0).getHeight())
 				arg1 += single ? 1 : PageAdapter.column;
 			if (!single)
 				arg1 += PageAdapter.column - 1;
@@ -264,7 +264,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 
 		++guard;
 
-		grid.setOnScrollListener(null);
+		view.setOnScrollListener(null);
 		jump.setOnItemSelectedListener(null);
 		jump.setAdapter(null);
 
@@ -290,16 +290,16 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 		if (current >= grp.size())
 			current = grp.size() - 1;
 
-		grid.invalidateViews();
+		view.invalidateViews();
 
 		ArrayAdapter<String> adp = new ArrayAdapter<>(jump.getContext(), android.R.layout.simple_spinner_item, grp);
 		adp.setDropDownViewResource(R.layout.spinner_drop_down_item);
 		jump.setAdapter(adp);
 		jump.setSelection(current);
-		grid.setSelection(idx.get(current));
-		grid.setOnScrollListener(this);
+		view.setSelection(idx.get(current));
+		view.setOnScrollListener(this);
 		jump.setOnItemSelectedListener(this);
-		grid.post(new Runnable()
+		view.post(new Runnable()
 		{
 			@Override
 			public void run()

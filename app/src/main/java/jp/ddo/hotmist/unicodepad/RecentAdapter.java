@@ -60,16 +60,16 @@ class RecentAdapter extends UnicodeAdapter
 	void show()
 	{
 		trunc();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
 	void leave()
 	{
 		commit();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
@@ -86,20 +86,21 @@ class RecentAdapter extends UnicodeAdapter
 
 	void add(int code)
 	{
-		list.remove(Integer.valueOf(code));
+		if (!list.remove(Integer.valueOf(code)))
+			temp.add(code);
 		list.add(code);
 		if (list.size() >= maxitems)
 			list.remove(0);
 	}
 
-	void remove(int code)
+	void rem(int code)
 	{
 		list.remove(Integer.valueOf(code));
 		if (list != temp)
 			temp.remove(Integer.valueOf(code));
 
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	private void commit()

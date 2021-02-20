@@ -23,6 +23,7 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -33,7 +34,7 @@ abstract class UnicodeAdapter extends BaseAdapter
 	private Typeface tf;
 	private NameDatabase db;
 	boolean single;
-	GridView grid;
+	AbsListView view;
 
 	static int padding = 3;
 	static float fontsize = 18f;
@@ -43,7 +44,7 @@ abstract class UnicodeAdapter extends BaseAdapter
 	{
 		this.db = db;
 		this.single = single;
-		this.grid = null;
+		this.view = null;
 	}
 
 	int name()
@@ -51,16 +52,16 @@ abstract class UnicodeAdapter extends BaseAdapter
 		return 0;
 	}
 
-	View instantiate(GridView grd)
+	View instantiate(AbsListView view)
 	{
-		grid = grd;
+		this.view = view;
 
-		return grd;
+		return view;
 	}
 
 	void destroy()
 	{
-		grid = null;
+		view = null;
 	}
 
 	void save(SharedPreferences.Editor edit)

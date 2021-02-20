@@ -31,7 +31,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.graphics.Paint;
-import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -209,7 +208,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 
 	@SuppressLint("SetTextI18n")
 	@Override
-	View instantiate(GridView grd)
+	View instantiate(AbsListView grd)
 	{
 		super.instantiate(grd);
 
@@ -619,24 +618,24 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		add(0xF0000, 0xFFFFF);
 		add(0x100000, 0x10FFFF);
 
-		resnormal = grid.getContext().getResources().getColor(android.R.color.transparent);
-		resselect = grid.getContext().getResources().getColor(android.R.color.tab_indicator_text);
+		resnormal = view.getContext().getResources().getColor(android.R.color.transparent);
+		resselect = view.getContext().getResources().getColor(android.R.color.tab_indicator_text);
 
-		layout = new LinearLayout(grid.getContext());
+		layout = new LinearLayout(view.getContext());
 		layout.setOrientation(LinearLayout.VERTICAL);
-		code = new Button(grid.getContext());
+		code = new Button(view.getContext());
 		code.setText("U+10DDDD");
 		code.setSingleLine();
-		jump = new Spinner(grid.getContext());
-		mark = new Spinner(grid.getContext());
+		jump = new Spinner(view.getContext());
+		mark = new Spinner(view.getContext());
 
-		FrameLayout fl = new FrameLayout(grid.getContext());
+		FrameLayout fl = new FrameLayout(view.getContext());
 		fl.addView(mark, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		lp.rightMargin = (int)(grid.getContext().getResources().getDisplayMetrics().scaledDensity * 22f);
+		lp.rightMargin = (int)(view.getContext().getResources().getDisplayMetrics().scaledDensity * 22f);
 		fl.addView(jump, lp);
 
-		LinearLayout hl = new LinearLayout(grid.getContext());
+		LinearLayout hl = new LinearLayout(view.getContext());
 		hl.setOrientation(LinearLayout.HORIZONTAL);
 		hl.setGravity(Gravity.CENTER);
 		hl.addView(fl, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
@@ -644,7 +643,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		p.setTextSize(code.getTextSize());
 		hl.addView(code, new LinearLayout.LayoutParams(code.getPaddingLeft() + (int)p.measureText("U+10DDDD") + code.getPaddingRight(), LayoutParams.WRAP_CONTENT));
 		layout.addView(hl, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		layout.addView(grid, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
+		layout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 		String[] jstr = new String[fmap.size()];
 		SparseArray<String> jmap = new SparseArray<>();
 		for (String s : jump.getContext().getResources().getStringArray(R.array.codes))
@@ -663,15 +662,15 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		mark.setSelection(0);
 		mark.setOnItemSelectedListener(this);
 
-		grid.setOnTouchListener(this);
+		view.setOnTouchListener(this);
 
 		code.setOnClickListener(this);
 
 		Entry<Integer, Pair<Integer, Integer>> e = fmap.floorEntry(scroll);
 		if (e.getValue().second < scroll)
 			scroll = e.getValue().second;
-		grid.setSelection(scroll - e.getKey() + e.getValue().first);
-		grid.setOnScrollListener(this);
+		view.setSelection(scroll - e.getKey() + e.getValue().first);
+		view.setOnScrollListener(this);
 
 		jump.setOnItemSelectedListener(this);
 
@@ -681,7 +680,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 	@Override
 	void destroy()
 	{
-		grid.setOnScrollListener(null);
+		view.setOnScrollListener(null);
 		layout = null;
 		code = null;
 		jump = null;
@@ -699,14 +698,14 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 			return -1;
 		scroll = code;
 		highlight = scroll - e.getKey() + e.getValue().first;
-		if (grid != null)
+		if (view != null)
 		{
-			grid.setSelection(scroll - e.getKey() + e.getValue().first);
-			if (grid.getFirstVisiblePosition() <= highlight && highlight <= grid.getLastVisiblePosition())
+			view.setSelection(scroll - e.getKey() + e.getValue().first);
+			if (view.getFirstVisiblePosition() <= highlight && highlight <= view.getLastVisiblePosition())
 			{
 				if (hightarget != null)
 					hightarget.setBackgroundColor(resnormal);
-				hightarget = grid.getChildAt(highlight - grid.getFirstVisiblePosition());
+				hightarget = view.getChildAt(highlight - view.getFirstVisiblePosition());
 				hightarget.setBackgroundColor(resselect);
 			}
 		}
@@ -779,9 +778,9 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 		if (arg0 == jump)
 		{
 			current = arg2;
-			if (grid != null)
+			if (view != null)
 				if (guard == 0)
-					grid.setSelection(jmap.get(arg2));
+					view.setSelection(jmap.get(arg2));
 		}
 		if (arg0 == mark)
 		{
@@ -791,7 +790,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 				int i = 0;
 				for (Entry<Integer, String> e : mmap.entrySet())
 					items[i++] = String.format("U+%04X %s", e.getKey(), e.getValue());
-				new AlertDialog.Builder(grid.getContext())
+				new AlertDialog.Builder(view.getContext())
 						.setTitle(R.string.rem)
 						.setItems(items, new DialogInterface.OnClickListener()
 						{
@@ -826,9 +825,9 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 	@Override
 	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3)
 	{
-		if (arg0 == grid)
+		if (arg0 == view)
 		{
-			if (grid.getChildAt(0) != null && grid.getChildAt(0).getTop() * -2 > grid.getChildAt(0).getHeight())
+			if (view.getChildAt(0) != null && view.getChildAt(0).getTop() * -2 > view.getChildAt(0).getHeight())
 				arg1 += single ? 1 : PageAdapter.column;
 
 			Entry<Integer, Pair<Integer, Integer>> e = emap.floorEntry(arg1);
@@ -962,14 +961,14 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
-							if (grid != null)
+							if (view != null)
 								try
 								{
 									if (find(Integer.valueOf(edit.getText().toString(), 16)) == -1)
-										Toast.makeText(grid.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
+										Toast.makeText(view.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
 								} catch (NumberFormatException e)
 								{
-									Toast.makeText(grid.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
+									Toast.makeText(view.getContext(), R.string.nocode, Toast.LENGTH_SHORT).show();
 								}
 						}
 					})
@@ -1014,7 +1013,7 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 	{
 		highlight = -1;
 		if (hightarget != null)
-			if (grid != null)
+			if (view != null)
 			{
 				hightarget.setBackgroundColor(resnormal);
 				hightarget = null;

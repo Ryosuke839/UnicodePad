@@ -16,4 +16,5 @@
  -->
 <resources>
 	<item name="TAB_ID" type="id"/>
+	<item name="HANDLE_ID" type="id"/>
 </resources>

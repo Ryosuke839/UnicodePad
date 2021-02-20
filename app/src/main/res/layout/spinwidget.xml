@@ -15,30 +15,38 @@
    limitations under the License.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
+	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="horizontal">
 
-	<ImageButton
-		android:id="@+id/buttonlist"
-		android:layout_width="wrap_content"
+	<ImageView
+		android:id="@+id/HANDLE_ID"
+		android:layout_width="24sp"
 		android:layout_height="match_parent"
-		android:scaleType="center"
-		android:src="@android:drawable/ic_menu_preferences"
-		android:contentDescription="@string/config"/>
+		android:contentDescription="@string/sort"
+		android:src="@android:drawable/ic_menu_sort_by_size" />
 
-	<ImageButton
-		android:id="@+id/buttonup"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:src="@android:drawable/arrow_up_float"
-		android:contentDescription="@string/up"/>
+	<RadioGroup
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-	<ImageButton
-		android:id="@+id/buttondown"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:src="@android:drawable/arrow_down_float"
-		android:contentDescription="@string/down"/>
+		<TextView
+			android:id="@+id/tabs_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+		<RadioButton
+			android:id="@+id/tabs_multiple"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/multiplecolumns" />
+
+		<RadioButton
+			android:id="@+id/tabs_single"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/singlecolumn" />
+	</RadioGroup>
 
 </LinearLayout>

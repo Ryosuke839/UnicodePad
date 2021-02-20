@@ -396,6 +396,7 @@
 
 	<string name="multiplecolumns">Multiple columns only with characters</string>
 	<string name="singlecolumn">Single column with description</string>
+	<string name="sort">Sort</string>
 
 	<string name="padding_desc">Padding of grid</string>
 	<string name="gridsize_desc">Text size of grid</string>

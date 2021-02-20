@@ -25,9 +25,11 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mobeta.android.dslv.DragSortListView;
 
 abstract class UnicodeAdapter extends BaseAdapter
 {
@@ -112,28 +114,34 @@ abstract class UnicodeAdapter extends BaseAdapter
 				vl.addView(nt, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f));
 				LinearLayout hl = new LinearLayout(arg2.getContext());
 				hl.setOrientation(LinearLayout.HORIZONTAL);
+				ImageView iv = new ImageView(arg2.getContext());
+				iv.setImageResource(android.R.drawable.ic_menu_sort_by_size);
+				iv.setId(R.id.HANDLE_ID);
+				if (!(this instanceof DragSortListView.DropListener || this instanceof DragSortListView.RemoveListener))
+					iv.setVisibility(View.GONE);
+				hl.addView(iv, new LinearLayout.LayoutParams((int)(arg2.getContext().getResources().getDisplayMetrics().scaledDensity * 24), LayoutParams.MATCH_PARENT));
 				hl.addView(ct, new LinearLayout.LayoutParams((int)(arg2.getContext().getResources().getDisplayMetrics().scaledDensity * fontsize * 2 + padding * 2), LayoutParams.MATCH_PARENT));
 				hl.addView(vl, new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f));
 				arg1 = hl;
 			}
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setText((String)getItem(arg0));
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).setText((String)getItem(arg0));
 			if (getItemId(arg0) != -1)
 			{
-				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(0)).setText(String.format("U+%04X", (int)getItemId(arg0)));
-				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(1)).setText(db.get((int)getItemId(arg0), "name"));
+				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(2)).getChildAt(0)).setText(String.format("U+%04X", (int)getItemId(arg0)));
+				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(2)).getChildAt(1)).setText(db.get((int)getItemId(arg0), "name"));
 			}
 			else
 			{
-				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(0)).setText((" " + getItemString(arg0)).replace(" ", " U+").substring(1));
-				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(1)).getChildAt(1)).setText(db.get(getItemString(arg0), "name"));
+				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(2)).getChildAt(0)).setText((" " + getItemString(arg0)).replace(" ", " U+").substring(1));
+				((TextView)((LinearLayout)((LinearLayout)arg1).getChildAt(2)).getChildAt(1)).setText(db.get(getItemString(arg0), "name"));
 			}
-			(((LinearLayout)arg1).getChildAt(0)).setPadding(padding, padding, padding, padding);
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setTextSize(fontsize);
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).shrinkWidth(shrink);
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setTypeface(tf);
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).drawSlash(true);
+			(((LinearLayout)arg1).getChildAt(1)).setPadding(padding, padding, padding, padding);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).setTextSize(fontsize);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).shrinkWidth(shrink);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).setTypeface(tf);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).drawSlash(true);
 			int ver = getItemId(arg0) != -1 ? db.getint((int)getItemId(arg0), "version") : db.getint(getItemString(arg0), "version");
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).setValid(ver != 0 && ver <= UnicodeActivity.univer);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).setValid(ver != 0 && ver <= UnicodeActivity.univer);
 			return arg1;
 		}
 		else

@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 import android.content.SharedPreferences;
 
-class RecentAdapter extends UnicodeAdapter
+import com.mobeta.android.dslv.DragSortListView;
+
+class RecentAdapter extends UnicodeAdapter implements DragSortListView.DropListener, DragSortListView.RemoveListener
 {
 	private ArrayList<Integer> list;
 	private ArrayList<Integer> temp;
@@ -86,8 +88,7 @@ class RecentAdapter extends UnicodeAdapter
 
 	void add(int code)
 	{
-		if (!list.remove(Integer.valueOf(code)))
-			temp.add(code);
+		list.remove(Integer.valueOf(code));
 		list.add(code);
 		if (list.size() >= maxitems)
 			list.remove(0);
@@ -124,4 +125,22 @@ class RecentAdapter extends UnicodeAdapter
 		edit.putString("rec", str);
 	}
 
+	@Override
+	public void drop(int from, int to)
+	{
+		list = temp;
+		Integer i = temp.remove(temp.size() - from - 1);
+		temp.add(temp.size() - to, i);
+		trunc();
+		if (view != null)
+			view.invalidateViews();
+	}
+
+	@Override
+	public void remove(int which)
+	{
+		list.remove(temp.remove(temp.size() - which - 1));
+		if (view != null)
+			view.invalidateViews();
+	}
 }

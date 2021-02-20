@@ -37,6 +37,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.mobeta.android.dslv.DragSortController;
+import com.mobeta.android.dslv.DragSortListView;
+
 class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLongClickListener
 {
 	private UnicodeActivity activity;
@@ -140,8 +143,20 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 
 		if (adps[position].single)
 		{
-			ListView view = new ListView(activity);
-			views[position] = view;
+			if (adps[position] instanceof DragSortListView.DropListener || adps[position] instanceof DragSortListView.RemoveListener)
+			{
+				DragSortListView view = new DragSortListView(activity, null);
+				DragSortController controller = new DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE, 0, R.id.HANDLE_ID);
+				controller.setRemoveEnabled(true);
+				controller.setRemoveMode(DragSortController.FLING_REMOVE);
+				controller.setSortEnabled(true);
+				view.setFloatViewManager(controller);
+				view.setOnTouchListener(controller);
+				views[position] = view;
+			} else
+			{
+				views[position] = new ListView(activity);
+			}
 		} else
 		{
 			GridView view = new GridView(activity);
@@ -193,7 +208,7 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 	@Override
 	public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3)
 	{
-		showDesc(arg0, arg2, (UnicodeAdapter)((GridView)arg0).getAdapter());
+		showDesc(arg0, arg2, (UnicodeAdapter)(arg0 instanceof DragSortListView ? ((DragSortListView)arg0).getInputAdapter() : arg0.getAdapter()));
 		return true;
 	}
 

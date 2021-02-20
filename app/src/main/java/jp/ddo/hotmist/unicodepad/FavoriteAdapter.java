@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 import android.content.SharedPreferences;
 
-class FavoriteAdapter extends UnicodeAdapter
+import com.mobeta.android.dslv.DragSortListView;
+
+class FavoriteAdapter extends UnicodeAdapter implements DragSortListView.DropListener, DragSortListView.RemoveListener
 {
 	private ArrayList<Integer> list;
 	private ArrayList<Integer> temp;
@@ -114,4 +116,21 @@ class FavoriteAdapter extends UnicodeAdapter
 		edit.putString("fav", str);
 	}
 
+	@Override
+	public void drop(int from, int to)
+	{
+		list = temp;
+		list.add(to, list.remove(from));
+		trunc();
+		if (view != null)
+			view.invalidateViews();
+	}
+
+	@Override
+	public void remove(int which)
+	{
+		list.remove(temp.remove(which));
+		if (view != null)
+			view.invalidateViews();
+	}
 }

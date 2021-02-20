@@ -148,7 +148,7 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 	{
 		arg1 = super.getView(arg0, arg1, arg2);
 		if (this.single)
-			((CharacterView)((LinearLayout)arg1).getChildAt(0)).drawSlash(false);
+			((CharacterView)((LinearLayout)arg1).getChildAt(1)).drawSlash(false);
 		else
 			((CharacterView)arg1).drawSlash(false);
 		return arg1;

@@ -20,15 +20,18 @@ import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
-import android.widget.GridView;
+
+import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.ArrayList;
 
-class EditAdapter extends UnicodeAdapter implements TextWatcher
+class EditAdapter extends UnicodeAdapter implements TextWatcher, DragSortListView.DropListener, DragSortListView.RemoveListener
 {
 	private EditText edit;
 	private ArrayList<Integer> list;
+	private boolean suspend = false;
 
 	EditAdapter(SharedPreferences pref, NameDatabase db, boolean single, EditText edit)
 	{
@@ -39,7 +42,8 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 		list = new ArrayList<>();
 	}
 
-	View instantiate(GridView grd)
+	@Override
+	View instantiate(AbsListView grd)
 	{
 		list.clear();
 		String str = edit.getEditableText().toString();
@@ -83,6 +87,9 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 
 	public void onTextChanged(CharSequence s, int start, int before, int count)
 	{
+		if (suspend)
+			return;
+
 		if (before == 0 && count == 0)
 			return;
 
@@ -95,7 +102,7 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 				++i;
 			list.add(code);
 		}
-		grid.invalidateViews();
+		view.invalidateViews();
 	}
 
 	public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -104,5 +111,64 @@ class EditAdapter extends UnicodeAdapter implements TextWatcher
 
 	public void afterTextChanged(Editable s)
 	{
+	}
+
+	@Override
+	public void drop(int from, int to)
+	{
+		if (view != null)
+			view.invalidateViews();
+		suspend = true;
+		int from_begin = 0;
+		int from_end = 0;
+		for (int i = 0; i < list.size(); ++i)
+		{
+			if (i == from)
+				from_begin = from_end;
+			if (list.get(i) > 0xFFFF)
+				++from_end;
+			++from_end;
+			if (i == from)
+				break;
+		}
+		edit.getEditableText().delete(from_begin, from_end);
+		Integer ch = list.remove(from);
+		int to_begin = 0;
+		for (int i = 0; i < list.size(); ++i)
+		{
+			if (i == to)
+				break;
+			if (list.get(i) > 0xFFFF)
+				++to_begin;
+			++to_begin;
+		}
+		edit.getEditableText().insert(to_begin, String.valueOf(Character.toChars(ch)));
+		edit.getEditableText().replace(0, edit.getEditableText().length(), edit.getEditableText());
+		suspend = false;
+		list.add(to, ch);
+	}
+
+	@Override
+	public void remove(int which)
+	{
+		if (view != null)
+			view.invalidateViews();
+		suspend = true;
+		int which_begin = 0;
+		int which_end = 0;
+		for (int i = 0; i < list.size(); ++i)
+		{
+			if (i == which)
+				which_begin = which_end;
+			if (list.get(i) > 0xFFFF)
+				++which_end;
+			++which_end;
+			if (i == which)
+				break;
+		}
+		edit.getEditableText().delete(which_begin, which_end);
+		edit.getEditableText().replace(0, edit.getEditableText().length(), edit.getEditableText());
+		suspend = false;
+		list.remove(which);
 	}
 }

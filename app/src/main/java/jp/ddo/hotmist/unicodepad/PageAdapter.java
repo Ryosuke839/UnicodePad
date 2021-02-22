@@ -75,16 +75,16 @@ class PageAdapter extends PagerAdapter implements OnItemClickListener, OnItemLon
 		db = new NameDatabase(act);
 		this.pref = pref;
 		num_page = pref.getInt("cnt_shown", 6);
-		adps[pref.getInt("ord_list", 1)] = alist = new ListAdapter(pref, db, blist);
+		adps[pref.getInt("ord_list", 1)] = alist = new ListAdapter(act, pref, db, blist);
 		listpage = pref.getInt("ord_list", 1);
-		adps[pref.getInt("ord_find", 3)] = afind = new FindAdapter(pref, db, bfind);
-		adps[pref.getInt("ord_rec", 0)] = arec = new RecentAdapter(pref, db, brec);
+		adps[pref.getInt("ord_find", 3)] = afind = new FindAdapter(act, pref, db, bfind);
+		adps[pref.getInt("ord_rec", 0)] = arec = new RecentAdapter(act, pref, db, brec);
 		recpage = pref.getInt("ord_rec", 0);
 		if (recpage >= num_page)
 			recpage = -1;
-		adps[pref.getInt("ord_fav", 4)] = afav = new FavoriteAdapter(pref, db, bfav);
-		adps[pref.getInt("ord_edt", 5)] = aedt = new EditAdapter(pref, db, bedt, arg);
-		adps[pref.getInt("ord_emoji", 2)] = aemoji = new EmojiAdapter(pref, db, bemoji);
+		adps[pref.getInt("ord_fav", 4)] = afav = new FavoriteAdapter(act, pref, db, bfav);
+		adps[pref.getInt("ord_edt", 5)] = aedt = new EditAdapter(act, pref, db, bedt, arg);
+		adps[pref.getInt("ord_emoji", 2)] = aemoji = new EmojiAdapter(act, pref, db, bemoji);
 		page = -1;
 		edit = arg;
 		tf = null;

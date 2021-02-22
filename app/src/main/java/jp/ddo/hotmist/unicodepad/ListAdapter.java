@@ -25,6 +25,7 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -176,9 +177,9 @@ class ListAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnSc
 
 	}
 
-	public ListAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	public ListAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		current = -1;
 		head = -1;

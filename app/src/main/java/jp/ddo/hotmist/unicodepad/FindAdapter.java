@@ -17,6 +17,7 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -50,9 +51,9 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 	private SharedPreferences pref;
 	private CompleteAdapter adapter;
 
-	public FindAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	public FindAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		this.db = db;
 		saved = pref.getString("find", "");

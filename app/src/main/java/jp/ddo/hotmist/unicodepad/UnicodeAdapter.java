@@ -17,6 +17,7 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
@@ -34,6 +35,7 @@ import com.mobeta.android.dslv.DragSortListView;
 abstract class UnicodeAdapter extends BaseAdapter
 {
 	private Typeface tf;
+	private Activity activity;
 	private NameDatabase db;
 	boolean single;
 	AbsListView view;
@@ -42,8 +44,9 @@ abstract class UnicodeAdapter extends BaseAdapter
 	static float fontsize = 18f;
 	static boolean shrink = true;
 
-	UnicodeAdapter(NameDatabase db, boolean single)
+	UnicodeAdapter(Activity activity, NameDatabase db, boolean single)
 	{
+		this.activity = activity;
 		this.db = db;
 		this.single = single;
 		this.view = null;
@@ -203,6 +206,11 @@ abstract class UnicodeAdapter extends BaseAdapter
 	public boolean isEnabled(int arg0)
 	{
 		return true;
+	}
+
+	protected void runOnUiThread(Runnable action)
+	{
+		activity.runOnUiThread(action);
 	}
 
 	void setTypeface(Typeface tf)

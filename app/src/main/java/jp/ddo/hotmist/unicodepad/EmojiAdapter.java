@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Build;
@@ -54,9 +55,9 @@ class EmojiAdapter extends UnicodeAdapter implements OnItemSelectedListener, OnS
 	private int current;
 	private boolean modifier;
 
-	public EmojiAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	public EmojiAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		this.db = db;
 		cur = null;

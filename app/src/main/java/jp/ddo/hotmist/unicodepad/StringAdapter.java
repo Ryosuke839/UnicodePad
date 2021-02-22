@@ -24,7 +24,7 @@ class StringAdapter extends UnicodeAdapter
 
 	StringAdapter(String str)
 	{
-		super(null, false);
+		super(null, null, false);
 
 		list = new ArrayList<>();
 		for (int i = 0; i < str.length(); ++i)

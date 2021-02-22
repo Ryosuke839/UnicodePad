@@ -18,6 +18,7 @@ package jp.ddo.hotmist.unicodepad;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
 import com.mobeta.android.dslv.DragSortListView;
@@ -28,9 +29,9 @@ class RecentAdapter extends UnicodeAdapter implements DragSortListView.DropListe
 	private ArrayList<Integer> temp;
 	static int maxitems = 16;
 
-	RecentAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	RecentAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		list = new ArrayList<>();
 		temp = list;
@@ -86,22 +87,34 @@ class RecentAdapter extends UnicodeAdapter implements DragSortListView.DropListe
 		return temp.get(temp.size() - arg0 - 1);
 	}
 
-	void add(int code)
+	void add(final int code)
 	{
-		list.remove(Integer.valueOf(code));
-		list.add(code);
-		if (list.size() >= maxitems)
-			list.remove(0);
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(Integer.valueOf(code));
+				list.add(code);
+				if (list.size() >= maxitems)
+					list.remove(0);
+			}
+		});
 	}
 
-	void rem(int code)
+	void rem(final int code)
 	{
-		list.remove(Integer.valueOf(code));
-		if (list != temp)
-			temp.remove(Integer.valueOf(code));
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(Integer.valueOf(code));
+				if (list != temp)
+					temp.remove(Integer.valueOf(code));
 
-		if (view != null)
-			view.invalidateViews();
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 
 	private void commit()
@@ -126,21 +139,35 @@ class RecentAdapter extends UnicodeAdapter implements DragSortListView.DropListe
 	}
 
 	@Override
-	public void drop(int from, int to)
+	public void drop(final int from, final int to)
 	{
-		list = temp;
-		Integer i = temp.remove(temp.size() - from - 1);
-		temp.add(temp.size() - to, i);
-		trunc();
-		if (view != null)
-			view.invalidateViews();
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list = temp;
+				Integer i = temp.remove(temp.size() - from - 1);
+				temp.add(temp.size() - to, i);
+				trunc();
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 
 	@Override
-	public void remove(int which)
+	public void remove(final int which)
 	{
-		list.remove(temp.remove(temp.size() - which - 1));
-		if (view != null)
-			view.invalidateViews();
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(temp.remove(temp.size() - which - 1));
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 }

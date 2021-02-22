@@ -18,6 +18,7 @@ package jp.ddo.hotmist.unicodepad;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
 import com.mobeta.android.dslv.DragSortListView;
@@ -27,9 +28,9 @@ class FavoriteAdapter extends UnicodeAdapter implements DragSortListView.DropLis
 	private ArrayList<Integer> list;
 	private ArrayList<Integer> temp;
 
-	FavoriteAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	FavoriteAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		list = new ArrayList<>();
 		temp = list;
@@ -117,20 +118,34 @@ class FavoriteAdapter extends UnicodeAdapter implements DragSortListView.DropLis
 	}
 
 	@Override
-	public void drop(int from, int to)
+	public void drop(final int from, final int to)
 	{
-		list = temp;
-		list.add(to, list.remove(from));
-		trunc();
-		if (view != null)
-			view.invalidateViews();
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list = temp;
+				list.add(to, list.remove(from));
+				trunc();
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 
 	@Override
-	public void remove(int which)
+	public void remove(final int which)
 	{
-		list.remove(temp.remove(which));
-		if (view != null)
-			view.invalidateViews();
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(temp.remove(which));
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 }

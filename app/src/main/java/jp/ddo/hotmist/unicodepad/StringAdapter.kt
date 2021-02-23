@@ -13,38 +13,28 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+package jp.ddo.hotmist.unicodepad
 
-package jp.ddo.hotmist.unicodepad;
+import java.util.*
 
-import java.util.ArrayList;
+internal class StringAdapter(str: String) : UnicodeAdapter(null, null, false) {
+    private val list: ArrayList<Int>
+    override fun getCount(): Int {
+        return list.size
+    }
 
-class StringAdapter extends UnicodeAdapter
-{
-	private ArrayList<Integer> list;
+    override fun getItemId(arg0: Int): Long {
+        return list[arg0].toLong()
+    }
 
-	StringAdapter(String str)
-	{
-		super(null, null, false);
-
-		list = new ArrayList<>();
-		for (int i = 0; i < str.length(); ++i)
-		{
-			int code = str.codePointAt(i);
-			if (code > 0xFFFF)
-				++i;
-			list.add(code);
-		}
-	}
-
-	@Override
-	public int getCount()
-	{
-		return list.size();
-	}
-
-	@Override
-	public long getItemId(int arg0)
-	{
-		return list.get(arg0);
-	}
+    init {
+        list = ArrayList()
+        var i = 0
+        while (i < str.length) {
+            val code = str.codePointAt(i)
+            if (code > 0xFFFF) ++i
+            list.add(code)
+            ++i
+        }
+    }
 }

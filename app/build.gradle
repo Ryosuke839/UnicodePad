@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 29
@@ -31,4 +32,9 @@ dependencies {
     implementation 'androidx.emoji:emoji-appcompat:1.1.0'
     implementation 'com.google.android.gms:play-services-ads-lite:19.3.0'
     implementation group: 'com.mobeta.android.dslv', name: 'library', version: '0.9.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

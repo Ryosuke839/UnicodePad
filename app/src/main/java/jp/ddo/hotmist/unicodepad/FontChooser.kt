@@ -1,0 +1,175 @@
+/*
+   Copyright 2018 Ryosuke839
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+package jp.ddo.hotmist.unicodepad
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Typeface
+import android.os.Build
+import android.preference.PreferenceManager
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
+import java.io.File
+import java.io.IOException
+import java.util.*
+
+class FontChooser internal constructor(private val activity: Activity, private val spinner: Spinner, private val listener: Listener) : DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnItemSelectedListener, FileChooser.Listener {
+    private val adapter: ArrayAdapter<String>
+    private var fidx: Int
+    private val fontpath: ArrayList<String?>
+
+    internal interface Listener {
+        fun onTypefaceChosen(typeface: Typeface?)
+    }
+
+    fun Save(edit: SharedPreferences.Editor) {
+        var fs = ""
+        for (s in fontpath) fs += """
+     $s
+     
+     """.trimIndent()
+        edit.putString("fontpath", fs)
+        edit.putInt("fontidx", if (spinner.selectedItemId > 2) spinner.selectedItemId.toInt() - 2 else 0)
+    }
+
+    private fun Add(path: String?): Boolean {
+        if (Load(path) == null) return false
+
+        // Add remove item
+        if (adapter.count < 3) adapter.add(activity.resources.getString(R.string.rem))
+
+        // Remove duplicated items
+        for (i in fontpath.indices) {
+            if (path != fontpath[i]) continue
+            adapter.remove(adapter.getItem(i + 3))
+            fontpath.removeAt(i)
+        }
+        adapter.add(File(path).name)
+        fontpath.add(path)
+        return true
+    }
+
+    private fun Load(path: String?): Typeface? {
+        return try {
+            Typeface.createFromFile(path)
+        } catch (e: RuntimeException) {
+            null
+        }
+    }
+
+    private fun Remove(which: Int) {
+        adapter.remove(adapter.getItem(which + 3))
+        try {
+            if (fontpath[which]!!.startsWith(activity.filesDir.canonicalPath)) File(fontpath[which]).delete()
+        } catch (e: IOException) {
+        }
+        fontpath.removeAt(which)
+        if (fidx == which + 1) fidx = 0
+        if (fidx > which + 1) --fidx
+
+        // Remove remove item
+        if (fontpath.size == 0) adapter.remove(adapter.getItem(2))
+        spinner.setSelection(if (fidx == 0) 0 else fidx + 2)
+    }
+
+    @SuppressLint("InlinedApi")
+    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        if (parent !== spinner) return
+        when (position) {
+            0 -> {
+                listener.onTypefaceChosen(Typeface.DEFAULT)
+                fidx = 0
+            }
+            1 -> if (Build.VERSION.SDK_INT >= 19) {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                intent.type = "*/*"
+                activity.startActivityForResult(intent, FONT_REQUEST_CODE)
+            } else FileChooser(activity, this, "/").show()
+            2 -> onClick(null, -1)
+            else -> {
+                fidx = position - 2
+                val tf = Load(fontpath[position - 3])
+                if (tf != null) listener.onTypefaceChosen(tf) else Remove(position - 3)
+            }
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
+    override fun onClick(dialog: DialogInterface, which: Int) {
+        if (which == -1) {
+            val str: Array<String?>
+            str = arrayOfNulls(fontpath.size)
+            for (i in str.indices) str[i] = adapter.getItem(i + 3)
+            AlertDialog.Builder(activity).setTitle(R.string.rem).setItems(str, this).setOnCancelListener(this).show()
+        } else {
+            Remove(which)
+        }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        spinner.setSelection(if (fidx == 0) 0 else fidx + 2)
+    }
+
+    override fun onFileChosen(path: String?) {
+        if (path!!.endsWith(".zip")) {
+            FileChooser(activity, this, path).onClick(null, -1)
+            return
+        }
+        if (Add(path)) {
+            spinner.setSelection(adapter.count - 1)
+        } else {
+            Toast.makeText(activity, R.string.cantopen, Toast.LENGTH_SHORT).show()
+            try {
+                if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
+            } catch (e2: IOException) {
+            }
+            spinner.setSelection(0)
+        }
+    }
+
+    override fun onFileCancel() {
+        spinner.setSelection(if (fidx == 0) 0 else fidx + 2)
+    }
+
+    companion object {
+        var FONT_REQUEST_CODE = 42
+    }
+
+    init {
+        adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.add(activity.resources.getString(R.string.normal))
+        adapter.add(activity.resources.getString(R.string.add))
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = this
+        val pref = PreferenceManager.getDefaultSharedPreferences(activity)
+        fontpath = ArrayList()
+        val fs = pref.getString("fontpath", "")
+        for (s in fs!!.split("\n").toTypedArray()) {
+            if (s.length == 0) continue
+            Add(s)
+        }
+        fidx = pref.getInt("fontidx", 0)
+        if (fidx > fontpath.size) fidx = 0
+        spinner.setSelection(if (fidx == 0) 0 else fidx + 2)
+    }
+}

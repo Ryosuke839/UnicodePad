@@ -37,8 +37,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
-internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: NameDatabase?, single: Boolean) : UnicodeAdapter(activity, db, single), OnItemSelectedListener, AbsListView.OnScrollListener, View.OnClickListener, OnTouchListener {
+internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), OnItemSelectedListener, AbsListView.OnScrollListener, View.OnClickListener, OnTouchListener {
     private var count = 0
     private val emap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
     private val fmap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
@@ -80,7 +82,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
             return 0
         }
 
-        override fun getView(arg0: Int, arg1: View, arg2: ViewGroup): View {
+        override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
             var arg1 = arg1
             if (arg1 == null) arg1 = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, arg2, false)
             (arg1 as TextView).text = getItem(arg0) as String
@@ -465,7 +467,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
         p.textSize = code!!.textSize
         hl.addView(code, LinearLayout.LayoutParams(code!!.paddingLeft + p.measureText("U+10DDDD").toInt() + code!!.paddingRight, ViewGroup.LayoutParams.WRAP_CONTENT))
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1))
+        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         val jstr = arrayOfNulls<String>(fmap.size)
         val jmap = SparseArray<String>()
         for (s in jump!!.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
@@ -512,8 +514,10 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
             view!!.setSelection(scroll - e.key + e.value.first)
             if (view!!.firstVisiblePosition <= highlight && highlight <= view!!.lastVisiblePosition) {
                 if (hightarget != null) hightarget!!.setBackgroundColor(resnormal)
-                hightarget = view!!.getChildAt(highlight - view!!.firstVisiblePosition)
-                hightarget.setBackgroundColor(resselect)
+                view!!.getChildAt(highlight - view!!.firstVisiblePosition).let {
+                    hightarget = it
+                    it.setBackgroundColor(resselect)
+                }
             }
         }
         return scroll
@@ -521,7 +525,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
 
     fun mark(code: Int, name: String) {
         mmap.remove(code)
-        mmap[code] = if (name.length > 0) name else "Unnamed Mark"
+        mmap[code] = if (name.isNotEmpty()) name else "Unnamed Mark"
     }
 
     public override fun save(edit: SharedPreferences.Editor) {
@@ -548,7 +552,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
         return count
     }
 
-    override fun getView(arg0: Int, arg1: View, arg2: ViewGroup): View {
+    override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
         val ret = super.getView(arg0, arg1, arg2)
         if (arg0 == highlight) {
             if (hightarget != null) hightarget!!.setBackgroundColor(resnormal)
@@ -633,8 +637,8 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
                     val start = edit.selectionStart
                     val end = edit.selectionEnd
                     if (start == -1) return@OnClickListener
-                    edit.editableText.replace(Math.min(start, end), Math.max(start, end), s)
-                    edit.setSelection(Math.min(start, end) + s.length)
+                    edit.editableText.replace(min(start, end), max(start, end), s)
+                    edit.setSelection(min(start, end) + s.length)
                 }
             }
             edit.setText(String.format("%04X", head))
@@ -654,7 +658,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
             val tv = TypedValue()
             arg0.getContext().theme.resolveAttribute(R.attr.backspace, tv, true)
             del.setImageDrawable(arg0.getContext().resources.getDrawable(tv.resourceId))
-            del.scaleType = ImageButton.ScaleType.CENTER_INSIDE
+            del.scaleType = ImageView.ScaleType.CENTER_INSIDE
             del.setPadding(0, 0, 0, 0)
             del.setOnClickListener(ocl)
             val vl = LinearLayout(arg0.getContext())
@@ -671,7 +675,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
             mlp.setMargins(0, 0, 0, 0)
             for (i in 5 downTo 0) {
                 val hl = LinearLayout(arg0.getContext())
-                for (j in if (i == 0) 2 else 0..2) {
+                for (j in if (i == 0) 2..2 else 0..2) {
                     val btn = Button(arg0.getContext(), null, android.R.attr.buttonStyleSmall)
                     btn.text = String.format("%X", i * 3 + j - 2)
                     btn.setPadding(0, 0, 0, 0)
@@ -685,7 +689,7 @@ internal class ListAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
             val dlg = AlertDialog.Builder(arg0.getContext())
                     .setTitle(R.string.code)
                     .setView(vl)
-                    .setPositiveButton(android.R.string.search_go) { dialog, which ->
+                    .setPositiveButton(android.R.string.search_go) { _, _ ->
                         if (view != null) try {
                             if (find(Integer.valueOf(edit.text.toString(), 16)) == -1) Toast.makeText(view!!.context, R.string.nocode, Toast.LENGTH_SHORT).show()
                         } catch (e: NumberFormatException) {

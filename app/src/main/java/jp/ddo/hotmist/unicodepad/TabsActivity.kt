@@ -15,6 +15,7 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -22,6 +23,7 @@ import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
 
 class TabsActivity : Activity() {
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         val themelist = intArrayOf(
                 androidx.appcompat.R.style.Theme_AppCompat,

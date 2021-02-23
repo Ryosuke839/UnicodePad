@@ -25,7 +25,7 @@ import android.widget.*
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 
-abstract class UnicodeAdapter(private val activity: Activity?, private val db: NameDatabase?, var single: Boolean) : BaseAdapter() {
+abstract class UnicodeAdapter(private val activity: Activity, private val db: NameDatabase, var single: Boolean) : BaseAdapter() {
     private var tf: Typeface? = null
     var view: AbsListView? = null
     open fun name(): Int {
@@ -48,7 +48,7 @@ abstract class UnicodeAdapter(private val activity: Activity?, private val db: N
         return String.format("%04X", getItemId(arg0).toInt())
     }
 
-    override fun getItem(arg0: Int): Any {
+    override fun getItem(arg0: Int): String {
         return String(Character.toChars(getItemId(arg0).toInt()))
     }
 
@@ -57,60 +57,57 @@ abstract class UnicodeAdapter(private val activity: Activity?, private val db: N
     }
 
     @SuppressLint("NewApi")
-    override fun getView(arg0: Int, arg1: View, arg2: ViewGroup): View {
-        var arg1 = arg1
+    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
         return if (single) {
-            if (arg1 == null) {
-                val ct = CharacterView(arg2.context, null, android.R.attr.textAppearanceLarge)
-                val pt = TextView(arg2.context, null, android.R.attr.textAppearanceSmall)
-                pt.setPadding(0, 0, 0, 0)
-                val nt = TextView(arg2.context, null, android.R.attr.textAppearanceSmall)
-                nt.setPadding(0, 0, 0, 0)
-                val vl = LinearLayout(arg2.context)
-                vl.orientation = LinearLayout.VERTICAL
-                vl.addView(pt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                vl.addView(nt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                val hl = LinearLayout(arg2.context)
-                hl.orientation = LinearLayout.HORIZONTAL
-                val iv = ImageView(arg2.context)
-                iv.setImageResource(android.R.drawable.ic_menu_sort_by_size)
-                iv.id = R.id.HANDLE_ID
-                if (!(this is DropListener || this is RemoveListener)) iv.visibility = View.GONE
-                hl.addView(iv, LinearLayout.LayoutParams((arg2.context.resources.displayMetrics.scaledDensity * 24).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
-                hl.addView(ct, LinearLayout.LayoutParams((arg2.context.resources.displayMetrics.scaledDensity * fontsize * 2 + padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
-                hl.addView(vl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-                arg1 = hl
+            (view as LinearLayout? ?: LinearLayout(activity).also {
+                it.orientation = LinearLayout.HORIZONTAL
+                it.addView(ImageView(activity).also { imageView ->
+                    imageView.setImageResource(android.R.drawable.ic_menu_sort_by_size)
+                    imageView.id = R.id.HANDLE_ID
+                    if (!(this is DropListener || this is RemoveListener)) imageView.visibility = View.GONE
+                }, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * 24).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+                it.addView(CharacterView(activity, null, android.R.attr.textAppearanceLarge), LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * fontsize * 2 + padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+                it.addView(LinearLayout(activity).also { linearLayout ->
+                    linearLayout.orientation = LinearLayout.VERTICAL
+                    linearLayout.addView(TextView(activity, null, android.R.attr.textAppearanceSmall).also { textView ->
+                        textView.setPadding(0, 0, 0, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                    linearLayout.addView(TextView(activity, null, android.R.attr.textAppearanceSmall).also { textView ->
+                        textView.setPadding(0, 0, 0, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+            }).also {
+                (it.getChildAt(1) as CharacterView).let { characterView ->
+                    characterView.text = getItem(i)
+                    characterView.setPadding(padding, padding, padding, padding)
+                    characterView.setTextSize(fontsize)
+                    characterView.shrinkWidth(shrink)
+                    characterView.setTypeface(tf)
+                    characterView.drawSlash(true)
+                    val ver = if (getItemId(i) != -1L) db.getint(getItemId(i).toInt(), "version") else db.getint(getItemString(i), "version")
+                    characterView.setValid(ver != 0 && ver <= UnicodeActivity.univer)
+                }
+                (it.getChildAt(2) as LinearLayout).let { linearLayout ->
+                    if (getItemId(i) != -1L) {
+                        (linearLayout.getChildAt(0) as TextView).text = String.format("U+%04X", getItemId(i).toInt())
+                        (linearLayout.getChildAt(1) as TextView).text = db[getItemId(i).toInt(), "name"]
+                    } else {
+                        (linearLayout.getChildAt(0) as TextView).text = (" " + getItemString(i)).replace(" ", " U+").substring(1)
+                        (linearLayout.getChildAt(1) as TextView).text = db[getItemString(i), "name"]
+                    }
+                }
             }
-            ((arg1 as LinearLayout).getChildAt(1) as CharacterView).text = getItem(arg0) as String
-            if (getItemId(arg0) != -1L) {
-                ((arg1.getChildAt(2) as LinearLayout).getChildAt(0) as TextView).text = String.format("U+%04X", getItemId(arg0).toInt())
-                ((arg1.getChildAt(2) as LinearLayout).getChildAt(1) as TextView).text = db!![getItemId(arg0).toInt(), "name"]
-            } else {
-                ((arg1.getChildAt(2) as LinearLayout).getChildAt(0) as TextView).text = (" " + getItemString(arg0)).replace(" ", " U+").substring(1)
-                ((arg1.getChildAt(2) as LinearLayout).getChildAt(1) as TextView).text = db!![getItemString(arg0), "name"]
-            }
-            arg1.getChildAt(1).setPadding(padding, padding, padding, padding)
-            (arg1.getChildAt(1) as CharacterView).setTextSize(fontsize)
-            (arg1.getChildAt(1) as CharacterView).shrinkWidth(shrink)
-            (arg1.getChildAt(1) as CharacterView).setTypeface(tf)
-            (arg1.getChildAt(1) as CharacterView).drawSlash(true)
-            val ver = if (getItemId(arg0) != -1L) db.getint(getItemId(arg0).toInt(), "version") else db.getint(getItemString(arg0), "version")
-            (arg1.getChildAt(1) as CharacterView).setValid(ver != 0 && ver <= UnicodeActivity.Companion.univer)
-            arg1
         } else {
-            val tv: CharacterView
-            tv = if (arg1 == null || arg1 !is CharacterView) {
-                CharacterView(arg2.context, null, android.R.attr.textAppearanceLarge)
-            } else arg1
-            tv.setPadding(padding, padding, padding, padding)
-            tv.setTextSize(fontsize)
-            tv.shrinkWidth(shrink)
-            tv.setTypeface(tf)
-            tv.drawSlash(true)
-            val ver = if (getItemId(arg0) != -1L) db!!.getint(getItemId(arg0).toInt(), "version") else db!!.getint(getItemString(arg0), "version")
-            tv.setValid(ver != 0 && ver <= UnicodeActivity.Companion.univer)
-            tv.text = getItem(arg0) as String
-            tv
+            (view as CharacterView? ?: CharacterView(activity, null, android.R.attr.textAppearanceLarge)).also {
+                it.setPadding(padding, padding, padding, padding)
+                it.setTextSize(fontsize)
+                it.shrinkWidth(shrink)
+                it.setTypeface(tf)
+                it.drawSlash(true)
+                val ver = if (getItemId(i) != -1L) db.getint(getItemId(i).toInt(), "version") else db.getint(getItemString(i), "version")
+                it.setValid(ver != 0 && ver <= UnicodeActivity.univer)
+                it.text = getItem(i)
+            }
         }
     }
 
@@ -137,7 +134,7 @@ abstract class UnicodeAdapter(private val activity: Activity?, private val db: N
     }
 
     protected fun runOnUiThread(action: Runnable?) {
-        activity!!.runOnUiThread(action)
+        activity.runOnUiThread(action)
     }
 
     fun setTypeface(tf: Typeface?) {

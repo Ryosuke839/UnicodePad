@@ -27,9 +27,11 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
-internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapter, tf: Typeface?, db: NameDatabase, afav: FavoriteAdapter) : PagerAdapter(), View.OnClickListener {
-    private val context: UnicodeActivity
+internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapter, tf: Typeface?, db: NameDatabase, afav: FavoriteAdapter) : PagerAdapter(), View.OnClickListener {
+    private val activity: UnicodeActivity
     private val adapter: UnicodeAdapter
     private val tf: Typeface?
     var index = 0
@@ -46,7 +48,7 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
     }
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
-        val text = CharacterView(context)
+        val text = CharacterView(activity)
         text.text = adapter.getItem(position) as String
         text.setTextSize(fontsize)
         text.setTypeface(tf)
@@ -54,11 +56,11 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
         text.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         text.setTextColor(Color.BLACK)
         text.setBackgroundColor(Color.WHITE)
-        text.setSquareAlpha(Math.min(Math.max(checker * 2.55f, 0f), 255f).toInt())
+        text.setSquareAlpha(min(max(checker * 2.55f, 0f), 255f).toInt())
         text.drawLines(lines)
         text.shrinkWidth(shrink)
         text.shrinkHeight(true)
-        val layout = LinearLayout(context)
+        val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.VERTICAL
         layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         val itemid = adapter.getItemId(position).toInt()
@@ -68,21 +70,20 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
         val str = StringBuilder()
         if (!emoji) str.append(adapter.getItem(position) as String)
         val lsn = OnLongClickListener { arg0 ->
-            context.adpPage!!.showDesc(arg0, arg0.id - 0x3F000000, StringAdapter(str.toString()))
+            activity.adpPage!!.showDesc(arg0, arg0.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
             true
         }
         for (i in 0 until if (!emoji) 10 else 7) {
             if (emoji && i == 5) continue
             if (i == 2) {
                 val v = if (!emoji) db.getint(itemid, cols[i]) else db.getint(adapter.getItemString(position), emjs[i])
-                val desc = TextView(context)
+                val desc = TextView(activity)
                 desc.text = if (!emoji) mods[i].toString() + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (if (v == 600) " or earlier" else "") else mode[i].toString() + String.format(Locale.US, "%d.%d", v / 100, v / 10 % 10)
                 desc.gravity = Gravity.CENTER_VERTICAL
                 layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 continue
             }
-            var r: String?
-            r = if (i == 1) {
+            val r: String? = if (i == 1) {
                 val a = (adapter.getItem(position) as String).toByteArray(Charset.defaultCharset())
                 val sb = StringBuilder(a.size * 3)
                 for (b in a) sb.append(String.format("%02X ", b))
@@ -92,7 +93,7 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
                 if (!emoji) db[itemid, cols[i]] else db[adapter.getItemString(position), emjs[i]]
             }
             if (r == null && i == 0) {
-                val desc = TextView(context)
+                val desc = TextView(activity)
                 desc.setText(R.string.notacharacter)
                 layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 break
@@ -101,17 +102,17 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
             val l = r.split(if (emoji && i == 6) " " else "\n").toTypedArray()
             for (s in l) {
                 if (i == 0) {
-                    val desc = TextView(context, null, android.R.attr.textAppearanceMedium)
+                    val desc = TextView(activity, null, android.R.attr.textAppearanceMedium)
                     desc.text = s
                     desc.setTextIsSelectable(true)
                     desc.gravity = Gravity.CENTER_VERTICAL
                     if (!emoji) {
-                        val fav = CheckBox(context)
+                        val fav = CheckBox(activity)
                         fav.setButtonDrawable(android.R.drawable.btn_star)
                         fav.gravity = Gravity.TOP
-                        fav.isChecked = afav.isfavorited(itemid)
-                        fav.setOnCheckedChangeListener { arg0, arg1 -> if (arg1) afav.add(itemid) else afav.rem(itemid) }
-                        val hl = LinearLayout(context)
+                        fav.isChecked = afav.isFavorited(itemid)
+                        fav.setOnCheckedChangeListener { _, b -> if (b) afav.add(itemid) else afav.rem(itemid) }
+                        val hl = LinearLayout(activity)
                         hl.orientation = LinearLayout.HORIZONTAL
                         hl.addView(desc, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
                         hl.addView(fav, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -119,14 +120,14 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
                     } else layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                     continue
                 }
-                val hl = LinearLayout(context)
+                val hl = LinearLayout(activity)
                 hl.orientation = LinearLayout.HORIZONTAL
-                val it = TextView(context)
+                val it = TextView(activity)
                 it.gravity = Gravity.CENTER_VERTICAL
                 it.text = (if (!emoji) mods else mode)[i]
                 hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 if (i < 6) {
-                    val desc = TextView(context)
+                    val desc = TextView(activity)
                     desc.text = s
                     desc.setTextIsSelectable(true)
                     hl.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
@@ -159,26 +160,26 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
                         ++j
                     }
                     sc.close()
-                    if (ps.length == 0) continue
+                    if (ps.isEmpty()) continue
                     ps = ps.substring(0, ps.length - 1)
-                    val ct = CharacterView(context, null, android.R.attr.textAppearanceLarge)
+                    val ct = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
                     ct.setPadding(0, 0, 0, 0)
                     ct.setPadding(UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding)
                     ct.drawSlash(false)
                     ct.setTextSize(UnicodeAdapter.Companion.fontsize)
                     ct.text = cs
                     ct.setTypeface(tf)
-                    hl.addView(ct, LinearLayout.LayoutParams((context.resources.displayMetrics.scaledDensity * UnicodeAdapter.Companion.fontsize * 2 + UnicodeAdapter.Companion.padding * 2) as Int, ViewGroup.LayoutParams.MATCH_PARENT))
-                    val pt = TextView(context, null, android.R.attr.textAppearanceSmall)
+                    hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.Companion.fontsize * 2 + UnicodeAdapter.Companion.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+                    val pt = TextView(activity, null, android.R.attr.textAppearanceSmall)
                     pt.setPadding(0, 0, 0, 0)
                     pt.gravity = Gravity.CENTER_VERTICAL
                     pt.text = ps
                     if (ns != null) {
-                        val nt = TextView(context, null, android.R.attr.textAppearanceSmall)
+                        val nt = TextView(activity, null, android.R.attr.textAppearanceSmall)
                         nt.setPadding(0, 0, 0, 0)
                         nt.gravity = Gravity.CENTER_VERTICAL
                         nt.text = ns
-                        val vl = LinearLayout(context)
+                        val vl = LinearLayout(activity)
                         vl.orientation = LinearLayout.VERTICAL
                         vl.addView(pt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
                         vl.addView(nt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
@@ -196,7 +197,7 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
         }
-        val scroll = ScrollView(context)
+        val scroll = ScrollView(activity)
         scroll.addView(layout)
         collection.addView(scroll)
         collection.findViewById<View>(R.id.TAB_ID).measure(MeasureSpec.makeMeasureSpec(10, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
@@ -225,7 +226,7 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
         while (i < s!!.length) {
             val code = s.codePointAt(i)
             if (code > 0xFFFF) ++i
-            context.adpPage!!.onItemClick(null, null, -1, code.toLong())
+            activity.adpPage!!.onItemClick(null, v, -1, code.toLong())
             ++i
         }
     }
@@ -243,9 +244,9 @@ internal class CharacterAdapter(context: UnicodeActivity, adapter: UnicodeAdapte
 
     init {
         val tv = TypedValue()
-        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, tv, true)
+        activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, tv, true)
         reslist = tv.resourceId
-        this.context = context
+        this.activity = activity
         this.adapter = adapter
         this.tf = tf
         this.db = db

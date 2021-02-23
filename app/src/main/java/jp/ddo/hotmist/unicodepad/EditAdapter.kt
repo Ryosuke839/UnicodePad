@@ -26,8 +26,8 @@ import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
 
-internal class EditAdapter(activity: Activity?, pref: SharedPreferences?, db: NameDatabase?, single: Boolean, private val edit: EditText?) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
-    private val list: ArrayList<Int>
+internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean, private val edit: EditText?) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
+    private val list: ArrayList<Int> = ArrayList()
     private var suspend = false
     public override fun instantiate(grd: AbsListView?): View? {
         list.clear()
@@ -80,23 +80,23 @@ internal class EditAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
     override fun drop(from: Int, to: Int) {
         runOnUiThread {
             suspend = true
-            var from_begin = 0
-            var from_end = 0
+            var fromBegin = 0
+            var fromEnd = 0
             for (i in list.indices) {
-                if (i == from) from_begin = from_end
-                if (list[i] > 0xFFFF) ++from_end
-                ++from_end
+                if (i == from) fromBegin = fromEnd
+                if (list[i] > 0xFFFF) ++fromEnd
+                ++fromEnd
                 if (i == from) break
             }
-            edit!!.editableText.delete(from_begin, from_end)
+            edit!!.editableText.delete(fromBegin, fromEnd)
             val ch = list.removeAt(from)
-            var to_begin = 0
+            var toBegin = 0
             for (i in list.indices) {
                 if (i == to) break
-                if (list[i] > 0xFFFF) ++to_begin
-                ++to_begin
+                if (list[i] > 0xFFFF) ++toBegin
+                ++toBegin
             }
-            edit.editableText.insert(to_begin, String(Character.toChars(ch)))
+            edit.editableText.insert(toBegin, String(Character.toChars(ch)))
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.add(to, ch)
@@ -107,15 +107,15 @@ internal class EditAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
     override fun remove(which: Int) {
         runOnUiThread {
             suspend = true
-            var which_begin = 0
-            var which_end = 0
+            var whichBegin = 0
+            var whichEnd = 0
             for (i in list.indices) {
-                if (i == which) which_begin = which_end
-                if (list[i] > 0xFFFF) ++which_end
-                ++which_end
+                if (i == which) whichBegin = whichEnd
+                if (list[i] > 0xFFFF) ++whichEnd
+                ++whichEnd
                 if (i == which) break
             }
-            edit!!.editableText.delete(which_begin, which_end)
+            edit!!.editableText.delete(whichBegin, whichEnd)
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.removeAt(which)
@@ -123,7 +123,4 @@ internal class EditAdapter(activity: Activity?, pref: SharedPreferences?, db: Na
         }
     }
 
-    init {
-        list = ArrayList()
-    }
 }

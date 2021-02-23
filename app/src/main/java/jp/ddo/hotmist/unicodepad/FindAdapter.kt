@@ -28,7 +28,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 
-internal class FindAdapter(activity: Activity?, pref: SharedPreferences?, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), View.OnClickListener, OnEditorActionListener {
+internal class FindAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), View.OnClickListener, OnEditorActionListener {
     private var cur: Cursor?
     private var layout: LinearLayout? = null
     private var text: AutoCompleteTextView? = null
@@ -77,7 +77,7 @@ internal class FindAdapter(activity: Activity?, pref: SharedPreferences?, privat
         hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         hl.addView(find, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1))
+        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         find!!.setOnClickListener(this)
         return layout
     }
@@ -116,7 +116,7 @@ internal class FindAdapter(activity: Activity?, pref: SharedPreferences?, privat
         if (arg0 === find) {
             saved = text!!.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text!!.setText(saved)
-            if (saved!!.length == 0) return
+            if (saved!!.isEmpty()) return
             if (adapter != null) adapter!!.update(saved!!)
             if (cur != null) cur!!.close()
             cur = db.find(saved!!, UnicodeActivity.Companion.univer)

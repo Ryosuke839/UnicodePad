@@ -21,19 +21,19 @@ import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
 
-internal class RecentAdapter(activity: Activity?, pref: SharedPreferences?, db: NameDatabase?, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
+internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
     private var list: ArrayList<Int>
     private var temp: ArrayList<Int>
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.recent
     }
 
-    public override fun show() {
+    override fun show() {
         trunc()
         if (view != null) view!!.invalidateViews()
     }
 
-    public override fun leave() {
+    override fun leave() {
         commit()
         if (view != null) view!!.invalidateViews()
     }
@@ -70,7 +70,7 @@ internal class RecentAdapter(activity: Activity?, pref: SharedPreferences?, db: 
         if (list === temp) temp = ArrayList(list)
     }
 
-    public override fun save(edit: SharedPreferences.Editor) {
+    override fun save(edit: SharedPreferences.Editor) {
         var str = ""
         for (i in list) str += String(Character.toChars(i))
         edit.putString("rec", str)

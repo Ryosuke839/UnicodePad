@@ -15,9 +15,10 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
@@ -28,14 +29,10 @@ import com.mobeta.android.dslv.DragSortListView.DropListener
 import java.util.*
 
 class TabsAdapter internal constructor(private val activity: Activity, private val list: AbsListView?) : BaseAdapter(), View.OnClickListener, DropListener {
-    private val NUM_TABS = 6
     private var shownnum: Int
     private val idx: ArrayList<Int>
     private val single: ArrayList<Boolean>
-    private val pref: SharedPreferences
-    private val KEYS = arrayOf("rec", "list", "emoji", "find", "fav", "edt")
-    private val RESS = intArrayOf(R.string.recent, R.string.list, R.string.emoji, R.string.find, R.string.favorite, R.string.edit)
-    private val DEFS = booleanArrayOf(false, false, false, true, false, true)
+    private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
     override fun getCount(): Int {
         return NUM_TABS + 2
     }
@@ -50,33 +47,35 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
     }
 
     override fun getItem(i: Int): Any {
-        return null
+        return Any()
     }
 
     override fun getItemId(i: Int): Long {
         return idx[i].toLong()
     }
 
-    override fun getView(i: Int, view: View, viewGroup: ViewGroup): View {
-        var view = view
+    @SuppressLint("InflateParams")
+    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
         if (getItemViewType(i) == 0) {
-            if (view == null) {
-                view = TextView(activity)
-            }
-            (view as TextView).setText(if (i == 0) R.string.shown_desc else R.string.hidden_desc)
+            val ret = view as TextView? ?: TextView(activity)
+            ret.setText(if (i == 0) R.string.shown_desc else R.string.hidden_desc)
+            return ret
         } else {
-            if (view == null) {
-                view = activity.layoutInflater.inflate(R.layout.spinwidget, null)
-                view.findViewById<View>(R.id.tabs_multiple).setOnClickListener(this)
-                view.findViewById<View>(R.id.tabs_single).setOnClickListener(this)
+            val ret = view ?: activity.layoutInflater.inflate(R.layout.spinwidget, null).also {
+                it.findViewById<RadioButton>(R.id.tabs_multiple).setOnClickListener(this)
+                it.findViewById<RadioButton>(R.id.tabs_single).setOnClickListener(this)
             }
-            (view.findViewById<View>(R.id.tabs_title) as TextView).setText(RESS[idx[i]])
-            (view.findViewById<View>(R.id.tabs_multiple) as RadioButton).isChecked = !single[idx[i]]
-            view.findViewById<View>(R.id.tabs_multiple).tag = idx[i]
-            (view.findViewById<View>(R.id.tabs_single) as RadioButton).isChecked = single[idx[i]]
-            view.findViewById<View>(R.id.tabs_single).tag = idx[i]
+            ret.findViewById<TextView>(R.id.tabs_title).setText(RESS[idx[i]])
+            ret.findViewById<RadioButton>(R.id.tabs_multiple).let {
+                it.isChecked = !single[idx[i]]
+                it.tag = idx[i]
+            }
+            ret.findViewById<RadioButton>(R.id.tabs_single).let {
+                it.isChecked = single[idx[i]]
+                it.tag = idx[i]
+            }
+            return ret
         }
-        return view
     }
 
     override fun onClick(view: View) {
@@ -109,7 +108,6 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
     }
 
     init {
-        pref = PreferenceManager.getDefaultSharedPreferences(activity)
         shownnum = pref.getInt("cnt_shown", NUM_TABS)
         idx = ArrayList(NUM_TABS + 2)
         for (i in 0 until NUM_TABS + 2) idx.add(-2)
@@ -126,5 +124,12 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
             }
             single[i] = java.lang.Boolean.valueOf(pref.getString("single_" + KEYS[i], java.lang.Boolean.valueOf(DEFS[i]).toString()))
         }
+    }
+
+    companion object {
+        private const val NUM_TABS = 6
+        private val KEYS = arrayOf("rec", "list", "emoji", "find", "fav", "edt")
+        private val RESS = intArrayOf(R.string.recent, R.string.list, R.string.emoji, R.string.find, R.string.favorite, R.string.edit)
+        private val DEFS = booleanArrayOf(false, false, false, true, false, true)
     }
 }

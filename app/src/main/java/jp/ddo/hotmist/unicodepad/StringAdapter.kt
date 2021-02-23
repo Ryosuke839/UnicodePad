@@ -15,10 +15,12 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.app.Activity
+import android.content.SharedPreferences
 import java.util.*
 
-internal class StringAdapter(str: String) : UnicodeAdapter(null, null, false) {
-    private val list: ArrayList<Int>
+internal class StringAdapter(str: String, activity: Activity, db: NameDatabase) : UnicodeAdapter(activity, db, false) {
+    private val list: ArrayList<Int> = ArrayList()
     override fun getCount(): Int {
         return list.size
     }
@@ -28,7 +30,6 @@ internal class StringAdapter(str: String) : UnicodeAdapter(null, null, false) {
     }
 
     init {
-        list = ArrayList()
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)

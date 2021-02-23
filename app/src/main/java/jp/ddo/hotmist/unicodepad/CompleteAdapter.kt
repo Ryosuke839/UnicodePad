@@ -35,7 +35,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
     private var current = ""
     fun update(str: String) {
         synchronized(lock) {
-            for (s in str.split(" ").toTypedArray()) if (s.length > 0) {
+            for (s in str.split(" ").toTypedArray()) if (s.isNotEmpty()) {
                 (if (temp == null) list else temp)!!.remove(s)
                 if ((if (temp == null) list else temp)!!.size == 255) (if (temp == null) list else temp)!!.removeAt(254)
                 (if (temp == null) list else temp)!!.add(0, s)
@@ -85,14 +85,14 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
             val idx = prefix?.toString()?.lastIndexOf(' ') ?: -1
             if (prefix == null || prefix.length == idx + 1) {
                 var res: ArrayList<String>
-                synchronized(lock) { res = ArrayList(temp) }
+                synchronized(lock) { res = ArrayList(temp!!) }
                 results.values = res
                 results.count = res.size
             } else {
                 val prefixString = prefix.toString().toUpperCase().substring(idx + 1)
                 current = if (idx == -1) "" else prefix.toString().substring(0, idx + 1)
                 var values: ArrayList<String>
-                synchronized(lock) { values = ArrayList(temp) }
+                synchronized(lock) { values = ArrayList(temp!!) }
                 val count = values.size
                 val newValues = ArrayList<String>()
                 for (i in 0 until count) {
@@ -114,7 +114,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
 
     init {
         list = ArrayList()
-        for (s in pref!!.getString("comp", "")!!.split("\n").toTypedArray()) if (s.length > 0) list.add(s)
+        for (s in pref!!.getString("comp", "")!!.split("\n").toTypedArray()) if (s.isNotEmpty()) list.add(s)
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 }

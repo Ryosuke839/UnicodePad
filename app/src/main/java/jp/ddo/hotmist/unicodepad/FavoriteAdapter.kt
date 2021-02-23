@@ -21,7 +21,7 @@ import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
 
-internal class FavoriteAdapter(activity: Activity?, pref: SharedPreferences?, db: NameDatabase?, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
+internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
     private var list: ArrayList<Int>
     private var temp: ArrayList<Int>
     public override fun name(): Int {
@@ -65,7 +65,7 @@ internal class FavoriteAdapter(activity: Activity?, pref: SharedPreferences?, db
         if (list === temp) temp = ArrayList(list)
     }
 
-    fun isfavorited(code: Int): Boolean {
+    fun isFavorited(code: Int): Boolean {
         return list.contains(code)
     }
 

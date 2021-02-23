@@ -25,14 +25,14 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.zip.ZipInputStream
 
-class NameDatabase(context: Context?) {
-    private val db: SQLiteDatabase
+class NameDatabase(context: Context) {
+    private val db: SQLiteDatabase = NameHelper(context).readableDatabase
     operator fun get(code: Int, column: String): String? {
         if (column == "name") {
-            if (0xE000 <= code && code <= 0xF8FF || 0xFFF80 <= code && code <= 0xFFFFD || 0x10FF80 <= code && code <= 0x10FFFD) return "Private Use"
-            if (0x3400 <= code && code <= 0x4DBF || 0x4E00 <= code && code <= 0x9FFC || 0x20000 <= code && code <= 0x2A6DD || 0x2A700 <= code && code <= 0x2B734 || 0x2B740 <= code && code <= 0x2B81D || 0x2B820 <= code && code <= 0x2CEA1 || 0x2CEB0 <= code && code <= 0x2EBE0 || 0x30000 <= code && code <= 0x3134A) return "CJK Unified Ideograph"
-            if (0xAC00 <= code && code <= 0xD7A3) return "Hangul Syllable"
-            if (0x17000 <= code && code <= 0x187F7) return "Tangut Character"
+            if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return "Private Use"
+            if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFC || code in 0x20000..0x2A6DD || code in 0x2A700..0x2B734 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A) return "CJK Unified Ideograph"
+            if (code in 0xAC00..0xD7A3) return "Hangul Syllable"
+            if (code in 0x17000..0x187F7) return "Tangut Character"
         }
         return get("name_table", code.toString(), column)
     }
@@ -59,19 +59,16 @@ class NameDatabase(context: Context?) {
 
     fun getint(code: Int, column: String): Int {
         if (column == "version") {
-            if (0xE000 <= code && code <= 0xF8FF || 0xFFF80 <= code && code <= 0xFFFFD || 0x10FF80 <= code && code <= 0x10FFFD) return 600
-            if (0x3400 <= code && code <= 0x4DB5 || 0x4E00 <= code && code <= 0x9FCB || 0x20000 <= code && code <= 0x2A6D6 || 0x2A700 <= code && code <= 0x2B734 || 0x2B740 <= code && code <= 0x2B81D) return 600
-            if (0x9FCC <= code && code <= 0x9FCC) return 610
-            if (0x9FCD <= code && code <= 0x9FD5 ||
-                    0x2B820 <= code && code <= 0x2CEA1) return 800
-            if (0x17000 <= code && code <= 0x187EC) return 900
-            if (0x9FD6 <= code && code <= 0x9FEA ||
-                    0x2CEB0 <= code && code <= 0x2EBE0) return 1000
-            if (0x9FEB <= code && code <= 0x9FEF ||
-                    0x187ED <= code && code <= 0x187F1) return 1100
-            if (0xAC00 <= code && code <= 0xD7A3) return 600
-            if (0x187F2 <= code && code <= 0x187F7) return 1200
-            if (0x4DB6 <= code && code <= 0x4DBF || 0x9FF0 <= code && code <= 0x9FFC || 0x2A6D7 <= code && code <= 0x2A6DD || 0x30000 <= code && code <= 0x3134A) return 1300
+            if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return 600
+            if (code in 0x3400..0x4DB5 || code in 0x4E00..0x9FCB || code in 0x20000..0x2A6D6 || code in 0x2A700..0x2B734 || code in 0x2B740..0x2B81D) return 600
+            if (code in 0x9FCC..0x9FCC) return 610
+            if (code in 0x9FCD..0x9FD5 || code in 0x2B820..0x2CEA1) return 800
+            if (code in 0x17000..0x187EC) return 900
+            if (code in 0x9FD6..0x9FEA || code in 0x2CEB0..0x2EBE0) return 1000
+            if (code in 0x9FEB..0x9FEF || code in 0x187ED..0x187F1) return 1100
+            if (code in 0xAC00..0xD7A3) return 600
+            if (code in 0x187F2..0x187F7) return 1200
+            if (code in 0x4DB6..0x4DBF || code in 0x9FF0..0x9FFC || code in 0x2A6D7..0x2A6DD || code in 0x30000..0x3134A) return 1300
         }
         return getint("name_table", code.toString(), column)
     }
@@ -98,7 +95,7 @@ class NameDatabase(context: Context?) {
 
     fun find(str: String, version: Int): Cursor? {
         val list = str.split(" +").toTypedArray()
-        if (list.size == 0) return null
+        if (list.isEmpty()) return null
         var query = "SELECT id FROM name_table WHERE "
         for (s in list) query += "words LIKE '%$s%' AND "
         query += "version <= $version;"
@@ -198,7 +195,4 @@ class NameDatabase(context: Context?) {
         }
     }
 
-    init {
-        db = NameHelper(context).getReadableDatabase()
-    }
 }

@@ -23,13 +23,13 @@ import android.widget.ScrollView
 
 class LockableScrollView : ScrollView {
     private var inmove = false
-    private var adapter: PageAdapter? = null
+    private lateinit var adapter: PageAdapter
     private var lockview: View? = null
     private var over = false
 
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context?) : super(context)
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (!over) return false
@@ -38,7 +38,7 @@ class LockableScrollView : ScrollView {
             return true
         }
         var hit = false
-        val v = adapter.getView()
+        val v = adapter.view
         if (v != null && v.visibility == VISIBLE) {
             val rc = Rect()
             v.getGlobalVisibleRect(rc)
@@ -49,7 +49,7 @@ class LockableScrollView : ScrollView {
         return false
     }
 
-    fun setAdapter(adapter: PageAdapter?) {
+    fun setAdapter(adapter: PageAdapter) {
         this.adapter = adapter
     }
 

@@ -15,6 +15,7 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -23,8 +24,8 @@ import androidx.viewpager.widget.ViewPager
 
 class LockableViewPager : ViewPager {
     private var slop: Int
-    private var x = 0f
-    private var y = 0f
+    private var tx = 0f
+    private var ty = 0f
 
     constructor(context: Context?) : super(context!!) {
         slop = ViewConfiguration.get(context).scaledTouchSlop
@@ -34,6 +35,7 @@ class LockableViewPager : ViewPager {
         slop = ViewConfiguration.get(context).scaledTouchSlop
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         try {
             return super.onTouchEvent(ev)
@@ -45,21 +47,21 @@ class LockableViewPager : ViewPager {
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
         try {
-            val inmove = super.onInterceptTouchEvent(event)
+            val inMove = super.onInterceptTouchEvent(event)
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    x = event.x
-                    y = event.y
+                    tx = event.x
+                    ty = event.y
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    val dx = Math.abs(event.x - x)
-                    val dy = Math.abs(event.y - y)
-                    if (dx > slop && dx * .5 > dy) // no need of lock anymore?
-                    //return true;
-                        break
+                    // no need of lock anymore?
+                    /*val dx = abs(event.x - tx)
+                    val dy = abs(event.y - ty)
+                    if (dx > slop && dx * .5 > dy)
+                        return true;*/
                 }
             }
-            return inmove
+            return inMove
         } catch (ex: IllegalArgumentException) {
             ex.printStackTrace()
         }

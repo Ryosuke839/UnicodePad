@@ -32,7 +32,7 @@ import java.io.IOException
 import java.util.*
 
 class FontChooser internal constructor(private val activity: Activity, private val spinner: Spinner, private val listener: Listener) : DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnItemSelectedListener, FileChooser.Listener {
-    private val adapter: ArrayAdapter<String>
+    private val adapter: ArrayAdapter<String> = ArrayAdapter(activity, android.R.layout.simple_spinner_item)
     private var fidx: Int
     private val fontpath: ArrayList<String?>
 
@@ -114,10 +114,9 @@ class FontChooser internal constructor(private val activity: Activity, private v
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
-    override fun onClick(dialog: DialogInterface, which: Int) {
+    override fun onClick(dialog: DialogInterface?, which: Int) {
         if (which == -1) {
-            val str: Array<String?>
-            str = arrayOfNulls(fontpath.size)
+            val str: Array<String?> = arrayOfNulls(fontpath.size)
             for (i in str.indices) str[i] = adapter.getItem(i + 3)
             AlertDialog.Builder(activity).setTitle(R.string.rem).setItems(str, this).setOnCancelListener(this).show()
         } else {
@@ -155,7 +154,6 @@ class FontChooser internal constructor(private val activity: Activity, private v
     }
 
     init {
-        adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         adapter.add(activity.resources.getString(R.string.normal))
         adapter.add(activity.resources.getString(R.string.add))
@@ -165,7 +163,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         fontpath = ArrayList()
         val fs = pref.getString("fontpath", "")
         for (s in fs!!.split("\n").toTypedArray()) {
-            if (s.length == 0) continue
+            if (s.isEmpty()) continue
             Add(s)
         }
         fidx = pref.getInt("fontidx", 0)

@@ -33,8 +33,8 @@ import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
 internal class FileChooser(private val activity: Activity, private val listener: Listener, private var path: String?) : DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnRequestPermissionsResultCallback {
-    private var roots: Array<String?>
-    private var children: Array<String?>?
+    private var roots: Array<String> = emptyArray()
+    private var children: Array<String> = emptyArray()
 
     internal interface Listener {
         fun onFileChosen(path: String?)
@@ -69,7 +69,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
             }
         } catch (e1: IllegalArgumentException) {
             zf.close()
-            PASSED@{
+            run passed@{
                 if (Build.VERSION.SDK_INT >= 24) {
                     // Try to find valid charset
                     for (charset in Charset.availableCharsets().values) {
@@ -84,7 +84,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                             continue
                         }
                         // Found
-                        break@PASSED
+                        return@passed
                     }
                 }
                 throw IllegalArgumentException()
@@ -93,7 +93,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
         return zf
     }
 
-    override fun onClick(dialog: DialogInterface, which: Int) {
+    override fun onClick(dialog: DialogInterface?, which: Int) {
         if (which != -1) {
             if (path!!.endsWith(".zip")) {
                 if (children!![which] == "../") path = path!!.substring(0, path!!.lastIndexOf('/') + 1) else {
@@ -136,28 +136,28 @@ internal class FileChooser(private val activity: Activity, private val listener:
             }
         }
         if (which != -1 && path!![path!!.length - 1] != '/' && !path!!.endsWith(".zip")) {
-            children = null
+            children = emptyArray()
             listener.onFileChosen(path)
             path = null
         } else {
             try {
                 if (path!!.length == 1) {
-                    val dirs = arrayOfNulls<String>(4)
+                    val dirs = Array(4) {""}
                     dirs[0] = Environment.getExternalStorageDirectory().canonicalPath
                     dirs[1] = Environment.getDataDirectory().canonicalPath
                     dirs[2] = Environment.getDownloadCacheDirectory().canonicalPath
                     dirs[3] = Environment.getRootDirectory().canonicalPath
-                    for (i in dirs.indices) for (j in dirs.indices) if (i != j && dirs[i].length > 0 && dirs[j].length > 0 && dirs[i].startsWith(dirs[j]) && File(dirs[j]).canRead()) dirs[i] = ""
+                    for (i in dirs.indices) for (j in dirs.indices) if (i != j && dirs[i].isNotEmpty() && dirs[j].isNotEmpty() && dirs[i].startsWith(dirs[j]) && File(dirs[j]).canRead()) dirs[i] = ""
                     var cnt = 0
                     for (dir1 in dirs) {
-                        if (dir1!!.length <= 0) continue
+                        if (dir1!!.isEmpty()) continue
                         if (!File(dir1).canRead()) continue
                         ++cnt
                     }
-                    roots = arrayOfNulls(cnt)
+                    roots = Array(cnt) {""}
                     var j = 0
                     for (dir in dirs) {
-                        if (dir!!.length <= 0) continue
+                        if (dir!!.isEmpty()) continue
                         if (!File(dir).canRead()) continue
                         roots[j] = dir.substring(1) + '/'
                         ++j
@@ -174,9 +174,9 @@ internal class FileChooser(private val activity: Activity, private val listener:
                                 if (!e.nextElement().isDirectory) ++cnt
                             }
                         }
-                        children = arrayOfNulls(cnt)
+                        children = Array(cnt) {""}
                         var j = 0
-                        if (which != -1) children!![j++] = "../"
+                        if (which != -1) children[j++] = "../"
                         val e = zf.entries()
                         while (e.hasMoreElements()) {
                             val entry = e.nextElement()
@@ -200,8 +200,9 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     }
                 } else {
                     val f = File(path)
-                    path = f.canonicalPath
-                    if (!path.endsWith("/")) path += '/'
+                    f.canonicalPath.let {
+                        path = it + if (!it.endsWith("/")) "/" else ""
+                    }
                     val fl = f.listFiles()
                     if (fl == null) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
@@ -211,13 +212,12 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     }
                     var cnt = 1
                     for (aFl1 in fl) if (aFl1.canRead()) ++cnt
-                    children = arrayOfNulls(cnt)
-                    children!![0] = "../"
+                    children = Array(cnt) {""}
+                    children[0] = "../"
                     var j = 1
                     for (aFl in fl) {
                         if (!aFl.canRead()) continue
-                        children!![j] = aFl.name
-                        if (aFl.isDirectory) children!![j] += '/'
+                        children[j] = aFl.name + if (aFl.isDirectory) "/" else ""
                         ++j
                     }
                 }

@@ -25,36 +25,36 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import java.util.*
 
-internal class EmojiAdapter(activity: Activity?, pref: SharedPreferences?, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), OnItemSelectedListener, AbsListView.OnScrollListener, CompoundButton.OnCheckedChangeListener {
+internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), OnItemSelectedListener, AbsListView.OnScrollListener, CompoundButton.OnCheckedChangeListener {
     private var cur: Cursor? = null
     private var layout: LinearLayout? = null
     private var jump: Spinner? = null
-    private var map: NavigableMap<Int, Int>? = null
-    private var grp: MutableList<String>? = null
-    private var idx: MutableList<Int>? = null
+    private lateinit var map: NavigableMap<Int, Int>
+    private lateinit var grp: MutableList<String>
+    private lateinit var idx: MutableList<Int>
     private var current: Int
     private var modifier: Boolean
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.emoji
     }
 
     @SuppressLint("InlinedApi")
-    public override fun instantiate(grd: AbsListView?): View? {
-        super.instantiate(grd)
-        layout = LinearLayout(view!!.context)
+    override fun instantiate(view: AbsListView?): View? {
+        super.instantiate(view)
+        layout = LinearLayout(this.view!!.context)
         layout!!.orientation = LinearLayout.VERTICAL
-        val hl = LinearLayout(view!!.context)
+        val hl = LinearLayout(this.view!!.context)
         hl.orientation = LinearLayout.HORIZONTAL
         hl.gravity = Gravity.CENTER
-        jump = Spinner(view!!.context)
+        jump = Spinner(this.view!!.context)
         hl.addView(jump, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        val modc = CheckBox(view!!.context)
+        val modc = CheckBox(this.view!!.context)
         modc.setText(R.string.modifier)
-        modc.setPadding(0, 0, (grd!!.context.resources.displayMetrics.density * 8f).toInt(), 0)
+        modc.setPadding(0, 0, (view!!.context.resources.displayMetrics.density * 8f).toInt(), 0)
         hl.addView(modc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        if (Build.VERSION.SDK_INT >= 21) hl.setPadding(0, (grd.context.resources.displayMetrics.density * 8f).toInt(), 0, (grd.context.resources.displayMetrics.density * 8f).toInt())
+        if (Build.VERSION.SDK_INT >= 21) hl.setPadding(0, (view.context.resources.displayMetrics.density * 8f).toInt(), 0, (view.context.resources.displayMetrics.density * 8f).toInt())
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1))
+        layout!!.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         cur = db.emoji(UnicodeActivity.Companion.univer, modifier)
         map = TreeMap()
         grp = ArrayList()
@@ -77,28 +77,25 @@ internal class EmojiAdapter(activity: Activity?, pref: SharedPreferences?, priva
         val adp = ArrayAdapter(jump!!.context, android.R.layout.simple_spinner_item, grp)
         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
         jump!!.adapter = adp
-        view!!.setSelection(idx.get(current))
+        this.view!!.setSelection(idx[current])
         jump!!.setSelection(current)
-        view!!.setOnScrollListener(this)
+        this.view!!.setOnScrollListener(this)
         jump!!.onItemSelectedListener = this
         modc.isChecked = modifier
         modc.setOnCheckedChangeListener(this)
         return layout
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         view!!.setOnScrollListener(null)
         layout = null
         jump = null
         if (cur != null) cur!!.close()
         cur = null
-        map = null
-        grp = null
-        idx = null
         super.destroy()
     }
 
-    override fun getView(arg0: Int, arg1: View, arg2: ViewGroup): View {
+    override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
         var arg1 = arg1
         arg1 = super.getView(arg0, arg1, arg2)
         if (single) ((arg1 as LinearLayout).getChildAt(1) as CharacterView).drawSlash(false) else (arg1 as CharacterView).drawSlash(false)
@@ -124,10 +121,10 @@ internal class EmojiAdapter(activity: Activity?, pref: SharedPreferences?, priva
         return cur!!.getString(0)
     }
 
-    override fun getItem(arg0: Int): Any {
+    override fun getItem(arg0: Int): String {
         val ss = getItemString(arg0).split(" ").toTypedArray()
         var res = ""
-        for (s in ss) if (s.length > 0) res += String(Character.toChars(s.toInt(16)))
+        for (s in ss) if (s.isNotEmpty()) res += String(Character.toChars(s.toInt(16)))
         return res
     }
 
@@ -194,7 +191,7 @@ internal class EmojiAdapter(activity: Activity?, pref: SharedPreferences?, priva
         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
         jump!!.adapter = adp
         jump!!.setSelection(current)
-        view!!.setSelection(idx.get(current))
+        view!!.setSelection(idx[current])
         view!!.setOnScrollListener(this)
         jump!!.onItemSelectedListener = this
         view!!.post { --guard }

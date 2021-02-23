@@ -15,6 +15,7 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
@@ -31,10 +32,11 @@ import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import kotlin.math.max
+import kotlin.math.min
 
-class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences?, arg: EditText?) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
-    private val MAX_VIEWS = 6
-    private var num_page: Int
+class PageAdapter(private val activity: UnicodeActivity, private val pref: SharedPreferences, arg: EditText?) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
+    private var numPage: Int
     private val layout = arrayOfNulls<View>(MAX_VIEWS)
     private val views = arrayOfNulls<AbsListView>(MAX_VIEWS)
     private val edit: EditText?
@@ -42,7 +44,7 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
     private val afind: FindAdapter
     private val arec: RecentAdapter
     private val afav: FavoriteAdapter
-    private val aedt: EditAdapter
+    internal val aedt: EditAdapter
     private val aemoji: EmojiAdapter
     private var blist = false
     private var bfind = false
@@ -55,35 +57,35 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
     private var listpage = -1
     private var page: Int
     private var tf: Typeface?
-    private val db: NameDatabase
-    private val pref: SharedPreferences?
+    private val db: NameDatabase = NameDatabase(activity)
     val view: View?
         get() = views[page]
 
     override fun getCount(): Int {
-        return num_page
+        return numPage
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return activity.resources.getString(adps[position]!!.name())
     }
 
     override fun notifyDataSetChanged() {
-        num_page = pref!!.getInt("cnt_shown", 6)
+        numPage = pref.getInt("cnt_shown", 6)
         adps[pref.getInt("ord_list", 1)] = alist
         listpage = pref.getInt("ord_list", 1)
         adps[pref.getInt("ord_find", 3)] = afind
         adps[pref.getInt("ord_rec", 0)] = arec
         recpage = pref.getInt("ord_rec", 0)
-        if (recpage >= num_page) recpage = -1
+        if (recpage >= numPage) recpage = -1
         adps[pref.getInt("ord_fav", 4)] = afav
         adps[pref.getInt("ord_edt", 5)] = aedt
         adps[pref.getInt("ord_emoji", 2)] = aemoji
         super.notifyDataSetChanged()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
-        brec = pref!!.getString("single_rec", "false") == "true"
+        brec = pref.getString("single_rec", "false") == "true"
         arec.single = brec
         blist = pref.getString("single_list", "false") == "true"
         alist.single = blist
@@ -142,7 +144,7 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
         val start = edit!!.selectionStart
         val end = edit.selectionEnd
         if (start == -1) return
-        edit.editableText.replace(Math.min(start, end), Math.max(start, end), if (arg3 != -1L) String(Character.toChars(arg3.toInt())) else arg0!!.adapter.getItem(arg2) as String)
+        edit.editableText.replace(min(start, end), max(start, end), if (arg3 != -1L) String(Character.toChars(arg3.toInt())) else arg0!!.adapter.getItem(arg2) as String)
     }
 
     override fun onItemLongClick(arg0: AdapterView<*>, arg1: View, arg2: Int, arg3: Long): Boolean {
@@ -163,42 +165,46 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
         val adapter = CharacterAdapter(activity, ua, tf, db, afav)
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
-        pager.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (activity.resources.displayMetrics.scaledDensity * (CharacterAdapter.Companion.fontsize * 1.8f + TextAppearanceSpan(activity, android.R.style.TextAppearance_Small).textSize * 2.4f + 32f)) as Int)
+        pager.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (activity.resources.displayMetrics.scaledDensity * (CharacterAdapter.fontsize * 1.8f + TextAppearanceSpan(activity, android.R.style.TextAppearance_Small).textSize * 2.4f + 32f)).toInt())
         val layout = LinearLayout(activity)
         layout.addView(pager)
         val builder = AlertDialog.Builder(activity)
                 .setView(layout)
-        if (view != null) builder.setPositiveButton(R.string.input, DialogInterface.OnClickListener { dialog, which ->
+        if (view != null) builder.setPositiveButton(R.string.input, DialogInterface.OnClickListener { _, _ ->
             if (adapter.id != -1L) {
-                arec.add(adapter.id as Int)
+                arec.add(adapter.id.toInt())
                 if (recpage != -1 && page != recpage && views[recpage] != null) views[recpage]!!.invalidateViews()
             }
             val start = edit!!.selectionStart
             val end = edit.selectionEnd
             if (start == -1) return@OnClickListener
-            edit.editableText.replace(Math.min(start, end), Math.max(start, end), ua.getItem(adapter.index) as String)
+            edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index) as String)
         })
-        if (view !is AbsListView || view.adapter !== aemoji) builder.setNeutralButton(R.string.inlist) { dialog, which -> find(adapter.id as Int) }
-        if (view is AbsListView && view.adapter === arec) builder.setNegativeButton(R.string.remrec) { dialog, which ->
-            arec.rem(adapter.id as Int)
+        if (view !is AbsListView || view.adapter !== aemoji) builder.setNeutralButton(R.string.inlist) { _, _ -> find(adapter.id.toInt()) }
+        if (view is AbsListView && view.adapter === arec) builder.setNegativeButton(R.string.remrec) { _, _ ->
+            arec.rem(adapter.id.toInt())
             if (views[recpage] != null) views[recpage]!!.invalidateViews()
         }
-        if (view is AbsListView && view.adapter === aedt) builder.setNegativeButton(R.string.delete) { dialog, which ->
+        if (view is AbsListView && view.adapter === aedt) builder.setNegativeButton(R.string.delete) { _, _ ->
             val i = pager.currentItem
             val s = edit!!.editableText.toString()
             edit.editableText.delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1))
         }
-        if (view is AbsListView && view.adapter === alist) builder.setNegativeButton(R.string.mark) { dialog, which ->
+        if (view is AbsListView && view.adapter === alist) builder.setNegativeButton(R.string.mark) { _, _ ->
             val edit = EditText(activity)
             AlertDialog.Builder(activity)
                     .setTitle(R.string.mark)
                     .setView(edit)
-                    .setPositiveButton(R.string.mark) { arg0, arg1 -> alist.mark(adapter.id as Int, edit.text.toString()) }
+                    .setPositiveButton(R.string.mark) { _, _ -> alist.mark(adapter.id.toInt(), edit.text.toString()) }
                     .create().show()
         }
-        if (dlg != null && dlg!!.isShowing) dlg!!.dismiss()
-        dlg = builder.create()
-        dlg.show()
+        dlg?.let {
+            if (it.isShowing) it.dismiss()
+        }
+        builder.create().let {
+            dlg = it
+            it.show()
+        }
     }
 
     override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -239,12 +245,11 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
 
     companion object {
         var column = 8
+        private const val MAX_VIEWS: Int = 6
     }
 
     init {
-        db = NameDatabase(activity)
-        this.pref = pref
-        num_page = pref!!.getInt("cnt_shown", 6)
+        numPage = pref.getInt("cnt_shown", 6)
         alist = ListAdapter(activity, pref, db, blist)
         adps[pref.getInt("ord_list", 1)] = alist
         listpage = pref.getInt("ord_list", 1)
@@ -253,7 +258,7 @@ class PageAdapter(private val activity: UnicodeActivity, pref: SharedPreferences
         arec = RecentAdapter(activity, pref, db, brec)
         adps[pref.getInt("ord_rec", 0)] = arec
         recpage = pref.getInt("ord_rec", 0)
-        if (recpage >= num_page) recpage = -1
+        if (recpage >= numPage) recpage = -1
         afav = FavoriteAdapter(activity, pref, db, bfav)
         adps[pref.getInt("ord_fav", 4)] = afav
         aedt = EditAdapter(activity, pref, db, bedt, arg)

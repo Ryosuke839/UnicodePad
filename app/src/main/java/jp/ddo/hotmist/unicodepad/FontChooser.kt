@@ -40,7 +40,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         fun onTypefaceChosen(typeface: Typeface?)
     }
 
-    fun Save(edit: SharedPreferences.Editor) {
+    fun save(edit: SharedPreferences.Editor) {
         var fs = ""
         for (s in fontpath) fs += """
      $s
@@ -50,8 +50,8 @@ class FontChooser internal constructor(private val activity: Activity, private v
         edit.putInt("fontidx", if (spinner.selectedItemId > 2) spinner.selectedItemId.toInt() - 2 else 0)
     }
 
-    private fun Add(path: String?): Boolean {
-        if (Load(path) == null) return false
+    private fun add(path: String?): Boolean {
+        if (load(path) == null) return false
 
         // Add remove item
         if (adapter.count < 3) adapter.add(activity.resources.getString(R.string.rem))
@@ -67,7 +67,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         return true
     }
 
-    private fun Load(path: String?): Typeface? {
+    private fun load(path: String?): Typeface? {
         return try {
             Typeface.createFromFile(path)
         } catch (e: RuntimeException) {
@@ -75,7 +75,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         }
     }
 
-    private fun Remove(which: Int) {
+    private fun remove(which: Int) {
         adapter.remove(adapter.getItem(which + 3))
         try {
             if (fontpath[which]!!.startsWith(activity.filesDir.canonicalPath)) File(fontpath[which]).delete()
@@ -91,7 +91,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
     }
 
     @SuppressLint("InlinedApi")
-    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         if (parent !== spinner) return
         when (position) {
             0 -> {
@@ -107,8 +107,8 @@ class FontChooser internal constructor(private val activity: Activity, private v
             2 -> onClick(null, -1)
             else -> {
                 fidx = position - 2
-                val tf = Load(fontpath[position - 3])
-                if (tf != null) listener.onTypefaceChosen(tf) else Remove(position - 3)
+                val tf = load(fontpath[position - 3])
+                if (tf != null) listener.onTypefaceChosen(tf) else remove(position - 3)
             }
         }
     }
@@ -120,7 +120,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
             for (i in str.indices) str[i] = adapter.getItem(i + 3)
             AlertDialog.Builder(activity).setTitle(R.string.rem).setItems(str, this).setOnCancelListener(this).show()
         } else {
-            Remove(which)
+            remove(which)
         }
     }
 
@@ -133,7 +133,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
             FileChooser(activity, this, path).onClick(null, -1)
             return
         }
-        if (Add(path)) {
+        if (add(path)) {
             spinner.setSelection(adapter.count - 1)
         } else {
             Toast.makeText(activity, R.string.cantopen, Toast.LENGTH_SHORT).show()
@@ -164,7 +164,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         val fs = pref.getString("fontpath", "")
         for (s in fs!!.split("\n").toTypedArray()) {
             if (s.isEmpty()) continue
-            Add(s)
+            add(s)
         }
         fidx = pref.getInt("fontidx", 0)
         if (fidx > fontpath.size) fidx = 0

@@ -100,7 +100,7 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
     init {
         list = ArrayList()
         temp = list
-        val str = pref!!.getString("rec", "")
+        val str = pref.getString("rec", "")
         var num = 0
         run {
             var i = 0

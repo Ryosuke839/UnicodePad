@@ -36,6 +36,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.core.content.res.ResourcesCompat
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -112,19 +113,19 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         }
     }
 
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.list
     }
 
     @SuppressLint("SetTextI18n")
-    public override fun instantiate(grd: AbsListView?): View? {
+    override fun instantiate(grd: AbsListView?): View? {
         super.instantiate(grd)
         emap.clear()
         fmap.clear()
         imap.clear()
         jmap.clear()
         count = 0
-        val univer: Int = UnicodeActivity.Companion.univer
+        val univer: Int = UnicodeActivity.univer
         add(0x0, 0x7F)
         add(0x80, 0xFF)
         add(0x100, 0x17F)
@@ -494,7 +495,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return layout
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         view!!.setOnScrollListener(null)
         layout = null
         code = null
@@ -528,7 +529,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         mmap[code] = if (name.isNotEmpty()) name else "Unnamed Mark"
     }
 
-    public override fun save(edit: SharedPreferences.Editor) {
+    override fun save(edit: SharedPreferences.Editor) {
         edit.putInt("list", scroll)
         var str = ""
         val mit: Iterator<Map.Entry<Int, String>> = mmap.entries.iterator()
@@ -559,7 +560,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             hightarget = ret
             hightarget!!.setBackgroundColor(resselect)
         } else if (ret === hightarget) hightarget!!.setBackgroundColor(resnormal)
-        return ret!!
+        return ret
     }
 
     override fun getItemId(arg0: Int): Long {
@@ -601,7 +602,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     override fun onScroll(arg0: AbsListView, arg1: Int, arg2: Int, arg3: Int) {
         var arg1 = arg1
         if (arg0 === view) {
-            if (view!!.getChildAt(0) != null && view!!.getChildAt(0).top * -2 > view!!.getChildAt(0).height) arg1 += if (single) 1 else PageAdapter.Companion.column
+            if (view!!.getChildAt(0) != null && view!!.getChildAt(0).top * -2 > view!!.getChildAt(0).height) arg1 += if (single) 1 else PageAdapter.column
             val e = emap.floorEntry(arg1)
             if (arg2 != 0) {
                 if (e != null) {
@@ -626,6 +627,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     }
 
     override fun onScrollStateChanged(arg0: AbsListView, arg1: Int) {}
+    @SuppressLint("ClickableViewAccessibility")
     override fun onClick(arg0: View) {
         if (arg0 === code) {
             val edit = EditText(arg0.getContext())
@@ -657,7 +659,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             val del = ImageButton(arg0.getContext(), null, android.R.attr.buttonStyleSmall)
             val tv = TypedValue()
             arg0.getContext().theme.resolveAttribute(R.attr.backspace, tv, true)
-            del.setImageDrawable(arg0.getContext().resources.getDrawable(tv.resourceId))
+            del.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
             del.scaleType = ImageView.ScaleType.CENTER_INSIDE
             del.setPadding(0, 0, 0, 0)
             del.setOnClickListener(ocl)
@@ -730,7 +732,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     init {
         current = -1
         head = -1
-        scroll = pref!!.getInt("list", 0)
+        scroll = pref.getInt("list", 0)
         highlight = -1
         hightarget = null
         val str = pref.getString("mark", "")

@@ -178,7 +178,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             val start = edit!!.selectionStart
             val end = edit.selectionEnd
             if (start == -1) return@OnClickListener
-            edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index) as String)
+            edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
         })
         if (view !is AbsListView || view.adapter !== aemoji) builder.setNeutralButton(R.string.inlist) { _, _ -> find(adapter.id.toInt()) }
         if (view is AbsListView && view.adapter === arec) builder.setNegativeButton(R.string.remrec) { _, _ ->

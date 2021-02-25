@@ -55,7 +55,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         if (Build.VERSION.SDK_INT >= 21) hl.setPadding(0, (view.context.resources.displayMetrics.density * 8f).toInt(), 0, (view.context.resources.displayMetrics.density * 8f).toInt())
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         layout!!.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        cur = db.emoji(UnicodeActivity.Companion.univer, modifier)
+        cur = db.emoji(UnicodeActivity.univer, modifier)
         map = TreeMap()
         grp = ArrayList()
         idx = ArrayList()
@@ -102,7 +102,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return arg1
     }
 
-    public override fun save(edit: SharedPreferences.Editor) {
+    override fun save(edit: SharedPreferences.Editor) {
         edit.putInt("emoji", current)
         edit.putBoolean("modifier", modifier)
     }
@@ -132,7 +132,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     override fun onItemSelected(arg0: AdapterView<*>, arg1: View, arg2: Int, arg3: Long) {
         if (arg0 === jump) {
             current = arg2
-            if (view != null) if (guard == 0) view!!.setSelection(idx!![arg2])
+            if (view != null) if (guard == 0) view!!.setSelection(idx[arg2])
         }
     }
 
@@ -140,9 +140,9 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     override fun onScroll(arg0: AbsListView, arg1: Int, arg2: Int, arg3: Int) {
         var arg1 = arg1
         if (arg0 === view) {
-            if (view!!.getChildAt(0) != null && view!!.getChildAt(0).top * -2 > view!!.getChildAt(0).height) arg1 += if (single) 1 else PageAdapter.Companion.column
-            if (!single) arg1 += PageAdapter.Companion.column - 1
-            val e = map!!.floorEntry(arg1)
+            if (view!!.getChildAt(0) != null && view!!.getChildAt(0).top * -2 > view!!.getChildAt(0).height) arg1 += if (single) 1 else PageAdapter.column
+            if (!single) arg1 += PageAdapter.column - 1
+            val e = map.floorEntry(arg1)
             if (arg2 != 0) {
                 if (e != null) {
                     if (jump != null) {
@@ -167,7 +167,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         jump!!.onItemSelectedListener = null
         jump!!.adapter = null
         if (cur != null) cur!!.close()
-        cur = db.emoji(UnicodeActivity.Companion.univer, modifier)
+        cur = db.emoji(UnicodeActivity.univer, modifier)
         map = TreeMap()
         grp = ArrayList()
         idx = ArrayList()
@@ -198,7 +198,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     }
 
     init {
-        current = pref!!.getInt("emoji", 0)
+        current = pref.getInt("emoji", 0)
         modifier = pref.getBoolean("modifier", true)
     }
 }

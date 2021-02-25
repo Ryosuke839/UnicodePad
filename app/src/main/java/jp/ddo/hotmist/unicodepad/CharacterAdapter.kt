@@ -43,13 +43,13 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
         return adapter.count
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return (if (adapter.getItemId(position) != -1L) String.format("U+%04X ", adapter.getItemId(position)) else adapter.getItemString(position) + " ") + adapter.getItem(position)
     }
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
         val text = CharacterView(activity)
-        text.text = adapter.getItem(position) as String
+        text.text = adapter.getItem(position)
         text.setTextSize(fontsize)
         text.setTypeface(tf)
         text.drawSlash(false)
@@ -65,18 +65,18 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
         layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         val itemid = adapter.getItemId(position).toInt()
         val emoji = itemid == -1
-        val ver = if (!emoji) db.getint(itemid, "version") else db.getint(adapter.getItemString(position), "version")
-        text.setValid(ver != 0 && ver <= UnicodeActivity.Companion.univer)
+        val ver = if (!emoji) db.getInt(itemid, "version") else db.getInt(adapter.getItemString(position), "version")
+        text.setValid(ver != 0 && ver <= UnicodeActivity.univer)
         val str = StringBuilder()
-        if (!emoji) str.append(adapter.getItem(position) as String)
+        if (!emoji) str.append(adapter.getItem(position))
         val lsn = OnLongClickListener { arg0 ->
-            activity.adpPage!!.showDesc(arg0, arg0.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
+            activity.adpPage.showDesc(arg0, arg0.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
             true
         }
         for (i in 0 until if (!emoji) 10 else 7) {
             if (emoji && i == 5) continue
             if (i == 2) {
-                val v = if (!emoji) db.getint(itemid, cols[i]) else db.getint(adapter.getItemString(position), emjs[i])
+                val v = if (!emoji) db.getInt(itemid, cols[i]) else db.getInt(adapter.getItemString(position), emjs[i])
                 val desc = TextView(activity)
                 desc.text = if (!emoji) mods[i].toString() + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (if (v == 600) " or earlier" else "") else mode[i].toString() + String.format(Locale.US, "%d.%d", v / 100, v / 10 % 10)
                 desc.gravity = Gravity.CENTER_VERTICAL
@@ -84,7 +84,7 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
                 continue
             }
             val r: String? = if (i == 1) {
-                val a = (adapter.getItem(position) as String).toByteArray(Charset.defaultCharset())
+                val a = (adapter.getItem(position)).toByteArray(Charset.defaultCharset())
                 val sb = StringBuilder(a.size * 3)
                 for (b in a) sb.append(String.format("%02X ", b))
                 sb.deleteCharAt(a.size * 3 - 1)
@@ -164,12 +164,12 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
                     ps = ps.substring(0, ps.length - 1)
                     val ct = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
                     ct.setPadding(0, 0, 0, 0)
-                    ct.setPadding(UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding, UnicodeAdapter.Companion.padding)
+                    ct.setPadding(UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding)
                     ct.drawSlash(false)
-                    ct.setTextSize(UnicodeAdapter.Companion.fontsize)
+                    ct.setTextSize(UnicodeAdapter.fontsize)
                     ct.text = cs
                     ct.setTypeface(tf)
-                    hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.Companion.fontsize * 2 + UnicodeAdapter.Companion.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+                    hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.fontsize * 2 + UnicodeAdapter.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
                     val pt = TextView(activity, null, android.R.attr.textAppearanceSmall)
                     pt.setPadding(0, 0, 0, 0)
                     pt.gravity = Gravity.CENTER_VERTICAL
@@ -226,7 +226,7 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
         while (i < s!!.length) {
             val code = s.codePointAt(i)
             if (code > 0xFFFF) ++i
-            activity.adpPage!!.onItemClick(null, v, -1, code.toLong())
+            activity.adpPage.onItemClick(null, v, -1, code.toLong())
             ++i
         }
     }

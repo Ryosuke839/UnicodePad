@@ -350,12 +350,6 @@
 	<string name="tabs_desc">Flikinställningar …</string>
 	<string name="shown_desc">Synliga flikar</string>
 	<string name="hidden_desc">Dolda flikar</string>
-	<string name="single_rec_desc">Kolumner i senast använda</string>
-	<string name="single_list_desc">Kolumner i listan</string>
-	<string name="single_find_desc">Kolumner i sök</string>
-	<string name="single_fav_desc">Kolumner i favoriter</string>
-	<string name="single_edt_desc">Kolumner i input</string>
-	<string name="single_emoji_desc">Kolumner i emoji</string>
 
 	<string name="multiplecolumns">Flera kolumner med endast tecken</string>
 	<string name="singlecolumn">En kolumn med beskrivning</string>

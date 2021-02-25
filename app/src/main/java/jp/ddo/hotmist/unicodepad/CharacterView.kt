@@ -48,6 +48,8 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var validChar: Boolean
     private var emojicache: Bitmap?
     private var invalid: Boolean
+    private var cacheRect = Rect()
+    private var drawRect = RectF()
     var text: String?
         get() = str
         set(str) {
@@ -146,21 +148,21 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         var heightOld = 0
         var sizeu = size
         var sizeb = 0f
-        var size_ = size
-        paint.textSize = size_
+        var size = size
+        paint.textSize = size
         var fm: Paint.FontMetrics
         var fmi: FontMetricsInt?
         while (true) {
-            size_ = (sizeu + sizeb) / 2f
-            paint.textSize = size_
+            size = (sizeu + sizeb) / 2f
+            paint.textSize = size
             fm = paint.fontMetrics
             fmi = paint.fontMetricsInt
             heightNew = (-fm.top + fm.bottom).toInt()
             if (heightNew > 0) {
                 if (heightNew == heightOld) break
                 heightOld = heightNew
-                sizeb = size_
-            } else sizeu = size_
+                sizeb = size
+            } else sizeu = size
         }
         heightNew += paddingTop + paddingBottom
         val measure = (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash
@@ -172,8 +174,8 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         if (widthMode != MeasureSpec.EXACTLY) if (widthMode == MeasureSpec.UNSPECIFIED || widthSize > widthNew) widthSize = widthNew
         if (!shrinkHeight) if (heightMode != MeasureSpec.EXACTLY) if (heightMode == MeasureSpec.UNSPECIFIED || heightSize > heightNew) heightSize = heightNew
         if (shrinkWidth) if (widthNew > widthSize) {
-            size_ = size_ * widthSize / (widthNew - paddingLeft - paddingRight)
-            paint.textSize = size_
+            size = size * widthSize / (widthNew - paddingLeft - paddingRight)
+            paint.textSize = size
             fm = paint.fontMetrics
             fmi = paint.fontMetricsInt
             widthNew = (if (measure) paint.measureText(str) else fm.descent - fm.ascent).toInt() + paddingLeft + paddingRight
@@ -190,6 +192,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         descent = ((heightSize - heightNew) / 2 - fm.top + fm.descent).toInt() + paddingTop
         fullWidth = widthSize
         fullHeight = heightSize
+        drawRect.set(offsetx.toFloat(), paddingTop.toFloat(), (fullWidth - offsetx + paddingLeft - paddingRight).toFloat(), (fullHeight - paddingBottom).toFloat())
         setMeasuredDimension(widthSize, heightSize)
     }
 
@@ -206,13 +209,13 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                 canvas.drawLine((fullWidth - offsetx).toFloat(), 0f, (fullWidth - offsetx).toFloat(), fullHeight.toFloat(), paintln!!)
             }
         }
-        if (str!!.length > 0) {
+        if (str!!.isNotEmpty()) {
             if (span != null) {
                 if (invalid) cache
-                if (emojicache == null) span!!.draw(canvas, str, 0, str!!.length, offsetx.toFloat(), ascent, offsety, descent, paint) else canvas.drawBitmap(emojicache!!, Rect(0, 0, emojicache!!.width, emojicache!!.height), RectF(offsetx.toFloat(), paddingTop.toFloat(), (fullWidth - offsetx + paddingLeft - paddingRight).toFloat(), (fullHeight - paddingBottom).toFloat()), paint)
+                if (emojicache == null) span!!.draw(canvas, str, 0, str!!.length, offsetx.toFloat(), ascent, offsety, descent, paint) else canvas.drawBitmap(emojicache!!, cacheRect, drawRect, paint)
             } else if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash) {
                 if (invalid) cache
-                if (emojicache == null) canvas.drawText(str!!, offsetx.toFloat(), offsety.toFloat(), paint) else canvas.drawBitmap(emojicache!!, Rect(0, 0, emojicache!!.width, emojicache!!.height), RectF(offsetx.toFloat(), paddingTop.toFloat(), (fullWidth - offsetx + paddingLeft - paddingRight).toFloat(), (fullHeight - paddingBottom).toFloat()), paint)
+                if (emojicache == null) canvas.drawText(str!!, offsetx.toFloat(), offsety.toFloat(), paint) else canvas.drawBitmap(emojicache!!, cacheRect, drawRect, paint)
             } else {
                 val sz = (descent - ascent).toFloat()
                 canvas.drawLine(fullWidth / 2 - sz * .4f, ascent + sz * .1f, fullWidth / 2 - sz * .4f, ascent + sz * .9f, paint)
@@ -235,8 +238,8 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                     w = span!!.getSize(paint, str, 0, str!!.length, fmi).toFloat()
                 }
                 if (w > 256f) {
-                    val size_ = paint.textSize
-                    paint.textSize = size_ * 256f / w
+                    val size = paint.textSize
+                    paint.textSize = size * 256f / w
                     val fm = paint.fontMetrics
                     var w2 = paint.measureText(str).toInt()
                     if (span != null && Build.VERSION.SDK_INT >= 19) {
@@ -255,9 +258,10 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                             paint.style = Paint.Style.FILL
                             if (span != null && Build.VERSION.SDK_INT >= 19) span!!.draw(cv, str, 0, str!!.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str!!, 0f, -fm.top, paint)
                             emojicache = bm
+                            cacheRect.set(0, 0, emojicache!!.width, emojicache!!.height)
                         } else paint.style = Paint.Style.FILL
                     }
-                    paint.textSize = size_
+                    paint.textSize = size
                 }
             }
             invalid = false

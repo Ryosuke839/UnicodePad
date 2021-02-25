@@ -29,7 +29,7 @@ import java.util.*
 internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean, private val edit: EditText?) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
     private val list: ArrayList<Int> = ArrayList()
     private var suspend = false
-    public override fun instantiate(grd: AbsListView?): View? {
+    override fun instantiate(grd: AbsListView?): View? {
         list.clear()
         val str = edit!!.editableText.toString()
         var i = 0
@@ -43,12 +43,12 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return super.instantiate(grd)
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         super.destroy()
         edit!!.removeTextChangedListener(this)
     }
 
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.edit
     }
 

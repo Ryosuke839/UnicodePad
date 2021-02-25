@@ -15,7 +15,6 @@
 */
 package jp.ddo.hotmist.unicodepad
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
 import android.database.DataSetObserver
@@ -25,9 +24,9 @@ import android.widget.*
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 
-abstract class UnicodeAdapter(private val activity: Activity, private val db: NameDatabase, var single: Boolean) : BaseAdapter() {
-    private var tf: Typeface? = null
-    var view: AbsListView? = null
+abstract class UnicodeAdapter(protected val activity: Activity, private val db: NameDatabase, var single: Boolean) : BaseAdapter() {
+    private var typeface: Typeface? = null
+    protected var view: AbsListView? = null
     open fun name(): Int {
         return 0
     }
@@ -44,19 +43,18 @@ abstract class UnicodeAdapter(private val activity: Activity, private val db: Na
     open fun save(edit: SharedPreferences.Editor) {}
     open fun show() {}
     open fun leave() {}
-    open fun getItemString(arg0: Int): String {
-        return String.format("%04X", getItemId(arg0).toInt())
+    open fun getItemString(i: Int): String {
+        return String.format("%04X", getItemId(i).toInt())
     }
 
-    override fun getItem(arg0: Int): String {
-        return String(Character.toChars(getItemId(arg0).toInt()))
+    override fun getItem(i: Int): String {
+        return String(Character.toChars(getItemId(i).toInt()))
     }
 
-    override fun getItemViewType(arg0: Int): Int {
+    override fun getItemViewType(i: Int): Int {
         return 0
     }
 
-    @SuppressLint("NewApi")
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
         return if (single) {
             (view as LinearLayout? ?: LinearLayout(activity).also {
@@ -82,9 +80,9 @@ abstract class UnicodeAdapter(private val activity: Activity, private val db: Na
                     characterView.setPadding(padding, padding, padding, padding)
                     characterView.setTextSize(fontsize)
                     characterView.shrinkWidth(shrink)
-                    characterView.setTypeface(tf)
+                    characterView.setTypeface(typeface)
                     characterView.drawSlash(true)
-                    val ver = if (getItemId(i) != -1L) db.getint(getItemId(i).toInt(), "version") else db.getint(getItemString(i), "version")
+                    val ver = if (getItemId(i) != -1L) db.getInt(getItemId(i).toInt(), "version") else db.getInt(getItemString(i), "version")
                     characterView.setValid(ver != 0 && ver <= UnicodeActivity.univer)
                 }
                 (it.getChildAt(2) as LinearLayout).let { linearLayout ->
@@ -102,9 +100,9 @@ abstract class UnicodeAdapter(private val activity: Activity, private val db: Na
                 it.setPadding(padding, padding, padding, padding)
                 it.setTextSize(fontsize)
                 it.shrinkWidth(shrink)
-                it.setTypeface(tf)
+                it.setTypeface(typeface)
                 it.drawSlash(true)
-                val ver = if (getItemId(i) != -1L) db.getint(getItemId(i).toInt(), "version") else db.getint(getItemString(i), "version")
+                val ver = if (getItemId(i) != -1L) db.getInt(getItemId(i).toInt(), "version") else db.getInt(getItemString(i), "version")
                 it.setValid(ver != 0 && ver <= UnicodeActivity.univer)
                 it.text = getItem(i)
             }
@@ -123,13 +121,13 @@ abstract class UnicodeAdapter(private val activity: Activity, private val db: Na
         return count == 0
     }
 
-    override fun registerDataSetObserver(arg0: DataSetObserver) {}
-    override fun unregisterDataSetObserver(arg0: DataSetObserver) {}
+    override fun registerDataSetObserver(observer: DataSetObserver) {}
+    override fun unregisterDataSetObserver(observer: DataSetObserver) {}
     override fun areAllItemsEnabled(): Boolean {
         return true
     }
 
-    override fun isEnabled(arg0: Int): Boolean {
+    override fun isEnabled(i: Int): Boolean {
         return true
     }
 
@@ -137,8 +135,8 @@ abstract class UnicodeAdapter(private val activity: Activity, private val db: Na
         activity.runOnUiThread(action)
     }
 
-    fun setTypeface(tf: Typeface?) {
-        this.tf = tf
+    fun setTypeface(typeface: Typeface?) {
+        this.typeface = typeface
     }
 
     companion object {

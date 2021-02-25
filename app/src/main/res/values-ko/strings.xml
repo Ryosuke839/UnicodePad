@@ -11,7 +11,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<string name="app_name">UnicodePad</string>
 	<string name="delete">삭제</string>
 	<string name="desc">정보</string>
@@ -367,12 +367,6 @@
 	<string name="tabs_desc">탭 설정…</string>
 	<string name="shown_desc">보이는 탭</string>
 	<string name="hidden_desc">숨긴 탭</string>
-	<string name="single_rec_desc">최근 탭의 열 설정</string>
-	<string name="single_list_desc">목록 탭의 열 설정</string>
-	<string name="single_find_desc">검색 탭의 열 설정</string>
-	<string name="single_fav_desc">즐겨찾기 탭의 열 설정</string>
-	<string name="single_edt_desc">입력 탭의 열 설정</string>
-	<string name="single_emoji_desc">이모지 탭의 열 설정</string>
 
 	<string name="multiplecolumns">여러 열, 문자만 표시</string>
 	<string name="singlecolumn">단일 열, 설명도 표시</string>

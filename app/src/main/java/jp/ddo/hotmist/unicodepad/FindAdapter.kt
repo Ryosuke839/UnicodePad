@@ -27,6 +27,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
+import androidx.core.content.res.ResourcesCompat
 
 internal class FindAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), View.OnClickListener, OnEditorActionListener {
     private var cur: Cursor?
@@ -37,11 +38,11 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
     private var saved: String?
     private val pref: SharedPreferences?
     private var adapter: CompleteAdapter? = null
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.find
     }
 
-    public override fun instantiate(grd: AbsListView?): View? {
+    override fun instantiate(grd: AbsListView?): View? {
         super.instantiate(grd)
         layout = LinearLayout(view!!.context)
         layout!!.orientation = LinearLayout.VERTICAL
@@ -58,7 +59,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
         clear = ImageButton(view!!.context)
         val tv = TypedValue()
         view!!.context.theme.resolveAttribute(R.attr.cancel, tv, true)
-        clear!!.setImageDrawable(view!!.context.resources.getDrawable(tv.resourceId))
+        clear!!.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
         clear!!.scaleType = ImageView.ScaleType.CENTER_INSIDE
         clear!!.setBackgroundDrawable(null)
         clear!!.setPadding(0, 0, 0, 0)
@@ -71,7 +72,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
         fl.addView(clear, lp)
         find = ImageButton(view!!.context)
         view!!.context.theme.resolveAttribute(R.attr.search, tv, true)
-        find!!.setImageDrawable(view!!.context.resources.getDrawable(tv.resourceId))
+        find!!.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
         val hl = LinearLayout(view!!.context)
         hl.orientation = LinearLayout.HORIZONTAL
         hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
@@ -82,7 +83,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
         return layout
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         view!!.setOnScrollListener(null)
         layout = null
         text = null
@@ -93,7 +94,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
         super.destroy()
     }
 
-    public override fun save(edit: SharedPreferences.Editor) {
+    override fun save(edit: SharedPreferences.Editor) {
         edit.putString("find", saved)
         if (adapter != null) adapter!!.save(edit)
     }
@@ -119,7 +120,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
             if (saved!!.isEmpty()) return
             if (adapter != null) adapter!!.update(saved!!)
             if (cur != null) cur!!.close()
-            cur = db.find(saved!!, UnicodeActivity.Companion.univer)
+            cur = db.find(saved!!, UnicodeActivity.univer)
             (text!!.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text!!.windowToken, 0)
             view!!.invalidateViews()
         }
@@ -134,7 +135,7 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
     }
 
     init {
-        saved = pref!!.getString("find", "")
+        saved = pref.getString("find", "")
         this.pref = pref
         cur = null
     }

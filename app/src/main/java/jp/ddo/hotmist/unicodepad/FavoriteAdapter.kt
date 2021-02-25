@@ -24,16 +24,16 @@ import java.util.*
 internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
     private var list: ArrayList<Int>
     private var temp: ArrayList<Int>
-    public override fun name(): Int {
+    override fun name(): Int {
         return R.string.favorite
     }
 
-    public override fun show() {
+    override fun show() {
         trunc()
         if (view != null) view!!.invalidateViews()
     }
 
-    public override fun leave() {
+    override fun leave() {
         commit()
         if (view != null) view!!.invalidateViews()
     }
@@ -69,7 +69,7 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
         return list.contains(code)
     }
 
-    public override fun save(edit: SharedPreferences.Editor) {
+    override fun save(edit: SharedPreferences.Editor) {
         var str = ""
         for (i in list) str += String(Character.toChars(i))
         edit.putString("fav", str)
@@ -94,7 +94,7 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
     init {
         list = ArrayList()
         temp = list
-        val str = pref!!.getString("fav", "")
+        val str = pref.getString("fav", "")
         var i = 0
         while (i < str!!.length) {
             val code = str.codePointAt(i)

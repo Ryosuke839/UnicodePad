@@ -15,6 +15,7 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
 import android.database.Cursor
@@ -37,7 +38,7 @@ class NameDatabase(context: Context) {
         return get("name_table", code.toString(), column)
     }
 
-    operator fun get(code: String?, column: String): String? {
+    operator fun get(code: String, column: String): String? {
         return get("emoji_table", "'$code'", column)
     }
 
@@ -57,7 +58,7 @@ class NameDatabase(context: Context) {
         }
     }
 
-    fun getint(code: Int, column: String): Int {
+    fun getInt(code: Int, column: String): Int {
         if (column == "version") {
             if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return 600
             if (code in 0x3400..0x4DB5 || code in 0x4E00..0x9FCB || code in 0x20000..0x2A6D6 || code in 0x2A700..0x2B734 || code in 0x2B740..0x2B81D) return 600
@@ -70,14 +71,14 @@ class NameDatabase(context: Context) {
             if (code in 0x187F2..0x187F7) return 1200
             if (code in 0x4DB6..0x4DBF || code in 0x9FF0..0x9FFC || code in 0x2A6D7..0x2A6DD || code in 0x30000..0x3134A) return 1300
         }
-        return getint("name_table", code.toString(), column)
+        return getInt("name_table", code.toString(), column)
     }
 
-    fun getint(code: String?, column: String): Int {
-        return getint("emoji_table", "'$code'", column)
+    fun getInt(code: String, column: String): Int {
+        return getInt("emoji_table", "'$code'", column)
     }
 
-    private fun getint(table: String, code: String, column: String): Int {
+    private fun getInt(table: String, code: String, column: String): Int {
         return try {
             val cur = db.rawQuery("SELECT $column FROM $table WHERE id = $code", null)
             if (cur.count != 1) {
@@ -93,19 +94,18 @@ class NameDatabase(context: Context) {
         }
     }
 
+    @SuppressLint("Recycle")
     fun find(str: String, version: Int): Cursor? {
         val list = str.split(" +").toTypedArray()
         if (list.isEmpty()) return null
-        var query = "SELECT id FROM name_table WHERE "
-        for (s in list) query += "words LIKE '%$s%' AND "
-        query += "version <= $version;"
         return try {
-            db.rawQuery(query, null)
+            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString { "words LIKE '%$it%' AND " } + "version <= $version;", null)
         } catch (e: SQLiteException) {
             null
         }
     }
 
+    @SuppressLint("Recycle")
     fun emoji(version: Int, mod: Boolean): Cursor? {
         var version = version
         when (version) {
@@ -113,9 +113,8 @@ class NameDatabase(context: Context) {
             700 -> version = 70
             800 -> version = 100
         }
-        val query = "SELECT id, grp, subgrp FROM emoji_table WHERE version <= " + version + if (mod) ";" else " AND mod = 0;"
         return try {
-            db.rawQuery(query, null)
+            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $version" + if (mod) ";" else " AND mod = 0;", null)
         } catch (e: SQLiteException) {
             null
         }

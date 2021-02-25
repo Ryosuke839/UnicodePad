@@ -27,11 +27,9 @@ import android.provider.OpenableColumns
 import android.text.*
 import android.util.DisplayMetrics
 import android.view.*
-import android.view.View.OnTouchListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.provider.FontRequest
 import androidx.core.view.MenuItemCompat
@@ -51,24 +49,23 @@ import java.util.zip.CRC32
 import kotlin.math.max
 import kotlin.math.min
 
-class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListener, OnEditorActionListener, FontChooser.Listener {
-    private var isMush = false
-    private var created = false
+class UnicodeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
-    private lateinit var btnDelete: ImageButton
-    private lateinit var btnCopy: Button
-    private lateinit var btnFind: Button
-    private lateinit var btnPaste: Button
     private lateinit var btnFinish: Button
-    var chooser: FontChooser? = null
+    private lateinit var chooser: FontChooser
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
-    var adpPage: PageAdapter? = null
+    internal lateinit var adpPage: PageAdapter
     private var adView: AdView? = null
-    private var cm: ClipboardManager? = null
+    private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
+    private var isMush = false
+    private var created = false
     private var disableime = false
+    private var delay: Runnable? = null
+    private var timer = 500
+    @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
         onActivityResult(-1, 0, null)
@@ -97,23 +94,95 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setContentView(if (useEmoji == "null") R.layout.main else R.layout.main_emojicompat)
-        editText = findViewById(R.id.text)
-        editText.setOnTouchListener(this)
-        editText.textSize = fontsize
-        btnClear = findViewById(R.id.clear)
-        btnClear.setOnClickListener(this)
-        btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
-        btnDelete = findViewById(R.id.delete)
-        btnDelete.setOnTouchListener(this)
-        btnCopy = findViewById(R.id.copy)
-        btnCopy.setOnClickListener(this)
-        btnFind = findViewById(R.id.find)
-        btnFind.setOnClickListener(this)
-        btnPaste = findViewById(R.id.paste)
-        btnPaste.setOnClickListener(this)
-        btnFinish = findViewById(R.id.finish)
-        btnFinish.setOnClickListener(this)
-        chooser = FontChooser(this, findViewById<View>(R.id.font) as Spinner, this)
+        editText = findViewById<EditText>(R.id.text).also {
+            it.setOnTouchListener { view: View, motionEvent: MotionEvent ->
+                view.onTouchEvent(motionEvent)
+                if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken, 0)
+                true
+            }
+            it.textSize = fontsize
+            it.setOnEditorActionListener { _, _, keyEvent ->
+                if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if (keyEvent.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
+                    true
+                } else
+                    false
+            }
+        }
+        btnClear = findViewById<ImageButton>(R.id.clear).also {
+            it.setOnClickListener {
+                editText.setText("")
+            }
+            it.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
+        }
+        findViewById<ImageButton>(R.id.delete).also {
+            it.setOnTouchListener { view: View, motionEvent: MotionEvent ->
+                view.onTouchEvent(motionEvent)
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> if (delay == null) {
+                        delay = Runnable {
+                            val str = editText.editableText.toString()
+                            if (str.isEmpty()) return@Runnable
+                            val start = editText.selectionStart
+                            if (start < 1) return@Runnable
+                            val end = editText.selectionEnd
+                            if (start < 1) return@Runnable
+                            if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
+                            if (delay != null) {
+                                editText.postDelayed(delay, timer.toLong())
+                                if (timer > 100) timer -= 200
+                            }
+                        }
+                        editText.post(delay)
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        editText.removeCallbacks(delay)
+                        delay = null
+                        timer = 500
+                    }
+                }
+                true
+            }
+        }
+        findViewById<Button>(R.id.copy).also {
+            it.setOnClickListener {
+                cm.text = editText.text.toString()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+            }
+        }
+        findViewById<Button>(R.id.find).also {
+            it.setOnClickListener {
+                val str = editText.editableText.toString()
+                if (str.isEmpty()) return@setOnClickListener
+                val start = editText.selectionStart
+                if (start == -1) return@setOnClickListener
+                val end = editText.selectionEnd
+                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.aedt)
+            }
+        }
+        findViewById<Button>(R.id.paste).also {
+            it.setOnClickListener {
+                editText.setText(cm.text)
+            }
+        }
+        btnFinish = findViewById<Button>(R.id.finish).also {
+            it.setOnClickListener {
+                if (isMush) {
+                    replace(editText.text.toString())
+                } else {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.type = "text/plain"
+                    intent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                    startActivity(intent)
+                }
+            }
+        }
+        chooser = FontChooser(this, findViewById<View>(R.id.font) as Spinner, object : FontChooser.Listener {
+            override fun onTypefaceChosen(typeface: Typeface?) {
+                setTypeface(typeface)
+            }
+        })
         scroll = findViewById(R.id.scrollView)
         pager = findViewById(R.id.cpager)
         pager.offscreenPageLimit = 3
@@ -124,7 +193,7 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
         scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")!!) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)
-        pager.setCurrentItem(min(pref.getInt("page", 1), adpPage!!.count - 1), false)
+        pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
         val it = intent
         val action = it.action
         editText.imeOptions = if (action != null && ACTION_INTERCEPT == action) EditorInfo.IME_ACTION_DONE else EditorInfo.IME_ACTION_SEND
@@ -149,7 +218,7 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
                     windowManager.defaultDisplay.getMetrics(outMetrics)
                     it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
                     it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                    findViewById<LinearLayout>(R.id.adContainer).addView(adView)
+                    findViewById<LinearLayout>(R.id.adContainer).addView(it)
                     val adRequest = AdRequest.Builder().build()
                     it.loadAd(adRequest)
                 }
@@ -178,80 +247,11 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
 
     public override fun onPause() {
         val edit = pref.edit()
-        adpPage!!.save(edit)
-        chooser!!.Save(edit)
+        adpPage.save(edit)
+        chooser.save(edit)
         edit.putInt("page", pager.currentItem)
         edit.apply()
         super.onPause()
-    }
-
-    override fun onClick(v: View) {
-        if (v === btnClear) {
-            editText.setText("")
-        }
-        if (v === btnCopy) {
-            cm!!.text = editText.text.toString()
-            Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-        }
-        if (v === btnFind) {
-            val str = editText.editableText.toString()
-            if (str.isEmpty()) return
-            val start = editText.selectionStart
-            if (start == -1) return
-            val end = editText.selectionEnd
-            adpPage!!.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage!!.aedt)
-        }
-        if (v === btnPaste) {
-            editText.setText(cm!!.text)
-        }
-        if (v === btnFinish) {
-            if (isMush) {
-                replace(editText.text.toString())
-            } else {
-                val intent = Intent()
-                intent.action = Intent.ACTION_SEND
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                startActivity(intent)
-            }
-        }
-    }
-
-    private var delay: Runnable? = null
-    private var timer = 500
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(v: View, event: MotionEvent): Boolean {
-        v.onTouchEvent(event)
-        if (v === btnDelete) {
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> if (delay == null) {
-                    delay = Runnable {
-                        val str = editText.editableText.toString()
-                        if (str.isEmpty()) return@Runnable
-                        val start = editText.selectionStart
-                        if (start < 1) return@Runnable
-                        val end = editText.selectionEnd
-                        if (start < 1) return@Runnable
-                        if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
-                        //							editText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                        if (delay != null) {
-                            editText.postDelayed(delay, timer.toLong())
-                            if (timer > 100) timer -= 200
-                        }
-                    }
-                    editText.post(delay)
-                }
-                MotionEvent.ACTION_UP -> {
-                    editText.removeCallbacks(delay)
-                    delay = null
-                    timer = 500
-                }
-            }
-        }
-        if (v === editText) {
-            if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(v.getWindowToken(), 0)
-        }
-        return true
     }
 
     override fun dispatchKeyEvent(e: KeyEvent): Boolean {
@@ -291,7 +291,7 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
                     val mf = File(filesDir, String.format("%08x", crc.value) + "/" + name)
                     mf.parentFile.mkdirs()
                     of.renameTo(mf)
-                    chooser!!.onFileChosen(mf.canonicalPath)
+                    chooser.onFileChosen(mf.canonicalPath)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -299,7 +299,7 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        } else chooser!!.onFileCancel()
+        } else chooser.onFileCancel()
         if (requestCode != -1) super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_FIRST_USER) {
             val intent = Intent()
@@ -314,10 +314,10 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
             fontsize = java.lang.Float.valueOf(pref.getString("textsize", "24.0")!!)
         } catch (e: NumberFormatException) {
         }
-        try {
-            univer = Integer.valueOf(pref.getString("universion", "Latest")!!.replace(".", ""))
+        univer = try {
+            Integer.valueOf(pref.getString("universion", "Latest")!!.replace(".", ""))
         } catch (e: NumberFormatException) {
-            univer = Int.MAX_VALUE
+            Int.MAX_VALUE
         }
         try {
             PageAdapter.column = Integer.valueOf(pref.getString("column", "8")!!)
@@ -351,7 +351,7 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
         if (created) {
             btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
             editText.textSize = fontsize
-            if (adpPage != null) adpPage!!.notifyDataSetChanged()
+            adpPage.notifyDataSetChanged()
             scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")!!) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         }
         if (requestCode != -1) {
@@ -360,14 +360,15 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
                 if (!pref.getBoolean("no-ad", false)) {
                     if (adContainer.childCount == 0) {
                         MobileAds.initialize(this) { }
-                        adView = AdView(this)
-                        val outMetrics = DisplayMetrics()
-                        windowManager.defaultDisplay.getMetrics(outMetrics)
-                        adView!!.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
-                        adView!!.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                        (findViewById<View>(R.id.adContainer) as LinearLayout).addView(adView)
-                        val adRequest = AdRequest.Builder().build()
-                        adView!!.loadAd(adRequest)
+                        adView = AdView(this).also {
+                            val outMetrics = DisplayMetrics()
+                            windowManager.defaultDisplay.getMetrics(outMetrics)
+                            it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
+                            it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
+                            (findViewById<View>(R.id.adContainer) as LinearLayout).addView(it)
+                            val adRequest = AdRequest.Builder().build()
+                            it.loadAd(adRequest)
+                        }
                     }
                 } else {
                     if (adContainer.childCount > 0) {
@@ -389,24 +390,12 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
         pager.currentItem = page
     }
 
-    override fun onTypefaceChosen(typeface: Typeface?) {
-        setTypeface(typeface)
-    }
-
     private var oldtf: Typeface? = null
     private fun setTypeface(tf: Typeface?) {
         if (tf === oldtf) return
         oldtf = tf
         editText.typeface = tf
-        adpPage!!.setTypeface(tf)
-    }
-
-    override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean {
-        if (v == editText && event.keyCode == KeyEvent.KEYCODE_ENTER) {
-            if (event.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
-            return true
-        }
-        return false
+        adpPage.setTypeface(tf)
     }
 
     companion object {
@@ -414,6 +403,6 @@ class UnicodeActivity : AppCompatActivity(), View.OnClickListener, OnTouchListen
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
         private var fontsize = 24.0f
-        var univer = 1000
+        internal var univer = 1000
     }
 }

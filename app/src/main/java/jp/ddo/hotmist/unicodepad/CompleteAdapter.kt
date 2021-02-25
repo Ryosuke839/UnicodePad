@@ -65,10 +65,10 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        val view = convertView ?: inflater.inflate(R.layout.spinner_drop_down_item, parent, false)
-        (view as TextView).text = list[position]
-        return view
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return ((convertView ?: inflater.inflate(R.layout.spinner_drop_down_item, parent, false)) as TextView).also {
+            it.text = list[position]
+        }
     }
 
     override fun getFilter(): Filter {
@@ -82,14 +82,14 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
             if (temp == null) {
                 synchronized(lock) { temp = ArrayList(list) }
             }
-            val idx = prefix?.toString()?.lastIndexOf(' ') ?: -1
-            if (prefix == null || prefix.length == idx + 1) {
+            val idx = prefix.toString().lastIndexOf(' ')
+            if (prefix.length == idx + 1) {
                 var res: ArrayList<String>
                 synchronized(lock) { res = ArrayList(temp!!) }
                 results.values = res
                 results.count = res.size
             } else {
-                val prefixString = prefix.toString().toUpperCase().substring(idx + 1)
+                val prefixString = prefix.toString().toUpperCase(Locale.ENGLISH).substring(idx + 1)
                 current = if (idx == -1) "" else prefix.toString().substring(0, idx + 1)
                 var values: ArrayList<String>
                 synchronized(lock) { values = ArrayList(temp!!) }
@@ -97,7 +97,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
                 val newValues = ArrayList<String>()
                 for (i in 0 until count) {
                     val value = values[i]
-                    val valueText = value.toUpperCase()
+                    val valueText = value.toUpperCase(Locale.ENGLISH)
                     if (valueText.startsWith(prefixString)) newValues.add(value)
                 }
                 results.values = newValues

@@ -96,10 +96,10 @@ internal class FileChooser(private val activity: Activity, private val listener:
     override fun onClick(dialog: DialogInterface?, which: Int) {
         if (which != -1) {
             if (path!!.endsWith(".zip")) {
-                if (children!![which] == "../") path = path!!.substring(0, path!!.lastIndexOf('/') + 1) else {
+                if (children[which] == "../") path = path!!.substring(0, path!!.lastIndexOf('/') + 1) else {
                     try {
                         val zf = openZip(path)
-                        val ze = zf.getEntry(children!![which])
+                        val ze = zf.getEntry(children[which])
                         val `is` = zf.getInputStream(ze)
                         val of = File(activity.filesDir, String.format("%08x", ze.crc) + "/" + File(ze.name).name)
                         of.parentFile.mkdirs()
@@ -132,7 +132,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                 if (path!!.length != 1 && which == 0) {
                     for (root in roots) if (path == "/$root") path = ""
                 }
-                if (path!!.length == 0) path = "/" else path += children!![which]
+                if (path!!.isEmpty()) path = "/" else path += children[which]
             }
         }
         if (which != -1 && path!![path!!.length - 1] != '/' && !path!!.endsWith(".zip")) {
@@ -150,14 +150,14 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     for (i in dirs.indices) for (j in dirs.indices) if (i != j && dirs[i].isNotEmpty() && dirs[j].isNotEmpty() && dirs[i].startsWith(dirs[j]) && File(dirs[j]).canRead()) dirs[i] = ""
                     var cnt = 0
                     for (dir1 in dirs) {
-                        if (dir1!!.isEmpty()) continue
+                        if (dir1.isEmpty()) continue
                         if (!File(dir1).canRead()) continue
                         ++cnt
                     }
                     roots = Array(cnt) {""}
                     var j = 0
                     for (dir in dirs) {
-                        if (dir!!.isEmpty()) continue
+                        if (dir.isEmpty()) continue
                         if (!File(dir).canRead()) continue
                         roots[j] = dir.substring(1) + '/'
                         ++j
@@ -183,7 +183,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                             if (entry.isDirectory) {
                                 continue
                             }
-                            children!![j] = entry.name
+                            children[j] = entry.name
                             ++j
                         }
                         zf.close()

@@ -74,10 +74,10 @@ class SettingActivity : PreferenceActivity(), OnPreferenceClickListener, OnPrefe
         val scroll = findPreference("scroll") as ListPreference
         scroll.onPreferenceChangeListener = this
         scroll.summary = scroll.entry
-        val legal_app = findPreference("legal_app")
-        legal_app.onPreferenceClickListener = this
-        val legal_uni = findPreference("legal_uni")
-        legal_uni.onPreferenceClickListener = this
+        val legalApp = findPreference("legal_app")
+        legalApp.onPreferenceClickListener = this
+        val legalUni = findPreference("legal_uni")
+        legalUni.onPreferenceClickListener = this
         setResult(RESULT_OK)
     }
 

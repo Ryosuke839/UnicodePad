@@ -11,7 +11,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<string name="app_name">UnicodePad</string>
 	<string name="delete">Delete</string>
 	<string name="desc">Detail</string>
@@ -387,12 +387,6 @@
 	<string name="tabs_desc">Tabs settings…</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>
-	<string name="single_rec_desc">Columns in recent tab</string>
-	<string name="single_list_desc">Columns in list tab</string>
-	<string name="single_find_desc">Columns in find tab</string>
-	<string name="single_fav_desc">Columns in favorite tab</string>
-	<string name="single_edt_desc">Columns in input tab</string>
-	<string name="single_emoji_desc">Columns in emoji tab</string>
 
 	<string name="multiplecolumns">Multiple columns only with characters</string>
 	<string name="singlecolumn">Single column with description</string>
@@ -423,9 +417,6 @@
 	<string name="clear_desc">Show clear button</string>
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
-	<string name="config" translatable="false">⚙</string>
-	<string name="up" translatable="false">⌃</string>
-	<string name="down" translatable="false">⌄</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="modifier" translatable="false">Modifier</string>
 	<string name="malformed">Malformed file name in zip</string>

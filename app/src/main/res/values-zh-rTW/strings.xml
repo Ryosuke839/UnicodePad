@@ -362,12 +362,6 @@
 	<string name="tabs_desc">標籤設定…</string>
 	<string name="shown_desc">已顯示標籤</string>
 	<string name="hidden_desc">已隱藏標籤</string>
-	<string name="single_rec_desc">最近使用列表的列數</string>
-	<string name="single_list_desc">列表欄的列數</string>
-	<string name="single_find_desc">尋找欄的列數</string>
-	<string name="single_fav_desc">收藏欄的列數</string>
-	<string name="single_edt_desc">輸入欄的列數</string>
-	<string name="single_emoji_desc">表情符號的列數</string>
 
 	<string name="multiplecolumns">多列表示(僅包含字符)</string>
 	<string name="singlecolumn">單列表示(包含詳細說明)</string>

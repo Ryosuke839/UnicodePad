@@ -361,12 +361,6 @@
 	<string name="tabs_desc">标签设置…</string>
 	<string name="shown_desc">已显示标签</string>
 	<string name="hidden_desc">已隐藏标签</string>
-	<string name="single_rec_desc">“最近使用”标签列数</string>
-	<string name="single_list_desc">“列表”标签列数</string>
-	<string name="single_find_desc">“查找”标签列数</string>
-	<string name="single_fav_desc">“收藏”标签列数</string>
-	<string name="single_edt_desc">“输入”标签列数</string>
-	<string name="single_emoji_desc">“绘文字”标签列数</string>
 
 	<string name="multiplecolumns">多列，仅显示字符</string>
 	<string name="singlecolumn">单列，显示描述</string>

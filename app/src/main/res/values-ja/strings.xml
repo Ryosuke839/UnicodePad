@@ -367,12 +367,6 @@
 	<string name="tabs_desc">タブ設定…</string>
 	<string name="shown_desc">表示タブ</string>
 	<string name="hidden_desc">非表示タブ</string>
-	<string name="single_rec_desc">履歴タブの列数</string>
-	<string name="single_list_desc">一覧タブの列数</string>
-	<string name="single_find_desc">検索タブの列数</string>
-	<string name="single_fav_desc">お気に入りタブの列数</string>
-	<string name="single_edt_desc">入力タブの列数</string>
-	<string name="single_emoji_desc">絵文字タブの列数</string>
 
 	<string name="multiplecolumns">複数列 (文字のみ)</string>
 	<string name="singlecolumn">1列 (詳細も表示)</string>

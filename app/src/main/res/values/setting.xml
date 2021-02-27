@@ -75,14 +75,6 @@
 		<item>true</item>
 	</string-array>
 	<string name="emojicompat_def" translatable="false">false</string>
-	<string-array name="single" tools:ignore="MissingTranslation">
-		<item>@string/multiplecolumns</item>
-		<item>@string/singlecolumn</item>
-	</string-array>
-	<string-array name="single_val">
-		<item>false</item>
-		<item>true</item>
-	</string-array>
 	<string-array name="theme" tools:ignore="MissingTranslation">
 		<item>@string/theme_dark</item>
 		<item>@string/theme_light</item>

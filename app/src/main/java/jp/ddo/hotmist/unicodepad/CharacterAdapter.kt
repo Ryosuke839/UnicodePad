@@ -19,7 +19,6 @@ import android.graphics.*
 import android.util.TypedValue
 import android.view.*
 import android.view.View.MeasureSpec
-import android.view.View.OnLongClickListener
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -30,15 +29,12 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapter, tf: Typeface?, db: NameDatabase, afav: FavoriteAdapter) : PagerAdapter(), View.OnClickListener {
-    private val activity: UnicodeActivity
-    private val adapter: UnicodeAdapter
-    private val tf: Typeface?
+internal class CharacterAdapter(private val activity: UnicodeActivity, private val adapter: UnicodeAdapter, private val tf: Typeface?, private val db: NameDatabase, private val afav: FavoriteAdapter) : PagerAdapter() {
     var index = 0
         private set
-    private val db: NameDatabase
-    private val afav: FavoriteAdapter
-    private val reslist: Int
+    private val reslist = TypedValue().also {
+        activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
+    }.resourceId
     override fun getCount(): Int {
         return adapter.count
     }
@@ -69,10 +65,6 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
         text.setValid(ver != 0 && ver <= UnicodeActivity.univer)
         val str = StringBuilder()
         if (!emoji) str.append(adapter.getItem(position))
-        val lsn = OnLongClickListener { arg0 ->
-            activity.adpPage.showDesc(arg0, arg0.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
-            true
-        }
         for (i in 0 until if (!emoji) 10 else 7) {
             if (emoji && i == 5) continue
             if (i == 2) {
@@ -135,31 +127,31 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
                     var cs = ""
                     var ps = ""
                     var ns: String? = null
-                    val sc = Scanner(s)
-                    var j = 0
-                    while (sc.hasNext()) {
-                        if (i == 9 && j == 0 && s[0] == '<') {
-                            ns = sc.next()
+                    Scanner(s).use { sc ->
+                        var j = 0
+                        while (sc.hasNext()) {
+                            if (i == 9 && j == 0 && s[0] == '<') {
+                                ns = sc.next()
+                                ++j
+                                continue
+                            }
+                            val tgt = sc.nextInt(16)
+                            cs += String(Character.toChars(tgt))
+                            ps += String.format("U+%04X ", tgt)
+                            if (i == 6) {
+                                val n = db[tgt, "name"]
+                                ns = n ?: "<not a character>"
+                                break
+                            }
+                            if (i == 7 && j == 1) {
+                                sc.useDelimiter("\n")
+                                sc.skip(" ")
+                                ns = if (sc.hasNext()) sc.next() else ""
+                                break
+                            }
                             ++j
-                            continue
                         }
-                        val tgt = sc.nextInt(16)
-                        cs += String(Character.toChars(tgt))
-                        ps += String.format("U+%04X ", tgt)
-                        if (i == 6) {
-                            val n = db[tgt, "name"]
-                            ns = n ?: "<not a character>"
-                            break
-                        }
-                        if (i == 7 && j == 1) {
-                            sc.useDelimiter("\n")
-                            sc.skip(" ")
-                            ns = if (sc.hasNext()) sc.next() else ""
-                            break
-                        }
-                        ++j
                     }
-                    sc.close()
                     if (ps.isEmpty()) continue
                     ps = ps.substring(0, ps.length - 1)
                     val ct = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
@@ -190,8 +182,18 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
                     hl.isEnabled = true
                     hl.isClickable = true
                     hl.isFocusable = true
-                    hl.setOnClickListener(this)
-                    hl.setOnLongClickListener(lsn)
+                    hl.setOnClickListener { view ->
+                        var j = 0
+                        while (j < str.length) {
+                            val code = str.codePointAt(i)
+                            activity.adpPage.onItemClick(null, view, -1, code.toLong())
+                            j += Character.charCount(code)
+                        }
+                    }
+                    hl.setOnLongClickListener { view ->
+                        activity.adpPage.showDesc(view, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
+                        true
+                    }
                     hl.setBackgroundResource(reslist)
                 }
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -220,16 +222,6 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
     val id: Long
         get() = adapter.getItemId(index)
 
-    override fun onClick(v: View) {
-        val s = ((v as LinearLayout).getChildAt(1) as CharacterView).text
-        var i = 0
-        while (i < s.length) {
-            val code = s.codePointAt(i)
-            activity.adpPage.onItemClick(null, v, -1, code.toLong())
-            i += Character.charCount(code)
-        }
-    }
-
     companion object {
         var fontsize = 160f
         var checker = 10f
@@ -239,16 +231,5 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
         private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 ")
         private val emjs = arrayOf("name", "utf8", "version", "grp", "subgrp", "", "id")
         private val mode = arrayOf(null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ", null, "")
-    }
-
-    init {
-        val tv = TypedValue()
-        activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, tv, true)
-        reslist = tv.resourceId
-        this.activity = activity
-        this.adapter = adapter
-        this.tf = tf
-        this.db = db
-        this.afav = afav
     }
 }

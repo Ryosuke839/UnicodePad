@@ -82,20 +82,18 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
     private inner class CompleteFilter : Filter() {
         override fun performFiltering(prefix: CharSequence): FilterResults {
             val results = FilterResults()
-            if (temp == null) {
-                synchronized(lock) { temp = ArrayList(list) }
-            }
+            val array = temp ?: ArrayList(list).also { synchronized(lock) { temp = it } }
             val idx = prefix.toString().lastIndexOf(' ')
             if (prefix.length == idx + 1) {
                 var res: ArrayList<String>
-                synchronized(lock) { res = ArrayList(temp!!) }
+                synchronized(lock) { res = ArrayList(array) }
                 results.values = res
                 results.count = res.size
             } else {
                 val prefixString = prefix.toString().toUpperCase(Locale.ENGLISH).substring(idx + 1)
                 current = if (idx == -1) "" else prefix.toString().substring(0, idx + 1)
                 var values: ArrayList<String>
-                synchronized(lock) { values = ArrayList(temp!!) }
+                synchronized(lock) { values = ArrayList(array) }
                 val count = values.size
                 val newValues = ArrayList<String>()
                 for (i in 0 until count) {

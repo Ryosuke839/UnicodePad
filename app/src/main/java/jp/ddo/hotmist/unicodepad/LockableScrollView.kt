@@ -68,7 +68,7 @@ class LockableScrollView : ScrollView {
         val pos = scrollY
         post {
             lockView?.let {
-                it.layoutParams.height = if (over) h else h - lockView!!.top
+                it.layoutParams.height = if (over) h else h - it.top
                 it.requestLayout()
                 it.post { scrollTo(0, pos) }
             }

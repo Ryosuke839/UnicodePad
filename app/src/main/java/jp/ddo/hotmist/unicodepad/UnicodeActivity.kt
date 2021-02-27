@@ -44,7 +44,6 @@ import com.google.android.gms.ads.MobileAds
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 import java.util.zip.CRC32
 import kotlin.math.max
 import kotlin.math.min
@@ -87,11 +86,7 @@ class UnicodeActivity : AppCompatActivity() {
                         }
                     }))
         }
-        val themelist = intArrayOf(
-                R.style.Theme,
-                R.style.Theme_Light,
-                R.style.Theme_Light_DarkActionBar)
-        setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")!!) - 2131492983])
+        setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setContentView(if (useEmoji == "null") R.layout.main else R.layout.main_emojicompat)
@@ -191,7 +186,7 @@ class UnicodeActivity : AppCompatActivity() {
             pager.adapter = it
             scroll.setAdapter(it)
         }
-        scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")!!) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)
         pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
@@ -231,7 +226,7 @@ class UnicodeActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")!!) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -265,38 +260,32 @@ class UnicodeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FontChooser.FONT_REQUEST_CODE) if (resultCode == RESULT_OK && data != null) {
-            val uri = data.data
-            var name = uri!!.path
-            while (name!!.endsWith("/")) name = name.substring(0, name.length - 1)
+            val uri = data.data ?: return
+            var name = uri.path ?: return
+            while (name.endsWith("/")) name = name.substring(0, name.length - 1)
             if (name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1)
-            val cursor = contentResolver.query(data.data!!, null, null, null, null)
-            if (cursor != null) {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                 if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                cursor.close()
             }
-            name!!.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
+            name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
             try {
-                val `is` = contentResolver.openInputStream(uri)
-                val of = File(filesDir, "00000000/$name")
-                of.parentFile?.mkdirs()
-                try {
-                    val os: OutputStream = FileOutputStream(of)
-                    val crc = CRC32()
-                    val buf = ByteArray(256)
-                    var size: Int
-                    while (`is`!!.read(buf).also { size = it } > 0) {
-                        os.write(buf, 0, size)
-                        crc.update(buf, 0, size)
+                (contentResolver.openInputStream(uri) ?: throw IOException()).use { `is` ->
+                    val of = File(filesDir, "00000000/$name")
+                    of.parentFile?.mkdirs()
+                    FileOutputStream(of).use { os ->
+                        val crc = CRC32()
+                        val buf = ByteArray(256)
+                        var size: Int
+                        while (`is`.read(buf).also { size = it } > 0) {
+                            os.write(buf, 0, size)
+                            crc.update(buf, 0, size)
+                        }
+                        val mf = File(filesDir, String.format("%08x", crc.value) + "/" + name)
+                        mf.parentFile?.mkdirs()
+                        of.renameTo(mf)
+                        chooser.onFileChosen(mf.canonicalPath)
                     }
-                    os.close()
-                    val mf = File(filesDir, String.format("%08x", crc.value) + "/" + name)
-                    mf.parentFile?.mkdirs()
-                    of.renameTo(mf)
-                    chooser.onFileChosen(mf.canonicalPath)
-                } catch (e: IOException) {
-                    e.printStackTrace()
                 }
-                `is`!!.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -311,49 +300,24 @@ class UnicodeActivity : AppCompatActivity() {
             finish()
             return
         }
-        try {
-            fontsize = java.lang.Float.valueOf(pref.getString("textsize", "24.0")!!)
-        } catch (e: NumberFormatException) {
-        }
-        univer = try {
-            Integer.valueOf(pref.getString("universion", "Latest")!!.replace(".", ""))
-        } catch (e: NumberFormatException) {
-            Int.MAX_VALUE
-        }
-        try {
-            PageAdapter.column = Integer.valueOf(pref.getString("column", "8")!!)
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) PageAdapter.column = Integer.valueOf(pref.getString("columnl", PageAdapter.column.toString())!!)
-        } catch (e: NumberFormatException) {
-        }
-        try {
-            UnicodeAdapter.padding = Integer.valueOf(pref.getString("padding", "4")!!)
-        } catch (e: NumberFormatException) {
-        }
-        try {
-            UnicodeAdapter.fontsize = java.lang.Float.valueOf(pref.getString("gridsize", "24.0")!!)
-        } catch (e: NumberFormatException) {
-        }
-        try {
-            CharacterAdapter.fontsize = java.lang.Float.valueOf(pref.getString("viewsize", "120.0")!!)
-        } catch (e: NumberFormatException) {
-        }
-        try {
-            CharacterAdapter.checker = java.lang.Float.valueOf(pref.getString("checker", "15.0")!!)
-        } catch (e: NumberFormatException) {
-        }
+        fontsize = pref.getString("textsize", null)?.toFloatOrNull() ?: 24f
+        univer = pref.getString("universion", "Latest")?.replace(".", "")?.toIntOrNull() ?: Int.MAX_VALUE
+        PageAdapter.column = pref.getString("column", null)?.toIntOrNull() ?: 8
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) PageAdapter.column = pref.getString("columnl", null)?.toIntOrNull() ?: PageAdapter.column
+        UnicodeAdapter.padding = pref.getString("padding", null)?.toIntOrNull() ?: 4
+        UnicodeAdapter.fontsize = pref.getString("gridsize", null)?.toFloatOrNull() ?: 24f
+        CharacterAdapter.fontsize = pref.getString("viewsize", null)?.toFloatOrNull() ?: 120f
+        CharacterAdapter.checker = pref.getString("checker", null)?.toFloatOrNull() ?: 15f
         CharacterAdapter.lines = pref.getBoolean("lines", true)
         UnicodeAdapter.shrink = pref.getBoolean("shrink", true)
         CharacterAdapter.shrink = pref.getBoolean("shrink", true)
-        try {
-            RecentAdapter.maxitems = Integer.valueOf(pref.getString("recentsize", "256")!!)
-        } catch (e: NumberFormatException) {
-        }
+        RecentAdapter.maxitems = pref.getString("recentsize", null)?.toIntOrNull() ?: 256
         disableime = pref.getBoolean("ime", true)
         if (created) {
             btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
-            scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", "1")!!) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+            scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         }
         if (requestCode != -1) {
             val adContainer = findViewById<LinearLayout>(R.id.adContainer)
@@ -403,6 +367,10 @@ class UnicodeActivity : AppCompatActivity() {
         private const val ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT"
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
+        private val THEME = intArrayOf(
+                R.style.Theme,
+                R.style.Theme_Light,
+                R.style.Theme_Light_DarkActionBar)
         private var fontsize = 24.0f
         internal var univer = 1000
     }

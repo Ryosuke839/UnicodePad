@@ -25,7 +25,7 @@ import com.mobeta.android.dslv.DragSortListView
 class TabsActivity : Activity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(THEME[Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "2131492983")!!) - 2131492983])
+        setTheme(THEME[(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
         val view = DragSortListView(this, null)
         val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE)

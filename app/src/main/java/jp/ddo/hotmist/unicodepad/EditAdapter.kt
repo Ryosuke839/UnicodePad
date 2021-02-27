@@ -34,9 +34,8 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)
-            if (code > 0xFFFF) ++i
             list.add(code)
-            ++i
+            i += Character.charCount(code)
         }
         edit.addTextChangedListener(this)
         return super.instantiate(view)
@@ -67,9 +66,8 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)
-            if (code > 0xFFFF) ++i
             list.add(code)
-            ++i
+            i += Character.charCount(code)
         }
         view?.invalidateViews()
     }
@@ -83,8 +81,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             var fromEnd = 0
             for (i in list.indices) {
                 if (i == from) fromBegin = fromEnd
-                if (list[i] > 0xFFFF) ++fromEnd
-                ++fromEnd
+                fromEnd += Character.charCount(list[i])
                 if (i == from) break
             }
             edit.editableText.delete(fromBegin, fromEnd)
@@ -92,8 +89,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             var toBegin = 0
             for (i in list.indices) {
                 if (i == to) break
-                if (list[i] > 0xFFFF) ++toBegin
-                ++toBegin
+                toBegin += Character.charCount(list[i])
             }
             edit.editableText.insert(toBegin, String(Character.toChars(ch)))
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
@@ -110,8 +106,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             var whichEnd = 0
             for (i in list.indices) {
                 if (i == which) whichBegin = whichEnd
-                if (list[i] > 0xFFFF) ++whichEnd
-                ++whichEnd
+                whichEnd += Character.charCount(list[i])
                 if (i == which) break
             }
             edit.editableText.delete(whichBegin, whichEnd)
@@ -121,5 +116,4 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             view?.invalidateViews()
         }
     }
-
 }

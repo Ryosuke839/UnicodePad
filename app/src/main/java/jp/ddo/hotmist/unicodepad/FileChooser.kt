@@ -26,7 +26,6 @@ import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 import java.nio.charset.Charset
 import java.util.*
 import java.util.zip.ZipException
@@ -98,23 +97,23 @@ internal class FileChooser(private val activity: Activity, private val listener:
             if (path.endsWith(".zip")) {
                 if (children[which] == "../") path = path.substring(0, path.lastIndexOf('/') + 1) else {
                     try {
-                        val zf = openZip(path)
-                        val ze = zf.getEntry(children[which])
-                        val `is` = zf.getInputStream(ze)
-                        val of = File(activity.filesDir, String.format("%08x", ze.crc) + "/" + File(ze.name).name)
-                        of.parentFile?.mkdirs()
-                        val os: OutputStream = FileOutputStream(of)
-                        val buf = ByteArray(256)
-                        var size: Int
-                        while (`is`.read(buf).also { size = it } > 0) os.write(buf, 0, size)
-                        os.close()
-                        `is`.close()
-                        zf.close()
-                        try {
-                            if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
-                        } catch (e: IOException) {
+                        openZip(path).use { zf ->
+                            val ze = zf.getEntry(children[which])
+                            zf.getInputStream(ze).use { `is` ->
+                                val of = File(activity.filesDir, String.format("%08x", ze.crc) + "/" + File(ze.name).name)
+                                of.parentFile?.mkdirs()
+                                FileOutputStream(of).use { os ->
+                                    val buf = ByteArray(256)
+                                    var size: Int
+                                    while (`is`.read(buf).also { size = it } > 0) os.write(buf, 0, size)
+                                }
+                                try {
+                                    if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
+                                } catch (e: IOException) {
+                                }
+                                path = of.canonicalPath
+                            }
                         }
-                        path = of.canonicalPath
                     } catch (e: ZipException) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
@@ -164,27 +163,27 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     children = roots
                 } else if (path.endsWith(".zip")) {
                     try {
-                        val zf = openZip(path)
-                        var cnt = if (which != -1) 1 else 0
-                        run {
+                        openZip(path).use { zf ->
+                            var cnt = if (which != -1) 1 else 0
+                            run {
+                                val e = zf.entries()
+                                while (e.hasMoreElements()) {
+                                    if (!e.nextElement().isDirectory) ++cnt
+                                }
+                            }
+                            children = Array(cnt) { "" }
+                            var j = 0
+                            if (which != -1) children[j++] = "../"
                             val e = zf.entries()
                             while (e.hasMoreElements()) {
-                                if (!e.nextElement().isDirectory) ++cnt
+                                val entry = e.nextElement()
+                                if (entry.isDirectory) {
+                                    continue
+                                }
+                                children[j] = entry.name
+                                ++j
                             }
                         }
-                        children = Array(cnt) {""}
-                        var j = 0
-                        if (which != -1) children[j++] = "../"
-                        val e = zf.entries()
-                        while (e.hasMoreElements()) {
-                            val entry = e.nextElement()
-                            if (entry.isDirectory) {
-                                continue
-                            }
-                            children[j] = entry.name
-                            ++j
-                        }
-                        zf.close()
                     } catch (e: ZipException) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()

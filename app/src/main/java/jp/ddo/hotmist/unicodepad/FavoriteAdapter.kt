@@ -30,12 +30,12 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
 
     override fun show() {
         truncate()
-        if (view != null) view!!.invalidateViews()
+        view?.invalidateViews()
     }
 
     override fun leave() {
         commit()
-        if (view != null) view!!.invalidateViews()
+        view?.invalidateViews()
     }
 
     override fun getCount(): Int {
@@ -84,14 +84,14 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
             list = temp
             list.add(to, list.removeAt(from))
             truncate()
-            if (view != null) view!!.invalidateViews()
+            view?.invalidateViews()
         }
     }
 
     override fun remove(which: Int) {
         runOnUiThread {
             list.remove(temp.removeAt(which))
-            if (view != null) view!!.invalidateViews()
+            view?.invalidateViews()
         }
     }
 

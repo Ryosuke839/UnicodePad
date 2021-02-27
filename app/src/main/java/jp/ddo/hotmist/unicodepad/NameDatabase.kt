@@ -44,15 +44,11 @@ class NameDatabase(context: Context) {
 
     private operator fun get(table: String, code: String, column: String): String? {
         return try {
-            val cur = db.rawQuery("SELECT $column FROM $table WHERE id = $code", null)
-            if (cur.count != 1) {
-                cur.close()
-                return null
+            db.rawQuery("SELECT $column FROM $table WHERE id = $code", null).use { cur ->
+                if (cur.count != 1) return null
+                cur.moveToFirst()
+                cur.getString(0)
             }
-            cur.moveToFirst()
-            val str = cur.getString(0)
-            cur.close()
-            str
         } catch (e: SQLiteException) {
             "Error: " + e.localizedMessage
         }
@@ -80,15 +76,12 @@ class NameDatabase(context: Context) {
 
     private fun getInt(table: String, code: String, column: String): Int {
         return try {
-            val cur = db.rawQuery("SELECT $column FROM $table WHERE id = $code", null)
-            if (cur.count != 1) {
-                cur.close()
-                return 0
+            db.rawQuery("SELECT $column FROM $table WHERE id = $code", null).use { cur ->
+                if (cur.count != 1)
+                    return 0
+                cur.moveToFirst()
+                cur.getInt(0)
             }
-            cur.moveToFirst()
-            val res = cur.getInt(0)
-            cur.close()
-            res
         } catch (e: SQLiteException) {
             0
         }
@@ -127,45 +120,38 @@ class NameDatabase(context: Context) {
         override fun getReadableDatabase(): SQLiteDatabase {
             return try {
                 val db = SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
-                val cur = db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table';", null)
-                cur.moveToFirst()
-                if (cur.getInt(0) != 2) {
-                    cur.close()
+                try {
+                    db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table';", null).use { cur ->
+                        cur.moveToFirst()
+                        if (cur.getInt(0) != 2) throw SQLiteException()
+                    }
+                    db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null).use { cur ->
+                        cur.moveToFirst()
+                        if (cur.getInt(0) != 33805) throw SQLiteException()
+                    }
+                    db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null).use { cur ->
+                        cur.moveToFirst()
+                        if (cur.getInt(0) != 3295) throw SQLiteException()
+                    }
+                } catch (e: SQLiteException) {
                     db.close()
-                    throw SQLiteException()
+                    throw e
                 }
-                cur.close()
-                val cur2 = db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null)
-                cur2.moveToFirst()
-                if (cur2.getInt(0) != 33805) {
-                    cur2.close()
-                    db.close()
-                    throw SQLiteException()
-                }
-                cur2.close()
-                val cur3 = db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null)
-                cur3.moveToFirst()
-                if (cur3.getInt(0) != 3295) {
-                    cur3.close()
-                    db.close()
-                    throw SQLiteException()
-                }
-                cur3.close()
                 db
             } catch (e: SQLiteException) {
-                if (e.message != null && e.message!!.contains("attempt to write a readonly database")) {
+                if (e.message?.contains("attempt to write a readonly database") == true) {
                     SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS).close()
                     return SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
                 }
                 extractZipFiles("namedb.zip")
                 try {
                     SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
-                } catch (e1: SQLiteException) {
-                    if (e.message != null && e.message!!.contains("attempt to write a readonly database")) {
+                } catch (e: SQLiteException) {
+                    if (e.message?.contains("attempt to write a readonly database") == true) {
                         SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS).close()
                         return SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
                     }
-                    throw e1
+                    throw e
                 }
             }
         }
@@ -173,19 +159,19 @@ class NameDatabase(context: Context) {
         private fun extractZipFiles(@Suppress("SameParameterValue") zipName: String) {
             try {
                 val inputStream = context.assets.open(zipName, AssetManager.ACCESS_STREAMING)
-                val zipInputStream = ZipInputStream(inputStream)
-                var zipEntry = zipInputStream.nextEntry
-                while (zipEntry != null) {
-                    val entryName = zipEntry.name
-                    var n: Int
-                    val fileOutputStream = context.openFileOutput(entryName, Context.MODE_PRIVATE)
-                    val buf = ByteArray(16384)
-                    while (zipInputStream.read(buf, 0, 16384).also { n = it } > -1) fileOutputStream.write(buf, 0, n)
-                    fileOutputStream.close()
-                    zipInputStream.closeEntry()
-                    zipEntry = zipInputStream.nextEntry
+                ZipInputStream(inputStream).use { zipInputStream ->
+                    var zipEntry = zipInputStream.nextEntry
+                    while (zipEntry != null) {
+                        val entryName = zipEntry.name
+                        var n: Int
+                        context.openFileOutput(entryName, Context.MODE_PRIVATE).use { fileOutputStream ->
+                            val buf = ByteArray(16384)
+                            while (zipInputStream.read(buf, 0, 16384).also { n = it } > -1) fileOutputStream.write(buf, 0, n)
+                        }
+                        zipInputStream.closeEntry()
+                        zipEntry = zipInputStream.nextEntry
+                    }
                 }
-                zipInputStream.close()
             } catch (e: FileNotFoundException) {
                 throw Error("Cannot open database file to write.")
             } catch (e: IOException) {

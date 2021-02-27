@@ -28,7 +28,7 @@ import android.widget.Toast
 class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        setTheme(THEME[Integer.valueOf(pref.getString("theme", "2131492983")!!) - 2131492983])
+        setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.setting)
         fun setEntry(it: ListPreference) = run {

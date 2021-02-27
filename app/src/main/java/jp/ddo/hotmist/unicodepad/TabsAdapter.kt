@@ -119,7 +119,7 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
                 idx[j] = i
                 break
             }
-            single[i] = java.lang.Boolean.valueOf(pref.getString("single_" + KEYS[i], java.lang.Boolean.valueOf(DEFAULTS[i]).toString()))
+            single[i] = pref.getString("single_" + KEYS[i], null)?.toBoolean() ?: DEFAULTS[i]
         }
     }
 

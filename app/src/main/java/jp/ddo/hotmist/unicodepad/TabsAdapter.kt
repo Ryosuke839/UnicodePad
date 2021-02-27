@@ -21,12 +21,10 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.BaseAdapter
-import android.widget.RadioButton
-import android.widget.TextView
+import android.widget.*
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import java.util.*
+import kotlin.math.max
 
 class TabsAdapter internal constructor(private val activity: Activity, private val list: AbsListView?) : BaseAdapter(), View.OnClickListener, DropListener {
     private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
@@ -87,14 +85,17 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
     }
 
     override fun drop(from: Int, to: Int) {
-        if (to == 0) return
+        if (idx[from] == 1 && to > shownNum) {
+            Toast.makeText(activity, R.string.list_title, Toast.LENGTH_SHORT).show()
+            return
+        }
         if (from < shownNum + 1) --shownNum
         if (shownNum == 0) {
             ++shownNum
             return
         }
         if (to <= shownNum + 1) ++shownNum
-        idx.add(to, idx.removeAt(from))
+        idx.add(max(to, 1), idx.removeAt(from))
         val edit = pref.edit()
         edit.putInt("cnt_shown", shownNum)
         for (i in 1 until NUM_TABS + 2) {

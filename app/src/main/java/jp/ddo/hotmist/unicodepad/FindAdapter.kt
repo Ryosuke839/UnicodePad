@@ -42,43 +42,43 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
         return R.string.find
     }
 
-    override fun instantiate(grd: AbsListView?): View? {
-        super.instantiate(grd)
-        layout = LinearLayout(view!!.context)
+    override fun instantiate(view: AbsListView?): View? {
+        super.instantiate(view)
+        layout = LinearLayout(activity)
         layout!!.orientation = LinearLayout.VERTICAL
-        text = AutoCompleteTextView(view!!.context)
+        text = AutoCompleteTextView(activity)
         text!!.setSingleLine()
         text!!.setText(saved)
         text!!.setHint(R.string.fhint)
         text!!.imeOptions = EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_FORCE_ASCII
         text!!.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
         text!!.setOnEditorActionListener(this)
-        if (adapter == null) adapter = CompleteAdapter(view!!.context, pref)
+        if (adapter == null) adapter = CompleteAdapter(activity, pref)
         text!!.setAdapter(adapter)
         text!!.threshold = 1
-        clear = ImageButton(view!!.context)
+        clear = ImageButton(activity)
         val tv = TypedValue()
-        view!!.context.theme.resolveAttribute(R.attr.cancel, tv, true)
+        activity.theme.resolveAttribute(R.attr.cancel, tv, true)
         clear!!.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
         clear!!.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        clear!!.setBackgroundDrawable(null)
+        clear!!.background = null
         clear!!.setPadding(0, 0, 0, 0)
         clear!!.setOnClickListener(this)
-        val fl = FrameLayout(view!!.context)
+        val fl = FrameLayout(activity)
         fl.addView(text, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        lp.rightMargin = (view!!.context.resources.displayMetrics.density * 10f).toInt()
+        lp.rightMargin = (activity.resources.displayMetrics.density * 10f).toInt()
         lp.gravity = Gravity.CENTER_VERTICAL or Gravity.END
         fl.addView(clear, lp)
-        find = ImageButton(view!!.context)
-        view!!.context.theme.resolveAttribute(R.attr.search, tv, true)
+        find = ImageButton(activity)
+        activity.theme.resolveAttribute(R.attr.search, tv, true)
         find!!.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
-        val hl = LinearLayout(view!!.context)
+        val hl = LinearLayout(activity)
         hl.orientation = LinearLayout.HORIZONTAL
         hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         hl.addView(find, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        layout!!.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         find!!.setOnClickListener(this)
         return layout
     }
@@ -121,13 +121,13 @@ internal class FindAdapter(activity: Activity, pref: SharedPreferences, private 
             if (adapter != null) adapter!!.update(saved!!)
             if (cur != null) cur!!.close()
             cur = db.find(saved!!, UnicodeActivity.univer)
-            (text!!.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text!!.windowToken, 0)
+            (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text!!.windowToken, 0)
             view!!.invalidateViews()
         }
     }
 
     override fun onEditorAction(arg0: TextView, arg1: Int, arg2: KeyEvent): Boolean {
-        if (arg0 === text && arg2 != null && arg2.keyCode == KeyEvent.KEYCODE_ENTER) {
+        if (arg0 === text && arg2.keyCode == KeyEvent.KEYCODE_ENTER) {
             if (arg2.action == KeyEvent.ACTION_DOWN) find!!.performClick()
             return true
         }

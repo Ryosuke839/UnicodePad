@@ -22,14 +22,14 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
 
 internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
-    private var list: ArrayList<Int>
-    private var temp: ArrayList<Int>
+    private var list = ArrayList<Int>()
+    private var temp = list
     override fun name(): Int {
         return R.string.recent
     }
 
     override fun show() {
-        trunc()
+        truncate()
         if (view != null) view!!.invalidateViews()
     }
 
@@ -54,7 +54,7 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
         }
     }
 
-    operator fun rem(code: Int) {
+    fun rem(code: Int) {
         runOnUiThread {
             list.remove(Integer.valueOf(code))
             if (list !== temp) temp.remove(Integer.valueOf(code))
@@ -63,11 +63,15 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
     }
 
     private fun commit() {
-        if (list !== temp) temp = list
+        runOnUiThread {
+            if (list !== temp) temp = list
+        }
     }
 
-    private fun trunc() {
-        if (list === temp) temp = ArrayList(list)
+    private fun truncate() {
+        runOnUiThread {
+            if (list === temp) temp = ArrayList(list)
+        }
     }
 
     override fun save(edit: SharedPreferences.Editor) {
@@ -81,7 +85,7 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
             list = temp
             val i = temp.removeAt(temp.size - from - 1)
             temp.add(temp.size - to, i)
-            trunc()
+            truncate()
             if (view != null) view!!.invalidateViews()
         }
     }
@@ -98,24 +102,19 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
     }
 
     init {
-        list = ArrayList()
-        temp = list
-        val str = pref.getString("rec", "")
+        val str = pref.getString("rec", null) ?: ""
         var num = 0
-        run {
-            var i = 0
-            while (i < str!!.length) {
-                if (str.codePointAt(i) > 0xFFFF) ++i
-                ++num
-                ++i
-            }
-        }
         var i = 0
-        while (i < str!!.length) {
+        while (i < str.length) {
             val code = str.codePointAt(i)
-            if (code > 0xFFFF) ++i
+            ++num
+            i += Character.charCount(code)
+        }
+        i = 0
+        while (i < str.length) {
+            val code = str.codePointAt(i)
             if (--num < maxitems) list.add(code)
-            ++i
+            i += Character.charCount(code)
         }
     }
 }

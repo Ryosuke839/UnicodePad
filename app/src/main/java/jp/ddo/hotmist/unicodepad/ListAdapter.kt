@@ -30,7 +30,6 @@ import android.util.Pair
 import android.util.SparseArray
 import android.util.TypedValue
 import android.view.*
-import android.view.View.OnTouchListener
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -41,14 +40,13 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), OnItemSelectedListener, AbsListView.OnScrollListener, View.OnClickListener, OnTouchListener {
+internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
     private var count = 0
     private val emap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
     private val fmap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
     private val imap: NavigableMap<Int, Int> = TreeMap()
     private val jmap: MutableList<Int> = ArrayList()
     private val mmap: NavigableMap<Int, String> = TreeMap()
-    private var layout: LinearLayout? = null
     private var jump: Spinner? = null
     private var mark: Spinner? = null
     private var code: Button? = null
@@ -58,37 +56,39 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     private var resnormal = 0
     private var resselect = 0
     private var highlight: Int
-    private var hightarget: View?
+    private var highTarget: View?
+    private var guard = 0
 
     private inner class MapAdapter(var context: Context) : SpinnerAdapter {
         override fun getCount(): Int {
             return if (mmap.size == 0) 1 else mmap.size + 2
         }
 
-        override fun getItem(arg0: Int): Any {
-            var arg0 = arg0
-            when (arg0) {
+        override fun getItem(i: Int): String {
+            when (i) {
                 0 -> return context.resources.getString(R.string.mark)
                 1 -> return context.resources.getString(R.string.rem)
-                else -> for ((key, value) in mmap) if (--arg0 == 1) return String.format("U+%04X %s", key, value)
+                else -> {
+                    var cnt = i
+                    for ((key, value) in mmap) if (--cnt == 1) return String.format("U+%04X %s", key, value)
+                }
             }
             return ""
         }
 
-        override fun getItemId(arg0: Int): Long {
-            return arg0.toLong()
+        override fun getItemId(i: Int): Long {
+            return i.toLong()
         }
 
         override fun getItemViewType(arg0: Int): Int {
             return 0
         }
 
-        override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
-            var arg1 = arg1
-            if (arg1 == null) arg1 = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, arg2, false)
-            (arg1 as TextView).text = getItem(arg0) as String
-            arg1.setTextColor(0x00000000)
-            return arg1
+        override fun getView(i: Int, view: View?, parent: ViewGroup): View {
+            return ((view ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, parent, false)) as TextView).also {
+                it.text = getItem(i)
+                it.setTextColor(0x00000000)
+            }
         }
 
         override fun getViewTypeCount(): Int {
@@ -105,11 +105,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
 
         override fun registerDataSetObserver(arg0: DataSetObserver) {}
         override fun unregisterDataSetObserver(arg0: DataSetObserver) {}
-        override fun getDropDownView(arg0: Int, arg1: View, arg2: ViewGroup): View {
-            var arg1 = arg1
-            if (arg1 == null) arg1 = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(if (arg0 == 0) R.layout.spinner_drop_down_void else R.layout.spinner_drop_down_item, arg2, false)
-            (arg1 as TextView).text = getItem(arg0) as String
-            return arg1
+        override fun getDropDownView(i: Int, view: View?, parent: ViewGroup): View {
+            return ((view ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(if (i == 0) R.layout.spinner_drop_down_void else R.layout.spinner_drop_down_item, parent, false)) as TextView).also {
+                it.text = getItem(i)
+            }
         }
     }
 
@@ -117,9 +116,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return R.string.list
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun instantiate(grd: AbsListView?): View? {
-        super.instantiate(grd)
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
+    override fun instantiate(view: AbsListView?): View {
+        super.instantiate(view)
         emap.clear()
         fmap.clear()
         imap.clear()
@@ -446,77 +445,237 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0xE0100, 0xE01EF)
         add(0xF0000, 0xFFFFF)
         add(0x100000, 0x10FFFF)
-        resnormal = view!!.context.resources.getColor(android.R.color.transparent)
-        resselect = view!!.context.resources.getColor(android.R.color.tab_indicator_text)
-        layout = LinearLayout(view!!.context)
-        layout!!.orientation = LinearLayout.VERTICAL
-        code = Button(view!!.context)
-        code!!.text = "U+10DDDD"
-        code!!.setSingleLine()
-        jump = Spinner(view!!.context)
-        mark = Spinner(view!!.context)
-        val fl = FrameLayout(view!!.context)
-        fl.addView(mark, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        lp.rightMargin = (view!!.context.resources.displayMetrics.scaledDensity * 22f).toInt()
-        fl.addView(jump, lp)
-        val hl = LinearLayout(view!!.context)
-        hl.orientation = LinearLayout.HORIZONTAL
-        hl.gravity = Gravity.CENTER
-        hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        val p = Paint()
-        p.textSize = code!!.textSize
-        hl.addView(code, LinearLayout.LayoutParams(code!!.paddingLeft + p.measureText("U+10DDDD").toInt() + code!!.paddingRight, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout!!.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        val jstr = arrayOfNulls<String>(fmap.size)
-        val jmap = SparseArray<String>()
-        for (s in jump!!.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
-        val jit: Iterator<Int> = fmap.keys.iterator()
-        var i = 0
-        while (jit.hasNext()) {
-            val c = jit.next()
-            jstr[i] = String.format("U+%04X %s", c, jmap[c])
-            ++i
+        @Suppress("DEPRECATION")
+        resnormal = activity.resources.getColor(android.R.color.transparent)
+        @Suppress("DEPRECATION")
+        resselect = activity.resources.getColor(android.R.color.tab_indicator_text)
+        return LinearLayout(activity).also { layout ->
+            layout.orientation = LinearLayout.VERTICAL
+            LinearLayout(activity).also { hl ->
+                hl.orientation = LinearLayout.HORIZONTAL
+                hl.gravity = Gravity.CENTER
+                FrameLayout(activity).also { fl ->
+                    mark = Spinner(activity).also { mark ->
+                        fl.addView(mark, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        mark.adapter = MapAdapter(mark.context)
+                        mark.setSelection(0)
+                        mark.onItemSelectedListener = object : OnItemSelectedListener {
+                            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                                if (position == 1) {
+                                    val items = arrayOfNulls<CharSequence>(mmap.size)
+                                    var i = 0
+                                    for ((key, value) in mmap) items[i++] = String.format("U+%04X %s", key, value)
+                                    AlertDialog.Builder(activity)
+                                            .setTitle(R.string.rem)
+                                            .setItems(items) { _, which ->
+                                                var i2 = which
+                                                for ((key) in mmap) if (--i2 == -1) {
+                                                    mmap.remove(key)
+                                                    break
+                                                }
+                                            }.show()
+                                    mark.setSelection(0)
+                                }
+                                if (position > 1) {
+                                    var i = position
+                                    for ((key) in mmap) if (--i == 1) find(key)
+                                    mark.setSelection(0)
+                                }
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {}
+                        }
+                    }
+                    jump = Spinner(activity).also { jump ->
+                        fl.addView(jump, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
+                            it.rightMargin = (activity.resources.displayMetrics.scaledDensity * 22f).toInt()
+                        })
+                        val jstr = arrayOfNulls<String>(fmap.size)
+                        val jmap = SparseArray<String>()
+                        for (s in jump.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
+                        val jit: Iterator<Int> = fmap.keys.iterator()
+                        var i = 0
+                        while (jit.hasNext()) {
+                            val c = jit.next()
+                            jstr[i] = String.format("U+%04X %s", c, jmap[c])
+                            ++i
+                        }
+                        val adp = ArrayAdapter(jump.context, android.R.layout.simple_spinner_item, jstr)
+                        adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
+                        jump.adapter = adp
+                        jump.onItemSelectedListener = object : OnItemSelectedListener {
+                            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                                current = position
+                                if (guard == 0) this@ListAdapter.view?.setSelection(this@ListAdapter.jmap[position])
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {}
+                        }
+                    }
+                    hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                }
+                code = Button(activity).also { code ->
+                    code.text = "U+10DDDD"
+                    code.setSingleLine()
+                    val p = Paint()
+                    p.textSize = code.textSize
+                    hl.addView(code, LinearLayout.LayoutParams(code.paddingLeft + p.measureText("U+10DDDD").toInt() + code.paddingRight, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    code.setOnClickListener {
+                        val edit = EditText(activity)
+                        val ocl = View.OnClickListener { v ->
+                            if (v is ImageButton) {
+                                edit.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
+                            } else {
+                                val s = (v as Button).text.toString()
+                                val start = edit.selectionStart
+                                val end = edit.selectionEnd
+                                if (start == -1) return@OnClickListener
+                                edit.editableText.replace(min(start, end), max(start, end), s)
+                                edit.setSelection(min(start, end) + s.length)
+                            }
+                        }
+                        edit.setText(String.format("%04X", head))
+                        edit.setSingleLine()
+                        edit.imeOptions = EditorInfo.IME_ACTION_GO or EditorInfo.IME_FLAG_FORCE_ASCII
+                        edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+                        edit.gravity = Gravity.CENTER_VERTICAL
+                        edit.setOnTouchListener { v, event ->
+                            v.onTouchEvent(event)
+                            (v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(v.windowToken, 0)
+                            true
+                        }
+                        val text = TextView(activity)
+                        text.text = "U+"
+                        text.gravity = Gravity.CENTER
+                        val del = ImageButton(activity, null, android.R.attr.buttonStyleSmall)
+                        val tv = TypedValue()
+                        activity.theme.resolveAttribute(R.attr.backspace, tv, true)
+                        del.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
+                        del.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        del.setPadding(0, 0, 0, 0)
+                        del.setOnClickListener(ocl)
+                        val vl = LinearLayout(activity)
+                        vl.orientation = LinearLayout.VERTICAL
+                        vl.addView(LinearLayout(activity).also { layout ->
+                            layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                            p.textSize = edit.textSize
+                            layout.addView(edit, LinearLayout.LayoutParams(edit.paddingLeft + Paint().also {
+                                it.textSize = edit.textSize
+                            }.measureText("10DDDD").toInt() + edit.paddingRight, ViewGroup.LayoutParams.WRAP_CONTENT))
+                            layout.addView(del)
+                            layout.gravity = Gravity.END
+                        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        val mlp = MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT, MarginLayoutParams.WRAP_CONTENT)
+                        mlp.setMargins(0, 0, 0, 0)
+                        for (i in 5 downTo 0) {
+                            vl.addView(LinearLayout(activity).also {
+                                for (j in if (i == 0) 2..2 else 0..2) {
+                                    it.addView(Button(activity, null, android.R.attr.buttonStyleSmall).also { button ->
+                                        button.text = String.format("%X", i * 3 + j - 2)
+                                        button.setPadding(0, 0, 0, 0)
+                                        button.setOnClickListener(ocl)
+                                    }, LinearLayout.LayoutParams(mlp))
+                                }
+                                it.gravity = Gravity.CENTER_HORIZONTAL
+                            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        }
+                        vl.gravity = Gravity.CENTER
+                        val dlg = AlertDialog.Builder(activity)
+                                .setTitle(R.string.code)
+                                .setView(vl)
+                                .setPositiveButton(android.R.string.search_go) { _, _ ->
+                                    if (view != null) try {
+                                        if (find(Integer.valueOf(edit.text.toString(), 16)) == -1) Toast.makeText(activity, R.string.nocode, Toast.LENGTH_SHORT).show()
+                                    } catch (e: NumberFormatException) {
+                                        Toast.makeText(activity, R.string.nocode, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                .create()
+                        dlg.show()
+                        val btn = dlg.getButton(DialogInterface.BUTTON_POSITIVE)
+                        edit.addTextChangedListener(object : TextWatcher {
+                            override fun afterTextChanged(arg0: Editable) {
+                                try {
+                                    Integer.valueOf(arg0.toString(), 16)
+                                    btn.isEnabled = true
+                                } catch (e: NumberFormatException) {
+                                    btn.isEnabled = false
+                                }
+                            }
+
+                            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
+                            override fun onTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
+                        })
+                        edit.setSelectAllOnFocus(true)
+                        edit.requestFocus()
+                    }
+                }
+                layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }
+            layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            this.view?.also { view ->
+                view.setOnTouchListener { view2, _ ->
+                    highlight = -1
+                    if (view2 != null) {
+                        highTarget?.setBackgroundColor(resnormal)
+                        highTarget = null
+                    }
+                    false
+                }
+                val e = fmap.floorEntry(scroll) ?: fmap.firstEntry()
+                if (e.value.second < scroll) scroll = e.value.second
+                view.setSelection(scroll - e.key + e.value.first)
+                view.setOnScrollListener(object : AbsListView.OnScrollListener {
+                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) { }
+
+                    override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                        if (visibleItemCount == 0)
+                            return
+                        var firstItem = firstVisibleItem
+                        if (view?.getChildAt(0)?.let { it.top * -2 > it.height } == true) firstItem += if (single) 1 else PageAdapter.column
+                        val e2 = emap.floorEntry(firstItem) ?: return
+                        jump?.let {
+                            if (guard == 0 && current != e2.value.second) {
+                                current = e2.value.second
+                                ++guard
+                                it.setSelection(e2.value.second, false)
+                                it.post { --guard }
+                            }
+                        }
+                        code?.let {
+                            if (head != firstItem - e2.key + e2.value.first) {
+                                head = firstItem - e2.key + e2.value.first
+                                it.text = String.format("U+%04X", head)
+                            }
+                        }
+                        if (firstItem != 0) scroll = firstItem - e2.key + e2.value.first
+                    }
+                })
+            }
         }
-        val adp = ArrayAdapter(jump!!.context, android.R.layout.simple_spinner_item, jstr)
-        adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
-        jump!!.adapter = adp
-        mark!!.adapter = MapAdapter(mark!!.context)
-        mark!!.setSelection(0)
-        mark!!.onItemSelectedListener = this
-        view!!.setOnTouchListener(this)
-        code!!.setOnClickListener(this)
-        val e = fmap.floorEntry(scroll)
-        if (e.value.second < scroll) scroll = e.value.second
-        view!!.setSelection(scroll - e.key + e.value.first)
-        view!!.setOnScrollListener(this)
-        jump!!.onItemSelectedListener = this
-        return layout
     }
 
     override fun destroy() {
-        view!!.setOnScrollListener(null)
-        layout = null
-        code = null
+        view?.setOnScrollListener(null)
         jump = null
         mark = null
+        code = null
         current = -1
         head = -1
         super.destroy()
     }
 
     fun find(code: Int): Int {
-        val e = fmap.floorEntry(code)
+        val e = fmap.floorEntry(code) ?: fmap.firstEntry()
         if (e.value.second < code) return -1
         scroll = code
         highlight = scroll - e.key + e.value.first
-        if (view != null) {
-            view!!.setSelection(scroll - e.key + e.value.first)
-            if (view!!.firstVisiblePosition <= highlight && highlight <= view!!.lastVisiblePosition) {
-                if (hightarget != null) hightarget!!.setBackgroundColor(resnormal)
-                view!!.getChildAt(highlight - view!!.firstVisiblePosition).let {
-                    hightarget = it
+        view?.let { view ->
+            view.setSelection(scroll - e.key + e.value.first)
+            if (view.firstVisiblePosition <= highlight && highlight <= view.lastVisiblePosition) {
+                highTarget?.setBackgroundColor(resnormal)
+                view.getChildAt(highlight - view.firstVisiblePosition).let {
+                    highTarget = it
                     it.setBackgroundColor(resselect)
                 }
             }
@@ -553,180 +712,19 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return count
     }
 
-    override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
-        val ret = super.getView(arg0, arg1, arg2)
-        if (arg0 == highlight) {
-            if (hightarget != null) hightarget!!.setBackgroundColor(resnormal)
-            hightarget = ret
-            hightarget!!.setBackgroundColor(resselect)
-        } else if (ret === hightarget) hightarget!!.setBackgroundColor(resnormal)
+    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
+        val ret = super.getView(i, view, viewGroup)
+        if (i == highlight) {
+            highTarget?.setBackgroundColor(resnormal)
+            highTarget = ret
+            highTarget?.setBackgroundColor(resselect)
+        } else highTarget?.setBackgroundColor(resnormal)
         return ret
     }
 
-    override fun getItemId(arg0: Int): Long {
-        val e = emap.floorEntry(arg0)
-        return (arg0 - e.key + e.value.first).toLong()
-    }
-
-    private var guard = 0
-    override fun onItemSelected(arg0: AdapterView<*>, arg1: View, arg2: Int, arg3: Long) {
-        var arg2 = arg2
-        if (arg0 === jump) {
-            current = arg2
-            if (view != null) if (guard == 0) view!!.setSelection(jmap[arg2])
-        }
-        if (arg0 === mark) {
-            if (arg2 == 1) {
-                val items = arrayOfNulls<CharSequence>(mmap.size)
-                var i = 0
-                for ((key, value) in mmap) items[i++] = String.format("U+%04X %s", key, value)
-                AlertDialog.Builder(view!!.context)
-                        .setTitle(R.string.rem)
-                        .setItems(items) { arg0, arg1 ->
-                            var arg1 = arg1
-                            for ((key) in mmap) if (--arg1 == -1) {
-                                mmap.remove(key)
-                                break
-                            }
-                        }.show()
-                mark!!.setSelection(0)
-            }
-            if (arg2 > 1) {
-                for ((key) in mmap) if (--arg2 == 1) find(key)
-                mark!!.setSelection(0)
-            }
-        }
-    }
-
-    override fun onNothingSelected(arg0: AdapterView<*>?) {}
-    override fun onScroll(arg0: AbsListView, arg1: Int, arg2: Int, arg3: Int) {
-        var arg1 = arg1
-        if (arg0 === view) {
-            if (view!!.getChildAt(0) != null && view!!.getChildAt(0).top * -2 > view!!.getChildAt(0).height) arg1 += if (single) 1 else PageAdapter.column
-            val e = emap.floorEntry(arg1)
-            if (arg2 != 0) {
-                if (e != null) {
-                    if (jump != null) {
-                        if (guard == 0 && current != e.value.second) {
-                            current = e.value.second
-                            ++guard
-                            jump!!.setSelection(e.value.second, false)
-                            jump!!.post { --guard }
-                        }
-                    }
-                    if (code != null) {
-                        if (head != arg1 - e.key + e.value.first) {
-                            head = arg1 - e.key + e.value.first
-                            code!!.text = String.format("U+%04X", head)
-                        }
-                    }
-                    if (arg1 != 0) scroll = arg1 - e.key + e.value.first
-                }
-            }
-        }
-    }
-
-    override fun onScrollStateChanged(arg0: AbsListView, arg1: Int) {}
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onClick(arg0: View) {
-        if (arg0 === code) {
-            val edit = EditText(arg0.getContext())
-            val ocl = View.OnClickListener { v ->
-                if (v is ImageButton) {
-                    edit.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
-                } else {
-                    val s = (v as Button).text.toString()
-                    val start = edit.selectionStart
-                    val end = edit.selectionEnd
-                    if (start == -1) return@OnClickListener
-                    edit.editableText.replace(min(start, end), max(start, end), s)
-                    edit.setSelection(min(start, end) + s.length)
-                }
-            }
-            edit.setText(String.format("%04X", head))
-            edit.setSingleLine()
-            edit.imeOptions = EditorInfo.IME_ACTION_GO or EditorInfo.IME_FLAG_FORCE_ASCII
-            edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
-            edit.gravity = Gravity.CENTER_VERTICAL
-            edit.setOnTouchListener { v, event ->
-                v.onTouchEvent(event)
-                (v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(v.windowToken, 0)
-                true
-            }
-            val text = TextView(arg0.getContext())
-            text.text = "U+"
-            text.gravity = Gravity.CENTER
-            val del = ImageButton(arg0.getContext(), null, android.R.attr.buttonStyleSmall)
-            val tv = TypedValue()
-            arg0.getContext().theme.resolveAttribute(R.attr.backspace, tv, true)
-            del.setImageDrawable(ResourcesCompat.getDrawable(activity.resources, tv.resourceId, null))
-            del.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            del.setPadding(0, 0, 0, 0)
-            del.setOnClickListener(ocl)
-            val vl = LinearLayout(arg0.getContext())
-            vl.orientation = LinearLayout.VERTICAL
-            val layout = LinearLayout(arg0.getContext())
-            layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            val p = Paint()
-            p.textSize = edit.textSize
-            layout.addView(edit, LinearLayout.LayoutParams(edit.paddingLeft + p.measureText("10DDDD").toInt() + edit.paddingRight, ViewGroup.LayoutParams.WRAP_CONTENT))
-            layout.addView(del)
-            layout.gravity = Gravity.END
-            vl.addView(layout, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            val mlp = MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT, MarginLayoutParams.WRAP_CONTENT)
-            mlp.setMargins(0, 0, 0, 0)
-            for (i in 5 downTo 0) {
-                val hl = LinearLayout(arg0.getContext())
-                for (j in if (i == 0) 2..2 else 0..2) {
-                    val btn = Button(arg0.getContext(), null, android.R.attr.buttonStyleSmall)
-                    btn.text = String.format("%X", i * 3 + j - 2)
-                    btn.setPadding(0, 0, 0, 0)
-                    btn.setOnClickListener(ocl)
-                    hl.addView(btn, LinearLayout.LayoutParams(mlp))
-                }
-                hl.gravity = Gravity.CENTER_HORIZONTAL
-                vl.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            }
-            vl.gravity = Gravity.CENTER
-            val dlg = AlertDialog.Builder(arg0.getContext())
-                    .setTitle(R.string.code)
-                    .setView(vl)
-                    .setPositiveButton(android.R.string.search_go) { _, _ ->
-                        if (view != null) try {
-                            if (find(Integer.valueOf(edit.text.toString(), 16)) == -1) Toast.makeText(view!!.context, R.string.nocode, Toast.LENGTH_SHORT).show()
-                        } catch (e: NumberFormatException) {
-                            Toast.makeText(view!!.context, R.string.nocode, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    .create()
-            dlg.show()
-            val btn = dlg.getButton(DialogInterface.BUTTON_POSITIVE)
-            edit.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(arg0: Editable) {
-                    try {
-                        Integer.valueOf(arg0.toString(), 16)
-                        btn.isEnabled = true
-                    } catch (e: NumberFormatException) {
-                        btn.isEnabled = false
-                    }
-                }
-
-                override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-                override fun onTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-            })
-            edit.setSelectAllOnFocus(true)
-            edit.requestFocus()
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(arg0: View, arg1: MotionEvent): Boolean {
-        highlight = -1
-        if (hightarget != null) if (view != null) {
-            hightarget!!.setBackgroundColor(resnormal)
-            hightarget = null
-        }
-        return false
+    override fun getItemId(i: Int): Long {
+        val e = emap.floorEntry(i) ?: fmap.firstEntry()
+        return (i - e.key + e.value.first).toLong()
     }
 
     init {
@@ -734,9 +732,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         head = -1
         scroll = pref.getInt("list", 0)
         highlight = -1
-        hightarget = null
-        val str = pref.getString("mark", "")
-        for (s in str!!.split("\n").toTypedArray()) {
+        highTarget = null
+        val str = pref.getString("mark", null) ?: ""
+        for (s in str.split("\n").toTypedArray()) {
             val space = s.indexOf(' ')
             if (space != -1) try {
                 mmap[Integer.valueOf(s.substring(0, space))] = s.substring(space + 1)

@@ -107,6 +107,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
         }
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
+            @Suppress("UNCHECKED_CAST")
             list = results.values as ArrayList<String>
             if (results.count > 0) notifyDataSetChanged() else notifyDataSetInvalidated()
         }

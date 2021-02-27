@@ -24,7 +24,7 @@ import android.widget.ScrollView
 class LockableScrollView : ScrollView {
     private var inmove = false
     private lateinit var adapter: PageAdapter
-    private var lockview: View? = null
+    private var lockView: View? = null
     private var over = false
 
     constructor(context: Context?) : super(context)
@@ -38,11 +38,12 @@ class LockableScrollView : ScrollView {
             return true
         }
         var hit = false
-        val v = adapter.view
-        if (v != null && v.visibility == VISIBLE) {
-            val rc = Rect()
-            v.getGlobalVisibleRect(rc)
-            if (rc.contains(ev.rawX.toInt(), ev.rawY.toInt())) hit = true
+        adapter.view?.let {
+            if (it.visibility == VISIBLE) {
+                val rc = Rect()
+                it.getGlobalVisibleRect(rc)
+                if (rc.contains(ev.rawX.toInt(), ev.rawY.toInt())) hit = true
+            }
         }
         if (!inmove && !hit) return super.onInterceptTouchEvent(ev).also { inmove = it }
         inmove = super.onInterceptTouchEvent(ev)
@@ -53,24 +54,25 @@ class LockableScrollView : ScrollView {
         this.adapter = adapter
     }
 
-    fun setLockView(lockview: View?, over: Boolean) {
-        this.lockview = lockview
+    fun setLockView(lockView: View?, over: Boolean) {
+        this.lockView = lockView
         this.over = over
-        if (lockview == null || height == 0) return
+        if (lockView == null || height == 0) return
         if (!over) scrollTo(0, 0)
-        lockview.layoutParams.height = if (over) height else height - lockview.top
-        lockview.requestLayout()
+        lockView.layoutParams.height = if (over) height else height - lockView.top
+        lockView.requestLayout()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         val pos = scrollY
-        post(Runnable {
-            if (lockview == null) return@Runnable
-            lockview!!.layoutParams.height = if (over) h else h - lockview!!.top
-            lockview!!.requestLayout()
-            lockview!!.post { scrollTo(0, pos) }
-        })
+        post {
+            lockView?.let {
+                it.layoutParams.height = if (over) h else h - lockView!!.top
+                it.requestLayout()
+                it.post { scrollTo(0, pos) }
+            }
+        }
     }
 
     private var scroll = false

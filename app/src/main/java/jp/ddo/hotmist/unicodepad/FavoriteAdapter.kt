@@ -29,7 +29,7 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
     }
 
     override fun show() {
-        trunc()
+        truncate()
         if (view != null) view!!.invalidateViews()
     }
 
@@ -51,21 +51,25 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
         list.add(code)
     }
 
-    operator fun rem(code: Int) {
+    fun rem(code: Int) {
         list.remove(Integer.valueOf(code))
     }
 
     private fun commit() {
-        if (list !== temp) {
-            temp = list
+        runOnUiThread {
+            if (list !== temp) {
+                temp = list
+            }
         }
     }
 
-    private fun trunc() {
-        if (list === temp) temp = ArrayList(list)
+    private fun truncate() {
+        runOnUiThread {
+            if (list === temp) temp = ArrayList(list)
+        }
     }
 
-    fun isFavorited(code: Int): Boolean {
+    fun isFavorite(code: Int): Boolean {
         return list.contains(code)
     }
 
@@ -79,7 +83,7 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
         runOnUiThread {
             list = temp
             list.add(to, list.removeAt(from))
-            trunc()
+            truncate()
             if (view != null) view!!.invalidateViews()
         }
     }
@@ -94,13 +98,12 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
     init {
         list = ArrayList()
         temp = list
-        val str = pref.getString("fav", "")
+        val str = pref.getString("fav", null) ?: ""
         var i = 0
-        while (i < str!!.length) {
+        while (i < str.length) {
             val code = str.codePointAt(i)
-            if (code > 0xFFFF) ++i
             list.add(code)
-            ++i
+            i += Character.charCount(code)
         }
     }
 }

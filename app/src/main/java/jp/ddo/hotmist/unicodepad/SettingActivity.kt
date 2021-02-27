@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+@file:Suppress("DEPRECATION")
+
 package jp.ddo.hotmist.unicodepad
 
 import android.content.Intent
@@ -20,73 +22,69 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.*
 import android.preference.Preference.OnPreferenceChangeListener
-import android.preference.Preference.OnPreferenceClickListener
 import android.text.ClipboardManager
 import android.widget.Toast
 
-class SettingActivity : PreferenceActivity(), OnPreferenceClickListener, OnPreferenceChangeListener {
+class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val themelist = intArrayOf(
-                androidx.appcompat.R.style.Theme_AppCompat,
-                androidx.appcompat.R.style.Theme_AppCompat_Light,
-                androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar)
-        setTheme(themelist[Integer.valueOf(pref.getString("theme", "2131492983")!!) - 2131492983])
+        setTheme(THEME[Integer.valueOf(pref.getString("theme", "2131492983")!!) - 2131492983])
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.setting)
-        val univer = findPreference("universion") as ListPreference
-        univer.onPreferenceChangeListener = this
-        univer.summary = univer.entry
-        val emojicompat = findPreference("emojicompat") as ListPreference
-        emojicompat.onPreferenceChangeListener = this
-        emojicompat.summary = emojicompat.entry
-        val download = findPreference("download")
-        download.onPreferenceClickListener = this
-        val theme = findPreference("theme") as ListPreference
-        theme.onPreferenceChangeListener = this
-        theme.summary = theme.entry
-        val textsize = findPreference("textsize") as EditTextPreference
-        textsize.onPreferenceChangeListener = this
-        textsize.summary = textsize.text
-        val column = findPreference("column") as ListPreference
-        column.onPreferenceChangeListener = this
-        column.summary = column.value
-        val columnl = findPreference("columnl") as ListPreference
-        columnl.onPreferenceChangeListener = this
-        columnl.summary = columnl.value
-        val tabs = findPreference("tabs")
-        tabs.onPreferenceClickListener = this
-        val padding = findPreference("padding") as EditTextPreference
-        padding.onPreferenceChangeListener = this
-        padding.summary = padding.text
-        val gridsize = findPreference("gridsize") as EditTextPreference
-        gridsize.onPreferenceChangeListener = this
-        gridsize.summary = gridsize.text
-        val viewsize = findPreference("viewsize") as EditTextPreference
-        viewsize.onPreferenceChangeListener = this
-        viewsize.summary = viewsize.text
-        val checker = findPreference("checker") as EditTextPreference
-        checker.onPreferenceChangeListener = this
-        checker.summary = checker.text
-        val recentsize = findPreference("recentsize") as EditTextPreference
-        recentsize.onPreferenceChangeListener = this
-        recentsize.summary = recentsize.text
-        val scroll = findPreference("scroll") as ListPreference
-        scroll.onPreferenceChangeListener = this
-        scroll.summary = scroll.entry
-        val legalApp = findPreference("legal_app")
-        legalApp.onPreferenceClickListener = this
-        val legalUni = findPreference("legal_uni")
-        legalUni.onPreferenceClickListener = this
+        fun setEntry(it: ListPreference) = run {
+            it.onPreferenceChangeListener = this
+            it.summary = it.entry
+        }
+        fun setValue(it: ListPreference) = run {
+            it.onPreferenceChangeListener = this
+            it.summary = it.value
+        }
+        fun setText(it: EditTextPreference) = run {
+            it.onPreferenceChangeListener = this
+            it.summary = it.text
+        }
+        setEntry(findPreference("universion") as ListPreference)
+        setEntry(findPreference("emojicompat") as ListPreference)
+        findPreference("download").also {
+            it.setOnPreferenceClickListener {
+                openPage(getString(R.string.download_uri))
+            }
+        }
+        setEntry(findPreference("theme") as ListPreference)
+        setText(findPreference("textsize") as EditTextPreference)
+        setValue(findPreference("column") as ListPreference)
+        setValue(findPreference("columnl") as ListPreference)
+        findPreference("tabs").also {
+            it.setOnPreferenceClickListener {
+                startActivity(Intent(this, TabsActivity::class.java))
+                true
+            }
+        }
+        setText(findPreference("padding") as EditTextPreference)
+        setText(findPreference("gridsize") as EditTextPreference)
+        setText(findPreference("viewsize") as EditTextPreference)
+        setText(findPreference("checker") as EditTextPreference)
+        setText(findPreference("recentsize") as EditTextPreference)
+        setEntry(findPreference("scroll") as ListPreference)
+        findPreference("legal_app").also {
+            it.setOnPreferenceClickListener {
+                openPage("https://github.com/Ryosuke839/UnicodePad")
+            }
+        }
+        findPreference("legal_uni").also {
+            it.setOnPreferenceClickListener {
+                openPage("https://unicode.org/")
+            }
+        }
         setResult(RESULT_OK)
     }
 
-    override fun onPreferenceChange(arg0: Preference, arg1: Any): Boolean {
-        if (arg0.hasKey()) {
-            val key = arg0.key
+    override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+        if (preference.hasKey()) {
+            val key = preference.key
             try {
-                if (key == "column" || key == "padding" || key == "recentsize") Integer.valueOf(arg1.toString())
-                if (key == "textsize" || key == "gridsize" || key == "viewsize" || key == "checker") java.lang.Float.valueOf(arg1.toString())
+                if (key == "column" || key == "padding" || key == "recentsize") newValue.toString().toInt()
+                if (key == "textsize" || key == "gridsize" || key == "viewsize" || key == "checker") newValue.toString().toFloat()
             } catch (e: NumberFormatException) {
                 return false
             }
@@ -95,14 +93,14 @@ class SettingActivity : PreferenceActivity(), OnPreferenceClickListener, OnPrefe
                 setResult(RESULT_FIRST_USER)
             }
         }
-        arg0.summary = if (arg0 is ListPreference) arg0.entries[arg0.findIndexOfValue(arg1.toString())] else arg1.toString()
+        preference.summary = if (preference is ListPreference) preference.entries[preference.findIndexOfValue(newValue.toString())] else newValue.toString()
         return true
     }
 
     private fun openPage(uri: String): Boolean {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         if (this.packageManager.queryIntentActivities(intent, 0).size > 0) {
-            // Show webpage
+            // Show web page
             startActivity(intent)
         } else {
             // Copy URI
@@ -112,20 +110,10 @@ class SettingActivity : PreferenceActivity(), OnPreferenceClickListener, OnPrefe
         return true
     }
 
-    override fun onPreferenceClick(arg0: Preference): Boolean {
-        val key = arg0.key
-        if (key == "download") {
-            return openPage(getString(R.string.download_uri))
-        }
-        if (key == "tabs") {
-            startActivity(Intent(this, TabsActivity::class.java))
-            return true
-        }
-        if (key == "legal_app") {
-            return openPage("https://github.com/Ryosuke839/UnicodePad")
-        }
-        return if (key == "legal_uni") {
-            openPage("https://unicode.org/")
-        } else false
+    companion object {
+        private val THEME = intArrayOf(
+                androidx.appcompat.R.style.Theme_AppCompat,
+                androidx.appcompat.R.style.Theme_AppCompat_Light,
+                androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar)
     }
 }

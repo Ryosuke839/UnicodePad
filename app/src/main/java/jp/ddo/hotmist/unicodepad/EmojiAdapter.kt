@@ -41,18 +41,18 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     @SuppressLint("InlinedApi")
     override fun instantiate(view: AbsListView?): View? {
         super.instantiate(view)
-        layout = LinearLayout(this.view!!.context)
+        layout = LinearLayout(activity)
         layout!!.orientation = LinearLayout.VERTICAL
-        val hl = LinearLayout(this.view!!.context)
+        val hl = LinearLayout(activity)
         hl.orientation = LinearLayout.HORIZONTAL
         hl.gravity = Gravity.CENTER
-        jump = Spinner(this.view!!.context)
+        jump = Spinner(activity)
         hl.addView(jump, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        val modc = CheckBox(this.view!!.context)
+        val modc = CheckBox(activity)
         modc.setText(R.string.modifier)
-        modc.setPadding(0, 0, (view!!.context.resources.displayMetrics.density * 8f).toInt(), 0)
+        modc.setPadding(0, 0, (activity.resources.displayMetrics.density * 8f).toInt(), 0)
         hl.addView(modc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        if (Build.VERSION.SDK_INT >= 21) hl.setPadding(0, (view.context.resources.displayMetrics.density * 8f).toInt(), 0, (view.context.resources.displayMetrics.density * 8f).toInt())
+        if (Build.VERSION.SDK_INT >= 21) hl.setPadding(0, (activity.resources.displayMetrics.density * 8f).toInt(), 0, (activity.resources.displayMetrics.density * 8f).toInt())
         layout!!.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         layout!!.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         cur = db.emoji(UnicodeActivity.univer, modifier)
@@ -74,7 +74,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
             cur!!.moveToNext()
         }
         if (current >= grp.size) current = grp.size - 1
-        val adp = ArrayAdapter(jump!!.context, android.R.layout.simple_spinner_item, grp)
+        val adp = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp)
         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
         jump!!.adapter = adp
         this.view!!.setSelection(idx[current])
@@ -95,11 +95,10 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         super.destroy()
     }
 
-    override fun getView(arg0: Int, arg1: View?, arg2: ViewGroup): View {
-        var arg1 = arg1
-        arg1 = super.getView(arg0, arg1, arg2)
-        if (single) ((arg1 as LinearLayout).getChildAt(1) as CharacterView).drawSlash(false) else (arg1 as CharacterView).drawSlash(false)
-        return arg1
+    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
+        return super.getView(i, view, viewGroup).also {
+            ((if (single) (it as LinearLayout).getChildAt(1) else it) as CharacterView).drawSlash(false)
+        }
     }
 
     override fun save(edit: SharedPreferences.Editor) {
@@ -115,14 +114,16 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return -1
     }
 
-    override fun getItemString(arg0: Int): String {
-        if (cur == null || arg0 < 0 || arg0 >= cur!!.count) return ""
-        cur!!.moveToPosition(arg0)
-        return cur!!.getString(0)
+    override fun getItemString(i: Int): String {
+        return cur?.let {
+            if (i < 0 || i >= it.count) return ""
+            it.moveToPosition(i)
+            it.getString(0)
+        } ?: ""
     }
 
-    override fun getItem(arg0: Int): String {
-        val ss = getItemString(arg0).split(" ").toTypedArray()
+    override fun getItem(i: Int): String {
+        val ss = getItemString(i).split(" ").toTypedArray()
         var res = ""
         for (s in ss) if (s.isNotEmpty()) res += String(Character.toChars(s.toInt(16)))
         return res
@@ -187,7 +188,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         }
         if (current >= grp.size) current = grp.size - 1
         view!!.invalidateViews()
-        val adp = ArrayAdapter(jump!!.context, android.R.layout.simple_spinner_item, grp)
+        val adp = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp)
         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
         jump!!.adapter = adp
         jump!!.setSelection(current)

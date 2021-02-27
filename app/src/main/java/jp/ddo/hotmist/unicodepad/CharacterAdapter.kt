@@ -110,7 +110,7 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
                         val fav = CheckBox(activity)
                         fav.setButtonDrawable(android.R.drawable.btn_star)
                         fav.gravity = Gravity.TOP
-                        fav.isChecked = afav.isFavorited(itemid)
+                        fav.isChecked = afav.isFavorite(itemid)
                         fav.setOnCheckedChangeListener { _, b -> if (b) afav.add(itemid) else afav.rem(itemid) }
                         val hl = LinearLayout(activity)
                         hl.orientation = LinearLayout.HORIZONTAL

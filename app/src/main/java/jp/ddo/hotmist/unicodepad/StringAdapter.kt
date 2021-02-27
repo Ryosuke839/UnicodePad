@@ -24,17 +24,16 @@ internal class StringAdapter(str: String, activity: Activity, db: NameDatabase) 
         return list.size
     }
 
-    override fun getItemId(arg0: Int): Long {
-        return list[arg0].toLong()
+    override fun getItemId(i: Int): Long {
+        return list[i].toLong()
     }
 
     init {
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)
-            if (code > 0xFFFF) ++i
             list.add(code)
-            ++i
+            i += Character.charCount(code)
         }
     }
 }

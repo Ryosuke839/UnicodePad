@@ -27,11 +27,11 @@ class LockableViewPager : ViewPager {
     private var tx = 0f
     private var ty = 0f
 
-    constructor(context: Context?) : super(context!!) {
+    constructor(context: Context) : super(context) {
         slop = ViewConfiguration.get(context).scaledTouchSlop
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         slop = ViewConfiguration.get(context).scaledTouchSlop
     }
 

@@ -157,7 +157,7 @@ class UnicodeActivity : AppCompatActivity() {
                 val start = editText.selectionStart
                 if (start == -1) return@setOnClickListener
                 val end = editText.selectionEnd
-                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.aedt)
+                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
             }
         }
         findViewById<Button>(R.id.paste).also {

@@ -107,14 +107,14 @@ class NameDatabase(context: Context) {
 
     @SuppressLint("Recycle")
     fun emoji(version: Int, mod: Boolean): Cursor? {
-        var version = version
-        when (version) {
-            600, 610, 620, 630 -> version = 60
-            700 -> version = 70
-            800 -> version = 100
+        val dbVersion = when (version) {
+            600, 610, 620, 630 -> 60
+            700 -> 70
+            800 -> 100
+            else -> version
         }
         return try {
-            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $version" + if (mod) ";" else " AND mod = 0;", null)
+            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $dbVersion" + if (mod) ";" else " AND mod = 0;", null)
         } catch (e: SQLiteException) {
             null
         }
@@ -170,7 +170,7 @@ class NameDatabase(context: Context) {
             }
         }
 
-        private fun extractZipFiles(zipName: String) {
+        private fun extractZipFiles(@Suppress("SameParameterValue") zipName: String) {
             try {
                 val inputStream = context.assets.open(zipName, AssetManager.ACCESS_STREAMING)
                 val zipInputStream = ZipInputStream(inputStream)

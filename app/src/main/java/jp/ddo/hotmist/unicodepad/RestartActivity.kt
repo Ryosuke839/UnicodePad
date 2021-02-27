@@ -9,10 +9,10 @@ class RestartActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Process.killProcess(intent.getIntExtra("pid_key", -1))
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.setClassName(packageName, UnicodeActivity::class.java.name)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        startActivity(Intent(Intent.ACTION_MAIN).also {
+            it.setClassName(packageName, UnicodeActivity::class.java.name)
+            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        })
         finish()
         Process.killProcess(Process.myPid())
     }

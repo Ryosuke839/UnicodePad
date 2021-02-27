@@ -16,7 +16,6 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.Activity
-import android.content.SharedPreferences
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -26,12 +25,12 @@ import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
 
-internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean, private val edit: EditText?) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
+internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean, private val edit: EditText) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
     private val list: ArrayList<Int> = ArrayList()
     private var suspend = false
-    override fun instantiate(grd: AbsListView?): View? {
+    override fun instantiate(view: AbsListView?): View? {
         list.clear()
-        val str = edit!!.editableText.toString()
+        val str = edit.editableText.toString()
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)
@@ -40,12 +39,12 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
             ++i
         }
         edit.addTextChangedListener(this)
-        return super.instantiate(grd)
+        return super.instantiate(view)
     }
 
     override fun destroy() {
         super.destroy()
-        edit!!.removeTextChangedListener(this)
+        edit.removeTextChangedListener(this)
     }
 
     override fun name(): Int {
@@ -56,8 +55,8 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return list.size
     }
 
-    override fun getItemId(arg0: Int): Long {
-        return list[arg0].toLong()
+    override fun getItemId(i: Int): Long {
+        return list[i].toLong()
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -72,7 +71,7 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
             list.add(code)
             ++i
         }
-        view!!.invalidateViews()
+        view?.invalidateViews()
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -88,7 +87,7 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 ++fromEnd
                 if (i == from) break
             }
-            edit!!.editableText.delete(fromBegin, fromEnd)
+            edit.editableText.delete(fromBegin, fromEnd)
             val ch = list.removeAt(from)
             var toBegin = 0
             for (i in list.indices) {
@@ -100,7 +99,7 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.add(to, ch)
-            if (view != null) view!!.invalidateViews()
+            view?.invalidateViews()
         }
     }
 
@@ -115,11 +114,11 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 ++whichEnd
                 if (i == which) break
             }
-            edit!!.editableText.delete(whichBegin, whichEnd)
+            edit.editableText.delete(whichBegin, whichEnd)
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.removeAt(which)
-            if (view != null) view!!.invalidateViews()
+            view?.invalidateViews()
         }
     }
 

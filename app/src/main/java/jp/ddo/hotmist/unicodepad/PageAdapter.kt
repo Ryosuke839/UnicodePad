@@ -96,7 +96,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEdit.single = bedt
         bemoji = pref.getString("single_emoji", "false") == "true"
         adapterEmoji.single = bemoji
-        if (adapters[position]!!.single) {
+        views[position] = if (adapters[position]!!.single) {
             if (adapters[position] is DropListener || adapters[position] is RemoveListener) {
                 val view = DragSortListView(activity, null)
                 val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE, 0, R.id.HANDLE_ID)
@@ -105,21 +105,22 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                 controller.isSortEnabled = true
                 view.setFloatViewManager(controller)
                 view.setOnTouchListener(controller)
-                views[position] = view
+                view
             } else {
-                views[position] = ListView(activity)
+                ListView(activity)
             }
         } else {
             val view = GridView(activity)
             view.numColumns = column
             view.adapter = adapters[position]
-            views[position] = view
+            view
+        }.also { view ->
+            view.onItemClickListener = this
+            view.onItemLongClickListener = this
+            view.adapter = adapters[position]
+            view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            layout[position] = adapters[position]!!.instantiate(view)
         }
-        views[position]!!.onItemClickListener = this
-        views[position]!!.onItemLongClickListener = this
-        views[position]!!.adapter = adapters[position]
-        views[position]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        layout[position] = adapters[position]!!.instantiate(views[position])
         collection.addView(layout[position], 0)
         return layout[position]!!
     }

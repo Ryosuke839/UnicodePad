@@ -28,7 +28,7 @@ import java.util.*
 internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean, private val edit: EditText) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
     private val list: ArrayList<Int> = ArrayList()
     private var suspend = false
-    override fun instantiate(view: AbsListView?): View? {
+    override fun instantiate(view: AbsListView): View {
         list.clear()
         val str = edit.editableText.toString()
         var i = 0

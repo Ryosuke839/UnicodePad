@@ -26,7 +26,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import java.util.*
 
-internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : BaseAdapter(), Filterable {
+internal class CompleteAdapter(context: Context, pref: SharedPreferences) : BaseAdapter(), Filterable {
     private val lock = Any()
     private var filter: CompleteFilter? = null
     private var list: ArrayList<String>
@@ -36,9 +36,11 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
     fun update(str: String) {
         synchronized(lock) {
             for (s in str.split(" ").toTypedArray()) if (s.isNotEmpty()) {
-                (if (temp == null) list else temp)!!.remove(s)
-                if ((if (temp == null) list else temp)!!.size == 255) (if (temp == null) list else temp)!!.removeAt(254)
-                (if (temp == null) list else temp)!!.add(0, s)
+                (temp ?: list).let {
+                    it.remove(s)
+                    if (it.size == 255) it.removeAt(254)
+                    it.add(0, s)
+                }
             }
         }
         notifyDataSetChanged()
@@ -72,8 +74,9 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
     }
 
     override fun getFilter(): Filter {
-        if (filter == null) filter = CompleteFilter()
-        return filter!!
+        return filter ?: CompleteFilter().also {
+            filter = it
+        }
     }
 
     private inner class CompleteFilter : Filter() {
@@ -115,7 +118,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences?) : Bas
 
     init {
         list = ArrayList()
-        for (s in pref!!.getString("comp", "")!!.split("\n").toTypedArray()) if (s.isNotEmpty()) list.add(s)
+        for (s in (pref.getString("comp", null) ?: "").split("\n").toTypedArray()) if (s.isNotEmpty()) list.add(s)
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 }

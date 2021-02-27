@@ -223,11 +223,10 @@ internal class CharacterAdapter(activity: UnicodeActivity, adapter: UnicodeAdapt
     override fun onClick(v: View) {
         val s = ((v as LinearLayout).getChildAt(1) as CharacterView).text
         var i = 0
-        while (i < s!!.length) {
+        while (i < s.length) {
             val code = s.codePointAt(i)
-            if (code > 0xFFFF) ++i
             activity.adpPage.onItemClick(null, v, -1, code.toLong())
-            ++i
+            i += Character.charCount(code)
         }
     }
 

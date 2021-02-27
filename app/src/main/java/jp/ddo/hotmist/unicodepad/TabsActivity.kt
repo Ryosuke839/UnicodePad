@@ -18,7 +18,7 @@ package jp.ddo.hotmist.unicodepad
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
 

@@ -26,7 +26,6 @@ import android.graphics.*
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Pair
 import android.util.SparseArray
 import android.util.TypedValue
 import android.view.*
@@ -41,36 +40,37 @@ import kotlin.math.max
 import kotlin.math.min
 
 internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
+    private data class FromIndex (val codePoint: Int, val block: Int)
+    private data class FromCodePoint (val index: Int, val end: Int, val block: Int)
     private var count = 0
-    private val emap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
-    private val fmap: NavigableMap<Int, Pair<Int, Int>> = TreeMap()
-    private val imap: NavigableMap<Int, Int> = TreeMap()
-    private val jmap: MutableList<Int> = ArrayList()
-    private val mmap: NavigableMap<Int, String> = TreeMap()
+    private val fromIndex: NavigableMap<Int, FromIndex> = TreeMap()
+    private val fromCodePoint: NavigableMap<Int, FromCodePoint> = TreeMap()
+    private val blockToIndex: MutableList<Int> = ArrayList()
+    private val marks: NavigableMap<Int, String> = TreeMap()
     private var jump: Spinner? = null
     private var mark: Spinner? = null
     private var code: Button? = null
-    private var current: Int
-    private var head: Int
-    private var scroll: Int
+    private var current = -1
+    private var head = -1
+    private var scroll = pref.getInt("list", 0)
     private var resnormal = 0
     private var resselect = 0
-    private var highlight: Int
-    private var highTarget: View?
+    private var highlight = -1
+    private var highTarget: View? = null
     private var guard = 0
 
-    private inner class MapAdapter(var context: Context) : SpinnerAdapter {
+    private inner class MapAdapter : SpinnerAdapter {
         override fun getCount(): Int {
-            return if (mmap.size == 0) 1 else mmap.size + 2
+            return if (marks.size == 0) 1 else marks.size + 2
         }
 
         override fun getItem(i: Int): String {
             when (i) {
-                0 -> return context.resources.getString(R.string.mark)
-                1 -> return context.resources.getString(R.string.rem)
+                0 -> return activity.resources.getString(R.string.mark)
+                1 -> return activity.resources.getString(R.string.rem)
                 else -> {
                     var cnt = i
-                    for ((key, value) in mmap) if (--cnt == 1) return String.format("U+%04X %s", key, value)
+                    for ((key, value) in marks) if (--cnt == 1) return String.format("U+%04X %s", key, value)
                 }
             }
             return ""
@@ -80,12 +80,12 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             return i.toLong()
         }
 
-        override fun getItemViewType(arg0: Int): Int {
+        override fun getItemViewType(i: Int): Int {
             return 0
         }
 
         override fun getView(i: Int, view: View?, parent: ViewGroup): View {
-            return ((view ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, parent, false)) as TextView).also {
+            return ((view ?: (activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, parent, false)) as TextView).also {
                 it.text = getItem(i)
                 it.setTextColor(0x00000000)
             }
@@ -106,7 +106,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         override fun registerDataSetObserver(arg0: DataSetObserver) {}
         override fun unregisterDataSetObserver(arg0: DataSetObserver) {}
         override fun getDropDownView(i: Int, view: View?, parent: ViewGroup): View {
-            return ((view ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(if (i == 0) R.layout.spinner_drop_down_void else R.layout.spinner_drop_down_item, parent, false)) as TextView).also {
+            return ((view ?: (activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(if (i == 0) R.layout.spinner_drop_down_void else R.layout.spinner_drop_down_item, parent, false)) as TextView).also {
                 it.text = getItem(i)
             }
         }
@@ -117,14 +117,19 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     }
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
-    override fun instantiate(view: AbsListView?): View {
+    override fun instantiate(view: AbsListView): View {
         super.instantiate(view)
-        emap.clear()
-        fmap.clear()
-        imap.clear()
-        jmap.clear()
+        fromIndex.clear()
+        fromCodePoint.clear()
+        blockToIndex.clear()
         count = 0
         val univer: Int = UnicodeActivity.univer
+        fun add(begin: Int, end: Int) {
+            fromIndex[count] = FromIndex(begin, fromIndex.size)
+            fromCodePoint[begin] = FromCodePoint(count, end, fromCodePoint.size)
+            blockToIndex.add(count)
+            count += end + 1 - begin
+        }
         add(0x0, 0x7F)
         add(0x80, 0xFF)
         add(0x100, 0x17F)
@@ -457,20 +462,20 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 FrameLayout(activity).also { fl ->
                     mark = Spinner(activity).also { mark ->
                         fl.addView(mark, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                        mark.adapter = MapAdapter(mark.context)
+                        mark.adapter = MapAdapter()
                         mark.setSelection(0)
                         mark.onItemSelectedListener = object : OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 if (position == 1) {
-                                    val items = arrayOfNulls<CharSequence>(mmap.size)
+                                    val items = arrayOfNulls<CharSequence>(marks.size)
                                     var i = 0
-                                    for ((key, value) in mmap) items[i++] = String.format("U+%04X %s", key, value)
+                                    for ((key, value) in marks) items[i++] = String.format("U+%04X %s", key, value)
                                     AlertDialog.Builder(activity)
                                             .setTitle(R.string.rem)
                                             .setItems(items) { _, which ->
                                                 var i2 = which
-                                                for ((key) in mmap) if (--i2 == -1) {
-                                                    mmap.remove(key)
+                                                for ((key) in marks) if (--i2 == -1) {
+                                                    marks.remove(key)
                                                     break
                                                 }
                                             }.show()
@@ -478,7 +483,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                                 }
                                 if (position > 1) {
                                     var i = position
-                                    for ((key) in mmap) if (--i == 1) find(key)
+                                    for ((key) in marks) if (--i == 1) find(key)
                                     mark.setSelection(0)
                                 }
                             }
@@ -490,10 +495,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         fl.addView(jump, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
                             it.rightMargin = (activity.resources.displayMetrics.scaledDensity * 22f).toInt()
                         })
-                        val jstr = arrayOfNulls<String>(fmap.size)
+                        val jstr = arrayOfNulls<String>(fromCodePoint.size)
                         val jmap = SparseArray<String>()
                         for (s in jump.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
-                        val jit: Iterator<Int> = fmap.keys.iterator()
+                        val jit: Iterator<Int> = fromCodePoint.keys.iterator()
                         var i = 0
                         while (jit.hasNext()) {
                             val c = jit.next()
@@ -506,7 +511,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         jump.onItemSelectedListener = object : OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 current = position
-                                if (guard == 0) this@ListAdapter.view?.setSelection(this@ListAdapter.jmap[position])
+                                if (guard == 0) this@ListAdapter.view?.setSelection(this@ListAdapter.blockToIndex[position])
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -584,7 +589,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                                 .setTitle(R.string.code)
                                 .setView(vl)
                                 .setPositiveButton(android.R.string.search_go) { _, _ ->
-                                    if (view != null) try {
+                                    try {
                                         if (find(Integer.valueOf(edit.text.toString(), 16)) == -1) Toast.makeText(activity, R.string.nocode, Toast.LENGTH_SHORT).show()
                                     } catch (e: NumberFormatException) {
                                         Toast.makeText(activity, R.string.nocode, Toast.LENGTH_SHORT).show()
@@ -614,17 +619,15 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             }
             layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             this.view?.also { view ->
-                view.setOnTouchListener { view2, _ ->
+                view.setOnTouchListener { _, _ ->
                     highlight = -1
-                    if (view2 != null) {
-                        highTarget?.setBackgroundColor(resnormal)
-                        highTarget = null
-                    }
+                    highTarget?.setBackgroundColor(resnormal)
+                    highTarget = null
                     false
                 }
-                val e = fmap.floorEntry(scroll) ?: fmap.firstEntry()
-                if (e.value.second < scroll) scroll = e.value.second
-                view.setSelection(scroll - e.key + e.value.first)
+                val e = fromCodePoint.floorEntry(scroll) ?: fromCodePoint.firstEntry()
+                if (e.value.end < scroll) scroll = e.value.end
+                view.setSelection(scroll - e.key + e.value.index)
                 view.setOnScrollListener(object : AbsListView.OnScrollListener {
                     override fun onScrollStateChanged(p0: AbsListView?, p1: Int) { }
 
@@ -633,22 +636,22 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             return
                         var firstItem = firstVisibleItem
                         if (view?.getChildAt(0)?.let { it.top * -2 > it.height } == true) firstItem += if (single) 1 else PageAdapter.column
-                        val e2 = emap.floorEntry(firstItem) ?: return
+                        val e2 = fromIndex.floorEntry(firstItem) ?: return
                         jump?.let {
-                            if (guard == 0 && current != e2.value.second) {
-                                current = e2.value.second
+                            if (guard == 0 && current != e2.value.block) {
+                                current = e2.value.block
                                 ++guard
-                                it.setSelection(e2.value.second, false)
+                                it.setSelection(e2.value.block, false)
                                 it.post { --guard }
                             }
                         }
                         code?.let {
-                            if (head != firstItem - e2.key + e2.value.first) {
-                                head = firstItem - e2.key + e2.value.first
+                            if (head != firstItem - e2.key + e2.value.codePoint) {
+                                head = firstItem - e2.key + e2.value.codePoint
                                 it.text = String.format("U+%04X", head)
                             }
                         }
-                        if (firstItem != 0) scroll = firstItem - e2.key + e2.value.first
+                        if (firstItem != 0) scroll = firstItem - e2.key + e2.value.codePoint
                     }
                 })
             }
@@ -666,46 +669,34 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     }
 
     fun find(code: Int): Int {
-        val e = fmap.floorEntry(code) ?: fmap.firstEntry()
-        if (e.value.second < code) return -1
+        val e = fromCodePoint.floorEntry(code) ?: fromCodePoint.firstEntry()
+        if (e.value.end < code) return -1
         scroll = code
-        highlight = scroll - e.key + e.value.first
+        highlight = scroll - e.key + e.value.index
         view?.let { view ->
-            view.setSelection(scroll - e.key + e.value.first)
-            if (view.firstVisiblePosition <= highlight && highlight <= view.lastVisiblePosition) {
-                highTarget?.setBackgroundColor(resnormal)
-                view.getChildAt(highlight - view.firstVisiblePosition).let {
-                    highTarget = it
-                    it.setBackgroundColor(resselect)
-                }
-            }
+            view.setSelection(scroll - e.key + e.value.index)
+            highTarget?.setBackgroundColor(resnormal)
+            highTarget = if (view.firstVisiblePosition <= highlight && highlight <= view.lastVisiblePosition) view.getChildAt(highlight - view.firstVisiblePosition) else null
+            highTarget?.setBackgroundColor(resselect)
         }
         return scroll
     }
 
     fun mark(code: Int, name: String) {
-        mmap.remove(code)
-        mmap[code] = if (name.isNotEmpty()) name else "Unnamed Mark"
+        marks.remove(code)
+        marks[code] = if (name.isNotEmpty()) name else "Unnamed Mark"
     }
 
     override fun save(edit: SharedPreferences.Editor) {
         edit.putInt("list", scroll)
         var str = ""
-        val mit: Iterator<Map.Entry<Int, String>> = mmap.entries.iterator()
+        val mit: Iterator<Map.Entry<Int, String>> = marks.entries.iterator()
         while (mit.hasNext()) {
             val code = mit.next()
             str += String.format(Locale.US, "%d %s", code.key, code.value)
             if (mit.hasNext()) str += "\n"
         }
         edit.putString("mark", str)
-    }
-
-    private fun add(begin: Int, end: Int) {
-        emap[count] = Pair(begin, emap.size)
-        fmap[begin] = Pair(count, end)
-        imap[begin] = imap.size
-        jmap.add(count)
-        count += end + 1 - begin
     }
 
     override fun getCount(): Int {
@@ -718,26 +709,24 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             highTarget?.setBackgroundColor(resnormal)
             highTarget = ret
             highTarget?.setBackgroundColor(resselect)
-        } else highTarget?.setBackgroundColor(resnormal)
+        } else if (ret == highTarget) {
+            highTarget?.setBackgroundColor(resnormal)
+            highTarget = null
+        }
         return ret
     }
 
     override fun getItemId(i: Int): Long {
-        val e = emap.floorEntry(i) ?: fmap.firstEntry()
-        return (i - e.key + e.value.first).toLong()
+        val e = fromIndex.floorEntry(i) ?: fromIndex.firstEntry()
+        return (i - e.key + e.value.codePoint).toLong()
     }
 
     init {
-        current = -1
-        head = -1
-        scroll = pref.getInt("list", 0)
-        highlight = -1
-        highTarget = null
         val str = pref.getString("mark", null) ?: ""
         for (s in str.split("\n").toTypedArray()) {
             val space = s.indexOf(' ')
             if (space != -1) try {
-                mmap[Integer.valueOf(s.substring(0, space))] = s.substring(space + 1)
+                marks[s.substring(0, space).toInt()] = s.substring(space + 1)
             } catch (e: NumberFormatException) {
             }
         }

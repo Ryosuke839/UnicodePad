@@ -49,6 +49,7 @@ import java.util.zip.CRC32
 import kotlin.math.max
 import kotlin.math.min
 
+@Suppress("DEPRECATION")
 class UnicodeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
@@ -277,7 +278,7 @@ class UnicodeActivity : AppCompatActivity() {
             try {
                 val `is` = contentResolver.openInputStream(uri)
                 val of = File(filesDir, "00000000/$name")
-                of.parentFile.mkdirs()
+                of.parentFile?.mkdirs()
                 try {
                     val os: OutputStream = FileOutputStream(of)
                     val crc = CRC32()
@@ -289,7 +290,7 @@ class UnicodeActivity : AppCompatActivity() {
                     }
                     os.close()
                     val mf = File(filesDir, String.format("%08x", crc.value) + "/" + name)
-                    mf.parentFile.mkdirs()
+                    mf.parentFile?.mkdirs()
                     of.renameTo(mf)
                     chooser.onFileChosen(mf.canonicalPath)
                 } catch (e: IOException) {

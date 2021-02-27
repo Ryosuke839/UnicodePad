@@ -31,7 +31,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         return 0
     }
 
-    open fun instantiate(view: AbsListView?): View? {
+    open fun instantiate(view: AbsListView): View {
         this.view = view
         return view
     }

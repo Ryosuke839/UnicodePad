@@ -32,12 +32,12 @@ import java.util.*
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
-internal class FileChooser(private val activity: Activity, private val listener: Listener, private var path: String?) : DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnRequestPermissionsResultCallback {
+internal class FileChooser(private val activity: Activity, private val listener: Listener, private var path: String) : DialogInterface.OnClickListener, DialogInterface.OnCancelListener, OnRequestPermissionsResultCallback {
     private var roots: Array<String> = emptyArray()
     private var children: Array<String> = emptyArray()
 
     internal interface Listener {
-        fun onFileChosen(path: String?)
+        fun onFileChosen(path: String)
         fun onFileCancel()
     }
 
@@ -60,7 +60,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
     }
 
     @Throws(IOException::class, IllegalArgumentException::class)
-    private fun openZip(path: String?): ZipFile {
+    private fun openZip(path: String): ZipFile {
         var zf = ZipFile(path)
         try {
             val e = zf.entries()
@@ -95,14 +95,14 @@ internal class FileChooser(private val activity: Activity, private val listener:
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
         if (which != -1) {
-            if (path!!.endsWith(".zip")) {
-                if (children[which] == "../") path = path!!.substring(0, path!!.lastIndexOf('/') + 1) else {
+            if (path.endsWith(".zip")) {
+                if (children[which] == "../") path = path.substring(0, path.lastIndexOf('/') + 1) else {
                     try {
                         val zf = openZip(path)
                         val ze = zf.getEntry(children[which])
                         val `is` = zf.getInputStream(ze)
                         val of = File(activity.filesDir, String.format("%08x", ze.crc) + "/" + File(ze.name).name)
-                        of.parentFile.mkdirs()
+                        of.parentFile?.mkdirs()
                         val os: OutputStream = FileOutputStream(of)
                         val buf = ByteArray(256)
                         var size: Int
@@ -111,38 +111,36 @@ internal class FileChooser(private val activity: Activity, private val listener:
                         `is`.close()
                         zf.close()
                         try {
-                            if (path!!.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
+                            if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
                         } catch (e: IOException) {
                         }
                         path = of.canonicalPath
                     } catch (e: ZipException) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
-                        path = null
                         return
                     } catch (e: IllegalArgumentException) {
                         Toast.makeText(activity, R.string.malformed, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
-                        path = null
                         return
                     } catch (e: IOException) {
                     }
                 }
             } else {
-                if (path!!.length != 1 && which == 0) {
+                if (path.length != 1 && which == 0) {
                     for (root in roots) if (path == "/$root") path = ""
                 }
-                if (path!!.isEmpty()) path = "/" else path += children[which]
+                if (path.isEmpty()) path = "/" else path += children[which]
             }
         }
-        if (which != -1 && path!![path!!.length - 1] != '/' && !path!!.endsWith(".zip")) {
+        if (which != -1 && path[path.length - 1] != '/' && !path.endsWith(".zip")) {
             children = emptyArray()
             listener.onFileChosen(path)
-            path = null
         } else {
             try {
-                if (path!!.length == 1) {
+                if (path.length == 1) {
                     val dirs = Array(4) {""}
+                    @Suppress("DEPRECATION")
                     dirs[0] = Environment.getExternalStorageDirectory().canonicalPath
                     dirs[1] = Environment.getDataDirectory().canonicalPath
                     dirs[2] = Environment.getDownloadCacheDirectory().canonicalPath
@@ -164,7 +162,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     }
                     Arrays.sort(roots)
                     children = roots
-                } else if (path!!.endsWith(".zip")) {
+                } else if (path.endsWith(".zip")) {
                     try {
                         val zf = openZip(path)
                         var cnt = if (which != -1) 1 else 0
@@ -190,12 +188,10 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     } catch (e: ZipException) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
-                        path = null
                         return
                     } catch (e: IllegalArgumentException) {
                         Toast.makeText(activity, R.string.malformed, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
-                        path = null
                         return
                     }
                 } else {
@@ -207,7 +203,6 @@ internal class FileChooser(private val activity: Activity, private val listener:
                     if (fl == null) {
                         Toast.makeText(activity, R.string.cantread, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
-                        path = null
                         return
                     }
                     var cnt = 1
@@ -221,7 +216,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                         ++j
                     }
                 }
-                AlertDialog.Builder(activity).setTitle(if (path!!.startsWith(activity.filesDir.canonicalPath)) path!!.substring(path!!.lastIndexOf('/') + 1) else path).setItems(children, this).setOnCancelListener(this).show()
+                AlertDialog.Builder(activity).setTitle(if (path.startsWith(activity.filesDir.canonicalPath)) path.substring(path.lastIndexOf('/') + 1) else path).setItems(children, this).setOnCancelListener(this).show()
             } catch (e: IOException) {
             }
         }

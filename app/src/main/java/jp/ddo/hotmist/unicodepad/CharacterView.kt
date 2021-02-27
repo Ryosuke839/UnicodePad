@@ -33,7 +33,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var paintbg: Paint? = null
     private var paintsq: Paint? = null
     private var paintln: Paint? = null
-    private var str: String?
+    private var str: String
     private var span: EmojiSpan? = null
     private var offsetx: Int
     private var offsety: Int
@@ -50,7 +50,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var invalid: Boolean
     private var cacheRect = Rect()
     private var drawRect = RectF()
-    var text: String?
+    var text: String
         get() = str
         set(str) {
             if (this.str != str) invalid = true
@@ -59,7 +59,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             try {
                 val emojiCompat = EmojiCompat.get()
                 if (emojiCompat != null) {
-                    val spanned = emojiCompat.process(str!!)
+                    val spanned = emojiCompat.process(str)
                     if (spanned is Spannable) {
                         val spans = spanned.getSpans(0, str.length, EmojiSpan::class.java)
                         if (spans.isNotEmpty()) {
@@ -93,21 +93,23 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun setBackgroundColor(color: Int) {
-        if (color == Color.TRANSPARENT) paintbg = null else {
-            if (paintbg == null) {
-                paintbg = Paint()
-                paintbg!!.style = Paint.Style.FILL
+        paintbg = if (color == Color.TRANSPARENT) null else {
+            (paintbg ?: Paint().also {
+                it.style = Paint.Style.FILL
+            }).also {
+                it.color = color
             }
-            paintbg!!.color = color
         }
     }
 
     fun setSquareAlpha(alpha: Int) {
-        if (alpha == 0) paintsq = null else {
+        paintsq = if (alpha == 0) null else {
             (paintsq ?: Paint().also {
                 paintsq = it
                 it.style = Paint.Style.FILL
-            }).color = ColorUtils.setAlphaComponent(paint.color, alpha)
+            }).also {
+                it.color = ColorUtils.setAlphaComponent(paint.color, alpha)
+            }
         }
     }
 
@@ -116,10 +118,9 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     fun drawLines(draw: Boolean) {
-        if (!draw) paintln = null else {
-            if (paintln == null) {
-                paintln = Paint()
-                paintln!!.color = Color.RED
+        paintln = if (!draw) null else {
+            paintln ?: Paint().also {
+                it.color = Color.RED
             }
         }
     }
@@ -168,8 +169,10 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         val measure = (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash
         var widthNew: Int
         widthNew = (if (measure) paint.measureText(str) else fm.descent - fm.ascent).toInt() + paddingLeft + paddingRight
-        if (span != null && Build.VERSION.SDK_INT >= 19) {
-            widthNew = span!!.getSize(paint, str, 0, str!!.length, fmi) + paddingLeft + paddingRight
+        if (Build.VERSION.SDK_INT >= 19) {
+            span?.let{
+                widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
+            }
         }
         if (widthMode != MeasureSpec.EXACTLY) if (widthMode == MeasureSpec.UNSPECIFIED || widthSize > widthNew) widthSize = widthNew
         if (!shrinkHeight) if (heightMode != MeasureSpec.EXACTLY) if (heightMode == MeasureSpec.UNSPECIFIED || heightSize > heightNew) heightSize = heightNew
@@ -179,8 +182,10 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             fm = paint.fontMetrics
             fmi = paint.fontMetricsInt
             widthNew = (if (measure) paint.measureText(str) else fm.descent - fm.ascent).toInt() + paddingLeft + paddingRight
-            if (span != null && Build.VERSION.SDK_INT >= 19) {
-                widthNew = span!!.getSize(paint, str, 0, str!!.length, fmi) + paddingLeft + paddingRight
+            if (Build.VERSION.SDK_INT >= 19) {
+                span?.let {
+                    widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
+                }
             }
             heightNew = (-fm.top + fm.bottom).toInt()
             heightNew += paddingTop + paddingBottom
@@ -198,24 +203,32 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (paintbg != null) canvas.drawPaint(paintbg!!)
-        if (paintsq != null) for (j in floor(-fullWidth * 6.0 / fullHeight).toInt() until ceil(fullWidth * 6.0 / fullHeight).toInt()) for (i in 0..11) if ((i + j) % 2 == 0) canvas.drawRect((fullWidth / 2 + fullHeight * j / 12).toFloat(), (fullHeight * i / 12).toFloat(), (fullWidth / 2 + fullHeight * (j + 1) / 12).toFloat(), (fullHeight * (i + 1) / 12).toFloat(), paintsq!!)
-        if (paintln != null) {
-            canvas.drawLine(0f, ascent.toFloat(), fullWidth.toFloat(), ascent.toFloat(), paintln!!)
-            canvas.drawLine(0f, offsety.toFloat(), fullWidth.toFloat(), offsety.toFloat(), paintln!!)
-            canvas.drawLine(0f, descent.toFloat(), fullWidth.toFloat(), descent.toFloat(), paintln!!)
+        paintbg?.let {
+            canvas.drawPaint(it)
+        }
+        paintsq?.let {
+            for (j in floor(-fullWidth * 6.0 / fullHeight).toInt() until ceil(fullWidth * 6.0 / fullHeight).toInt()) for (i in 0..11) if ((i + j) % 2 == 0) canvas.drawRect((fullWidth / 2 + fullHeight * j / 12).toFloat(), (fullHeight * i / 12).toFloat(), (fullWidth / 2 + fullHeight * (j + 1) / 12).toFloat(), (fullHeight * (i + 1) / 12).toFloat(), it)
+        }
+        paintln?.let {
+            canvas.drawLine(0f, ascent.toFloat(), fullWidth.toFloat(), ascent.toFloat(), it)
+            canvas.drawLine(0f, offsety.toFloat(), fullWidth.toFloat(), offsety.toFloat(), it)
+            canvas.drawLine(0f, descent.toFloat(), fullWidth.toFloat(), descent.toFloat(), it)
             if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash) {
-                canvas.drawLine(offsetx.toFloat(), 0f, offsetx.toFloat(), fullHeight.toFloat(), paintln!!)
-                canvas.drawLine((fullWidth - offsetx).toFloat(), 0f, (fullWidth - offsetx).toFloat(), fullHeight.toFloat(), paintln!!)
+                canvas.drawLine(offsetx.toFloat(), 0f, offsetx.toFloat(), fullHeight.toFloat(), it)
+                canvas.drawLine((fullWidth - offsetx).toFloat(), 0f, (fullWidth - offsetx).toFloat(), fullHeight.toFloat(), it)
             }
         }
-        if (str!!.isNotEmpty()) {
+        if (str.isNotEmpty()) {
             if (span != null) {
                 if (invalid) cache
-                if (emojicache == null) span!!.draw(canvas, str, 0, str!!.length, offsetx.toFloat(), ascent, offsety, descent, paint) else canvas.drawBitmap(emojicache!!, cacheRect, drawRect, paint)
+                emojicache?.also {
+                    canvas.drawBitmap(it, cacheRect, drawRect, paint)
+                } ?: span?.draw(canvas, str, 0, str.length, offsetx.toFloat(), ascent, offsety, descent, paint)
             } else if ((Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash) {
                 if (invalid) cache
-                if (emojicache == null) canvas.drawText(str!!, offsetx.toFloat(), offsety.toFloat(), paint) else canvas.drawBitmap(emojicache!!, cacheRect, drawRect, paint)
+                emojicache?.also {
+                    canvas.drawBitmap(it, cacheRect, drawRect, paint)
+                } ?: canvas.drawText(str, offsetx.toFloat(), offsety.toFloat(), paint)
             } else {
                 val sz = (descent - ascent).toFloat()
                 canvas.drawLine(fullWidth / 2 - sz * .4f, ascent + sz * .1f, fullWidth / 2 - sz * .4f, ascent + sz * .9f, paint)
@@ -233,32 +246,40 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             emojicache = null
             if (span != null || (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0f) {
                 var w = paint.measureText(str)
-                if (span != null && Build.VERSION.SDK_INT >= 19) {
-                    val fmi = paint.fontMetricsInt
-                    w = span!!.getSize(paint, str, 0, str!!.length, fmi).toFloat()
+                span?.let {
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        w = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt).toFloat()
+                    }
                 }
                 if (w > 256f) {
                     val size = paint.textSize
                     paint.textSize = size * 256f / w
                     val fm = paint.fontMetrics
                     var w2 = paint.measureText(str).toInt()
-                    if (span != null && Build.VERSION.SDK_INT >= 19) {
-                        val fmi = paint.fontMetricsInt
-                        w2 = span!!.getSize(paint, str, 0, str!!.length, fmi)
+                    span?.let {
+                        if (Build.VERSION.SDK_INT >= 19) {
+                            w2 = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt)
+                        }
                     }
                     val bm = Bitmap.createBitmap(w2, (-fm.top + fm.bottom).toInt(), Bitmap.Config.ARGB_8888)
                     val tr = Bitmap.createBitmap(w2, (-fm.top + fm.bottom).toInt(), Bitmap.Config.ARGB_8888)
                     val cv = Canvas(bm)
-                    if (span != null && Build.VERSION.SDK_INT >= 19) span!!.draw(cv, str, 0, str!!.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str!!, 0f, -fm.top, paint)
+                    span?.let {
+                        if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
+                    }
                     if (!bm.sameAs(tr)) {
                         cv.drawColor(0, PorterDuff.Mode.CLEAR)
                         paint.style = Paint.Style.STROKE
-                        if (span != null && Build.VERSION.SDK_INT >= 19) span!!.draw(cv, str, 0, str!!.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str!!, 0f, -fm.top, paint)
+                        span?.let {
+                            if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
+                        }
                         if (bm.sameAs(tr)) {
                             paint.style = Paint.Style.FILL
-                            if (span != null && Build.VERSION.SDK_INT >= 19) span!!.draw(cv, str, 0, str!!.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str!!, 0f, -fm.top, paint)
+                            span?.let {
+                                if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
+                            }
                             emojicache = bm
-                            cacheRect.set(0, 0, emojicache!!.width, emojicache!!.height)
+                            cacheRect.set(0, 0, bm.width, bm.height)
                         } else paint.style = Paint.Style.FILL
                     }
                     paint.textSize = size

@@ -58,7 +58,7 @@ public class LockableScrollView extends ScrollView
 		}
 
 		boolean hit = false;
-		View v = adapter.getGridView();
+		View v = adapter.getView();
 		if (v != null && v.getVisibility() == VISIBLE)
 		{
 			Rect rc = new Rect();

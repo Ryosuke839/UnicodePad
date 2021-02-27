@@ -17,10 +17,10 @@
 package jp.ddo.hotmist.unicodepad;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Build;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,10 +30,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,9 +51,9 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 	private SharedPreferences pref;
 	private CompleteAdapter adapter;
 
-	public FindAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	public FindAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		this.db = db;
 		saved = pref.getString("find", "");
@@ -68,13 +68,13 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 	}
 
 	@Override
-	View instantiate(GridView grd)
+	View instantiate(AbsListView grd)
 	{
 		super.instantiate(grd);
 
-		layout = new LinearLayout(grid.getContext());
+		layout = new LinearLayout(view.getContext());
 		layout.setOrientation(LinearLayout.VERTICAL);
-		text = new AutoCompleteTextView(grid.getContext());
+		text = new AutoCompleteTextView(view.getContext());
 		text.setSingleLine();
 		text.setText(saved);
 		text.setHint(R.string.fhint);
@@ -82,35 +82,35 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 		text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 		text.setOnEditorActionListener(this);
 		if (adapter == null)
-			adapter = new CompleteAdapter(grid.getContext(), pref);
+			adapter = new CompleteAdapter(view.getContext(), pref);
 		text.setAdapter(adapter);
 		text.setThreshold(1);
-		clear = new ImageButton(grid.getContext());
+		clear = new ImageButton(view.getContext());
 		TypedValue tv = new TypedValue();
-		grid.getContext().getTheme().resolveAttribute(R.attr.cancel, tv, true);
-		clear.setImageDrawable(grid.getContext().getResources().getDrawable(tv.resourceId));
+		view.getContext().getTheme().resolveAttribute(R.attr.cancel, tv, true);
+		clear.setImageDrawable(view.getContext().getResources().getDrawable(tv.resourceId));
 		clear.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 		clear.setBackgroundDrawable(null);
 		clear.setPadding(0, 0, 0, 0);
 		clear.setOnClickListener(this);
 
-		FrameLayout fl = new FrameLayout(grid.getContext());
+		FrameLayout fl = new FrameLayout(view.getContext());
 		fl.addView(text, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		lp.rightMargin = (int)(grid.getContext().getResources().getDisplayMetrics().density * 10.f);
+		lp.rightMargin = (int)(view.getContext().getResources().getDisplayMetrics().density * 10.f);
 		lp.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
 		fl.addView(clear, lp);
 
-		find = new ImageButton(grid.getContext());
-		grid.getContext().getTheme().resolveAttribute(R.attr.search, tv, true);
-		find.setImageDrawable(grid.getContext().getResources().getDrawable(tv.resourceId));
+		find = new ImageButton(view.getContext());
+		view.getContext().getTheme().resolveAttribute(R.attr.search, tv, true);
+		find.setImageDrawable(view.getContext().getResources().getDrawable(tv.resourceId));
 
-		LinearLayout hl = new LinearLayout(grid.getContext());
+		LinearLayout hl = new LinearLayout(view.getContext());
 		hl.setOrientation(LinearLayout.HORIZONTAL);
 		hl.addView(fl, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
 		hl.addView(find, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		layout.addView(hl, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		layout.addView(grid, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
+		layout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 
 		find.setOnClickListener(this);
 
@@ -120,7 +120,7 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 	@Override
 	void destroy()
 	{
-		grid.setOnScrollListener(null);
+		view.setOnScrollListener(null);
 		layout = null;
 		text = null;
 		find = null;
@@ -176,7 +176,7 @@ class FindAdapter extends UnicodeAdapter implements OnClickListener, OnEditorAct
 				cur.close();
 			cur = db.find(saved, UnicodeActivity.univer);
 			((InputMethodManager)text.getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(text.getWindowToken(), 0);
-			grid.invalidateViews();
+			view.invalidateViews();
 		}
 	}
 

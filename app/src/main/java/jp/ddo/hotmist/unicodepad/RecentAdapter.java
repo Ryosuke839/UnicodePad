@@ -18,17 +18,20 @@ package jp.ddo.hotmist.unicodepad;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
-class RecentAdapter extends UnicodeAdapter
+import com.mobeta.android.dslv.DragSortListView;
+
+class RecentAdapter extends UnicodeAdapter implements DragSortListView.DropListener, DragSortListView.RemoveListener
 {
 	private ArrayList<Integer> list;
 	private ArrayList<Integer> temp;
 	static int maxitems = 16;
 
-	RecentAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	RecentAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		list = new ArrayList<>();
 		temp = list;
@@ -60,16 +63,16 @@ class RecentAdapter extends UnicodeAdapter
 	void show()
 	{
 		trunc();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
 	void leave()
 	{
 		commit();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
@@ -84,22 +87,34 @@ class RecentAdapter extends UnicodeAdapter
 		return temp.get(temp.size() - arg0 - 1);
 	}
 
-	void add(int code)
+	void add(final int code)
 	{
-		list.remove(Integer.valueOf(code));
-		list.add(code);
-		if (list.size() >= maxitems)
-			list.remove(0);
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(Integer.valueOf(code));
+				list.add(code);
+				if (list.size() >= maxitems)
+					list.remove(0);
+			}
+		});
 	}
 
-	void remove(int code)
+	void rem(final int code)
 	{
-		list.remove(Integer.valueOf(code));
-		if (list != temp)
-			temp.remove(Integer.valueOf(code));
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(Integer.valueOf(code));
+				if (list != temp)
+					temp.remove(Integer.valueOf(code));
 
-		if (grid != null)
-			grid.invalidateViews();
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
 	}
 
 	private void commit()
@@ -123,4 +138,36 @@ class RecentAdapter extends UnicodeAdapter
 		edit.putString("rec", str);
 	}
 
+	@Override
+	public void drop(final int from, final int to)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list = temp;
+				Integer i = temp.remove(temp.size() - from - 1);
+				temp.add(temp.size() - to, i);
+				trunc();
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
+	}
+
+	@Override
+	public void remove(final int which)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(temp.remove(temp.size() - which - 1));
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
+	}
 }

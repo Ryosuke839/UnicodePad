@@ -179,7 +179,7 @@ class CharacterAdapter extends PagerAdapter implements OnClickListener
 								if (arg1)
 									afav.add(itemid);
 								else
-									afav.remove(itemid);
+									afav.rem(itemid);
 							}
 						});
 						LinearLayout hl = new LinearLayout(context);

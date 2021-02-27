@@ -18,16 +18,19 @@ package jp.ddo.hotmist.unicodepad;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
-class FavoriteAdapter extends UnicodeAdapter
+import com.mobeta.android.dslv.DragSortListView;
+
+class FavoriteAdapter extends UnicodeAdapter implements DragSortListView.DropListener, DragSortListView.RemoveListener
 {
 	private ArrayList<Integer> list;
 	private ArrayList<Integer> temp;
 
-	FavoriteAdapter(SharedPreferences pref, NameDatabase db, boolean single)
+	FavoriteAdapter(Activity activity, SharedPreferences pref, NameDatabase db, boolean single)
 	{
-		super(db, single);
+		super(activity, db, single);
 
 		list = new ArrayList<>();
 		temp = list;
@@ -51,16 +54,16 @@ class FavoriteAdapter extends UnicodeAdapter
 	void show()
 	{
 		trunc();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
 	void leave()
 	{
 		commit();
-		if (grid != null)
-			grid.invalidateViews();
+		if (view != null)
+			view.invalidateViews();
 	}
 
 	@Override
@@ -81,7 +84,7 @@ class FavoriteAdapter extends UnicodeAdapter
 		list.add(code);
 	}
 
-	void remove(int code)
+	void rem(int code)
 	{
 		list.remove(Integer.valueOf(code));
 	}
@@ -114,4 +117,35 @@ class FavoriteAdapter extends UnicodeAdapter
 		edit.putString("fav", str);
 	}
 
+	@Override
+	public void drop(final int from, final int to)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list = temp;
+				list.add(to, list.remove(from));
+				trunc();
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
+	}
+
+	@Override
+	public void remove(final int which)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				list.remove(temp.remove(which));
+
+				if (view != null)
+					view.invalidateViews();
+			}
+		});
+	}
 }

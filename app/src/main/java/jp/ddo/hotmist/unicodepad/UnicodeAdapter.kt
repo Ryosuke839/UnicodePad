@@ -27,6 +27,7 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener
 abstract class UnicodeAdapter(protected val activity: Activity, private val db: NameDatabase, var single: Boolean) : BaseAdapter() {
     private var typeface: Typeface? = null
     protected var view: AbsListView? = null
+    internal var lastPadding: Int = 0
     open fun name(): Int {
         return 0
     }
@@ -94,10 +95,11 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                         (linearLayout.getChildAt(1) as TextView).text = db[getItemString(i), "name"]
                     }
                 }
+                it.setPadding(0, 0, 0, if (i == this.count - 1) lastPadding else 0)
             }
         } else {
             (view as CharacterView? ?: CharacterView(activity, null, android.R.attr.textAppearanceLarge)).also {
-                it.setPadding(padding, padding, padding, padding)
+                it.setPadding(padding, padding, padding, padding + if (i == this.count - 1) lastPadding else 0)
                 it.setTextSize(fontsize)
                 it.shrinkWidth(shrink)
                 it.setTypeface(typeface)

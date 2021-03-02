@@ -18,4 +18,5 @@
 	<attr name="backspace" format="reference" />
 	<attr name="cancel" format="reference" />
 	<attr name="search" format="reference" />
+	<attr name="drag_handle" format="reference" />
 </resources>

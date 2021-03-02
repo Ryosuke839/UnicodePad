@@ -19,6 +19,7 @@ import android.app.Activity
 import android.content.SharedPreferences
 import android.database.DataSetObserver
 import android.graphics.Typeface
+import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import com.mobeta.android.dslv.DragSortListView.DropListener
@@ -60,7 +61,9 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
             (view as LinearLayout? ?: LinearLayout(activity).also {
                 it.orientation = LinearLayout.HORIZONTAL
                 it.addView(ImageView(activity).also { imageView ->
-                    imageView.setImageResource(android.R.drawable.ic_menu_sort_by_size)
+                    imageView.setImageResource(TypedValue().also { tv ->
+                        activity.theme.resolveAttribute(R.attr.drag_handle, tv, true)
+                    }.resourceId)
                     imageView.id = R.id.HANDLE_ID
                     if (!(this is DropListener || this is RemoveListener)) imageView.visibility = View.GONE
                 }, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * 24).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))

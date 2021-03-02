@@ -18,6 +18,7 @@ package jp.ddo.hotmist.unicodepad
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.preference.PreferenceManager
 import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
@@ -30,6 +31,9 @@ class TabsActivity : Activity() {
         val view = DragSortListView(this, null)
         val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE)
         controller.isSortEnabled = true
+        controller.setBackgroundColor(TypedValue().also { tv ->
+            theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
+        }.data)
         view.setFloatViewManager(controller)
         view.setOnTouchListener(controller)
         view.adapter = TabsAdapter(this, view)
@@ -38,8 +42,8 @@ class TabsActivity : Activity() {
 
     companion object {
         private val THEME = intArrayOf(
-                androidx.appcompat.R.style.Theme_AppCompat,
-                androidx.appcompat.R.style.Theme_AppCompat_Light,
-                androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar)
+                R.style.Theme,
+                R.style.Theme_Light,
+                R.style.Theme_Light_DarkActionBar)
     }
 }

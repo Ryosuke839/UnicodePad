@@ -21,6 +21,7 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.text.style.TextAppearanceSpan
+import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -103,6 +104,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     controller.isRemoveEnabled = true
                     controller.removeMode = DragSortController.FLING_REMOVE
                     controller.isSortEnabled = true
+                    controller.setBackgroundColor(TypedValue().also { tv ->
+                        activity.theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
+                    }.data)
                     view.setFloatViewManager(controller)
                     view.setOnTouchListener(controller)
                 }

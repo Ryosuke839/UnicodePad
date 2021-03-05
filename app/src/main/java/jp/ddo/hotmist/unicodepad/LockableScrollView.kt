@@ -61,6 +61,7 @@ class LockableScrollView : ScrollView {
         if (!over) scrollTo(0, 0)
         lockView.layoutParams.height = if (over) height else height - lockView.top
         lockView.requestLayout()
+        adapter.onSizeChanged(if (over) lockView.top else 0)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -70,6 +71,7 @@ class LockableScrollView : ScrollView {
             lockView?.let {
                 it.layoutParams.height = if (over) h else h - it.top
                 it.requestLayout()
+                adapter.onSizeChanged(if (over) it.top else 0)
                 it.post { scrollTo(0, pos) }
             }
         }

@@ -245,6 +245,12 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         for (i in 0 until MAX_VIEWS) views[i]?.invalidateViews()
     }
 
+    fun onSizeChanged(top: Int) {
+        adapters.forEach {
+            it.lastPadding = top
+        }
+    }
+
     companion object {
         var column = 8
         private const val MAX_VIEWS: Int = 6

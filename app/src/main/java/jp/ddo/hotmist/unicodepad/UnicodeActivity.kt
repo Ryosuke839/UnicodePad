@@ -186,7 +186,7 @@ class UnicodeActivity : AppCompatActivity() {
             pager.adapter = it
             scroll.setAdapter(it)
         }
-        scroll.setLockView(pager, Integer.valueOf(pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)
         pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)

@@ -18,6 +18,8 @@ package jp.ddo.hotmist.unicodepad
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
+import android.graphics.Typeface
+import android.util.TypedValue
 import androidx.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
@@ -54,25 +56,33 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
 
     @SuppressLint("InflateParams")
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        if (getItemViewType(i) == 0) {
-            val ret = view as TextView? ?: TextView(activity)
-            ret.setText(if (i == 0) R.string.shown_desc else R.string.hidden_desc)
-            return ret
+        return if (getItemViewType(i) == 0) {
+            (view as TextView? ?: TextView(activity).also {
+                it.setTextColor(TypedValue().also { tv ->
+                    activity.theme.resolveAttribute(android.R.attr.textColorLink, tv, true)
+                }.data)
+                it.typeface = Typeface.DEFAULT_BOLD
+                (activity.resources.displayMetrics.density * 16).toInt().let { padding ->
+                    it.setPadding(padding, padding / 2, padding, padding / 2)
+                }
+            }).also {
+                it.setText(if (i == 0) R.string.shown_desc else R.string.hidden_desc)
+            }
         } else {
-            val ret = view ?: activity.layoutInflater.inflate(R.layout.spinwidget, null).also {
+            (view ?: activity.layoutInflater.inflate(R.layout.spinwidget, null).also {
                 it.findViewById<RadioButton>(R.id.tabs_multiple).setOnClickListener(this)
                 it.findViewById<RadioButton>(R.id.tabs_single).setOnClickListener(this)
+            }).also {
+                it.findViewById<TextView>(R.id.tabs_title).setText(RESOURCES[idx[i]])
+                it.findViewById<RadioButton>(R.id.tabs_multiple).let { rb ->
+                    rb.isChecked = !single[idx[i]]
+                    rb.tag = idx[i]
+                }
+                it.findViewById<RadioButton>(R.id.tabs_single).let { rb ->
+                    rb.isChecked = single[idx[i]]
+                    rb.tag = idx[i]
+                }
             }
-            ret.findViewById<TextView>(R.id.tabs_title).setText(RESOURCES[idx[i]])
-            ret.findViewById<RadioButton>(R.id.tabs_multiple).let {
-                it.isChecked = !single[idx[i]]
-                it.tag = idx[i]
-            }
-            ret.findViewById<RadioButton>(R.id.tabs_single).let {
-                it.isChecked = single[idx[i]]
-                it.tag = idx[i]
-            }
-            return ret
         }
     }
 

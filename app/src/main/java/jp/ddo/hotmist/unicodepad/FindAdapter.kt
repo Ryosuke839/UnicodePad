@@ -85,9 +85,10 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             saved = text.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text.setText(saved)
             if (saved.isEmpty()) return@setOnClickListener
-            adapter?.update(saved)
             cur?.close()
             cur = db.find(saved, UnicodeActivity.univer)
+            if ((cur?.count ?: 0) > 0)
+                adapter?.update(saved)
             (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
             view.invalidateViews()
         }

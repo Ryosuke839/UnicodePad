@@ -80,18 +80,19 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
     }
 
     private inner class CompleteFilter : Filter() {
-        override fun performFiltering(prefix: CharSequence): FilterResults {
+        override fun performFiltering(prefix: CharSequence?): FilterResults {
             val results = FilterResults()
             val array = temp ?: ArrayList(list).also { synchronized(lock) { temp = it } }
-            val idx = prefix.toString().lastIndexOf(' ')
-            if (prefix.length == idx + 1) {
+            val str = prefix?.toString() ?: ""
+            val idx = str.lastIndexOf(' ')
+            if (str.length == idx + 1) {
                 var res: ArrayList<String>
                 synchronized(lock) { res = ArrayList(array) }
                 results.values = res
                 results.count = res.size
             } else {
-                val prefixString = prefix.toString().toUpperCase(Locale.ENGLISH).substring(idx + 1)
-                current = if (idx == -1) "" else prefix.toString().substring(0, idx + 1)
+                val prefixString = str.toUpperCase(Locale.ENGLISH).substring(idx + 1)
+                current = if (idx == -1) "" else str.substring(0, idx + 1)
                 var values: ArrayList<String>
                 synchronized(lock) { values = ArrayList(array) }
                 val count = values.size
@@ -107,9 +108,9 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
             return results
         }
 
-        override fun publishResults(constraint: CharSequence, results: FilterResults) {
+        override fun publishResults(constraint: CharSequence?, results: FilterResults) {
             @Suppress("UNCHECKED_CAST")
-            list = results.values as ArrayList<String>
+            list = results.values as ArrayList<String>? ?: ArrayList()
             if (results.count > 0) notifyDataSetChanged() else notifyDataSetInvalidated()
         }
     }

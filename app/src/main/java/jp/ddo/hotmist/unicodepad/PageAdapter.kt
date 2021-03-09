@@ -225,6 +225,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     private fun find(code: Int) {
+        if (code == -1) return
         activity.setPage(listpage)
         adapterList.find(code)
     }

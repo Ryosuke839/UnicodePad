@@ -91,8 +91,14 @@ class NameDatabase(context: Context) {
     fun find(str: String, version: Int): Cursor? {
         val list = str.split(" +").toTypedArray()
         if (list.isEmpty()) return null
+        val emojiVersion = when (version) {
+            600, 610, 620, 630 -> 60
+            700 -> 70
+            800 -> 100
+            else -> version
+        }
         return try {
-            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString { "words LIKE '%$it%' AND " } + "version <= $version;", null)
+            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version UNION ALL SELECT id FROM emoji_table WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
         } catch (e: SQLiteException) {
             null
         }
@@ -100,14 +106,14 @@ class NameDatabase(context: Context) {
 
     @SuppressLint("Recycle")
     fun emoji(version: Int, mod: Boolean): Cursor? {
-        val dbVersion = when (version) {
+        val emojiVersion = when (version) {
             600, 610, 620, 630 -> 60
             700 -> 70
             800 -> 100
             else -> version
         }
         return try {
-            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $dbVersion" + if (mod) ";" else " AND mod = 0;", null)
+            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $emojiVersion" + if (mod) ";" else " AND mod = 0;", null)
         } catch (e: SQLiteException) {
             null
         }

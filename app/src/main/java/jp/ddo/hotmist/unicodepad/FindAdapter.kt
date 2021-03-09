@@ -115,8 +115,20 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         return cur?.let {
             if (i < 0 || i >= it.count) null else {
                 it.moveToPosition(i)
-                it.getInt(0).toLong()
+                if (it.getType(0) == Cursor.FIELD_TYPE_INTEGER) it.getInt(0).toLong() else -1
             }
         } ?: 0
+    }
+
+    override fun getItemString(i: Int): String {
+        return cur?.let {
+            if (i < 0 || i >= it.count) return ""
+            it.moveToPosition(i)
+            if (it.getType(0) == Cursor.FIELD_TYPE_INTEGER) super.getItemString(i) else it.getString(0)
+        } ?: ""
+    }
+
+    override fun getItem(i: Int): String {
+        return getItemString(i).split(" ").joinToString("") { String(Character.toChars(it.toInt(16))) }
     }
 }

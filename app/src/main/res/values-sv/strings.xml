@@ -345,6 +345,11 @@
 
 	<string name="version_latest">Senaste (13.0.0)</string>
 
+	<string name="emojicompat_desc">Använd framåtkompatibilitet för emoji</string>
+	<string name="emojicompat_null">Aldrig</string>
+	<string name="emojicompat_false">Endast för emojier som saknas</string>
+	<string name="emojicompat_true">För alla emojier</string>
+
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
 	<string name="tabs_desc">Flikinställningar …</string>

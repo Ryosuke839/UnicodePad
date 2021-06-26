@@ -11,7 +11,6 @@ import com.google.android.gms.ads.MobileAds
 
 import android.app.Activity
 import android.content.SharedPreferences
-import android.util.Log
 
 internal class AdCompatImpl : AdCompat {
     override val showAdSettings = true
@@ -24,6 +23,7 @@ internal class AdCompatImpl : AdCompat {
                         MobileAds.initialize(activity) { }
                         AdView(activity).also {
                             val outMetrics = DisplayMetrics()
+                            @Suppress("DEPRECATION")
                             activity.windowManager.defaultDisplay.getMetrics(outMetrics)
                             it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, (outMetrics.widthPixels / outMetrics.density).toInt())
                             it.adUnitId = "ca-app-pub-8779692709020298/6882844952"

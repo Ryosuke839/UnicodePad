@@ -19,6 +19,7 @@ package jp.ddo.hotmist.unicodepad
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.preference.*
 import android.preference.Preference.OnPreferenceChangeListener
@@ -78,8 +79,13 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
             }
         }
         if (!adCompat.showAdSettings) {
-            findPreference("no-ad").also {
-                it.parent?.removePreference(it);
+            (findPreference("no-ad") as CheckBoxPreference).also {
+                if (Build.VERSION.SDK_INT >= 26) {
+                    it.parent?.removePreference(it)
+                } else {
+                    it.isEnabled = false
+                    it.isChecked = true
+                }
             }
         }
         setResult(RESULT_OK)

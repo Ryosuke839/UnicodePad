@@ -22,10 +22,8 @@ import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Process
-import androidx.preference.PreferenceManager
 import android.provider.OpenableColumns
 import android.text.*
-import android.util.DisplayMetrics
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -36,11 +34,8 @@ import androidx.core.view.MenuItemCompat
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.EmojiCompat.InitCallback
 import androidx.emoji.text.FontRequestEmojiCompatConfig
+import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -57,7 +52,7 @@ class UnicodeActivity : AppCompatActivity() {
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
-    private var adView: AdView? = null
+    private val adCompat: AdCompat = AdCompatImpl()
     private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
     private var isMush = false
@@ -206,21 +201,7 @@ class UnicodeActivity : AppCompatActivity() {
             val str = it.getStringExtra(Intent.EXTRA_TEXT)
             if (str != null) editText.append(str)
         }
-        if (!pref.getBoolean("no-ad", false)) {
-            try {
-                MobileAds.initialize(this) { }
-                adView = AdView(this).also {
-                    val outMetrics = DisplayMetrics()
-                    windowManager.defaultDisplay.getMetrics(outMetrics)
-                    it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
-                    it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                    findViewById<LinearLayout>(R.id.adContainer).addView(it)
-                    val adRequest = AdRequest.Builder().build()
-                    it.loadAd(adRequest)
-                }
-            } catch (e: NullPointerException) {
-            }
-        }
+        adCompat.renderAdToContainer(this, pref)
         created = true
     }
 
@@ -320,27 +301,7 @@ class UnicodeActivity : AppCompatActivity() {
             scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         }
         if (requestCode != -1) {
-            val adContainer = findViewById<LinearLayout>(R.id.adContainer)
-            if (adContainer != null) {
-                if (!pref.getBoolean("no-ad", false)) {
-                    if (adContainer.childCount == 0) {
-                        MobileAds.initialize(this) { }
-                        adView = AdView(this).also {
-                            val outMetrics = DisplayMetrics()
-                            windowManager.defaultDisplay.getMetrics(outMetrics)
-                            it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
-                            it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                            (findViewById<View>(R.id.adContainer) as LinearLayout).addView(it)
-                            val adRequest = AdRequest.Builder().build()
-                            it.loadAd(adRequest)
-                        }
-                    }
-                } else {
-                    if (adContainer.childCount > 0) {
-                        adContainer.removeAllViews()
-                    }
-                }
-            }
+            adCompat.renderAdToContainer(this, pref)
         }
     }
 

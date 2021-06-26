@@ -26,6 +26,7 @@ import android.text.ClipboardManager
 import android.widget.Toast
 
 class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
+    private val adCompat: AdCompat = AdCompatImpl()
     override fun onCreate(savedInstanceState: Bundle?) {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
@@ -74,6 +75,11 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
         findPreference("legal_uni").also {
             it.setOnPreferenceClickListener {
                 openPage("https://unicode.org/")
+            }
+        }
+        if (!adCompat.showAdSettings) {
+            findPreference("no-ad").also {
+                it.parent?.removePreference(it);
             }
         }
         setResult(RESULT_OK)

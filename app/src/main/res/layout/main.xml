@@ -164,11 +164,6 @@
 
 	</jp.ddo.hotmist.unicodepad.LockableScrollView>
 
-	<LinearLayout
-		android:id="@+id/adContainer"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-	</LinearLayout>
+	<include layout="@layout/ad_container" />
 
 </LinearLayout>

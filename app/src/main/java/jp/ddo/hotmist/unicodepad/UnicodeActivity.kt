@@ -40,9 +40,11 @@ import androidx.viewpager.widget.ViewPager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 import java.util.zip.CRC32
 import kotlin.math.max
 import kotlin.math.min
+
 
 @Suppress("DEPRECATION")
 class UnicodeActivity : AppCompatActivity() {
@@ -50,6 +52,7 @@ class UnicodeActivity : AppCompatActivity() {
     private lateinit var btnClear: ImageButton
     private lateinit var btnFinish: Button
     private lateinit var chooser: FontChooser
+    private lateinit var locale: LocaleChooser
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
@@ -78,7 +81,9 @@ class UnicodeActivity : AppCompatActivity() {
                             super.onInitialized()
                             val tf = oldtf
                             oldtf = null
-                            setTypeface(tf)
+                            val locale = oldlocale
+                            oldlocale = Locale.ROOT
+                            setTypeface(tf, locale)
                         }
                     }))
         }
@@ -182,9 +187,14 @@ class UnicodeActivity : AppCompatActivity() {
                 }
             }
         }
-        chooser = FontChooser(this, findViewById<View>(R.id.font) as Spinner, object : FontChooser.Listener {
+        chooser = FontChooser(this, findViewById(R.id.font), object : FontChooser.Listener {
             override fun onTypefaceChosen(typeface: Typeface?) {
-                setTypeface(typeface)
+                setTypeface(typeface, oldlocale)
+            }
+        })
+        locale = LocaleChooser(this, findViewById(R.id.locale), object : LocaleChooser.Listener {
+            override fun onLocaleChosen(locale: Locale) {
+                setTypeface(oldtf, locale)
             }
         })
         scroll = findViewById(R.id.scrollView)
@@ -194,7 +204,8 @@ class UnicodeActivity : AppCompatActivity() {
             pager.adapter = it
             scroll.setAdapter(it)
         }
-        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)
         pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
@@ -220,7 +231,8 @@ class UnicodeActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -239,6 +251,7 @@ class UnicodeActivity : AppCompatActivity() {
         val edit = pref.edit()
         adpPage.save(edit)
         chooser.save(edit)
+        locale.save(edit)
         edit.putInt("page", pager.currentItem)
         edit.apply()
         super.onPause()
@@ -311,7 +324,8 @@ class UnicodeActivity : AppCompatActivity() {
             btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
-            scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+            scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                    ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         }
         if (requestCode != -1) {
             adCompat.renderAdToContainer(this, pref)
@@ -323,11 +337,16 @@ class UnicodeActivity : AppCompatActivity() {
     }
 
     private var oldtf: Typeface? = null
-    private fun setTypeface(tf: Typeface?) {
-        if (tf === oldtf) return
+    private var oldlocale = Locale.ROOT
+    private fun setTypeface(tf: Typeface?, locale: Locale) {
+        if (tf === oldtf && locale == oldlocale) return
         oldtf = tf
+        oldlocale = locale
         editText.typeface = tf
-        adpPage.setTypeface(tf)
+        if (Build.VERSION.SDK_INT >= 17) {
+            editText.textLocale = locale
+        }
+        adpPage.setTypeface(tf, locale)
     }
 
     companion object {

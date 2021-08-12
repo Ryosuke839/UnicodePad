@@ -11,33 +11,33 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">UnicodePad</string>
-	<string name="delete">Delete</string>
-	<string name="desc">Detail</string>
-	<string name="find">Find</string>
-	<string name="fhint">Enter a character name</string>
-	<string name="inlist">Find in list</string>
-	<string name="copied">Copied to clipboard</string>
+	<string name="delete">წაშლა</string>
+	<string name="desc">დეტალები</string>
+	<string name="find">ძიება</string>
+	<string name="fhint">შეიყვანეთ სიმბოლოს სახელი</string>
+	<string name="inlist">ძიება სიაში</string>
+	<string name="copied">დაკოპირებულია გაცვლის ბუფერზე</string>
 	<string name="finish">Enter</string>
-	<string name="share">Share</string>
-	<string name="font">Font</string>
-	<string name="favorite">Favorite</string>
-	<string name="recent">Recent</string>
-	<string name="list">List</string>
-	<string name="edit">Input</string>
-	<string name="emoji">Emoji</string>
-	<string name="normal">Default</string>
-	<string name="input">Input</string>
-	<string name="remrec">Remove</string>
-	<string name="add">Select…</string>
-	<string name="mark">Mark</string>
-	<string name="rem">Remove…</string>
-	<string name="code">Codepoint</string>
-	<string name="nocode">Invalid codepoint</string>
-	<string name="cantopen">Cannot open the font</string>
-	<string name="cantread">Cannot access; the application may not have permission to read</string>
-	<string name="denied">You have denied access. To browse SD card, please grant the storage permission from Apps setting.</string>
+	<string name="share">გაზიარება</string>
+	<string name="font">ფონტი</string>
+	<string name="favorite">ფავორიტი</string>
+	<string name="recent">Ბოლო</string>
+	<string name="list">სია</string>
+	<string name="edit">შესწორება</string>
+	<string name="emoji">ემოჯი</string>
+	<string name="normal">ჩვეულებრივი</string>
+	<string name="input">შეყვანა</string>
+	<string name="remrec">წაშლა</string>
+	<string name="add">დამატება…</string>
+	<string name="mark">მონიშვნა</string>
+	<string name="rem">წაშლა…</string>
+	<string name="code">კოდირებული წერტილი</string>
+	<string name="nocode">არასწორი კოდირებული წერტილი</string>
+	<string name="cantopen">გახსნა შეუძლებელია</string>
+	<string name="cantread">წვდომა შეუძლებელია; აპლიკაციას შეიძლება არ ჰქონდეს წაკითხვის ნებართვა</string>
+	<string name="denied">თქვენ უარყავით წვდომა. SD ბარათის დასათვალიერებლად, გთხოვთ, მიანიჭოთ მეხსიერების ნებართვა პროგრამების პარამეტრებიდან.</string>
 
 	<string name="script_0">0 Basic Latin</string>
 	<string name="script_80">80 Latin-1 Supplement</string>
@@ -345,12 +345,12 @@
 	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>
 	<string name="script_100000">100000 Supplementary Private Use Area-B</string>
 
-	<string name="general">General</string>
-	<string name="appearance">Appearance</string>
-	<string name="behaviour">Behaviour</string>
-	<string name="textsize_desc">Text size of edit box</string>
-	<string name="column_desc">Columns in grid</string>
-	<string name="columnl_desc">Columns in grid (landscape)</string>
+	<string name="general">გენერალური</string>
+	<string name="appearance">გარეგნობა</string>
+	<string name="behaviour">Მოქმედება</string>
+	<string name="textsize_desc">ტექსტის ზომა რედაქტირების ყუთში</string>
+	<string name="column_desc">სვეტები ბადეში</string>
+	<string name="columnl_desc">სვეტები ბადეში (ლანდშაფტი)</string>
 
 	<string name="column_1" translatable="false">1</string>
 	<string name="column_2" translatable="false">2</string>
@@ -360,7 +360,7 @@
 	<string name="column_32" translatable="false">32</string>
 	<string name="column_64" translatable="false">64</string>
 
-	<string name="version_desc">Unicode version</string>
+	<string name="version_desc">Unicode-ის ვერსია</string>
 
 	<string name="version_600" translatable="false">6.0.0</string>
 	<string name="version_610" translatable="false">6.1.0</string>
@@ -374,59 +374,68 @@
 	<string name="version_1200" translatable="false">12.0.0</string>
 	<string name="version_1210" translatable="false">12.1.0</string>
 	<string name="version_1300" translatable="false">13.0.0</string>
-	<string name="version_latest">Latest (13.0.0)</string>
+	<string name="version_latest">უახლესი (13.0.0)</string>
 
-	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
-	<string name="emojicompat_null">Never</string>
-	<string name="emojicompat_false">Only for missing glyphs</string>
-	<string name="emojicompat_true">For all emoji glyphs</string>
+	<string name="emojicompat_desc">EmojiCompat-ის გამოყენება ემოჯების საჩვენებლად</string>
+	<string name="emojicompat_null">არასდროს</string>
+	<string name="emojicompat_false">მხოლოდ დაკარგული გლიფებისთვის</string>
+	<string name="emojicompat_true">ყველა ემოციური გლიფისთვის</string>
 
-	<string name="download_desc">Download Noto fonts…</string>
+	<string name="download_desc">გადმოწერე Noto ფონტები…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
-	<string name="no_ad_desc">Opt-out ads</string>
-	<string name="tabs_desc">Tabs settings…</string>
-	<string name="shown_desc">Shown tabs</string>
-	<string name="hidden_desc">Hidden tabs</string>
+	<string name="no_ad_desc">უარი თქვით რეკლამებზე</string>
+	<string name="tabs_desc">ჩანართის პარამეტრები…</string>
+	<string name="shown_desc">ნაჩვენები ჩანართები</string>
+	<string name="hidden_desc">დამალული ჩანართები</string>
+	<string name="single_rec_desc">სვეტები ბოლო ჩანართში</string>
+	<string name="single_list_desc">სვეტები სიის ჩანართში</string>
+	<string name="single_find_desc">სვეტები ძიების ჩანართში</string>
+	<string name="single_fav_desc">სვეტები ფავორიტ ჩანართში</string>
+	<string name="single_edt_desc">სვეტები შეყვანის ჩანართში</string>
+	<string name="single_emoji_desc">სვეტები emoji ჩანართში</string>
 
-	<string name="multiplecolumns">Multiple columns only with characters</string>
-	<string name="singlecolumn">Single column with description</string>
-	<string name="sort">Sort</string>
+	<string name="multiplecolumns">მრავალი სვეტი მხოლოდ სიმბოლოებით</string>
+	<string name="singlecolumn">ერთი სვეტი აღწერით</string>
+	<string name="sort">დალაგება</string>
 
-	<string name="padding_desc">Padding of grid</string>
-	<string name="gridsize_desc">Text size of grid</string>
-	<string name="viewsize_desc">Text size of large view</string>
-	<string name="checker_desc">Checker opacity in large view (%)</string>
-	<string name="lines_desc">Show font metrics in large view</string>
-	<string name="shrink_desc">Shrink font to fit width</string>
-	<string name="recent_desc">Maximum number of recent list</string>
-	<string name="theme_desc">Theme</string>
+	<string name="padding_desc">ბადის გადახურვა</string>
+	<string name="gridsize_desc">ბადის ტექსტის ზომა</string>
+	<string name="viewsize_desc">დიდი ხედის ტექსტის ზომა</string>
+	<string name="checker_desc">გამშვები გამჭვირვალობა დიდ ხედში (%)</string>
+	<string name="lines_desc">შრიფტის მეტრიკის ჩვენება დიდი ხედვით</string>
+	<string name="shrink_desc">შრიფტის შემცირება სიგანეზე მორგებისთვის</string>
+	<string name="recent_desc">ბოლო სიის მაქსიმალური რაოდენობა</string>
+	<string name="theme_desc">თემა</string>
 
-	<string name="theme_dark">Dark</string>
-	<string name="theme_light">Light</string>
-	<string name="theme_darktitle">Light + DarkTitle</string>
+	<string name="theme_dark">ბნელო</string>
+	<string name="theme_light">ნათელი</string>
+	<string name="theme_darktitle">ნათელი + ბნელი სათაური</string>
 
-	<string name="theme_title">Applied after restart</string>
-	<string name="list_title">List tab can\'t be hidden</string>
+	<string name="theme_title">მიიღება ხელახლა ჩართვის მერე</string>
+	<string name="list_title">სიის ჩანართი ვერ დაიმალება</string>
 	<string name="scroll_desc">UI scroll</string>
 
-	<string name="scroll_never">Never</string>
-	<string name="scroll_landscape">Only in landscape</string>
-	<string name="scroll_always">Always</string>
+	<string name="scroll_never">არასდროს</string>
+	<string name="scroll_landscape">მხოლოდ ლანდშაფტის პოზიციაში</string>
+	<string name="scroll_always">ყოველთვის</string>
 
-	<string name="ime_desc">Disable IME</string>
-	<string name="clear_desc">Show clear button</string>
+	<string name="ime_desc">IME-ს გათიშვა</string>
+	<string name="clear_desc">ყოველთვის აჩვენე გასუფთავების ღილაკი</string>
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
+	<string name="config" translatable="false">⚙</string>
+	<string name="up" translatable="false">⌃</string>
+	<string name="down" translatable="false">⌄</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="modifier" translatable="false">Modifier</string>
-	<string name="malformed">Malformed file name in zip</string>
-	<string name="legal">Legal</string>
+	<string name="malformed">ფაილის სახელი არასწორია zip-ში</string>
+	<string name="legal">იურიდიული</string>
 	<string name="legal_uni">Unicode®</string>
-	<string name="legal_uni2">This application includes a modified version of Unicode Data File.
-Copyright © 1991-2020 Unicode, Inc. All rights reserved.
-Distributed under the Terms of Use in
+	<string name="legal_uni2">ეს პროგრამა შეიცავს Unicode მონაცემთა ფაილის შეცვლილ ვერსიას.
+საავტორო უფლება © 1991-2020 Unicode, Inc. ყველა უფლება დაცულია.
+განაწილებულია გამოყენების პირობებით
 http://www.unicode.org/copyright.html.</string>
 	<string name="legal_app">UnicodePad 2.9.1</string>
-	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
+	<string name="legal_app2">UnicodePad არის ლიცენზირებული Apache License, ვერსია2.0-ით
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

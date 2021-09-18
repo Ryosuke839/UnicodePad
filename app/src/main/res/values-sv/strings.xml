@@ -343,7 +343,7 @@
 
 	<string name="version_desc">Unicode-version</string>
 
-	<string name="version_latest">Senaste (13.0.0)</string>
+	<string name="version_latest">Senaste (14.0.0)</string>
 
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>

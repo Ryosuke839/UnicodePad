@@ -377,7 +377,8 @@
 	<string name="version_1200" translatable="false">12.0.0</string>
 	<string name="version_1210" translatable="false">12.1.0</string>
 	<string name="version_1300" translatable="false">13.0.0</string>
-	<string name="version_latest">Latest (13.0.0)</string>
+	<string name="version_1400" translatable="false">14.0.0</string>
+	<string name="version_latest">Latest (14.0.0)</string>
 
 	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
 	<string name="emojicompat_null">Never</string>

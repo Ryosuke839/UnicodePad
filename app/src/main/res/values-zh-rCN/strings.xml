@@ -354,7 +354,7 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (13.0.0)</string>
+	<string name="version_latest">最新 (14.0.0)</string>
 
 	<string name="download_desc">下载 Noto 字体…</string>
 	<string name="download_uri">https://www.google.cn/get/noto/</string>

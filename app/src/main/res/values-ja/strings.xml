@@ -354,7 +354,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (13.0.0)</string>
+	<string name="version_latest">最新 (14.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>

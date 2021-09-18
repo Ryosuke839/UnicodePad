@@ -228,6 +228,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                                     it.put("find", pref.getString("find", null))
                                     it.put("list", if (pref.contains("list")) pref.getInt("list", 0) else null)
                                     it.put("emoji", if (pref.contains("emoji")) pref.getInt("emoji", 0) else null)
+                                    it.put("locale", pref.getString("locale", null))
                                 })
                             }
                         }.toString(2).encodeToByteArray())
@@ -365,11 +366,10 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                             }
                             if (cbScroll.isChecked) {
                                 obj.optJSONObject("scroll")?.also {
-                                    (it.opt("mark") as? String)?.let { str -> edit.putString("mark", str) }
-                                    (it.opt("comp") as? String)?.let { str -> edit.putString("comp", str) }
                                     (it.opt("find") as? String)?.let { str -> edit.putString("find", str) }
                                     (it.opt("list") as? Int)?.let { int -> edit.putInt("list", int) }
                                     (it.opt("emoji") as? Int)?.let { int -> edit.putInt("emoji", int) }
+                                    (it.opt("locale") as? String)?.let { str -> edit.putString("locale", str) }
                                 }
                             }
                             edit.apply()

@@ -133,11 +133,11 @@ class NameDatabase(context: Context) {
                     }
                     db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 33805) throw SQLiteException()
+                        if (cur.getInt(0) != 34634) throw SQLiteException()
                     }
                     db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 3295) throw SQLiteException()
+                        if (cur.getInt(0) != 3624) throw SQLiteException()
                     }
                 } catch (e: SQLiteException) {
                     db.close()

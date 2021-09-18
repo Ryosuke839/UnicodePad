@@ -404,4 +404,7 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="legal_app">UnicodePad 2.9.1</string>
 	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
+    <string name="locale_default">기본 (%s)</string>
+	<string name="locale_other">다른…</string>
+	<string name="locale_title">로케일</string>
 </resources>

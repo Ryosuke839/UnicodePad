@@ -25,6 +25,7 @@ import android.view.View
 import androidx.core.graphics.ColorUtils
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.EmojiSpan
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -72,9 +73,12 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             requestLayout()
         }
 
-    fun setTypeface(tf: Typeface?) {
+    fun setTypeface(tf: Typeface?, locale: Locale) {
         if (paint.typeface != tf) invalid = true
         paint.typeface = tf
+        if (Build.VERSION.SDK_INT >= 17) {
+            paint.textLocale = locale
+        }
         requestLayout()
     }
 

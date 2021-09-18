@@ -21,12 +21,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.database.DataSetObserver
 import android.graphics.*
+import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.SparseArray
 import android.util.TypedValue
 import android.view.*
 import android.view.ViewGroup.MarginLayoutParams
@@ -39,9 +40,10 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
+
 internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
-    private data class FromIndex (val codePoint: Int, val block: Int)
-    private data class FromCodePoint (val index: Int, val end: Int, val block: Int)
+    private data class FromIndex(val codePoint: Int, val block: Int)
+    private data class FromCodePoint(val index: Int, val end: Int, val block: Int)
     private var count = 0
     private val fromIndex: NavigableMap<Int, FromIndex> = TreeMap()
     private val fromCodePoint: NavigableMap<Int, FromCodePoint> = TreeMap()
@@ -491,20 +493,32 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             override fun onNothingSelected(parent: AdapterView<*>?) {}
                         }
                     }
-                    jump = Spinner(activity).also { jump ->
+                    jump = FilterableSpinner(activity).also { jump ->
                         fl.addView(jump, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
                             it.rightMargin = (activity.resources.displayMetrics.scaledDensity * 22f).toInt()
                         })
-                        val jstr = arrayOfNulls<String>(fromCodePoint.size)
-                        val jmap = SparseArray<String>()
-                        for (s in jump.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
-                        val jit: Iterator<Int> = fromCodePoint.keys.iterator()
-                        var i = 0
-                        while (jit.hasNext()) {
-                            val c = jit.next()
-                            jstr[i] = String.format("U+%04X %s", c, jmap[c])
-                            ++i
+                        class JumpItem(private val code: Int, private val localized: String, private val default: String) : FilterableSpinner.FilterableItem {
+                            override fun toString(): String {
+                                return String.format("U+%04X %s", code, localized)
+                            }
+
+                            override fun contains(str: String): Boolean {
+                                return localized.contains(str, true) || default.contains(str, true)
+                            }
+
                         }
+                        val jmap = jump.context.resources.getStringArray(R.array.codes).map {
+                            Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
+                        }.toMap()
+                        val jdef = jump.context.resources.let {
+                            if (Build.VERSION.SDK_INT >= 17)
+                                jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
+                            else
+                                Resources(it.assets, it.displayMetrics, it.configuration.apply { locale = Locale.US })
+                        }.getStringArray(R.array.codes).map {
+                            Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
+                        }.toMap()
+                        val jstr = fromCodePoint.keys.map { JumpItem(it, jmap.getValue(it), jdef.getValue(it)) }.toTypedArray()
                         val adp = ArrayAdapter(jump.context, android.R.layout.simple_spinner_item, jstr)
                         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
                         jump.adapter = adp
@@ -629,7 +643,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 if (e.value.end < scroll) scroll = e.value.end
                 view.setSelection(scroll - e.key + e.value.index)
                 view.setOnScrollListener(object : AbsListView.OnScrollListener {
-                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) { }
+                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {}
 
                     override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                         if (visibleItemCount == 0)

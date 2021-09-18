@@ -383,6 +383,22 @@
 
 	<string name="download_desc">Download Noto fonts…</string>
 	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="export_data">Export data and settings…</string>
+	<string name="import_data">Import data and settings…</string>
+	<string name="exported_data">Data to export</string>
+	<string name="imported_data">Data to import</string>
+	<string name="export_confirm">Export</string>
+	<string name="import_confirm">Import</string>
+	<string name="exported_notice">Exported</string>
+	<string name="imported_notice">Imported</string>
+	<string name="export_fail_io">Failed to export: %1$s</string>
+	<string name="import_fail_json">File to import is not a valid JSON: %1$s</string>
+	<string name="import_fail_io">Failed to import: %1$s</string>
+	<string name="data_setting">Setting</string>
+	<string name="data_history">History (%1$d)</string>
+	<string name="data_favorite">Favorite (%1$d)</string>
+	<string name="data_scroll">Scroll positions</string>
+	<string name="data_merge">Merge with current</string>
 	<string name="no_ad_desc">Opt-out ads</string>
 	<string name="tabs_desc">Tabs settings…</string>
 	<string name="shown_desc">Shown tabs</string>

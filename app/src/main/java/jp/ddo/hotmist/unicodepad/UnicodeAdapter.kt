@@ -24,9 +24,11 @@ import android.view.*
 import android.widget.*
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import java.util.*
 
 abstract class UnicodeAdapter(protected val activity: Activity, private val db: NameDatabase, var single: Boolean) : BaseAdapter() {
     private var typeface: Typeface? = null
+    private var locale = Locale.ROOT
     protected var view: AbsListView? = null
     internal var lastPadding: Int = 0
     open fun name(): Int {
@@ -84,7 +86,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                     characterView.setPadding(padding, padding, padding, padding)
                     characterView.setTextSize(fontsize)
                     characterView.shrinkWidth(shrink)
-                    characterView.setTypeface(typeface)
+                    characterView.setTypeface(typeface, locale)
                     characterView.drawSlash(true)
                     val ver = if (getItemId(i) != -1L) db.getInt(getItemId(i).toInt(), "version") else db.getInt(getItemString(i), "version")
                     characterView.setValid(ver != 0 && ver <= UnicodeActivity.univer)
@@ -105,7 +107,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                 it.setPadding(padding, padding, padding, padding + if (i == this.count - 1) lastPadding else 0)
                 it.setTextSize(fontsize)
                 it.shrinkWidth(shrink)
-                it.setTypeface(typeface)
+                it.setTypeface(typeface, locale)
                 it.drawSlash(true)
                 val ver = if (getItemId(i) != -1L) db.getInt(getItemId(i).toInt(), "version") else db.getInt(getItemString(i), "version")
                 it.setValid(ver != 0 && ver <= UnicodeActivity.univer)
@@ -140,8 +142,9 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         activity.runOnUiThread(action)
     }
 
-    fun setTypeface(typeface: Typeface?) {
+    fun setTypeface(typeface: Typeface?, locale: Locale) {
         this.typeface = typeface
+        this.locale = locale
     }
 
     companion object {

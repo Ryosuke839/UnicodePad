@@ -39,6 +39,12 @@
 			android:key="download"
 			android:summary="@string/download_uri"
 			android:title="@string/download_desc" />
+		<Preference
+			android:key="export"
+			android:title="@string/export_data" />
+		<Preference
+			android:key="import"
+			android:title="@string/import_data" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:key="app"

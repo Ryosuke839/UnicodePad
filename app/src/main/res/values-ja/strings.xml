@@ -59,6 +59,7 @@
 	<string name="script_800">800 サマリア文字</string>
 	<string name="script_840">840 マンダ文字</string>
 	<string name="script_860">860 シリア文字補助</string>
+	<string name="script_870">870 アラビア文字拡張B</string>
 	<string name="script_8A0">8A0 アラビア文字拡張A</string>
 	<string name="script_900">900 デーヴァナーガリー文字</string>
 	<string name="script_980">980 ベンガル文字</string>
@@ -220,6 +221,7 @@
 	<string name="script_10500">10500 エルバサン文字</string>
 	<string name="script_10530">10530 カフカス・アルバニア文字</string>
 	<string name="script_10600">10600 線文字A</string>
+	<string name="script_10780">10780 ラテン文字拡張F</string>
 	<string name="script_10800">10800 キプロス音節文字</string>
 	<string name="script_10840">10840 アラム文字</string>
 	<string name="script_10860">10860 パルミラ文字</string>
@@ -244,6 +246,7 @@
 	<string name="script_10E80">10E80 ヤズィーディー文字</string>
 	<string name="script_10F00">10F00 古代ソグド文字</string>
 	<string name="script_10F30">10F30 ソグド文字</string>
+	<string name="script_10F70">10F70 古ウイグル文字</string>
 	<string name="script_10FB0">10FB0 コレズム文字</string>
 	<string name="script_10FE0">10FE0 エリマイス文字</string>
 	<string name="script_11000">11000 ブラーフミー文字</string>
@@ -270,6 +273,7 @@
 	<string name="script_119A0">119A0 ナンディナーガリー文字</string>
 	<string name="script_11A00">11A00 ザナバザル方形文字</string>
 	<string name="script_11A50">11A50 ソヨンボ文字</string>
+	<string name="script_11AB0">11AB0 統合カナダ先住民音節拡張A</string>
 	<string name="script_11AC0">11AC0 パウ・チン・ハウ表語文字</string>
 	<string name="script_11C00">11C00 バイクシュキー文字</string>
 	<string name="script_11C70">11C70 マルチェン文字</string>
@@ -281,6 +285,7 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字の数字及び句読点</string>
 	<string name="script_12480">12480 シュメール楔形文字</string>
+	<string name="script_12F90">12F90 キュプロ・ミノア文字</string>
 	<string name="script_13000">13000 エジプト・ヒエログリフ</string>
 	<string name="script_13430">13430 エジプト・ヒエログリフ制御</string>
 	<string name="script_14400">14400 アナトリア・ヒエログリフ</string>
@@ -295,6 +300,7 @@
 	<string name="script_18800">18800 西夏文字構成要素</string>
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字補助</string>
+	<string name="script_1AFF0">1AFF0 仮名文字拡張B</string>
 	<string name="script_1B000">1B000 仮名文字補助</string>
 	<string name="script_1B100">1B100 仮名文字拡張A</string>
 	<string name="script_1B130">1B130 小書き仮名拡張</string>
@@ -309,9 +315,11 @@
 	<string name="script_1D360">1D360 算木用数字</string>
 	<string name="script_1D400">1D400 数学用英数字記号</string>
 	<string name="script_1D800">1D800 サットン手話表記法</string>
+	<string name="script_1DF00">1DF00 ラテン文字拡張G</string>
 	<string name="script_1E000">1E000 グラゴル文字補助</string>
 	<string name="script_1E100">1E100 ニアケン・プアチェ・フモン文字</string>
 	<string name="script_1E2C0">1E2C0 ワンチョー文字</string>
+	<string name="script_1E7E0">1E7E0 エチオピア文字拡張B</string>
 	<string name="script_1E800">1E800 メンデ文字</string>
 	<string name="script_1E900">1E900 アドラム文字</string>
 	<string name="script_1EC70">1EC70 インド・シアク数字</string>

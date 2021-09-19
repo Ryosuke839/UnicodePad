@@ -31,7 +31,7 @@ class NameDatabase(context: Context) {
     operator fun get(code: Int, column: String): String? {
         if (column == "name") {
             if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return "Private Use"
-            if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFC || code in 0x20000..0x2A6DD || code in 0x2A700..0x2B734 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A) return "CJK Unified Ideograph"
+            if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFF || code in 0x20000..0x2A6DF || code in 0x2A700..0x2B738 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A) return "CJK Unified Ideograph"
             if (code in 0xAC00..0xD7A3) return "Hangul Syllable"
             if (code in 0x17000..0x187F7) return "Tangut Character"
         }
@@ -66,6 +66,7 @@ class NameDatabase(context: Context) {
             if (code in 0xAC00..0xD7A3) return 600
             if (code in 0x187F2..0x187F7) return 1200
             if (code in 0x4DB6..0x4DBF || code in 0x9FF0..0x9FFC || code in 0x2A6D7..0x2A6DD || code in 0x30000..0x3134A) return 1300
+            if (code in 0x9FFD..0x9FFF || code in 0x2A6DE..0x2A6DF || code in 0x2B735..0x2B738) return 1400
         }
         return getInt("name_table", code.toString(), column)
     }

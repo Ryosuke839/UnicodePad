@@ -191,9 +191,6 @@
 	<string name="script_ABC0">ABC0 Meetei Mayek</string>
 	<string name="script_AC00">AC00 Hangul Syllables</string>
 	<string name="script_D7B0">D7B0 Hangul Jamo Extended-B</string>
-	<string name="script_D800">D800 High Surrogates</string>
-	<string name="script_DB80">DB80 High Private Use Surrogates</string>
-	<string name="script_DC00">DC00 Low Surrogates</string>
 	<string name="script_E000">E000 Private Use Area</string>
 	<string name="script_F900">F900 CJK Compatibility Ideographs</string>
 	<string name="script_FB00">FB00 Alphabetic Presentation Forms</string>

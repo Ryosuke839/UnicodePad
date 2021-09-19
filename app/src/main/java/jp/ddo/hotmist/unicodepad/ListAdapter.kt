@@ -528,6 +528,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             if (Build.VERSION.SDK_INT >= 17)
                                 jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
                             else
+                                @Suppress("DEPRECATION")
                                 Resources(it.assets, it.displayMetrics, it.configuration.apply { locale = Locale.US })
                         }.getStringArray(R.array.codes).map {
                             Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)

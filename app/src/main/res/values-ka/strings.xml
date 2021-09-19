@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright 2018 Ryosuke839
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<string name="app_name">UnicodePad</string>
+	<string name="delete">წაშლა</string>
+	<string name="desc">დეტალები</string>
+	<string name="find">ძიება</string>
+	<string name="fhint">შეიყვანეთ სიმბოლოს სახელი</string>
+	<string name="inlist">ძიება სიაში</string>
+	<string name="copied">დაკოპირებულია გაცვლის ბუფერზე</string>
+	<string name="finish">Enter</string>
+	<string name="share">გაზიარება</string>
+	<string name="font">ფონტი</string>
+	<string name="favorite">ფავორიტი</string>
+	<string name="recent">Ბოლო</string>
+	<string name="list">სია</string>
+	<string name="edit">შესწორება</string>
+	<string name="emoji">ემოჯი</string>
+	<string name="normal">ჩვეულებრივი</string>
+	<string name="input">შეყვანა</string>
+	<string name="remrec">წაშლა</string>
+	<string name="add">დამატება…</string>
+	<string name="mark">მონიშვნა</string>
+	<string name="rem">წაშლა…</string>
+	<string name="code">კოდირებული წერტილი</string>
+	<string name="nocode">არასწორი კოდირებული წერტილი</string>
+	<string name="cantopen">გახსნა შეუძლებელია</string>
+	<string name="cantread">წვდომა შეუძლებელია; აპლიკაციას შეიძლება არ ჰქონდეს წაკითხვის ნებართვა</string>
+	<string name="denied">თქვენ უარყავით წვდომა. SD ბარათის დასათვალიერებლად, გთხოვთ, მიანიჭოთ მეხსიერების ნებართვა პროგრამების პარამეტრებიდან.</string>
+
+	<string name="general">გენერალური</string>
+	<string name="appearance">გარეგნობა</string>
+	<string name="behaviour">Მოქმედება</string>
+	<string name="textsize_desc">ტექსტის ზომა რედაქტირების ყუთში</string>
+	<string name="column_desc">სვეტები ბადეში</string>
+	<string name="columnl_desc">სვეტები ბადეში (ლანდშაფტი)</string>
+
+	<string name="version_desc">Unicode-ის ვერსია</string>
+
+	<string name="version_latest">უახლესი (14.0.0)</string>
+
+	<string name="emojicompat_desc">EmojiCompat-ის გამოყენება ემოჯების საჩვენებლად</string>
+	<string name="emojicompat_null">არასდროს</string>
+	<string name="emojicompat_false">მხოლოდ დაკარგული გლიფებისთვის</string>
+	<string name="emojicompat_true">ყველა ემოციური გლიფისთვის</string>
+
+	<string name="download_desc">გადმოწერე Noto ფონტები…</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
+	<string name="no_ad_desc">უარი თქვით რეკლამებზე</string>
+	<string name="tabs_desc">ჩანართის პარამეტრები…</string>
+	<string name="shown_desc">ნაჩვენები ჩანართები</string>
+	<string name="hidden_desc">დამალული ჩანართები</string>
+
+	<string name="multiplecolumns">მრავალი სვეტი მხოლოდ სიმბოლოებით</string>
+	<string name="singlecolumn">ერთი სვეტი აღწერით</string>
+	<string name="sort">დალაგება</string>
+
+	<string name="padding_desc">ბადის გადახურვა</string>
+	<string name="gridsize_desc">ბადის ტექსტის ზომა</string>
+	<string name="viewsize_desc">დიდი ხედის ტექსტის ზომა</string>
+	<string name="checker_desc">გამშვები გამჭვირვალობა დიდ ხედში (%)</string>
+	<string name="lines_desc">შრიფტის მეტრიკის ჩვენება დიდი ხედვით</string>
+	<string name="shrink_desc">შრიფტის შემცირება სიგანეზე მორგებისთვის</string>
+	<string name="recent_desc">ბოლო სიის მაქსიმალური რაოდენობა</string>
+	<string name="theme_desc">თემა</string>
+
+	<string name="theme_dark">ბნელო</string>
+	<string name="theme_light">ნათელი</string>
+	<string name="theme_darktitle">ნათელი + ბნელი სათაური</string>
+
+	<string name="theme_title">მიიღება ხელახლა ჩართვის მერე</string>
+	<string name="list_title">სიის ჩანართი ვერ დაიმალება</string>
+	<string name="scroll_desc">UI scroll</string>
+
+	<string name="scroll_never">არასდროს</string>
+	<string name="scroll_landscape">მხოლოდ ლანდშაფტის პოზიციაში</string>
+	<string name="scroll_always">ყოველთვის</string>
+
+	<string name="ime_desc">IME-ს გათიშვა</string>
+	<string name="clear_desc">ყოველთვის აჩვენე გასუფთავების ღილაკი</string>
+	<string name="malformed">ფაილის სახელი არასწორია zip-ში</string>
+	<string name="legal">იურიდიული</string>
+	<string name="legal_uni">Unicode®</string>
+	<string name="legal_uni2">ეს პროგრამა შეიცავს Unicode მონაცემთა ფაილის შეცვლილ ვერსიას.
+საავტორო უფლება © 1991-2020 Unicode, Inc. ყველა უფლება დაცულია.
+განაწილებულია გამოყენების პირობებით
+http://www.unicode.org/copyright.html.</string>
+	<string name="legal_app">UnicodePad 2.9.1</string>
+	<string name="legal_app2">UnicodePad არის ლიცენზირებული Apache License, ვერსია2.0-ით
+https://github.com/Ryosuke839/UnicodePad</string>
+</resources>

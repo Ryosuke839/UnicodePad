@@ -18,7 +18,14 @@
 	package="jp.ddo.hotmist.unicodepad"
 	android:installLocation="auto">
 
+	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+	<queries>
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+		</intent>
+	</queries>
 
 	<application
 		android:allowBackup="true"
@@ -38,7 +45,8 @@
 		<activity
 			android:name="jp.ddo.hotmist.unicodepad.UnicodeActivity"
 			android:label="@string/app_name"
-			android:windowSoftInputMode="adjustResize">
+			android:windowSoftInputMode="adjustResize"
+			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -56,6 +64,11 @@
 				<data android:mimeType="text/plain" />
 
 				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.PROCESS_TEXT" />
+				<category android:name="android.intent.category.DEFAULTT" />
+				<data android:mimeType="text/plain" />
 			</intent-filter>
 		</activity>
 

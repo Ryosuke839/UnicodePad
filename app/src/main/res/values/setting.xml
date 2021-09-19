@@ -46,6 +46,7 @@
 		<item>@string/version_1200</item>
 		<item>@string/version_1210</item>
 		<item>@string/version_1300</item>
+		<item>@string/version_1400</item>
 		<item>@string/version_latest</item>
 	</string-array>
 	<string-array name="version_val">
@@ -61,6 +62,7 @@
 		<item>12.0.0</item>
 		<item>12.1.0</item>
 		<item>13.0.0</item>
+		<item>14.0.0</item>
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def" translatable="false">Latest</string>
@@ -75,14 +77,6 @@
 		<item>true</item>
 	</string-array>
 	<string name="emojicompat_def" translatable="false">false</string>
-	<string-array name="single" tools:ignore="MissingTranslation">
-		<item>@string/multiplecolumns</item>
-		<item>@string/singlecolumn</item>
-	</string-array>
-	<string-array name="single_val">
-		<item>false</item>
-		<item>true</item>
-	</string-array>
 	<string-array name="theme" tools:ignore="MissingTranslation">
 		<item>@string/theme_dark</item>
 		<item>@string/theme_light</item>

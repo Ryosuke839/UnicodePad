@@ -24,7 +24,7 @@
 		android:layout_width="24sp"
 		android:layout_height="match_parent"
 		android:contentDescription="@string/sort"
-		android:src="@android:drawable/ic_menu_sort_by_size" />
+		android:src="?attr/drag_handle" />
 
 	<RadioGroup
 		android:layout_width="match_parent"
@@ -34,19 +34,24 @@
 			android:id="@+id/tabs_title"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary" />
 
 		<RadioButton
 			android:id="@+id/tabs_multiple"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/multiplecolumns" />
+			android:text="@string/multiplecolumns"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary" />
 
 		<RadioButton
 			android:id="@+id/tabs_single"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/singlecolumn" />
+			android:text="@string/singlecolumn"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary" />
 	</RadioGroup>
 
 </LinearLayout>

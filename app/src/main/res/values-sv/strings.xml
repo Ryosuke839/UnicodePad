@@ -343,19 +343,18 @@
 
 	<string name="version_desc">Unicode-version</string>
 
-	<string name="version_latest">Senaste (13.0.0)</string>
+	<string name="version_latest">Senaste (14.0.0)</string>
+
+	<string name="emojicompat_desc">Använd framåtkompatibilitet för emoji</string>
+	<string name="emojicompat_null">Aldrig</string>
+	<string name="emojicompat_false">Endast för emojier som saknas</string>
+	<string name="emojicompat_true">För alla emojier</string>
 
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="tabs_desc">Flikinställningar …</string>
 	<string name="shown_desc">Synliga flikar</string>
 	<string name="hidden_desc">Dolda flikar</string>
-	<string name="single_rec_desc">Kolumner i senast använda</string>
-	<string name="single_list_desc">Kolumner i listan</string>
-	<string name="single_find_desc">Kolumner i sök</string>
-	<string name="single_fav_desc">Kolumner i favoriter</string>
-	<string name="single_edt_desc">Kolumner i input</string>
-	<string name="single_emoji_desc">Kolumner i emoji</string>
 
 	<string name="multiplecolumns">Flera kolumner med endast tecken</string>
 	<string name="singlecolumn">En kolumn med beskrivning</string>
@@ -387,11 +386,14 @@
 	<string name="legal">Juridisk information</string>
 	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">Denna applikation innehåller en modifierad version av Unicode Data File.
-Upphovsrätt © 1991-2020 Unicode, Inc. Alla rättigheter förbehållna.
-Distribueras enligt användarvillkoren i
+Copyright © 1991-2021 Unicode, Inc. All rights reserved.
+Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.9.1</string>
+	<string name="legal_app">UnicodePad 2.10.1</string>
 	<string name="legal_app2">UnicodePad är licensierad under Apache-licensen, version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 	<string name="no_ad_desc">Visa inte annonser</string>
+    <string name="locale_default">Systemstandard (%s)</string>
+	<string name="locale_other">Övrig…</string>
+	<string name="locale_title">Locale</string>
 </resources>

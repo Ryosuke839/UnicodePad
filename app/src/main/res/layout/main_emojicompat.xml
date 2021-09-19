@@ -82,7 +82,8 @@
 
 			<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				style="?android:attr/buttonBarStyle">
 
 				<Button
 					android:id="@+id/paste"
@@ -90,7 +91,8 @@
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:maxLines="1"
-					android:text="@android:string/paste" />
+					android:text="@android:string/paste"
+					style="?android:attr/buttonBarButtonStyle" />
 
 				<Button
 					android:id="@+id/find"
@@ -98,7 +100,8 @@
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:maxLines="1"
-					android:text="@string/desc" />
+					android:text="@string/desc"
+					style="?android:attr/buttonBarButtonStyle" />
 
 				<Button
 					android:id="@+id/copy"
@@ -106,7 +109,8 @@
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:maxLines="1"
-					android:text="@android:string/copy" />
+					android:text="@android:string/copy"
+					style="?android:attr/buttonBarButtonStyle" />
 
 				<Button
 					android:id="@+id/finish"
@@ -114,7 +118,8 @@
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:maxLines="1"
-					android:text="@string/finish" />
+					android:text="@string/finish"
+					style="?android:attr/buttonBarButtonStyle" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -134,6 +139,13 @@
 
 				<Spinner
 					android:id="@+id/font"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="2" />
+
+				<Spinner
+					android:id="@+id/locale"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"

@@ -59,6 +59,7 @@
 	<string name="script_800">800 サマリア文字</string>
 	<string name="script_840">840 マンダ文字</string>
 	<string name="script_860">860 シリア文字補助</string>
+	<string name="script_870">870 アラビア文字拡張B</string>
 	<string name="script_8A0">8A0 アラビア文字拡張A</string>
 	<string name="script_900">900 デーヴァナーガリー文字</string>
 	<string name="script_980">980 ベンガル文字</string>
@@ -220,6 +221,7 @@
 	<string name="script_10500">10500 エルバサン文字</string>
 	<string name="script_10530">10530 カフカス・アルバニア文字</string>
 	<string name="script_10600">10600 線文字A</string>
+	<string name="script_10780">10780 ラテン文字拡張F</string>
 	<string name="script_10800">10800 キプロス音節文字</string>
 	<string name="script_10840">10840 アラム文字</string>
 	<string name="script_10860">10860 パルミラ文字</string>
@@ -244,6 +246,7 @@
 	<string name="script_10E80">10E80 ヤズィーディー文字</string>
 	<string name="script_10F00">10F00 古代ソグド文字</string>
 	<string name="script_10F30">10F30 ソグド文字</string>
+	<string name="script_10F70">10F70 古ウイグル文字</string>
 	<string name="script_10FB0">10FB0 コレズム文字</string>
 	<string name="script_10FE0">10FE0 エリマイス文字</string>
 	<string name="script_11000">11000 ブラーフミー文字</string>
@@ -270,6 +273,7 @@
 	<string name="script_119A0">119A0 ナンディナーガリー文字</string>
 	<string name="script_11A00">11A00 ザナバザル方形文字</string>
 	<string name="script_11A50">11A50 ソヨンボ文字</string>
+	<string name="script_11AB0">11AB0 統合カナダ先住民音節拡張A</string>
 	<string name="script_11AC0">11AC0 パウ・チン・ハウ表語文字</string>
 	<string name="script_11C00">11C00 バイクシュキー文字</string>
 	<string name="script_11C70">11C70 マルチェン文字</string>
@@ -281,6 +285,7 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字の数字及び句読点</string>
 	<string name="script_12480">12480 シュメール楔形文字</string>
+	<string name="script_12F90">12F90 キュプロ・ミノア文字</string>
 	<string name="script_13000">13000 エジプト・ヒエログリフ</string>
 	<string name="script_13430">13430 エジプト・ヒエログリフ制御</string>
 	<string name="script_14400">14400 アナトリア・ヒエログリフ</string>
@@ -295,6 +300,7 @@
 	<string name="script_18800">18800 西夏文字構成要素</string>
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字補助</string>
+	<string name="script_1AFF0">1AFF0 仮名文字拡張B</string>
 	<string name="script_1B000">1B000 仮名文字補助</string>
 	<string name="script_1B100">1B100 仮名文字拡張A</string>
 	<string name="script_1B130">1B130 小書き仮名拡張</string>
@@ -309,9 +315,11 @@
 	<string name="script_1D360">1D360 算木用数字</string>
 	<string name="script_1D400">1D400 数学用英数字記号</string>
 	<string name="script_1D800">1D800 サットン手話表記法</string>
+	<string name="script_1DF00">1DF00 ラテン文字拡張G</string>
 	<string name="script_1E000">1E000 グラゴル文字補助</string>
 	<string name="script_1E100">1E100 ニアケン・プアチェ・フモン文字</string>
 	<string name="script_1E2C0">1E2C0 ワンチョー文字</string>
+	<string name="script_1E7E0">1E7E0 エチオピア文字拡張B</string>
 	<string name="script_1E800">1E800 メンデ文字</string>
 	<string name="script_1E900">1E900 アドラム文字</string>
 	<string name="script_1EC70">1EC70 インド・シアク数字</string>
@@ -354,7 +362,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (13.0.0)</string>
+	<string name="version_latest">最新 (14.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>
@@ -362,17 +370,11 @@
 	<string name="emojicompat_true">全ての絵文字に使用</string>
 
 	<string name="download_desc">Notoフォントをダウンロード…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="no_ad_desc">広告を非表示</string>
 	<string name="tabs_desc">タブ設定…</string>
 	<string name="shown_desc">表示タブ</string>
 	<string name="hidden_desc">非表示タブ</string>
-	<string name="single_rec_desc">履歴タブの列数</string>
-	<string name="single_list_desc">一覧タブの列数</string>
-	<string name="single_find_desc">検索タブの列数</string>
-	<string name="single_fav_desc">お気に入りタブの列数</string>
-	<string name="single_edt_desc">入力タブの列数</string>
-	<string name="single_emoji_desc">絵文字タブの列数</string>
 
 	<string name="multiplecolumns">複数列 (文字のみ)</string>
 	<string name="singlecolumn">1列 (詳細も表示)</string>
@@ -404,10 +406,29 @@
 	<string name="legal">法的表記</string>
 	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">本アプリケーションはUnicode Data Fileの改変された版を含んでいます。
-Copyright © 1991-2020 Unicode, Inc. All rights reserved.
+Copyright © 1991-2021 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.9.1</string>
+	<string name="legal_app">UnicodePad 2.10.1</string>
 	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
+    <string name="locale_default">デフォルト (%s)</string>
+	<string name="locale_other">その他…</string>
+	<string name="locale_title">ロケール</string>
+	<string name="export_data">設定とデータをエクスポート…</string>
+	<string name="import_data">設定とデータをインポート…</string>
+	<string name="exported_data">エクスポートする項目</string>
+	<string name="imported_data">インポートする項目</string>
+	<string name="export_confirm">エクスポート</string>
+	<string name="import_confirm">インポート</string>
+	<string name="exported_notice">エクスポートしました</string>
+	<string name="imported_notice">インポートしました</string>
+	<string name="export_fail_io">エクスポートに失敗しました: %1$s</string>
+	<string name="import_fail_json">選択されたファイルは正しい JSON ではありません: %1$s</string>
+	<string name="import_fail_io">インポートに失敗しました: %1$s</string>
+	<string name="data_setting">設定</string>
+	<string name="data_history">履歴 (%1$d)</string>
+	<string name="data_favorite">お気に入り (%1$d)</string>
+	<string name="data_scroll">スクロール位置</string>
+	<string name="data_merge">現在の値と合成</string>
 </resources>

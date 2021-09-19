@@ -401,7 +401,7 @@
 	<string name="emojicompat_true">For all emoji glyphs</string>
 
 	<string name="download_desc">Download Noto fonts…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="export_data">Export data and settings…</string>
 	<string name="import_data">Import data and settings…</string>
 	<string name="exported_data">Data to export</string>

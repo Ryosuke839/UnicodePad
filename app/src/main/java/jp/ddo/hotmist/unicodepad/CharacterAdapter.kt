@@ -185,7 +185,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                     hl.setOnClickListener { view ->
                         var j = 0
                         while (j < str.length) {
-                            val code = str.codePointAt(i)
+                            val code = str.codePointAt(j)
                             activity.adpPage.onItemClick(null, view, -1, code.toLong())
                             j += Character.charCount(code)
                         }

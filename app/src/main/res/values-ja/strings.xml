@@ -370,7 +370,7 @@
 	<string name="emojicompat_true">全ての絵文字に使用</string>
 
 	<string name="download_desc">Notoフォントをダウンロード…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="no_ad_desc">広告を非表示</string>
 	<string name="tabs_desc">タブ設定…</string>
 	<string name="shown_desc">表示タブ</string>

@@ -362,7 +362,7 @@
 	<string name="emojicompat_true">모든 이모지</string>
 
 	<string name="download_desc">Noto 글꼴 내려받기…</string>
-	<string name="download_uri">https://www.google.com/get/noto/</string>
+	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="no_ad_desc">광고 숨기기</string>
 	<string name="tabs_desc">탭 설정…</string>
 	<string name="shown_desc">보이는 탭</string>

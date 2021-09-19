@@ -62,6 +62,7 @@
 	<string name="script_800">800 Samaritan</string>
 	<string name="script_840">840 Mandaic</string>
 	<string name="script_860">860 Syriac Supplement</string>
+	<string name="script_870">870 Arabic Extended-B</string>
 	<string name="script_8A0">8A0 Arabic Extended-A</string>
 	<string name="script_900">900 Devanagari</string>
 	<string name="script_980">980 Bengali</string>
@@ -190,6 +191,9 @@
 	<string name="script_ABC0">ABC0 Meetei Mayek</string>
 	<string name="script_AC00">AC00 Hangul Syllables</string>
 	<string name="script_D7B0">D7B0 Hangul Jamo Extended-B</string>
+	<string name="script_D800">D800 High Surrogates</string>
+	<string name="script_DB80">DB80 High Private Use Surrogates</string>
+	<string name="script_DC00">DC00 Low Surrogates</string>
 	<string name="script_E000">E000 Private Use Area</string>
 	<string name="script_F900">F900 CJK Compatibility Ideographs</string>
 	<string name="script_FB00">FB00 Alphabetic Presentation Forms</string>
@@ -222,7 +226,9 @@
 	<string name="script_104B0">104B0 Osage</string>
 	<string name="script_10500">10500 Elbasan</string>
 	<string name="script_10530">10530 Caucasian Albanian</string>
+	<string name="script_10570">10570 Vithkuqi</string>
 	<string name="script_10600">10600 Linear A</string>
+	<string name="script_10780">10780 Latin Extended-F</string>
 	<string name="script_10800">10800 Cypriot Syllabary</string>
 	<string name="script_10840">10840 Imperial Aramaic</string>
 	<string name="script_10860">10860 Palmyrene</string>
@@ -247,6 +253,7 @@
 	<string name="script_10E80">10E80 Yezidi</string>
 	<string name="script_10F00">10F00 Old Sogdian</string>
 	<string name="script_10F30">10F30 Sogdian</string>
+	<string name="script_10F70">10F70 Old Uyghur</string>
 	<string name="script_10FB0">10FB0 Chorasmian</string>
 	<string name="script_10FE0">10FE0 Elymaic</string>
 	<string name="script_11000">11000 Brahmi</string>
@@ -273,6 +280,7 @@
 	<string name="script_119A0">119A0 Nandinagari</string>
 	<string name="script_11A00">11A00 Zanabazar Square</string>
 	<string name="script_11A50">11A50 Soyombo</string>
+	<string name="script_11AB0">11AB0 Unified Canadian Aboriginal Syllabics Extended-A</string>
 	<string name="script_11AC0">11AC0 Pau Cin Hau</string>
 	<string name="script_11C00">11C00 Bhaiksuki</string>
 	<string name="script_11C70">11C70 Marchen</string>
@@ -284,11 +292,13 @@
 	<string name="script_12000">12000 Cuneiform</string>
 	<string name="script_12400">12400 Cuneiform Numbers and Punctuation</string>
 	<string name="script_12480">12480 Early Dynastic Cuneiform</string>
+	<string name="script_12F90">12F90 Cypro-Minoan</string>
 	<string name="script_13000">13000 Egyptian Hieroglyphs</string>
 	<string name="script_13430">13430 Egyptian Hieroglyph Format Controls</string>
 	<string name="script_14400">14400 Anatolian Hieroglyphs</string>
 	<string name="script_16800">16800 Bamum Supplement</string>
 	<string name="script_16A40">16A40 Mro</string>
+	<string name="script_16A70">16A70 Tangsa</string>
 	<string name="script_16AD0">16AD0 Bassa Vah</string>
 	<string name="script_16B00">16B00 Pahawh Hmong</string>
 	<string name="script_16E40">16E40 Medefaidrin</string>
@@ -298,12 +308,14 @@
 	<string name="script_18800">18800 Tangut Components</string>
 	<string name="script_18B00">18B00 Khitan Small Script</string>
 	<string name="script_18D00">18D00 Tangut Supplement</string>
+	<string name="script_1AFF0">1AFF0 Kana Extended-B</string>
 	<string name="script_1B000">1B000 Kana Supplement</string>
 	<string name="script_1B100">1B100 Kana Extended-A</string>
 	<string name="script_1B130">1B130 Small Kana Extension</string>
 	<string name="script_1B170">1B170 Nushu</string>
 	<string name="script_1BC00">1BC00 Duployan</string>
 	<string name="script_1BCA0">1BCA0 Shorthand Format Controls</string>
+	<string name="script_1CF00">1CF00 Znamenny Musical Notation</string>
 	<string name="script_1D000">1D000 Byzantine Musical Symbols</string>
 	<string name="script_1D100">1D100 Musical Symbols</string>
 	<string name="script_1D200">1D200 Ancient Greek Musical Notation</string>
@@ -312,9 +324,12 @@
 	<string name="script_1D360">1D360 Counting Rod Numerals</string>
 	<string name="script_1D400">1D400 Mathematical Alphanumeric Symbols</string>
 	<string name="script_1D800">1D800 Sutton SignWriting</string>
+	<string name="script_1DF00">1DF00 Latin Extended-G</string>
 	<string name="script_1E000">1E000 Glagolitic Supplement</string>
 	<string name="script_1E100">1E100 Nyiakeng Puachue Hmong</string>
+	<string name="script_1E290">1E290 Toto</string>
 	<string name="script_1E2C0">1E2C0 Wancho</string>
+	<string name="script_1E7E0">1E7E0 Ethiopic Extended-B</string>
 	<string name="script_1E800">1E800 Mende Kikakui</string>
 	<string name="script_1E900">1E900 Adlam</string>
 	<string name="script_1EC70">1EC70 Indic Siyaq Numbers</string>
@@ -377,7 +392,8 @@
 	<string name="version_1200" translatable="false">12.0.0</string>
 	<string name="version_1210" translatable="false">12.1.0</string>
 	<string name="version_1300" translatable="false">13.0.0</string>
-	<string name="version_latest">Latest (13.0.0)</string>
+	<string name="version_1400" translatable="false">14.0.0</string>
+	<string name="version_latest">Latest (14.0.0)</string>
 
 	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
 	<string name="emojicompat_null">Never</string>

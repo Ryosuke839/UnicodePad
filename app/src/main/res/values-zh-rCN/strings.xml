@@ -59,6 +59,7 @@
 	<string name="script_800">800 撒马利亚文字</string>
 	<string name="script_840">840 曼达安文字</string>
 	<string name="script_860">860 叙利亚文字补充</string>
+	<string name="script_870">870 阿拉伯文字扩展B</string>
 	<string name="script_8A0">8A0 阿拉伯文字扩展A</string>
 	<string name="script_900">900 天城文字</string>
 	<string name="script_980">980 孟加拉文字</string>
@@ -70,9 +71,9 @@
 	<string name="script_C80">C80 卡纳达文字</string>
 	<string name="script_D00">D00 马拉雅拉姆文字</string>
 	<string name="script_D80">D80 僧伽罗文字</string>
-	<string name="script_E00">E00 泰文</string>
+	<string name="script_E00">E00 泰文字</string>
 	<string name="script_E80">E80 老挝文字</string>
-	<string name="script_F00">F00 藏文</string>
+	<string name="script_F00">F00 藏文字</string>
 	<string name="script_1000">1000 缅甸文字</string>
 	<string name="script_10A0">10A0 格鲁吉亚文字</string>
 	<string name="script_1100">1100 谚文字母</string>
@@ -90,11 +91,11 @@
 	<string name="script_1800">1800 蒙古文字</string>
 	<string name="script_18B0">18B0 统一加拿大原住民音节文字扩展</string>
 	<string name="script_1900">1900 林布文字</string>
-	<string name="script_1950">1950 德宏傣文</string>
-	<string name="script_1980">1980 西双版纳新傣文</string>
+	<string name="script_1950">1950 德宏傣文字</string>
+	<string name="script_1980">1980 西双版纳新傣文字</string>
 	<string name="script_19E0">19E0 高棉文符号</string>
 	<string name="script_1A00">1A00 布吉文字</string>
-	<string name="script_1A20">1A20 西双版纳老傣文</string>
+	<string name="script_1A20">1A20 西双版纳老傣文字</string>
 	<string name="script_1AB0">1AB0 组合附加记号扩展</string>
 	<string name="script_1B00">1B00 巴厘文字</string>
 	<string name="script_1B80">1B80 巽他文字</string>
@@ -159,9 +160,9 @@
 	<string name="script_3400">3400 中日韩统一汉字扩展A</string>
 	<string name="script_4DC0">4DC0 易经六十四卦符号</string>
 	<string name="script_4E00">4E00 中日韩统一汉字</string>
-	<string name="script_A000">A000 彝文</string>
-	<string name="script_A490">A490 彝文部首</string>
-	<string name="script_A4D0">A4D0 老傈僳文</string>
+	<string name="script_A000">A000 彝文字</string>
+	<string name="script_A490">A490 彝文字部首</string>
+	<string name="script_A4D0">A4D0 老傈僳文字</string>
 	<string name="script_A500">A500 瓦伊文字</string>
 	<string name="script_A640">A640 西里尔文字扩展B</string>
 	<string name="script_A6A0">A6A0 巴姆穆文字</string>
@@ -177,9 +178,9 @@
 	<string name="script_A960">A960 谚文字母扩展A</string>
 	<string name="script_A980">A980 爪哇文字</string>
 	<string name="script_A9E0">A9E0 缅甸文字扩展B</string>
-	<string name="script_AA00">AA00 占文</string>
+	<string name="script_AA00">AA00 占文字</string>
 	<string name="script_AA60">AA60 缅甸文字扩展A</string>
-	<string name="script_AA80">AA80 越南傣文</string>
+	<string name="script_AA80">AA80 越南傣文字</string>
 	<string name="script_AAE0">AAE0 曼尼普尔文字扩展</string>
 	<string name="script_AB00">AB00 埃塞俄比亚文字扩展A</string>
 	<string name="script_AB30">AB30 拉丁文字扩展E</string>
@@ -219,7 +220,9 @@
 	<string name="script_104B0">104B0 欧塞奇文字</string>
 	<string name="script_10500">10500 爱尔巴桑文字</string>
 	<string name="script_10530">10530 高加索阿尔巴尼亚文字</string>
+	<string name="script_10570">10570 维斯库奇文字</string>
 	<string name="script_10600">10600 线形文字A</string>
+	<string name="script_10780">10780 拉丁文字扩展F</string>
 	<string name="script_10800">10800 塞浦路斯音节文字</string>
 	<string name="script_10840">10840 皇室亚拉姆文字</string>
 	<string name="script_10860">10860 帕尔迈拉文字</string>
@@ -244,6 +247,7 @@
 	<string name="script_10E80">10E80 雅兹迪文字</string>
 	<string name="script_10F00">10F00 古粟特文字</string>
 	<string name="script_10F30">10F30 粟特文字</string>
+	<string name="script_10F70">10F70 回鹘文字</string>
 	<string name="script_10FB0">10FB0 花剌子模文字</string>
 	<string name="script_10FE0">10FE0 埃兰文字</string>
 	<string name="script_11000">11000 婆罗米文字</string>
@@ -270,6 +274,7 @@
 	<string name="script_119A0">119A0 喜城文字</string>
 	<string name="script_11A00">11A00 札那巴札尔方形文字</string>
 	<string name="script_11A50">11A50 索永布文字</string>
+	<string name="script_11AB0">11AB0 统一加拿大原住民音节文字扩展A</string>
 	<string name="script_11AC0">11AC0 包钦豪文字</string>
 	<string name="script_11C00">11C00 拜克舒基文字</string>
 	<string name="script_11C70">11C70 玛钦文字</string>
@@ -281,11 +286,13 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字数字和标点符号</string>
 	<string name="script_12480">12480 早期王朝楔形文字</string>
+	<string name="script_12F90">12F90 塞浦路斯-米诺斯文字</string>
 	<string name="script_13000">13000 埃及象形文字</string>
 	<string name="script_13430">13430 埃及象形文字格式控制符</string>
 	<string name="script_14400">14400 安纳托利亚象形文字</string>
 	<string name="script_16800">16800 巴姆穆文字补充</string>
 	<string name="script_16A40">16A40 木如文字</string>
+	<string name="script_16A70">16A70 唐撒文字</string>
 	<string name="script_16AD0">16AD0 巴萨文字</string>
 	<string name="script_16B00">16B00 杨松录苗文</string>
 	<string name="script_16E40">16E40 梅德法伊德林文字</string>
@@ -295,12 +302,14 @@
 	<string name="script_18800">18800 西夏文字部首</string>
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字补充</string>
+	<string name="script_1AFF0">1AFF0 假名扩展B</string>
 	<string name="script_1B000">1B000 假名补充</string>
 	<string name="script_1B100">1B100 假名扩展A</string>
 	<string name="script_1B130">1B130 小写假名扩展</string>
 	<string name="script_1B170">1B170 女书</string>
 	<string name="script_1BC00">1BC00 杜普雷速记文字</string>
 	<string name="script_1BCA0">1BCA0 速记格式控制符</string>
+	<string name="script_1CF00">1CF00 兹纳缅内乐谱记号</string>
 	<string name="script_1D000">1D000 拜占庭乐谱符号</string>
 	<string name="script_1D100">1D100 乐谱符号</string>
 	<string name="script_1D200">1D200 古希腊乐谱记号</string>
@@ -309,9 +318,12 @@
 	<string name="script_1D360">1D360 算筹数字</string>
 	<string name="script_1D400">1D400 数学字母数字符号</string>
 	<string name="script_1D800">1D800 萨顿手语符号</string>
+	<string name="script_1DF00">1DF00 拉丁文字扩展G</string>
 	<string name="script_1E000">1E000 格拉哥里文字补充</string>
 	<string name="script_1E100">1E100 花布苗文</string>
+	<string name="script_1E290">1E290 投投文字</string>
 	<string name="script_1E2C0">1E2C0 万却文字</string>
+	<string name="script_1E7E0">1E7E0 埃塞俄比亚文字扩展B</string>
 	<string name="script_1E800">1E800 门德基卡库文字</string>
 	<string name="script_1E900">1E900 阿德拉姆文字</string>
 	<string name="script_1EC70">1EC70 印度西亚克数字</string>
@@ -330,7 +342,7 @@
 	<string name="script_1F780">1F780 几何形状扩展</string>
 	<string name="script_1F800">1F800 补充箭头C</string>
 	<string name="script_1F900">1F900 补充符号与图形标记</string>
-	<string name="script_1FA00">1FA00 棋类符号</string>
+	<string name="script_1FA00">1FA00 棋子符号</string>
 	<string name="script_1FA70">1FA70 符号及图形标记扩展A</string>
 	<string name="script_1FB00">1FB00 传统计算机符号</string>
 	<string name="script_20000">20000 中日韩统一汉字扩展B</string>
@@ -354,7 +366,12 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (13.0.0)</string>
+	<string name="version_latest">最新 (14.0.0)</string>
+	
+	<string name="emojicompat_desc">使用EmojiCompat方式显示Emoji</string>
+	<string name="emojicompat_null">禁用</string>
+	<string name="emojicompat_false">仅限缺失字符</string>
+	<string name="emojicompat_true">全部</string>
 
 	<string name="download_desc">下载 Noto 字体…</string>
 	<string name="download_uri">https://www.google.cn/get/noto/</string>

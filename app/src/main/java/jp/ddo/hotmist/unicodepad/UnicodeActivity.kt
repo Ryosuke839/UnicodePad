@@ -99,7 +99,7 @@ class UnicodeActivity : AppCompatActivity() {
             }
             it.textSize = fontsize
             it.setOnEditorActionListener { _, _, keyEvent ->
-                if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (keyEvent.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
                     true
                 } else

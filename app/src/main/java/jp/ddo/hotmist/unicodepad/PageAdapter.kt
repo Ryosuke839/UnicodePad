@@ -144,7 +144,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return view === `object`
     }
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent == null || id != -1L) {
             adapterRecent.add(id.toInt())
             if (recpage != -1 && page != recpage) views[recpage]?.invalidateViews()
@@ -153,6 +153,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val end = edit.selectionEnd
         if (start == -1) return
         edit.editableText.replace(min(start, end), max(start, end), if (parent == null || id != -1L) String(Character.toChars(id.toInt())) else parent.adapter.getItem(position) as String)
+        dlg?.let {
+            if (it.isShowing) it.dismiss()
+        }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {

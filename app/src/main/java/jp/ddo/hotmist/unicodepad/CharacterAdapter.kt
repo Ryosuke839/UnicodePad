@@ -184,8 +184,8 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                     hl.isFocusable = true
                     hl.setOnClickListener { view ->
                         var j = 0
-                        while (j < str.length) {
-                            val code = str.codePointAt(j)
+                        while (j < cs.length) {
+                            val code = cs.codePointAt(j)
                             activity.adpPage.onItemClick(null, view, -1, code.toLong())
                             j += Character.charCount(code)
                         }

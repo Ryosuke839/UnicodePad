@@ -56,7 +56,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         if (adapter.count < 3) adapter.add(activity.resources.getString(R.string.rem))
 
         // Remove duplicated items
-        for (i in fontPaths.indices) {
+        for (i in fontPaths.indices.reversed()) {
             if (path != fontPaths[i]) continue
             adapter.remove(adapter.getItem(i + 3))
             fontPaths.removeAt(i)

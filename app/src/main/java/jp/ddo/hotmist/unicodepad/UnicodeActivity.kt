@@ -32,6 +32,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.provider.FontRequest
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.doOnLayout
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.EmojiCompat.InitCallback
 import androidx.emoji.text.FontRequestEmojiCompatConfig
@@ -212,6 +213,12 @@ class UnicodeActivity : AppCompatActivity() {
         pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
         val it = intent
         action = it.action
+        // handle the paste home screen shortcut
+        if (action == "jp.ddo.hotmist.unicodepad.intent.action.PASTE") {
+            val view = findViewById<View>(android.R.id.content).rootView
+            // the ClipboardManager text becomes valid when the view is in focus.
+            view.doOnLayout { editText.setText(cm.text) }
+        }
         when {
             action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
             action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()

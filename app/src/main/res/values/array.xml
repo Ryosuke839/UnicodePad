@@ -207,6 +207,7 @@
 		<item>@string/script_10D00</item>
 		<item>@string/script_10E60</item>
 		<item>@string/script_10E80</item>
+		<item>@string/script_10EC0</item>
 		<item>@string/script_10F00</item>
 		<item>@string/script_10F30</item>
 		<item>@string/script_10F70</item>
@@ -238,11 +239,13 @@
 		<item>@string/script_11A50</item>
 		<item>@string/script_11AB0</item>
 		<item>@string/script_11AC0</item>
+		<item>@string/script_11B00</item>
 		<item>@string/script_11C00</item>
 		<item>@string/script_11C70</item>
 		<item>@string/script_11D00</item>
 		<item>@string/script_11D60</item>
 		<item>@string/script_11EE0</item>
+		<item>@string/script_11F00</item>
 		<item>@string/script_11FB0</item>
 		<item>@string/script_11FC0</item>
 		<item>@string/script_12000</item>
@@ -275,6 +278,7 @@
 		<item>@string/script_1D000</item>
 		<item>@string/script_1D100</item>
 		<item>@string/script_1D200</item>
+		<item>@string/script_1D2C0</item>
 		<item>@string/script_1D2E0</item>
 		<item>@string/script_1D300</item>
 		<item>@string/script_1D360</item>
@@ -282,9 +286,11 @@
 		<item>@string/script_1D800</item>
 		<item>@string/script_1DF00</item>
 		<item>@string/script_1E000</item>
+		<item>@string/script_1E030</item>
 		<item>@string/script_1E100</item>
 		<item>@string/script_1E290</item>
 		<item>@string/script_1E2C0</item>
+		<item>@string/script_1E4D0</item>
 		<item>@string/script_1E7E0</item>
 		<item>@string/script_1E800</item>
 		<item>@string/script_1E900</item>
@@ -314,6 +320,7 @@
 		<item>@string/script_2CEB0</item>
 		<item>@string/script_2F800</item>
 		<item>@string/script_30000</item>
+		<item>@string/script_31350</item>
 		<item>@string/script_E0000</item>
 		<item>@string/script_E0100</item>
 		<item>@string/script_F0000</item>

@@ -248,6 +248,7 @@
 	<string name="script_10D00">10D00 Hanifi Rohingya</string>
 	<string name="script_10E60">10E60 Rumi Numeral Symbols</string>
 	<string name="script_10E80">10E80 Yezidi</string>
+	<string name="script_10EC0">10EC0 Arabic Extended-C</string>
 	<string name="script_10F00">10F00 Old Sogdian</string>
 	<string name="script_10F30">10F30 Sogdian</string>
 	<string name="script_10F70">10F70 Old Uyghur</string>
@@ -279,11 +280,13 @@
 	<string name="script_11A50">11A50 Soyombo</string>
 	<string name="script_11AB0">11AB0 Unified Canadian Aboriginal Syllabics Extended-A</string>
 	<string name="script_11AC0">11AC0 Pau Cin Hau</string>
+	<string name="script_11B00">11B00 Devanagari Extended-A</string>
 	<string name="script_11C00">11C00 Bhaiksuki</string>
 	<string name="script_11C70">11C70 Marchen</string>
 	<string name="script_11D00">11D00 Masaram Gondi</string>
 	<string name="script_11D60">11D60 Gunjala Gondi</string>
 	<string name="script_11EE0">11EE0 Makasar</string>
+	<string name="script_11F00">11F00 Kawi</string>
 	<string name="script_11FB0">11FB0 Lisu Supplement</string>
 	<string name="script_11FC0">11FC0 Tamil Supplement</string>
 	<string name="script_12000">12000 Cuneiform</string>
@@ -316,6 +319,7 @@
 	<string name="script_1D000">1D000 Byzantine Musical Symbols</string>
 	<string name="script_1D100">1D100 Musical Symbols</string>
 	<string name="script_1D200">1D200 Ancient Greek Musical Notation</string>
+	<string name="script_1D2C0">1D2C0 Kaktovik Numerals</string>
 	<string name="script_1D2E0">1D2E0 Mayan Numerals</string>
 	<string name="script_1D300">1D300 Tai Xuan Jing Symbols</string>
 	<string name="script_1D360">1D360 Counting Rod Numerals</string>
@@ -323,9 +327,11 @@
 	<string name="script_1D800">1D800 Sutton SignWriting</string>
 	<string name="script_1DF00">1DF00 Latin Extended-G</string>
 	<string name="script_1E000">1E000 Glagolitic Supplement</string>
+	<string name="script_1E030">1E030 Cyrillic Extended-D</string>
 	<string name="script_1E100">1E100 Nyiakeng Puachue Hmong</string>
 	<string name="script_1E290">1E290 Toto</string>
 	<string name="script_1E2C0">1E2C0 Wancho</string>
+	<string name="script_1E4D0">1E4D0 Nag Mundari</string>
 	<string name="script_1E7E0">1E7E0 Ethiopic Extended-B</string>
 	<string name="script_1E800">1E800 Mende Kikakui</string>
 	<string name="script_1E900">1E900 Adlam</string>
@@ -355,6 +361,7 @@
 	<string name="script_2CEB0">2CEB0 CJK Unified Ideographs Extension F</string>
 	<string name="script_2F800">2F800 CJK Compatibility Ideographs Supplement</string>
 	<string name="script_30000">30000 CJK Unified Ideographs Extension G</string>
+	<string name="script_31350">31350 CJK Unified Ideographs Extension H</string>
 	<string name="script_E0000">E0000 Tags</string>
 	<string name="script_E0100">E0100 Variation Selectors Supplement</string>
 	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>

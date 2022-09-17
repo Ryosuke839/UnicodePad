@@ -30,7 +30,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1">
 
-			<androidx.emoji.widget.EmojiAppCompatEditText
+			<androidx.appcompat.widget.AppCompatEditText
 				android:id="@+id/text"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
 				android:maxLines="1">
 
 				<requestFocus />
-			</androidx.emoji.widget.EmojiAppCompatEditText>
+			</androidx.appcompat.widget.AppCompatEditText>
 
 			<ImageButton
 				android:id="@+id/clear"

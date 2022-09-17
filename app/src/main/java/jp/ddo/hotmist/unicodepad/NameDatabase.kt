@@ -67,6 +67,7 @@ class NameDatabase(context: Context) {
             if (code in 0x187F2..0x187F7) return 1200
             if (code in 0x4DB6..0x4DBF || code in 0x9FF0..0x9FFC || code in 0x2A6D7..0x2A6DD || code in 0x30000..0x3134A) return 1300
             if (code in 0x9FFD..0x9FFF || code in 0x2A6DE..0x2A6DF || code in 0x2B735..0x2B738) return 1400
+            if (code == 0x2B739 || code in 0x31350..0x323AF) return 1500
         }
         return getInt("name_table", code.toString(), column)
     }
@@ -134,11 +135,11 @@ class NameDatabase(context: Context) {
                     }
                     db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 34634) throw SQLiteException()
+                        if (cur.getInt(0) != 34930) throw SQLiteException()
                     }
                     db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 3624) throw SQLiteException()
+                        if (cur.getInt(0) != 3655) throw SQLiteException()
                     }
                 } catch (e: SQLiteException) {
                     db.close()

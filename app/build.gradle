@@ -36,6 +36,7 @@ android {
     lintOptions {
         disable "ResourceType"
         disable 'GoogleAppIndexingWarning'
+        disable 'NullSafeMutableLiveData'
     }
 
     flavorDimensions "distribution"

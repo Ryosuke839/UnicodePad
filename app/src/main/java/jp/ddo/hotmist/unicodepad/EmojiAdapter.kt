@@ -192,6 +192,11 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     }
 
     override fun getItem(i: Int): String {
-        return getItemString(i).split(" ").joinToString("") { String(Character.toChars(it.toInt(16))) }
+        return getItemString(i).let {
+            if (it != "")
+                it.split(" ").joinToString("") { String(Character.toChars(it.toInt(16))) }
+            else
+                ""
+        }
     }
 }

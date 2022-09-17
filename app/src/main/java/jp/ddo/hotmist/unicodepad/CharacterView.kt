@@ -25,6 +25,7 @@ import android.view.View
 import androidx.core.graphics.ColorUtils
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiSpan
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -70,9 +71,12 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             requestLayout()
         }
 
-    fun setTypeface(tf: Typeface?) {
+    fun setTypeface(tf: Typeface?, locale: Locale) {
         if (paint.typeface != tf) invalid = true
         paint.typeface = tf
+        if (Build.VERSION.SDK_INT >= 17) {
+            paint.textLocale = locale
+        }
         requestLayout()
     }
 
@@ -263,19 +267,28 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                     val tr = Bitmap.createBitmap(w2, (-fm.top + fm.bottom).toInt(), Bitmap.Config.ARGB_8888)
                     val cv = Canvas(bm)
                     span?.let {
-                        if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
-                    }
+                        if (Build.VERSION.SDK_INT >= 19) {
+                            it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                            true
+                        } else null
+                    } ?: cv.drawText(str, 0f, -fm.top, paint)
                     if (!bm.sameAs(tr)) {
                         cv.drawColor(0, PorterDuff.Mode.CLEAR)
                         paint.style = Paint.Style.STROKE
                         span?.let {
-                            if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
-                        }
+                            if (Build.VERSION.SDK_INT >= 19) {
+                                it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                                true
+                            } else null
+                        } ?: cv.drawText(str, 0f, -fm.top, paint)
                         if (bm.sameAs(tr)) {
                             paint.style = Paint.Style.FILL
                             span?.let {
-                                if (Build.VERSION.SDK_INT >= 19) it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint) else cv.drawText(str, 0f, -fm.top, paint)
-                            }
+                                if (Build.VERSION.SDK_INT >= 19) {
+                                    it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                                    true
+                                } else null
+                            } ?: cv.drawText(str, 0f, -fm.top, paint)
                             emojicache = bm
                             cacheRect.set(0, 0, bm.width, bm.height)
                         } else paint.style = Paint.Style.FILL

@@ -33,6 +33,7 @@ import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
 import com.mobeta.android.dslv.DragSortListView.DropListener
 import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -57,6 +58,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private var listpage = -1
     private var page: Int
     private var tf: Typeface?
+    private var locale = Locale.ROOT
     private val db: NameDatabase = NameDatabase(activity)
     val view: View?
         get() = views[page]
@@ -142,7 +144,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return view === `object`
     }
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent == null || id != -1L) {
             adapterRecent.add(id.toInt())
             if (recpage != -1 && page != recpage) views[recpage]?.invalidateViews()
@@ -151,6 +153,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val end = edit.selectionEnd
         if (start == -1) return
         edit.editableText.replace(min(start, end), max(start, end), if (parent == null || id != -1L) String(Character.toChars(id.toInt())) else parent.adapter.getItem(position) as String)
+        dlg?.let {
+            if (it.isShowing) it.dismiss()
+        }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
@@ -168,7 +173,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         layoutParams.gravity = Gravity.TOP
         val pager = ViewPager(activity)
         pager.addView(tab, layoutParams)
-        val adapter = CharacterAdapter(activity, ua, tf, db, adapterFavorite)
+        val adapter = CharacterAdapter(activity, ua, tf, locale, db, adapterFavorite)
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
         pager.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (activity.resources.displayMetrics.scaledDensity * (CharacterAdapter.fontsize * 1.8f + TextAppearanceSpan(activity, android.R.style.TextAppearance_Small).textSize * 2.4f + 32f)).toInt())
@@ -239,14 +244,15 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEmoji.save(edit)
     }
 
-    fun setTypeface(tf: Typeface?) {
+    fun setTypeface(tf: Typeface?, locale: Locale) {
         this.tf = tf
-        adapterList.setTypeface(tf)
-        adapterFind.setTypeface(tf)
-        adapterRecent.setTypeface(tf)
-        adapterFavorite.setTypeface(tf)
-        adapterEdit.setTypeface(tf)
-        adapterEmoji.setTypeface(tf)
+        this.locale = locale
+        adapterList.setTypeface(tf, locale)
+        adapterFind.setTypeface(tf, locale)
+        adapterRecent.setTypeface(tf, locale)
+        adapterFavorite.setTypeface(tf, locale)
+        adapterEdit.setTypeface(tf, locale)
+        adapterEmoji.setTypeface(tf, locale)
         for (i in 0 until MAX_VIEWS) views[i]?.invalidateViews()
     }
 

@@ -46,6 +46,18 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         edit.removeTextChangedListener(this)
     }
 
+    fun updateString() {
+        if (suspend) return
+        val str = edit.editableText.toString()
+        list.clear()
+        var i = 0
+        while (i < str.length) {
+            val code = str.codePointAt(i)
+            list.add(code)
+            i += Character.charCount(code)
+        }
+    }
+
     override fun name(): Int {
         return R.string.edit
     }

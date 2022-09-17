@@ -21,12 +21,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.database.DataSetObserver
 import android.graphics.*
+import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.SparseArray
 import android.util.TypedValue
 import android.view.*
 import android.view.ViewGroup.MarginLayoutParams
@@ -39,9 +40,10 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
+
 internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
-    private data class FromIndex (val codePoint: Int, val block: Int)
-    private data class FromCodePoint (val index: Int, val end: Int, val block: Int)
+    private data class FromIndex(val codePoint: Int, val block: Int)
+    private data class FromCodePoint(val index: Int, val end: Int, val block: Int)
     private var count = 0
     private val fromIndex: NavigableMap<Int, FromIndex> = TreeMap()
     private val fromCodePoint: NavigableMap<Int, FromCodePoint> = TreeMap()
@@ -150,6 +152,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0x800, 0x83F)
         add(0x840, 0x85F)
         if (univer >= 1000) add(0x860, 0x86F)
+        if (univer >= 1400) add(0x870, 0x89F)
         if (univer >= 610) add(0x8A0, 0x8FF)
         add(0x900, 0x97F)
         add(0x980, 0x9FF)
@@ -311,7 +314,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         if (univer >= 700) {
             add(0x10500, 0x1052F)
             add(0x10530, 0x1056F)
+            if (univer >= 1400) add(0x10570, 0x105BF)
             add(0x10600, 0x1077F)
+            if (univer >= 1400) add(0x10780, 0x107BF)
         }
         add(0x10800, 0x1083F)
         add(0x10840, 0x1085F)
@@ -335,10 +340,12 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         if (univer >= 1100) add(0x10D00, 0x10D3F)
         add(0x10E60, 0x10E7F)
         if (univer >= 1300) add(0x10E80, 0x10EBF)
+        if (univer >= 1500) add(0x10EC0, 0x10EFF)
         if (univer >= 1100) {
             add(0x10F00, 0x10F2F)
             add(0x10F30, 0x10F6F)
         }
+        if (univer >= 1400) add(0x10F70, 0x10FAF)
         if (univer >= 1300) add(0x10FB0, 0x10FDF)
         add(0x11000, 0x1107F)
         add(0x11080, 0x110CF)
@@ -360,14 +367,17 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 if (univer >= 900) add(0x11660, 0x1167F)
             }
             add(0x11680, 0x116CF)
-            if (univer >= 800) add(0x11700, 0x1173F)
+            if (univer >= 1400) add(0x11700, 0x1174F)
+            else if (univer >= 800) add(0x11700, 0x1173F)
             if (univer >= 1100) add(0x11800, 0x1184F)
             if (univer >= 700) add(0x118A0, 0x118FF)
             if (univer >= 1300) add(0x11900, 0x1195F)
             if (univer >= 1200) add(0x119A0, 0x119FF)
             if (univer >= 1000) add(0x11A00, 0x11A4F)
             if (univer >= 1000) add(0x11A50, 0x11AAF)
+            if (univer >= 1400) add(0x11AB0, 0x11ABF)
             if (univer >= 700) add(0x11AC0, 0x11AFF)
+            if (univer >= 1500) add(0x11B00, 0x11B5F)
             if (univer >= 900) add(0x11C00, 0x11C6F)
             if (univer >= 900) add(0x11C70, 0x11CBF)
             if (univer >= 1000) add(0x11D00, 0x11D5F)
@@ -375,18 +385,22 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 add(0x11D60, 0x11DAF)
                 add(0x11EE0, 0x11EFF)
             }
+            if (univer >= 1500) add(0x11F00, 0x11F5F)
             if (univer >= 1300) add(0x11FB0, 0x11FBF)
             if (univer >= 1200) add(0x11FC0, 0x11FFF)
         }
         add(0x12000, 0x123FF)
         add(0x12400, 0x1247F)
         if (univer >= 800) add(0x12480, 0x1254F)
+        if (univer >= 1400) add(0x12F90, 0x12FFF)
         add(0x13000, 0x1342F)
-        if (univer >= 1200) add(0x13430, 0x1343F)
+        if (univer >= 1500) add(0x13430, 0x1345F)
+        else if (univer >= 1200) add(0x13430, 0x1343F)
         if (univer >= 800) add(0x14400, 0x1467F)
         add(0x16800, 0x16A3F)
         if (univer >= 700) {
             add(0x16A40, 0x16A6F)
+            if (univer >= 1400) add(0x16A70, 0x16ACF)
             add(0x16AD0, 0x16AFF)
             add(0x16B00, 0x16B8F)
         }
@@ -399,25 +413,34 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         }
         if (univer >= 1300) {
             add(0x18B00, 0x18CFF)
-            add(0x18D00, 0x18D8F)
+            if (univer >= 1400) add(0x18D00, 0x18D7F)
+            else add(0x18D00, 0x18D8F)
         }
+        if (univer >= 1400) add(0x1AFF0, 0x1AFFF)
         add(0x1B000, 0x1B0FF)
         if (univer >= 1000) add(0x1B100, 0x1B12F)
         if (univer >= 1200) add(0x1B130, 0x1B16F)
         if (univer >= 1000) add(0x1B170, 0x1B2FF)
         if (univer >= 700) add(0x1BC00, 0x1BC9F)
         if (univer >= 700) add(0x1BCA0, 0x1BCAF)
+        if (univer >= 1400) add(0x1CF00, 0x1CFCF)
         add(0x1D000, 0x1D0FF)
         add(0x1D100, 0x1D1FF)
         add(0x1D200, 0x1D24F)
+        if (univer >= 1500) add(0x1D2C0, 0x1D2DF)
         if (univer >= 1100) add(0x1D2E0, 0x1D2FF)
         add(0x1D300, 0x1D35F)
         add(0x1D360, 0x1D37F)
         add(0x1D400, 0x1D7FF)
         if (univer >= 800) add(0x1D800, 0x1DAAF)
+        if (univer >= 1400) add(0x1DF00, 0x1DFFF)
         if (univer >= 900) add(0x1E000, 0x1E02F)
+        if (univer >= 1500) add(0x1E030, 0x1E08F)
         if (univer >= 1200) add(0x1E100, 0x1E14F)
+        if (univer >= 1400) add(0x1E290, 0x1E2BF)
         if (univer >= 1200) add(0x1E2C0, 0x1E2FF)
+        if (univer >= 1500) add(0x1E4D0, 0x1E4FF)
+        if (univer >= 1400) add(0x1E7E0, 0x1E7FF)
         if (univer >= 700) add(0x1E800, 0x1E8DF)
         if (univer >= 900) add(0x1E900, 0x1E95F)
         if (univer >= 1100) add(0x1EC70, 0x1ECBF)
@@ -446,6 +469,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         if (univer >= 1000) add(0x2CEB0, 0x2EBEF)
         add(0x2F800, 0x2FA1F)
         if (univer >= 1300) add(0x30000, 0x3134F)
+        if (univer >= 1500) add(0x31350, 0x323AF)
         add(0xE0000, 0xE007F)
         add(0xE0100, 0xE01EF)
         add(0xF0000, 0xFFFFF)
@@ -491,20 +515,33 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             override fun onNothingSelected(parent: AdapterView<*>?) {}
                         }
                     }
-                    jump = Spinner(activity).also { jump ->
+                    jump = FilterableSpinner(activity).also { jump ->
                         fl.addView(jump, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
                             it.rightMargin = (activity.resources.displayMetrics.scaledDensity * 22f).toInt()
                         })
-                        val jstr = arrayOfNulls<String>(fromCodePoint.size)
-                        val jmap = SparseArray<String>()
-                        for (s in jump.context.resources.getStringArray(R.array.codes)) jmap.put(Integer.valueOf(s.substring(0, s.indexOf(' ')), 16), s.substring(s.indexOf(' ') + 1))
-                        val jit: Iterator<Int> = fromCodePoint.keys.iterator()
-                        var i = 0
-                        while (jit.hasNext()) {
-                            val c = jit.next()
-                            jstr[i] = String.format("U+%04X %s", c, jmap[c])
-                            ++i
+                        class JumpItem(private val code: Int, private val localized: String, private val default: String) : FilterableSpinner.FilterableItem {
+                            override fun toString(): String {
+                                return String.format("U+%04X %s", code, localized)
+                            }
+
+                            override fun contains(str: String): Boolean {
+                                return localized.contains(str, true) || default.contains(str, true)
+                            }
+
                         }
+                        val jmap = jump.context.resources.getStringArray(R.array.codes).map {
+                            Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
+                        }.toMap()
+                        val jdef = jump.context.resources.let {
+                            if (Build.VERSION.SDK_INT >= 17)
+                                jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
+                            else
+                                @Suppress("DEPRECATION")
+                                Resources(it.assets, it.displayMetrics, it.configuration.apply { locale = Locale.US })
+                        }.getStringArray(R.array.codes).map {
+                            Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
+                        }.toMap()
+                        val jstr = fromCodePoint.keys.map { JumpItem(it, jmap.getValue(it), jdef.getValue(it)) }.toTypedArray()
                         val adp = ArrayAdapter(jump.context, android.R.layout.simple_spinner_item, jstr)
                         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
                         jump.adapter = adp
@@ -629,7 +666,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 if (e.value.end < scroll) scroll = e.value.end
                 view.setSelection(scroll - e.key + e.value.index)
                 view.setOnScrollListener(object : AbsListView.OnScrollListener {
-                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) { }
+                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {}
 
                     override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                         if (visibleItemCount == 0)

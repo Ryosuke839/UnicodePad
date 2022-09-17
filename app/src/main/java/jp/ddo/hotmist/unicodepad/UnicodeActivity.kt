@@ -20,12 +20,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.os.Process
-import androidx.preference.PreferenceManager
 import android.provider.OpenableColumns
 import android.text.*
-import android.util.DisplayMetrics
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -36,17 +35,16 @@ import androidx.core.view.MenuItemCompat
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
 import androidx.emoji2.text.FontRequestEmojiCompatConfig
+import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 import java.util.zip.CRC32
 import kotlin.math.max
 import kotlin.math.min
+
 
 @Suppress("DEPRECATION")
 class UnicodeActivity : AppCompatActivity() {
@@ -54,13 +52,14 @@ class UnicodeActivity : AppCompatActivity() {
     private lateinit var btnClear: ImageButton
     private lateinit var btnFinish: Button
     private lateinit var chooser: FontChooser
+    private lateinit var locale: LocaleChooser
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
-    private var adView: AdView? = null
+    private val adCompat: AdCompat = AdCompatImpl()
     private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
-    private var isMush = false
+    private var action: String? = null
     private var created = false
     private var disableime = false
     private var delay: Runnable? = null
@@ -82,7 +81,9 @@ class UnicodeActivity : AppCompatActivity() {
                             super.onInitialized()
                             val tf = oldtf
                             oldtf = null
-                            setTypeface(tf)
+                            val locale = oldlocale
+                            oldlocale = Locale.ROOT
+                            setTypeface(tf, locale)
                         }
                     }))
         }
@@ -98,7 +99,7 @@ class UnicodeActivity : AppCompatActivity() {
             }
             it.textSize = fontsize
             it.setOnEditorActionListener { _, _, keyEvent ->
-                if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (keyEvent.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
                     true
                 } else
@@ -153,6 +154,7 @@ class UnicodeActivity : AppCompatActivity() {
                 val start = editText.selectionStart
                 if (start == -1) return@setOnClickListener
                 val end = editText.selectionEnd
+                adpPage.adapterEdit.updateString()
                 adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
             }
         }
@@ -163,20 +165,37 @@ class UnicodeActivity : AppCompatActivity() {
         }
         btnFinish = findViewById<Button>(R.id.finish).also {
             it.setOnClickListener {
-                if (isMush) {
-                    replace(editText.text.toString())
-                } else {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                    startActivity(intent)
+                when {
+                    action == ACTION_INTERCEPT -> {
+                        setResult(RESULT_OK, Intent().apply {
+                            putExtra(REPLACE_KEY, editText.text.toString())
+                        })
+                        finish()
+                    }
+                    Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
+                        setResult(RESULT_OK, Intent().apply {
+                            putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
+                        })
+                        finish()
+                    }
+                    else -> {
+                        startActivity(Intent().apply {
+                            action = Intent.ACTION_SEND
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                        })
+                    }
                 }
             }
         }
-        chooser = FontChooser(this, findViewById<View>(R.id.font) as Spinner, object : FontChooser.Listener {
+        chooser = FontChooser(this, findViewById(R.id.font), object : FontChooser.Listener {
             override fun onTypefaceChosen(typeface: Typeface?) {
-                setTypeface(typeface)
+                setTypeface(typeface, oldlocale)
+            }
+        })
+        locale = LocaleChooser(this, findViewById(R.id.locale), object : LocaleChooser.Listener {
+            override fun onLocaleChosen(locale: Locale) {
+                setTypeface(oldtf, locale)
             }
         })
         scroll = findViewById(R.id.scrollView)
@@ -186,47 +205,35 @@ class UnicodeActivity : AppCompatActivity() {
             pager.adapter = it
             scroll.setAdapter(it)
         }
-        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)
         pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
         val it = intent
-        val action = it.action
-        editText.imeOptions = if (action != null && ACTION_INTERCEPT == action) EditorInfo.IME_ACTION_DONE else EditorInfo.IME_ACTION_SEND
-        if (action != null && ACTION_INTERCEPT == action) {
-            isMush = true
-            val str = it.getStringExtra(REPLACE_KEY)
-            if (str != null) editText.append(str)
+        action = it.action
+        when {
+            action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
+            action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()
+            Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> it.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
+            else -> null
+        }?.let { editText.setText(it) }
+        if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
+            editText.imeOptions = EditorInfo.IME_ACTION_DONE
             btnFinish.setText(R.string.finish)
         } else {
-            isMush = false
+            editText.imeOptions = EditorInfo.IME_ACTION_SEND
             btnFinish.setText(R.string.share)
+            action = null
         }
-        if (action != null && Intent.ACTION_SEND == action) {
-            val str = it.getStringExtra(Intent.EXTRA_TEXT)
-            if (str != null) editText.append(str)
-        }
-        if (!pref.getBoolean("no-ad", false)) {
-            try {
-                MobileAds.initialize(this) { }
-                adView = AdView(this).also {
-                    val outMetrics = DisplayMetrics()
-                    windowManager.defaultDisplay.getMetrics(outMetrics)
-                    it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
-                    it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                    findViewById<LinearLayout>(R.id.adContainer).addView(it)
-                    val adRequest = AdRequest.Builder().build()
-                    it.loadAd(adRequest)
-                }
-            } catch (e: NullPointerException) {
-            }
-        }
+        adCompat.renderAdToContainer(this, pref)
         created = true
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+        scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -245,6 +252,7 @@ class UnicodeActivity : AppCompatActivity() {
         val edit = pref.edit()
         adpPage.save(edit)
         chooser.save(edit)
+        locale.save(edit)
         edit.putInt("page", pager.currentItem)
         edit.apply()
         super.onPause()
@@ -317,38 +325,12 @@ class UnicodeActivity : AppCompatActivity() {
             btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
-            scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
+            scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()
+                    ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1)
         }
         if (requestCode != -1) {
-            val adContainer = findViewById<LinearLayout>(R.id.adContainer)
-            if (adContainer != null) {
-                if (!pref.getBoolean("no-ad", false)) {
-                    if (adContainer.childCount == 0) {
-                        MobileAds.initialize(this) { }
-                        adView = AdView(this).also {
-                            val outMetrics = DisplayMetrics()
-                            windowManager.defaultDisplay.getMetrics(outMetrics)
-                            it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, (outMetrics.widthPixels / outMetrics.density).toInt())
-                            it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
-                            (findViewById<View>(R.id.adContainer) as LinearLayout).addView(it)
-                            val adRequest = AdRequest.Builder().build()
-                            it.loadAd(adRequest)
-                        }
-                    }
-                } else {
-                    if (adContainer.childCount > 0) {
-                        adContainer.removeAllViews()
-                    }
-                }
-            }
+            adCompat.renderAdToContainer(this, pref)
         }
-    }
-
-    private fun replace(result: String) {
-        val data = Intent()
-        data.putExtra(REPLACE_KEY, result)
-        setResult(RESULT_OK, data)
-        finish()
     }
 
     fun setPage(page: Int) {
@@ -356,11 +338,16 @@ class UnicodeActivity : AppCompatActivity() {
     }
 
     private var oldtf: Typeface? = null
-    private fun setTypeface(tf: Typeface?) {
-        if (tf === oldtf) return
+    private var oldlocale = Locale.ROOT
+    private fun setTypeface(tf: Typeface?, locale: Locale) {
+        if (tf === oldtf && locale == oldlocale) return
         oldtf = tf
+        oldlocale = locale
         editText.typeface = tf
-        adpPage.setTypeface(tf)
+        if (Build.VERSION.SDK_INT >= 17) {
+            editText.textLocale = locale
+        }
+        adpPage.setTypeface(tf, locale)
     }
 
     companion object {

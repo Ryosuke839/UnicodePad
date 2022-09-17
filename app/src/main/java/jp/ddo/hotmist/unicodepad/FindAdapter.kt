@@ -50,7 +50,7 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         text.imeOptions = EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_FORCE_ASCII
         text.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
         text.setOnEditorActionListener { _, _, event ->
-            if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (event?.keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (event.action == KeyEvent.ACTION_DOWN) find.performClick()
                 return@setOnEditorActionListener true
             }

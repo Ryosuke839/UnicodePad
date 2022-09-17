@@ -142,6 +142,13 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
+					android:layout_weight="2" />
+
+				<Spinner
+					android:id="@+id/locale"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
 					android:layout_weight="1" />
 
 			</LinearLayout>

@@ -91,7 +91,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
                 results.values = res
                 results.count = res.size
             } else {
-                val prefixString = str.toUpperCase(Locale.ENGLISH).substring(idx + 1)
+                val prefixString = str.uppercase(Locale.ENGLISH).substring(idx + 1)
                 current = if (idx == -1) "" else str.substring(0, idx + 1)
                 var values: ArrayList<String>
                 synchronized(lock) { values = ArrayList(array) }
@@ -99,7 +99,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
                 val newValues = ArrayList<String>()
                 for (i in 0 until count) {
                     val value = values[i]
-                    val valueText = value.toUpperCase(Locale.ENGLISH)
+                    val valueText = value.uppercase(Locale.ENGLISH)
                     if (valueText.startsWith(prefixString)) newValues.add(value)
                 }
                 results.values = newValues

@@ -145,6 +145,13 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
+					android:layout_weight="2" />
+
+				<Spinner
+					android:id="@+id/locale"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
 					android:layout_weight="1" />
 
 			</LinearLayout>
@@ -164,11 +171,6 @@
 
 	</jp.ddo.hotmist.unicodepad.LockableScrollView>
 
-	<LinearLayout
-		android:id="@+id/adContainer"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-	</LinearLayout>
+	<include layout="@layout/ad_container" />
 
 </LinearLayout>

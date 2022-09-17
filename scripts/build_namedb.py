@@ -51,7 +51,7 @@ def main():
           except:
             print(exp)
             raise
-      for version in [600, 610, 620, 630, 700, 800, 900, 1000, 1100, 1200, 1210, 1300, 1400]:
+      for version in [600, 610, 620, 630, 700, 800, 900, 1000, 1100, 1200, 1210, 1300, 1400, 1500]:
         ftp.encoding = 'cp1252' if version < 620 else 'utf-8'
         print(ftp.cwd(f'/Public/{version // 100}.{version // 10 % 10}.{version % 10}/ucd/'))
         current = None
@@ -100,8 +100,8 @@ def main():
           current.update()
       for v in characters.values():
         v.insert()
-      print(f'RETR /Public/emoji/14.0/')
-      print(ftp.cwd('/Public/emoji/14.0/'))
+      print(f'RETR /Public/emoji/15.0/')
+      print(ftp.cwd('/Public/emoji/15.0/'))
       group = ''
       subgroup = ''
       def emoji_line(line):

@@ -354,7 +354,7 @@
 
 	<string name="version_desc">Unicode 버전</string>
 
-	<string name="version_latest">최근 (14.0.0)</string>
+	<string name="version_latest">최근 (15.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat으로 이모지 표시</string>
 	<string name="emojicompat_null">꺼짐</string>

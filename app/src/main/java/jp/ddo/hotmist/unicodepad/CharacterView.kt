@@ -23,8 +23,8 @@ import android.text.Spannable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.graphics.ColorUtils
-import androidx.emoji.text.EmojiCompat
-import androidx.emoji.text.EmojiSpan
+import androidx.emoji2.text.EmojiCompat
+import androidx.emoji2.text.EmojiSpan
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -59,13 +59,11 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             span = null
             try {
                 val emojiCompat = EmojiCompat.get()
-                if (emojiCompat != null) {
-                    val spanned = emojiCompat.process(str)
-                    if (spanned is Spannable) {
-                        val spans = spanned.getSpans(0, str.length, EmojiSpan::class.java)
-                        if (spans.isNotEmpty()) {
-                            span = spans[0]
-                        }
+                val spanned = emojiCompat.process(str)
+                if (spanned is Spannable) {
+                    val spans = spanned.getSpans(0, str.length, EmojiSpan::class.java)
+                    if (spans.isNotEmpty()) {
+                        span = spans[0]
                     }
                 }
             } catch (e: IllegalStateException) {

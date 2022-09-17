@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="paste"
+        android:icon="@drawable/ic_shortcut_paste"
+        android:shortcutShortLabel="@android:string/paste">
+        <intent
+            android:action="jp.ddo.hotmist.unicodepad.intent.action.PASTE"
+            android:targetPackage="jp.ddo.hotmist.unicodepad"
+            android:targetClass="jp.ddo.hotmist.unicodepad.UnicodeActivity" />
+    </shortcut>
+</shortcuts>

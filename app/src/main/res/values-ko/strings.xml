@@ -354,7 +354,7 @@
 
 	<string name="version_desc">Unicode 버전</string>
 
-	<string name="version_latest">최근 (14.0.0)</string>
+	<string name="version_latest">최근 (15.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat으로 이모지 표시</string>
 	<string name="emojicompat_null">꺼짐</string>
@@ -396,14 +396,10 @@
 	<string name="clear_desc">초기화 버튼 보이기</string>
 	<string name="malformed">ZIP 파일 이름이 잘못됨</string>
 	<string name="legal">라이선스</string>
-	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">This application includes a modified version of Unicode Data File.
-Copyright © 1991-2021 Unicode, Inc. All rights reserved.
+Copyright © 1991-2022 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.10.4</string>
-	<string name="legal_app2">UnicodePad is licensed under the Apache License, Version2.0
-https://github.com/Ryosuke839/UnicodePad</string>
     <string name="locale_default">기본 (%s)</string>
 	<string name="locale_other">다른…</string>
 	<string name="locale_title">로케일</string>

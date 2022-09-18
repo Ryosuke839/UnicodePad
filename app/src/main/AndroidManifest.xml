@@ -15,6 +15,7 @@
    limitations under the License.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="jp.ddo.hotmist.unicodepad"
 	android:installLocation="auto">
 
@@ -65,11 +66,13 @@
 
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-			<intent-filter>
+			<intent-filter android:icon="@mipmap/ic_launcher">
 				<action android:name="android.intent.action.PROCESS_TEXT" />
-				<category android:name="android.intent.category.DEFAULTT" />
+				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="text/plain" />
 			</intent-filter>
+			<meta-data android:name="android.app.shortcuts"
+				android:resource="@xml/shortcuts" />
 		</activity>
 
 		<activity android:name="SettingActivity" />
@@ -77,5 +80,14 @@
 		<activity android:name="TabsActivity" />
 
 		<activity android:name="RestartActivity" />
+
+		<provider
+			android:name="androidx.startup.InitializationProvider"
+			android:authorities="${applicationId}.androidx-startup"
+			android:exported="false"
+			tools:node="merge">
+			<meta-data android:name="androidx.emoji2.text.EmojiCompatInitializer"
+				tools:node="remove" />
+		</provider>
 	</application>
 </manifest>

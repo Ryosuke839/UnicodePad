@@ -17,6 +17,9 @@
 	<string name="edit">Inmatning</string>
 	<string name="emoji">Emoji</string>
 	<string name="normal">Systemstandard</string>
+	<string name="locale_default">System (%s)</string>
+	<string name="locale_other">Annat …</string>
+	<string name="locale_title">Språk</string>
 	<string name="input">Mata in</string>
 	<string name="remrec">Ta bort</string>
 	<string name="add">Välj …</string>
@@ -337,13 +340,13 @@
 	<string name="general">Allmänt</string>
 	<string name="appearance">Utseende</string>
 	<string name="behaviour">Beteende</string>
-	<string name="textsize_desc">Textstorlek på input</string>
+	<string name="textsize_desc">Textstorlek på inmatning</string>
 	<string name="column_desc">Antal kolumner i rutnät</string>
 	<string name="columnl_desc">Antal kolumner i rutnät (liggande)</string>
 
 	<string name="version_desc">Unicode-version</string>
 
-	<string name="version_latest">Senaste (14.0.0)</string>
+	<string name="version_latest">Senaste (15.0.0)</string>
 
 	<string name="emojicompat_desc">Använd framåtkompatibilitet för emoji</string>
 	<string name="emojicompat_null">Aldrig</string>
@@ -352,6 +355,23 @@
 
 	<string name="download_desc">Ladda ned Noto-typsnitt …</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>
+	<string name="export_data">Exportera data och inställnignar …</string>
+	<string name="import_data">Importera data och inställnignar …</string>
+	<string name="exported_data">Export</string>
+	<string name="imported_data">Import</string>
+	<string name="export_confirm">Exportera</string>
+	<string name="import_confirm">Importera</string>
+	<string name="exported_notice">Exporterat</string>
+	<string name="imported_notice">Importerat</string>
+	<string name="export_fail_io">Det gick inte att exportera: %1$s</string>
+	<string name="import_fail_json">Filen är inte en giltig JSON-fil: %1$s</string>
+	<string name="import_fail_io">Det gick inte att importera: %1$s</string>
+	<string name="data_setting">Inställningar</string>
+	<string name="data_history">Historik (%1$d)</string>
+	<string name="data_favorite">Favoriter (%1$d)</string>
+	<string name="data_scroll">Skrollpositioner</string>
+	<string name="data_merge">Slå samman</string>
+	<string name="no_ad_desc">Visa inte annonser</string>
 	<string name="tabs_desc">Flikinställningar …</string>
 	<string name="shown_desc">Synliga flikar</string>
 	<string name="hidden_desc">Dolda flikar</string>
@@ -374,7 +394,7 @@
 
 	<string name="theme_title">Tillämpas efter omstart</string>
 	<string name="list_title">Listan kan inte döljas</string>
-	<string name="scroll_desc">Autoscrolla</string>
+	<string name="scroll_desc">Autoskrolla</string>
 
 	<string name="scroll_never">Aldrig</string>
 	<string name="scroll_landscape">Alltid i liggande läge</string>
@@ -384,16 +404,8 @@
 	<string name="clear_desc">Visa rensa-knapp</string>
 	<string name="malformed">Felaktigt filnamn på zip-fil</string>
 	<string name="legal">Juridisk information</string>
-	<string name="legal_uni">Unicode®</string>
 	<string name="legal_uni2">Denna applikation innehåller en modifierad version av Unicode Data File.
-Copyright © 1991-2021 Unicode, Inc. All rights reserved.
+Copyright © 1991-2022 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app">UnicodePad 2.10.4</string>
-	<string name="legal_app2">UnicodePad är licensierad under Apache-licensen, version2.0
-https://github.com/Ryosuke839/UnicodePad</string>
-	<string name="no_ad_desc">Visa inte annonser</string>
-    <string name="locale_default">Systemstandard (%s)</string>
-	<string name="locale_other">Övrig…</string>
-	<string name="locale_title">Locale</string>
 </resources>

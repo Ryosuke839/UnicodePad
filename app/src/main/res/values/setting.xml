@@ -47,6 +47,7 @@
 		<item>@string/version_1210</item>
 		<item>@string/version_1300</item>
 		<item>@string/version_1400</item>
+		<item>@string/version_1500</item>
 		<item>@string/version_latest</item>
 	</string-array>
 	<string-array name="version_val">
@@ -63,6 +64,7 @@
 		<item>12.1.0</item>
 		<item>13.0.0</item>
 		<item>14.0.0</item>
+		<item>15.0.0</item>
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def" translatable="false">Latest</string>

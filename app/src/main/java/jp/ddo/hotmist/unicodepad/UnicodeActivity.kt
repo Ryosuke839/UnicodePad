@@ -280,7 +280,7 @@ class UnicodeActivity : AppCompatActivity() {
             while (name.endsWith("/")) name = name.substring(0, name.length - 1)
             if (name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1)
             contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
             }
             name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
             try {

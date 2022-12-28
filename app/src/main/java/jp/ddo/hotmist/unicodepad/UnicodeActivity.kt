@@ -31,7 +31,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.provider.FontRequest
-import androidx.core.view.MenuItemCompat
 import androidx.core.view.doOnLayout
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
@@ -51,7 +50,7 @@ import kotlin.math.min
 class UnicodeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
-    private lateinit var btnFinish: Button
+    private lateinit var btnFinish: MenuItem
     private lateinit var chooser: FontChooser
     private lateinit var locale: LocaleChooser
     private lateinit var scroll: LockableScrollView
@@ -99,9 +98,9 @@ class UnicodeActivity : AppCompatActivity() {
                 true
             }
             it.textSize = fontsize
-            it.setOnEditorActionListener { _, _, keyEvent ->
-                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (keyEvent.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
+            it.setOnEditorActionListener { _, actionId, keyEvent ->
+                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
+                    onOptionsItemSelected(btnFinish)
                     true
                 } else
                     false
@@ -124,7 +123,6 @@ class UnicodeActivity : AppCompatActivity() {
                             val start = editText.selectionStart
                             if (start < 1) return@Runnable
                             val end = editText.selectionEnd
-                            if (start < 1) return@Runnable
                             if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
                             if (delay != null) {
                                 editText.postDelayed(delay, timer.toLong())
@@ -140,53 +138,6 @@ class UnicodeActivity : AppCompatActivity() {
                     }
                 }
                 true
-            }
-        }
-        findViewById<Button>(R.id.copy).also {
-            it.setOnClickListener {
-                cm.text = editText.text.toString()
-                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-            }
-        }
-        findViewById<Button>(R.id.find).also {
-            it.setOnClickListener {
-                val str = editText.editableText.toString()
-                if (str.isEmpty()) return@setOnClickListener
-                val start = editText.selectionStart
-                if (start == -1) return@setOnClickListener
-                val end = editText.selectionEnd
-                adpPage.adapterEdit.updateString()
-                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
-            }
-        }
-        findViewById<Button>(R.id.paste).also {
-            it.setOnClickListener {
-                editText.setText(cm.text)
-            }
-        }
-        btnFinish = findViewById<Button>(R.id.finish).also {
-            it.setOnClickListener {
-                when {
-                    action == ACTION_INTERCEPT -> {
-                        setResult(RESULT_OK, Intent().apply {
-                            putExtra(REPLACE_KEY, editText.text.toString())
-                        })
-                        finish()
-                    }
-                    Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
-                        setResult(RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
-                        })
-                        finish()
-                    }
-                    else -> {
-                        startActivity(Intent().apply {
-                            action = Intent.ACTION_SEND
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                        })
-                    }
-                }
             }
         }
         chooser = FontChooser(this, findViewById(R.id.font), object : FontChooser.Listener {
@@ -227,10 +178,8 @@ class UnicodeActivity : AppCompatActivity() {
         }?.let { editText.setText(it) }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
-            btnFinish.setText(R.string.finish)
         } else {
             editText.imeOptions = EditorInfo.IME_ACTION_SEND
-            btnFinish.setText(R.string.share)
             action = null
         }
         adCompat.renderAdToContainer(this, pref)
@@ -244,14 +193,61 @@ class UnicodeActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val actionItem = menu.add("Setting")
-        MenuItemCompat.setShowAsAction(actionItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS)
-        actionItem.setIcon(android.R.drawable.ic_menu_preferences)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            menu.setGroupDividerEnabled(true)
+        }
+        menu.add(0, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_preferences)
+        menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)
+        menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        btnFinish = if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
+            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_share)
+            menu.add(3, MENU_ID_SEND, MENU_ID_SEND, R.string.finish).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_send)
+        } else {
+            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_share)
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+        when (item.itemId) {
+            MENU_ID_SETTING -> startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+            MENU_ID_PASTE -> editText.setText(cm.text)
+            MENU_ID_DESC -> run {
+                val str = editText.editableText.toString()
+                if (str.isEmpty()) return@run
+                val start = editText.selectionStart
+                if (start == -1) return@run
+                val end = editText.selectionEnd
+                adpPage.adapterEdit.updateString()
+                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
+            }
+            MENU_ID_COPY -> {
+                cm.text = editText.text.toString()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+            }
+            MENU_ID_SHARE -> {
+                startActivity(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                })
+            }
+            MENU_ID_SEND -> when {
+                action == ACTION_INTERCEPT -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra(REPLACE_KEY, editText.text.toString())
+                    })
+                    finish()
+                }
+                Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
+                    })
+                    finish()
+                }
+            }
+        }
         return true
     }
 
@@ -273,6 +269,7 @@ class UnicodeActivity : AppCompatActivity() {
         return super.dispatchKeyEvent(e)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FontChooser.FONT_REQUEST_CODE) if (resultCode == RESULT_OK && data != null) {
             val uri = data.data ?: return
@@ -361,6 +358,12 @@ class UnicodeActivity : AppCompatActivity() {
         private const val ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT"
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
+        private const val MENU_ID_SETTING = 5
+        private const val MENU_ID_PASTE = 15
+        private const val MENU_ID_DESC = 25
+        private const val MENU_ID_COPY = 35
+        private const val MENU_ID_SHARE = 36
+        private const val MENU_ID_SEND = 37
         private val THEME = intArrayOf(
                 R.style.Theme,
                 R.style.Theme_Light,

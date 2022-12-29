@@ -120,6 +120,10 @@ class UnicodeActivity : AppCompatActivity() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
+                    if (!::itemUndo.isInitialized) {
+                        history[0] = Triple(s.toString(), 0, 0)
+                        return
+                    }
                     if (s.toString() == history[historyCursor].first) {
                         return
                     }
@@ -475,6 +479,7 @@ class UnicodeActivity : AppCompatActivity() {
         private const val MENU_ID_UNDO = 13
         private const val MENU_ID_REDO = 14
         private const val MENU_ID_PASTE = 15
+        private const val MENU_ID_CONVERT = 16
         private const val MENU_ID_DESC = 25
         private const val MENU_ID_COPY = 35
         private const val MENU_ID_SHARE = 36

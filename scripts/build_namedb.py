@@ -104,9 +104,11 @@ def main():
       print(ftp.cwd('/Public/emoji/15.0/'))
       group = ''
       subgroup = ''
+      pending = None
       def emoji_line(line):
         nonlocal group
         nonlocal subgroup
+        nonlocal pending
         if len(line) == 0:
           return
         if line[0] == '#':
@@ -121,17 +123,40 @@ def main():
           return
         if m.group(2) != 'fully-qualified':
           return
-        exp = 'INSERT INTO emoji_table (id, name, version, grp, subgrp, mod) values (\'{}\', \'{}\', {}, \'{}\', \'{}\', {});'.format(
-          m.group(1).rstrip(' '), m.group(5), int(m.group(3) + m.group(4) + '0'), group, subgroup, 1 if re.search(' (1F3F[B-F]|1F9B[0-3]) ', m.group(1)) else 0)
-        try:
-          cur.execute(exp)
-        except:
-          print(exp)
-          raise
-      cur.execute('CREATE TABLE emoji_table (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, mod bit NOT NULL);')
+        exp = 'INSERT INTO emoji_table2 (id, name, version, grp, subgrp, tone) values (\'{}\', \'{}\', {}, \'{}\', \'{}\','.format(
+          m.group(1).rstrip(' '), m.group(5), int(m.group(3) + m.group(4) + '0'), group, subgroup)
+        m = re.search(' (1F3F[B-F]) ', m.group(1))
+        if m:
+          if pending is not None:
+            try:
+              cur.execute(pending + '11034);')
+            except:
+              print(pending + '11034);')
+              raise
+            pending = None
+          try:
+            cur.execute(exp + str(int(m.group(1), 16)) + ');')
+          except:
+            print(exp + str(int(m.group(1), 16)) + ');')
+            raise
+        else:
+          if pending is not None:
+            try:
+              cur.execute(pending + '0);')
+            except:
+              print(pending + '0);')
+              raise
+          pending = exp
+      cur.execute('CREATE TABLE emoji_table2 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
+      if pending is not None:
+        try:
+          cur.execute(pending + '0);')
+        except:
+          print(pending + '0);')
+          raise
       con.commit()
-      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table\';']:
+      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table2\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table2\';']:
         print(cmd)
         cur.execute(cmd)
         r = cur.fetchone()

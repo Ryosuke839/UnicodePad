@@ -16,12 +16,14 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Process
 import android.provider.OpenableColumns
 import android.text.*
@@ -42,6 +44,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 import java.util.zip.CRC32
+import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.math.min
 
@@ -233,6 +236,7 @@ class UnicodeActivity : AppCompatActivity() {
         itemUndo = menu.add(1, MENU_ID_UNDO, MENU_ID_UNDO, R.string.undo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_revert).setEnabled(false)
         itemRedo = menu.add(1, MENU_ID_REDO, MENU_ID_REDO, R.string.redo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setEnabled(false)
         menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(1, MENU_ID_CONVERT, MENU_ID_CONVERT, R.string.convert_).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_sort_alphabetically)
         menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)
         menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         btnFinish = if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
@@ -270,6 +274,58 @@ class UnicodeActivity : AppCompatActivity() {
                 }
             }
             MENU_ID_PASTE -> editText.setText(cm.text)
+            MENU_ID_CONVERT-> {
+                val text = editText.text.toString()
+                val adapter = object : ArrayAdapter<Pair<String, String>>(this, android.R.layout.simple_list_item_2, mutableListOf<Pair<String, String>>().apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        add(Pair("NFC Normalization", android.icu.text.Normalizer2.getNFCInstance().normalize(text)))
+                        add(Pair("NFD Normalization", android.icu.text.Normalizer2.getNFDInstance().normalize(text)))
+                        add(Pair("NFKC Normalization", android.icu.text.Normalizer2.getNFKCInstance().normalize(text)))
+                        add(Pair("NFKD Normalization", android.icu.text.Normalizer2.getNFKDInstance().normalize(text)))
+                        add(Pair("NFKC_Casefold Normalization", android.icu.text.Normalizer2.getNFKCCasefoldInstance().normalize(text)))
+                    } else {
+                        add(Pair("NFC Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFC)))
+                        add(Pair("NFD Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)))
+                        add(Pair("NFKC Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFKC)))
+                        add(Pair("NFKD Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFKD)))
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        add(Pair("Lower Case", android.icu.text.CaseMap.toLower().apply(null, text)))
+                        add(Pair("Upper Case", android.icu.text.CaseMap.toUpper().apply(null, text)))
+                        add(Pair("Title Case", android.icu.text.CaseMap.toTitle().apply(null, android.icu.text.BreakIterator.getWordInstance(), text)))
+                        add(Pair("Fold Case", android.icu.text.CaseMap.fold().apply(text)))
+                    } else {
+                        add(Pair("Lower Case", text.lowercase()))
+                        add(Pair("Upper Case", text.uppercase()))
+                    }
+                }) {
+                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                        return (convertView
+                                ?: (context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_list_item_2, parent, false)).apply {
+                            val elem = getItem(position)
+                            findViewById<TextView>(android.R.id.text1).text = elem?.first
+                            findViewById<TextView>(android.R.id.text2).text = elem?.second
+                        }
+                    }
+                }
+                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
+                val handler = Handler()
+                thread {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        for (id in android.icu.text.Transliterator.getAvailableIDs()) {
+                            if (!dialog.isShowing) return@thread
+                            val converted = android.icu.text.Transliterator.getInstance(id).transliterate(text)
+                            if (converted == text) continue
+                            handler.post {
+                                adapter.add(Pair(android.icu.text.Transliterator.getDisplayName(id), converted))
+                            }
+                        }
+                    }
+                    handler.post {
+                        dialog.setTitle(R.string.convert)
+                    }
+                }
+            }
             MENU_ID_DESC -> run {
                 val str = editText.editableText.toString()
                 if (str.isEmpty()) return@run

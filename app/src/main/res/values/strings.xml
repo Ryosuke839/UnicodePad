@@ -21,6 +21,8 @@
 	<string name="copied">Copied to clipboard</string>
 	<string name="finish">Enter</string>
 	<string name="share">Share</string>
+	<string name="undo">Undo</string>
+	<string name="redo">Redo</string>
 	<string name="font">Font</string>
 	<string name="favorite">Favorite</string>
 	<string name="recent">Recent</string>

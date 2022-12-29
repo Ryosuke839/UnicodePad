@@ -56,6 +56,8 @@ class UnicodeActivity : AppCompatActivity() {
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
+    private lateinit var itemUndo: MenuItem
+    private lateinit var itemRedo: MenuItem
     private val adCompat: AdCompat = AdCompatImpl()
     private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
@@ -64,6 +66,8 @@ class UnicodeActivity : AppCompatActivity() {
     private var disableime = false
     private var delay: Runnable? = null
     private var timer = 500
+    private val history = mutableListOf(Triple("", 0, 0))
+    private var historyCursor = 0
     @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -105,6 +109,29 @@ class UnicodeActivity : AppCompatActivity() {
                 } else
                     false
             }
+            it.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (s.toString() == history[historyCursor].first) {
+                        return
+                    }
+                    while (history.size > historyCursor + 1) {
+                        history.removeLast()
+                    }
+                    while (history.size >= MAX_HISTORY) {
+                        history.removeFirst()
+                    }
+                    history.add(Triple(s.toString(), it.selectionStart, it.selectionEnd))
+                    historyCursor = history.size - 1
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = false
+                }
+            })
         }
         btnClear = findViewById<ImageButton>(R.id.clear).also {
             it.setOnClickListener {
@@ -168,14 +195,20 @@ class UnicodeActivity : AppCompatActivity() {
         if (action == "jp.ddo.hotmist.unicodepad.intent.action.PASTE") {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
-            view.doOnLayout { editText.setText(cm.text) }
+            view.doOnLayout {
+                history[0] = Triple(cm.text.toString(), 0, 0)
+                editText.setText(cm.text)
+            }
         }
         when {
             action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
             action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()
             Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> it.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
             else -> null
-        }?.let { editText.setText(it) }
+        }?.let {
+            history[0] = Triple(it, 0, 0)
+            editText.setText(it)
+        }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
         } else {
@@ -196,12 +229,14 @@ class UnicodeActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             menu.setGroupDividerEnabled(true)
         }
-        menu.add(0, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_preferences)
-        menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        menu.add(4, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_preferences)
+        itemUndo = menu.add(1, MENU_ID_UNDO, MENU_ID_UNDO, R.string.undo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_revert).setEnabled(false)
+        itemRedo = menu.add(1, MENU_ID_REDO, MENU_ID_REDO, R.string.redo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setEnabled(false)
+        menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)
-        menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         btnFinish = if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
-            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_share)
+            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_share)
             menu.add(3, MENU_ID_SEND, MENU_ID_SEND, R.string.finish).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_send)
         } else {
             menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_share)
@@ -212,6 +247,28 @@ class UnicodeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             MENU_ID_SETTING -> startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+            MENU_ID_UNDO -> {
+                if (historyCursor > 0) {
+                    historyCursor -= 1
+                    history[historyCursor].also {
+                        editText.setText(it.first)
+                        editText.setSelection(it.second, it.third)
+                    }
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = historyCursor < history.size - 1
+                }
+            }
+            MENU_ID_REDO -> {
+                if (historyCursor < history.size - 1) {
+                    historyCursor += 1
+                    history[historyCursor].also {
+                        editText.setText(it.first)
+                        editText.setSelection(it.second, it.third)
+                    }
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = historyCursor < history.size - 1
+                }
+            }
             MENU_ID_PASTE -> editText.setText(cm.text)
             MENU_ID_DESC -> run {
                 val str = editText.editableText.toString()
@@ -358,12 +415,15 @@ class UnicodeActivity : AppCompatActivity() {
         private const val ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT"
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
-        private const val MENU_ID_SETTING = 5
+        private const val MENU_ID_SETTING = 45
+        private const val MENU_ID_UNDO = 13
+        private const val MENU_ID_REDO = 14
         private const val MENU_ID_PASTE = 15
         private const val MENU_ID_DESC = 25
         private const val MENU_ID_COPY = 35
         private const val MENU_ID_SHARE = 36
         private const val MENU_ID_SEND = 37
+        private const val MAX_HISTORY = 256
         private val THEME = intArrayOf(
                 R.style.Theme,
                 R.style.Theme_Light,

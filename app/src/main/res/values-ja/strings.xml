@@ -21,6 +21,10 @@
 	<string name="copied">クリップボードにコピーしました</string>
 	<string name="finish">確定</string>
 	<string name="share">共有</string>
+	<string name="undo">元に戻す</string>
+	<string name="redo">やり直す</string>
+	<string name="convert">変換</string>
+	<string name="convert_">変換…</string>
 	<string name="font">フォント</string>
 	<string name="favorite">お気に入り</string>
 	<string name="recent">履歴</string>

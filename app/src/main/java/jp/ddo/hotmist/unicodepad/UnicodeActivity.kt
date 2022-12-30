@@ -16,12 +16,14 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Process
 import android.provider.OpenableColumns
 import android.text.*
@@ -31,7 +33,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.provider.FontRequest
-import androidx.core.view.MenuItemCompat
 import androidx.core.view.doOnLayout
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
@@ -43,6 +44,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 import java.util.zip.CRC32
+import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.math.min
 
@@ -51,12 +53,14 @@ import kotlin.math.min
 class UnicodeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
-    private lateinit var btnFinish: Button
+    private lateinit var btnFinish: MenuItem
     private lateinit var chooser: FontChooser
     private lateinit var locale: LocaleChooser
     private lateinit var scroll: LockableScrollView
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
+    private lateinit var itemUndo: MenuItem
+    private lateinit var itemRedo: MenuItem
     private val adCompat: AdCompat = AdCompatImpl()
     private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
@@ -65,6 +69,8 @@ class UnicodeActivity : AppCompatActivity() {
     private var disableime = false
     private var delay: Runnable? = null
     private var timer = 500
+    private val history = mutableListOf(Triple("", 0, 0))
+    private var historyCursor = 0
     @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -99,13 +105,40 @@ class UnicodeActivity : AppCompatActivity() {
                 true
             }
             it.textSize = fontsize
-            it.setOnEditorActionListener { _, _, keyEvent ->
-                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (keyEvent.action == KeyEvent.ACTION_DOWN) btnFinish.performClick()
+            it.setOnEditorActionListener { _, actionId, keyEvent ->
+                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
+                    onOptionsItemSelected(btnFinish)
                     true
                 } else
                     false
             }
+            it.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (!::itemUndo.isInitialized) {
+                        history[0] = Triple(s.toString(), 0, 0)
+                        return
+                    }
+                    if (s.toString() == history[historyCursor].first) {
+                        return
+                    }
+                    while (history.size > historyCursor + 1) {
+                        history.removeLast()
+                    }
+                    while (history.size >= MAX_HISTORY) {
+                        history.removeFirst()
+                    }
+                    history.add(Triple(s.toString(), it.selectionStart, it.selectionEnd))
+                    historyCursor = history.size - 1
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = false
+                }
+            })
         }
         btnClear = findViewById<ImageButton>(R.id.clear).also {
             it.setOnClickListener {
@@ -124,7 +157,6 @@ class UnicodeActivity : AppCompatActivity() {
                             val start = editText.selectionStart
                             if (start < 1) return@Runnable
                             val end = editText.selectionEnd
-                            if (start < 1) return@Runnable
                             if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
                             if (delay != null) {
                                 editText.postDelayed(delay, timer.toLong())
@@ -140,53 +172,6 @@ class UnicodeActivity : AppCompatActivity() {
                     }
                 }
                 true
-            }
-        }
-        findViewById<Button>(R.id.copy).also {
-            it.setOnClickListener {
-                cm.text = editText.text.toString()
-                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-            }
-        }
-        findViewById<Button>(R.id.find).also {
-            it.setOnClickListener {
-                val str = editText.editableText.toString()
-                if (str.isEmpty()) return@setOnClickListener
-                val start = editText.selectionStart
-                if (start == -1) return@setOnClickListener
-                val end = editText.selectionEnd
-                adpPage.adapterEdit.updateString()
-                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
-            }
-        }
-        findViewById<Button>(R.id.paste).also {
-            it.setOnClickListener {
-                editText.setText(cm.text)
-            }
-        }
-        btnFinish = findViewById<Button>(R.id.finish).also {
-            it.setOnClickListener {
-                when {
-                    action == ACTION_INTERCEPT -> {
-                        setResult(RESULT_OK, Intent().apply {
-                            putExtra(REPLACE_KEY, editText.text.toString())
-                        })
-                        finish()
-                    }
-                    Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
-                        setResult(RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
-                        })
-                        finish()
-                    }
-                    else -> {
-                        startActivity(Intent().apply {
-                            action = Intent.ACTION_SEND
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                        })
-                    }
-                }
             }
         }
         chooser = FontChooser(this, findViewById(R.id.font), object : FontChooser.Listener {
@@ -217,20 +202,24 @@ class UnicodeActivity : AppCompatActivity() {
         if (action == "jp.ddo.hotmist.unicodepad.intent.action.PASTE") {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
-            view.doOnLayout { editText.setText(cm.text) }
+            view.doOnLayout {
+                history[0] = Triple(cm.text.toString(), 0, 0)
+                editText.setText(cm.text)
+            }
         }
         when {
             action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
             action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()
             Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> it.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
             else -> null
-        }?.let { editText.setText(it) }
+        }?.let {
+            history[0] = Triple(it, 0, 0)
+            editText.setText(it)
+        }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
-            btnFinish.setText(R.string.finish)
         } else {
             editText.imeOptions = EditorInfo.IME_ACTION_SEND
-            btnFinish.setText(R.string.share)
             action = null
         }
         adCompat.renderAdToContainer(this, pref)
@@ -244,14 +233,138 @@ class UnicodeActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val actionItem = menu.add("Setting")
-        MenuItemCompat.setShowAsAction(actionItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS)
-        actionItem.setIcon(android.R.drawable.ic_menu_preferences)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            menu.setGroupDividerEnabled(true)
+        }
+        menu.add(4, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_preferences)
+        itemUndo = menu.add(1, MENU_ID_UNDO, MENU_ID_UNDO, R.string.undo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_revert).setEnabled(false)
+        itemRedo = menu.add(1, MENU_ID_REDO, MENU_ID_REDO, R.string.redo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setEnabled(false)
+        menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(1, MENU_ID_CONVERT, MENU_ID_CONVERT, R.string.convert_).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_sort_alphabetically)
+        menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)
+        menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
+        btnFinish = if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
+            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_share)
+            menu.add(3, MENU_ID_SEND, MENU_ID_SEND, R.string.finish).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_send)
+        } else {
+            menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_share)
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+        when (item.itemId) {
+            MENU_ID_SETTING -> startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+            MENU_ID_UNDO -> {
+                if (historyCursor > 0) {
+                    historyCursor -= 1
+                    history[historyCursor].also {
+                        editText.setText(it.first)
+                        editText.setSelection(it.second, it.third)
+                    }
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = historyCursor < history.size - 1
+                }
+            }
+            MENU_ID_REDO -> {
+                if (historyCursor < history.size - 1) {
+                    historyCursor += 1
+                    history[historyCursor].also {
+                        editText.setText(it.first)
+                        editText.setSelection(it.second, it.third)
+                    }
+                    itemUndo.isEnabled = historyCursor > 0
+                    itemRedo.isEnabled = historyCursor < history.size - 1
+                }
+            }
+            MENU_ID_PASTE -> editText.setText(cm.text)
+            MENU_ID_CONVERT-> {
+                val text = editText.text.toString()
+                val adapter = object : ArrayAdapter<Pair<String, String>>(this, android.R.layout.simple_list_item_2, mutableListOf<Pair<String, String>>().apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        add(Pair("NFC Normalization", android.icu.text.Normalizer2.getNFCInstance().normalize(text)))
+                        add(Pair("NFD Normalization", android.icu.text.Normalizer2.getNFDInstance().normalize(text)))
+                        add(Pair("NFKC Normalization", android.icu.text.Normalizer2.getNFKCInstance().normalize(text)))
+                        add(Pair("NFKD Normalization", android.icu.text.Normalizer2.getNFKDInstance().normalize(text)))
+                        add(Pair("NFKC_Casefold Normalization", android.icu.text.Normalizer2.getNFKCCasefoldInstance().normalize(text)))
+                    } else {
+                        add(Pair("NFC Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFC)))
+                        add(Pair("NFD Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)))
+                        add(Pair("NFKC Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFKC)))
+                        add(Pair("NFKD Normalization", java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFKD)))
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        add(Pair("Lower Case", android.icu.text.CaseMap.toLower().apply(null, text)))
+                        add(Pair("Upper Case", android.icu.text.CaseMap.toUpper().apply(null, text)))
+                        add(Pair("Title Case", android.icu.text.CaseMap.toTitle().apply(null, android.icu.text.BreakIterator.getWordInstance(), text)))
+                        add(Pair("Fold Case", android.icu.text.CaseMap.fold().apply(text)))
+                    } else {
+                        add(Pair("Lower Case", text.lowercase()))
+                        add(Pair("Upper Case", text.uppercase()))
+                    }
+                }) {
+                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                        return (convertView
+                                ?: (context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_list_item_2, parent, false)).apply {
+                            val elem = getItem(position)
+                            findViewById<TextView>(android.R.id.text1).text = elem?.first
+                            findViewById<TextView>(android.R.id.text2).text = elem?.second
+                        }
+                    }
+                }
+                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
+                val handler = Handler()
+                thread {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        for (id in android.icu.text.Transliterator.getAvailableIDs()) {
+                            if (!dialog.isShowing) return@thread
+                            val converted = android.icu.text.Transliterator.getInstance(id).transliterate(text)
+                            if (converted == text) continue
+                            handler.post {
+                                adapter.add(Pair(android.icu.text.Transliterator.getDisplayName(id), converted))
+                            }
+                        }
+                    }
+                    handler.post {
+                        dialog.setTitle(R.string.convert)
+                    }
+                }
+            }
+            MENU_ID_DESC -> run {
+                val str = editText.editableText.toString()
+                if (str.isEmpty()) return@run
+                val start = editText.selectionStart
+                if (start == -1) return@run
+                val end = editText.selectionEnd
+                adpPage.adapterEdit.updateString()
+                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
+            }
+            MENU_ID_COPY -> {
+                cm.text = editText.text.toString()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+            }
+            MENU_ID_SHARE -> {
+                startActivity(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                })
+            }
+            MENU_ID_SEND -> when {
+                action == ACTION_INTERCEPT -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra(REPLACE_KEY, editText.text.toString())
+                    })
+                    finish()
+                }
+                Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
+                    })
+                    finish()
+                }
+            }
+        }
         return true
     }
 
@@ -273,6 +386,7 @@ class UnicodeActivity : AppCompatActivity() {
         return super.dispatchKeyEvent(e)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FontChooser.FONT_REQUEST_CODE) if (resultCode == RESULT_OK && data != null) {
             val uri = data.data ?: return
@@ -280,7 +394,7 @@ class UnicodeActivity : AppCompatActivity() {
             while (name.endsWith("/")) name = name.substring(0, name.length - 1)
             if (name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1)
             contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
             }
             name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
             try {
@@ -361,6 +475,16 @@ class UnicodeActivity : AppCompatActivity() {
         private const val ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT"
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
+        private const val MENU_ID_SETTING = 45
+        private const val MENU_ID_UNDO = 13
+        private const val MENU_ID_REDO = 14
+        private const val MENU_ID_PASTE = 15
+        private const val MENU_ID_CONVERT = 16
+        private const val MENU_ID_DESC = 25
+        private const val MENU_ID_COPY = 35
+        private const val MENU_ID_SHARE = 36
+        private const val MENU_ID_SEND = 37
+        private const val MAX_HISTORY = 256
         private val THEME = intArrayOf(
                 R.style.Theme,
                 R.style.Theme_Light,

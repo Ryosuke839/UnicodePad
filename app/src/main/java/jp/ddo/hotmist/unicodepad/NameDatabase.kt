@@ -31,7 +31,7 @@ class NameDatabase(context: Context) {
     operator fun get(code: Int, column: String): String? {
         if (column == "name") {
             if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return "Private Use"
-            if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFF || code in 0x20000..0x2A6DF || code in 0x2A700..0x2B738 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A) return "CJK Unified Ideograph"
+            if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFF || code in 0x20000..0x2A6DF || code in 0x2A700..0x2B738 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A || code in 0x31350 .. 0x323AF) return "CJK Unified Ideograph"
             if (code in 0xAC00..0xD7A3) return "Hangul Syllable"
             if (code in 0x17000..0x187F7) return "Tangut Character"
         }
@@ -39,7 +39,7 @@ class NameDatabase(context: Context) {
     }
 
     operator fun get(code: String, column: String): String? {
-        return get("emoji_table", "'$code'", column)
+        return get("emoji_table2", "'$code'", column)
     }
 
     private operator fun get(table: String, code: String, column: String): String? {
@@ -73,7 +73,7 @@ class NameDatabase(context: Context) {
     }
 
     fun getInt(code: String, column: String): Int {
-        return getInt("emoji_table", "'$code'", column)
+        return getInt("emoji_table2", "'$code'", column)
     }
 
     private fun getInt(table: String, code: String, column: String): Int {
@@ -100,14 +100,14 @@ class NameDatabase(context: Context) {
             else -> version
         }
         return try {
-            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version UNION ALL SELECT id FROM emoji_table WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
+            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version UNION ALL SELECT id FROM emoji_table2 WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
         } catch (e: SQLiteException) {
             null
         }
     }
 
     @SuppressLint("Recycle")
-    fun emoji(version: Int, mod: Boolean): Cursor? {
+    fun emoji(version: Int, tone: Int): Cursor? {
         val emojiVersion = when (version) {
             600, 610, 620, 630 -> 60
             700 -> 70
@@ -115,7 +115,7 @@ class NameDatabase(context: Context) {
             else -> version
         }
         return try {
-            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table WHERE version <= $emojiVersion" + if (mod) ";" else " AND mod = 0;", null)
+            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table2 WHERE version <= $emojiVersion AND (tone = $tone OR tone = 0);", null)
         } catch (e: SQLiteException) {
             null
         }
@@ -129,7 +129,7 @@ class NameDatabase(context: Context) {
             return try {
                 val db = SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
                 try {
-                    db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table';", null).use { cur ->
+                    db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table2';", null).use { cur ->
                         cur.moveToFirst()
                         if (cur.getInt(0) != 2) throw SQLiteException()
                     }
@@ -137,7 +137,7 @@ class NameDatabase(context: Context) {
                         cur.moveToFirst()
                         if (cur.getInt(0) != 34930) throw SQLiteException()
                     }
-                    db.rawQuery("SELECT COUNT(*) FROM 'emoji_table';", null).use { cur ->
+                    db.rawQuery("SELECT COUNT(*) FROM 'emoji_table2';", null).use { cur ->
                         cur.moveToFirst()
                         if (cur.getInt(0) != 3655) throw SQLiteException()
                     }

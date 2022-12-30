@@ -35,10 +35,10 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
     private var current = ""
     fun update(str: String) {
         synchronized(lock) {
-            for (s in str.split(" ").toTypedArray()) if (s.isNotEmpty()) {
+            for (s in str.split(" ", "\n").toTypedArray()) if (s.isNotEmpty()) {
                 (temp ?: list).let {
                     it.remove(s)
-                    if (it.size == 255) it.removeAt(254)
+                    while (it.size >= 255) it.removeAt(254)
                     it.add(0, s)
                 }
             }

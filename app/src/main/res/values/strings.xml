@@ -21,6 +21,10 @@
 	<string name="copied">Copied to clipboard</string>
 	<string name="finish">Enter</string>
 	<string name="share">Share</string>
+	<string name="undo">Undo</string>
+	<string name="redo">Redo</string>
+	<string name="convert">Convert</string>
+	<string name="convert_">Convert…</string>
 	<string name="font">Font</string>
 	<string name="favorite">Favorite</string>
 	<string name="recent">Recent</string>
@@ -466,7 +470,7 @@
 Copyright © 1991-2022 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.11.0</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.12.0</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

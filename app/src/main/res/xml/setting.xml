@@ -135,6 +135,10 @@
 			android:defaultValue="false"
 			android:key="clear"
 			android:title="@string/clear_desc" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="buttons"
+			android:title="@string/buttons_desc" />
 		<ListPreference
 			android:defaultValue="1"
 			android:dialogTitle="@string/scroll_desc"

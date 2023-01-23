@@ -53,7 +53,8 @@ import kotlin.math.min
 class UnicodeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
-    private lateinit var btnFinish: MenuItem
+    private lateinit var btnRow: LinearLayout
+    private lateinit var btnFinish: Button
     private lateinit var chooser: FontChooser
     private lateinit var locale: LocaleChooser
     private lateinit var scroll: LockableScrollView
@@ -107,7 +108,7 @@ class UnicodeActivity : AppCompatActivity() {
             it.textSize = fontsize
             it.setOnEditorActionListener { _, actionId, keyEvent ->
                 if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
-                    onOptionsItemSelected(btnFinish)
+                    btnFinish.performClick()
                     true
                 } else
                     false
@@ -140,11 +141,61 @@ class UnicodeActivity : AppCompatActivity() {
                 }
             })
         }
+        findViewById<Button>(R.id.copy).also {
+            it.setOnClickListener {
+                cm.text = editText.text.toString()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+            }
+        }
+        findViewById<Button>(R.id.find).also {
+            it.setOnClickListener {
+                val str = editText.editableText.toString()
+                if (str.isEmpty()) return@setOnClickListener
+                val start = editText.selectionStart
+                if (start == -1) return@setOnClickListener
+                val end = editText.selectionEnd
+                adpPage.adapterEdit.updateString()
+                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
+            }
+        }
+        findViewById<Button>(R.id.paste).also {
+            it.setOnClickListener {
+                editText.setText(cm.text)
+            }
+        }
+        btnFinish = findViewById<Button>(R.id.finish).also {
+            it.setOnClickListener {
+                when {
+                    action == ACTION_INTERCEPT -> {
+                        setResult(RESULT_OK, Intent().apply {
+                            putExtra(REPLACE_KEY, editText.text.toString())
+                        })
+                        finish()
+                    }
+                    Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
+                        setResult(RESULT_OK, Intent().apply {
+                            putExtra(Intent.EXTRA_PROCESS_TEXT, editText.text)
+                        })
+                        finish()
+                    }
+                    else -> {
+                        startActivity(Intent().apply {
+                            action = Intent.ACTION_SEND
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                        })
+                    }
+                }
+            }
+        }
         btnClear = findViewById<ImageButton>(R.id.clear).also {
             it.setOnClickListener {
                 editText.setText("")
             }
             it.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
+        }
+        btnRow = findViewById<LinearLayout>(R.id.buttonBar).also {
+            it.visibility = if (pref.getBoolean("buttons", true)) View.VISIBLE else View.GONE
         }
         findViewById<ImageButton>(R.id.delete).also {
             it.setOnTouchListener { view: View, motionEvent: MotionEvent ->
@@ -218,8 +269,10 @@ class UnicodeActivity : AppCompatActivity() {
         }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
+            btnFinish.setText(R.string.finish)
         } else {
             editText.imeOptions = EditorInfo.IME_ACTION_SEND
+            btnFinish.setText(R.string.share)
             action = null
         }
         adCompat.renderAdToContainer(this, pref)
@@ -243,7 +296,7 @@ class UnicodeActivity : AppCompatActivity() {
         menu.add(1, MENU_ID_CONVERT, MENU_ID_CONVERT, R.string.convert_).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_sort_alphabetically)
         menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)
         menu.add(3, MENU_ID_COPY, MENU_ID_COPY, android.R.string.copy).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
-        btnFinish = if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
+        if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)) {
             menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_share)
             menu.add(3, MENU_ID_SEND, MENU_ID_SEND, R.string.finish).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_send)
         } else {
@@ -444,6 +497,7 @@ class UnicodeActivity : AppCompatActivity() {
         disableime = pref.getBoolean("ime", true)
         if (created) {
             btnClear.visibility = if (pref.getBoolean("clear", false)) View.VISIBLE else View.GONE
+            btnRow.visibility = if (pref.getBoolean("buttons", true)) View.VISIBLE else View.GONE
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
             scroll.setLockView(pager, (pref.getString("scroll", null)?.toIntOrNull()

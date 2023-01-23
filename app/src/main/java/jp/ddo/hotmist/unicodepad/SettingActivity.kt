@@ -213,6 +213,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                                     it.put("shrink", if (pref.contains("shrink")) pref.getBoolean("shrink", true) else null)
                                     it.put("ime", if (pref.contains("ime")) pref.getBoolean("ime", true) else null)
                                     it.put("clear", if (pref.contains("clear")) pref.getBoolean("clear", true) else null)
+                                    it.put("buttons", if (pref.contains("buttons")) pref.getBoolean("buttons", true) else null)
                                     it.put("scroll", pref.getString("scroll", null))
                                     it.put("recentsize", pref.getString("recentsize", null))
                                 })
@@ -334,6 +335,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                                     (it.opt("shrink") as? Boolean)?.let { bool -> edit.putBoolean("shrink", bool) }
                                     (it.opt("ime") as? Boolean)?.let { bool -> edit.putBoolean("ime", bool) }
                                     (it.opt("clear") as? Boolean)?.let { bool -> edit.putBoolean("clear", bool) }
+                                    (it.opt("buttons") as? Boolean)?.let { bool -> edit.putBoolean("buttons", bool) }
                                     (it.opt("scroll") as? String)?.let { str -> edit.putString("scroll", str) }
                                     (it.opt("recentsize") as? String)?.let { str -> edit.putString("recentsize", str) }
                                 }

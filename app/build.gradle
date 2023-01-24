@@ -8,8 +8,8 @@ android {
         applicationId "jp.ddo.hotmist.unicodepad"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 54
-        versionName "2.12.1"
+        versionCode 55
+        versionName "2.12.2"
     }
 
     compileOptions {

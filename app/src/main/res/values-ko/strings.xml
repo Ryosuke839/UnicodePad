@@ -21,6 +21,10 @@
 	<string name="copied">클립보드로 복사됨</string>
 	<string name="finish">완료</string>
 	<string name="share">공유</string>
+	<string name="undo">되돌리기</string>
+	<string name="redo">다시 실행</string>
+	<string name="convert">변환</string>
+	<string name="convert_">변환…</string>
 	<string name="font">글꼴</string>
 	<string name="favorite">즐겨찾기</string>
 	<string name="recent">최근</string>
@@ -28,6 +32,9 @@
 	<string name="edit">편집</string>
 	<string name="emoji">이모지</string>
 	<string name="normal">기본</string>
+	<string name="locale_default">기본 (%s)</string>
+	<string name="locale_other">모두…</string>
+	<string name="locale_title">로케일</string>
 	<string name="input">입력</string>
 	<string name="remrec">삭제</string>
 	<string name="add">선택…</string>
@@ -40,7 +47,7 @@
 	<string name="denied">접근을 거부했습니다. SD카드를 탐색하려면 저장공간 접근 권한을 부여해주십시오.</string>
 
 	<string name="script_0">0 로마자 기본</string>
-	<string name="script_80">80 라틴-1 보충</string>
+	<string name="script_80">80 로마자-1 보충</string>
 	<string name="script_100">100 로마자 확장 A</string>
 	<string name="script_180">180 로마자 확장 B</string>
 	<string name="script_250">250 IPA 확장</string>
@@ -59,6 +66,7 @@
 	<string name="script_800">800 사마리아 문자</string>
 	<string name="script_840">840 만다이아 문자</string>
 	<string name="script_860">860 시리아 문자 보충</string>
+	<string name="script_870">870 아랍 문자 확장 B</string>
 	<string name="script_8A0">8A0 아랍 문자 확장 A</string>
 	<string name="script_900">900 데바나가리 문자</string>
 	<string name="script_980">980 벵골 문자</string>
@@ -80,7 +88,7 @@
 	<string name="script_1380">1380 에티오피아 문자 보충</string>
 	<string name="script_13A0">13A0 체로키 문자 보충</string>
 	<string name="script_1400">1400 통합 캐나다 원주민 음절문자</string>
-	<string name="script_1680">1680 오검 문자</string>
+	<string name="script_1680">1680 오감 문자</string>
 	<string name="script_16A0">16A0 룬 문자</string>
 	<string name="script_1700">1700 타갈로그 문자</string>
 	<string name="script_1720">1720 하누누 문자</string>
@@ -88,7 +96,7 @@
 	<string name="script_1760">1760 타그반와 문자</string>
 	<string name="script_1780">1780 크메르 문자</string>
 	<string name="script_1800">1800 몽골 문자</string>
-	<string name="script_18B0">18B0 통합 캐나다 원주민 음절문자</string>
+	<string name="script_18B0">18B0 통합 캐나다 원주민 음절문자 확장</string>
 	<string name="script_1900">1900 림부 문자</string>
 	<string name="script_1950">1950 타이 루에 문자</string>
 	<string name="script_1980">1980 신 타이 루에 문자</string>
@@ -101,7 +109,7 @@
 	<string name="script_1BC0">1BC0 바타크 문자</string>
 	<string name="script_1C00">1C00 렙차 문자</string>
 	<string name="script_1C50">1C50 올치키 문자</string>
-	<string name="script_1C80">1C80 키릴 확장 C</string>
+	<string name="script_1C80">1C80 키릴 문자 확장 C</string>
 	<string name="script_1C90">1C90 조지아 문자 확장</string>
 	<string name="script_1CC0">1CC0 순다 문자 보충</string>
 	<string name="script_1CD0">1CD0 베다 문자 확장</string>
@@ -135,7 +143,7 @@
 	<string name="script_2A00">2A00 수학 연산자 보충</string>
 	<string name="script_2B00">2B00 기타 기호 및 화살표</string>
 	<string name="script_2C00">2C00 글라골 문자</string>
-	<string name="script_2C60">2C60 라틴 확장 C</string>
+	<string name="script_2C60">2C60 로마자 확장 C</string>
 	<string name="script_2C80">2C80 콥트 문자</string>
 	<string name="script_2D00">2D00 조지아 문자 보충</string>
 	<string name="script_2D30">2D30 티피나그 문자</string>
@@ -163,7 +171,7 @@
 	<string name="script_A490">A490 이 부수</string>
 	<string name="script_A4D0">A4D0 리수 문자</string>
 	<string name="script_A500">A500 바이 문자</string>
-	<string name="script_A640">A640 키릴 확장 B</string>
+	<string name="script_A640">A640 키릴 문자 확장 B</string>
 	<string name="script_A6A0">A6A0 바뭄 문자</string>
 	<string name="script_A700">A700 성조 조정 문자</string>
 	<string name="script_A720">A720 라틴 확장 D</string>
@@ -219,7 +227,9 @@
 	<string name="script_104B0">104B0 오세이지 문자</string>
 	<string name="script_10500">10500 엘바산 문자</string>
 	<string name="script_10530">10530 캅카스 알바니아 문자</string>
+	<string name="script_10570">10570 비트쿠크</string>
 	<string name="script_10600">10600 선형 A 문자</string>
+	<string name="script_10780">10780 로마자 확장 F</string>
 	<string name="script_10800">10800 키프로스 음절문자</string>
 	<string name="script_10840">10840 아람 문자</string>
 	<string name="script_10860">10860 팔미라 문자</string>
@@ -242,8 +252,10 @@
 	<string name="script_10D00">10D00 하니피 로힝야 문자</string>
 	<string name="script_10E60">10E60 루미 숫자 기호</string>
 	<string name="script_10E80">10E80 야지디 문자</string>
+	<string name="script_10EC0">10EC0 아랍 문자 확장 C</string>
 	<string name="script_10F00">10F00 옛 소그디아나 문자</string>
 	<string name="script_10F30">10F30 소그디아나 문자</string>
+	<string name="script_10F70">10F70 옛 위구르 문자</string>
 	<string name="script_10FB0">10FB0 화레즘 문자</string>
 	<string name="script_10FE0">10FE0 엘리마이스 문자</string>
 	<string name="script_11000">11000 브라흐미 문자</string>
@@ -270,24 +282,29 @@
 	<string name="script_119A0">119A0 난디나가리 문자</string>
 	<string name="script_11A00">11A00 자나바자르 네모꼴문자</string>
 	<string name="script_11A50">11A50 소욤보 문자</string>
+	<string name="script_11AB0">11AB0 통합 캐나다 원주민 음절문자 확장 A</string>
 	<string name="script_11AC0">11AC0 파우친하우 문자</string>
+	<string name="script_11B00">11B00 데바나가리 확장 A</string>
 	<string name="script_11C00">11C00 바하이쿠스키 문자</string>
 	<string name="script_11C70">11C70 마르첸 문자</string>
 	<string name="script_11D00">11D00 마살람 곤디 문자</string>
 	<string name="script_11D60">11D60 군잘라 곤디 문자</string>
 	<string name="script_11EE0">11EE0 마카사르 문자</string>
+	<string name="script_11F00">11F00 카위 문자</string>
 	<string name="script_11FB0">11FB0 리수 문자 보충</string>
 	<string name="script_11FC0">11FC0 타밀 문자 보충</string>
 	<string name="script_12000">12000 쐐기 문자</string>
 	<string name="script_12400">12400 쐐기 숫자 및 구두점</string>
 	<string name="script_12480">12480 초기 왕조 쐐기 문자</string>
+	<string name="script_12F90">12F90 키프로스-미노스 문자</string>
 	<string name="script_13000">13000 이집트 상형문자</string>
 	<string name="script_13430">13430 이집트 상형문자 표현꼴 제어문자</string>
 	<string name="script_14400">14400 아나톨리아 상형문자</string>
 	<string name="script_16800">16800 바뭄 문자 보충</string>
 	<string name="script_16A40">16A40 므로 문자</string>
+	<string name="script_16A70">16A70 탕사 문자</string>
 	<string name="script_16AD0">16AD0 바사 문자</string>
-	<string name="script_16B00">16B00 파하우 흐몽 문자</string>
+	<string name="script_16B00">16B00 파하우 몽 문자</string>
 	<string name="script_16E40">16E40 메데파이드린 문자</string>
 	<string name="script_16F00">16F00 먀오 문자</string>
 	<string name="script_16FE0">16FE0 한자꼴 기호 및 구두점</string>
@@ -295,23 +312,31 @@
 	<string name="script_18800">18800 탕구트 문자 구성요소</string>
 	<string name="script_18B00">18B00 거란 문자 작은꼴</string>
 	<string name="script_18D00">18D00 탕구트 문자 보충</string>
+	<string name="script_1AFF0">1AFF0 카나 문자 확장 B</string>
 	<string name="script_1B000">1B000 카나 문자 보충</string>
 	<string name="script_1B100">1B100 카나 문자 확장 A</string>
 	<string name="script_1B130">1B130 카나 문자 작은꼴 확장</string>
 	<string name="script_1B170">1B170 여서 문자</string>
 	<string name="script_1BC00">1BC00 뒤플로이 문자</string>
 	<string name="script_1BCA0">1BCA0 숏핸드 표현꼴 제어문자</string>
-	<string name="script_1D000">1D000 비잔틴 시대 악보 기호</string>
-	<string name="script_1D100">1D100 악보 기호</string>
-	<string name="script_1D200">1D200 고대 그리스 악보 기호</string>
+	<string name="script_1CF00">1CF00 즈나메니 음악 기호</string>
+	<string name="script_1D000">1D000 비잔틴 시대 음악 기호</string>
+	<string name="script_1D100">1D100 음악 기호</string>
+	<string name="script_1D200">1D200 고대 그리스 음악 기호</string>
+	<string name="script_1D2C0">1D2C0 카크토비크 숫자</string>
 	<string name="script_1D2E0">1D2E0 마야 숫자</string>
 	<string name="script_1D300">1D300 태현경 기호</string>
 	<string name="script_1D360">1D360 산가지 숫자</string>
 	<string name="script_1D400">1D400 수학적 글자 및 숫자 기호</string>
 	<string name="script_1D800">1D800 서튼 신호쓰기 기호</string>
+	<string name="script_1DF00">1DF00 로마자 확장 G</string>
 	<string name="script_1E000">1E000 글라골 문자 보충</string>
-	<string name="script_1E100">1E100 호세 먀오 문자</string>
+	<string name="script_1E030">1E030 키릴 문자 확장 D</string>
+	<string name="script_1E100">1E100 나야켕 파하우 몽 문자</string>
+	<string name="script_1E290">1E290 토토 문자</string>
 	<string name="script_1E2C0">1E2C0 완초 문자</string>
+	<string name="script_1E4D0">1E4D0 나그 문다리 문자</string>
+	<string name="script_1E7E0">1E7E0 에티오피아 문자 확장 B</string>
 	<string name="script_1E800">1E800 멘데 문자</string>
 	<string name="script_1E900">1E900 아들람 문자</string>
 	<string name="script_1EC70">1EC70 인도 시야크 숫자</string>
@@ -340,6 +365,7 @@
 	<string name="script_2CEB0">2CEB0 한중일 통합 한자 확장 F</string>
 	<string name="script_2F800">2F800 한중일 호환 한자 보충</string>
 	<string name="script_30000">30000 한중일 통합 한자 확장 G</string>
+	<string name="script_30000">30000 한중일 통합 한자 확장 H</string>
 	<string name="script_E0000">E0000 태그</string>
 	<string name="script_E0100">E0100 모습 구별 문자 보충</string>
 	<string name="script_F0000">F0000 사용자 영역 보충 A</string>
@@ -353,7 +379,6 @@
 	<string name="columnl_desc">열 개수 (가로모드)</string>
 
 	<string name="version_desc">Unicode 버전</string>
-
 	<string name="version_latest">최근 (15.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat으로 이모지 표시</string>
@@ -363,6 +388,22 @@
 
 	<string name="download_desc">Noto 글꼴 내려받기…</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>
+	<string name="export_data">데이터 및 설정 내보내기…</string>
+	<string name="import_data">데이터 및 설정 가져오기…</string>
+	<string name="exported_data">내보낼 데이터</string>
+	<string name="imported_data">가져올 데이터</string>
+	<string name="export_confirm">내보내기</string>
+	<string name="import_confirm">가져오기</string>
+	<string name="exported_notice">내보내기 완료</string>
+	<string name="imported_notice">가져오기 완료</string>
+	<string name="export_fail_io">내보내기 실패: %1$s</string>
+	<string name="import_fail_json">유효한 JSON 파일이 아님: %1$s</string>
+	<string name="import_fail_io">가져오기 실패: %1$s</string>
+	<string name="data_setting">설정</string>
+	<string name="data_history">내역 (%1$d)</string>
+	<string name="data_favorite">즐겨찾기 (%1$d)</string>
+	<string name="data_scroll">스크롤 위치</string>
+	<string name="data_merge">현재 데이터와 합치기</string>
 	<string name="no_ad_desc">광고 숨기기</string>
 	<string name="tabs_desc">탭 설정…</string>
 	<string name="shown_desc">보이는 탭</string>
@@ -370,6 +411,7 @@
 
 	<string name="multiplecolumns">여러 열, 문자만 표시</string>
 	<string name="singlecolumn">단일 열, 설명도 표시</string>
+	<string name="sort">정렬</string>
 
 	<string name="padding_desc">격자 내부 여백</string>
 	<string name="gridsize_desc">격자 내 글자 크기</string>
@@ -389,7 +431,7 @@
 	<string name="scroll_desc">UI 스크롤</string>
 
 	<string name="scroll_never">꺼짐</string>
-	<string name="scroll_landscape">가로모드에서만</string>
+	<string name="scroll_landscape">가로 전용</string>
 	<string name="scroll_always">항상</string>
 
 	<string name="ime_desc">IME 비활성화</string>
@@ -400,7 +442,4 @@
 Copyright © 1991-2022 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-    <string name="locale_default">기본 (%s)</string>
-	<string name="locale_other">다른…</string>
-	<string name="locale_title">로케일</string>
 </resources>

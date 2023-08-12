@@ -161,6 +161,7 @@ class UnicodeActivity : AppCompatActivity() {
         findViewById<Button>(R.id.paste).also {
             it.setOnClickListener {
                 editText.setText(cm.text)
+                editText.setSelection(editText.length())
             }
         }
         btnFinish = findViewById<Button>(R.id.finish).also {
@@ -254,8 +255,9 @@ class UnicodeActivity : AppCompatActivity() {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
             view.doOnLayout {
-                history[0] = Triple(cm.text.toString(), 0, 0)
+                history[0] = Triple(cm.text?.toString() ?: "", 0, 0)
                 editText.setText(cm.text)
+                editText.setSelection(editText.length())
             }
         }
         when {
@@ -266,6 +268,7 @@ class UnicodeActivity : AppCompatActivity() {
         }?.let {
             history[0] = Triple(it, 0, 0)
             editText.setText(it)
+            editText.setSelection(editText.length())
         }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -330,7 +333,10 @@ class UnicodeActivity : AppCompatActivity() {
                     itemRedo.isEnabled = historyCursor < history.size - 1
                 }
             }
-            MENU_ID_PASTE -> editText.setText(cm.text)
+            MENU_ID_PASTE -> {
+                editText.setText(cm.text)
+                editText.setSelection(editText.length())
+            }
             MENU_ID_CONVERT-> {
                 val text = editText.text.toString()
                 val adapter = object : ArrayAdapter<Pair<String, String>>(this, android.R.layout.simple_list_item_2, mutableListOf<Pair<String, String>>().apply {

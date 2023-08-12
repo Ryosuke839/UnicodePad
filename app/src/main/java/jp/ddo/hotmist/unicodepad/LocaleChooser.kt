@@ -73,7 +73,12 @@ class LocaleChooser internal constructor(private val context: Context, private v
                             }
                         }
                     }
-                    AlertDialog.Builder(context).setTitle(R.string.locale_title).setAdapter(adapter) { _, i -> select(adapter.getItem(i).toString()) }.setOnCancelListener { select(locale) }.show()
+                    AlertDialog.Builder(context)
+                            .setTitle(R.string.locale_title)
+                            .setAdapter(adapter) { _, i -> select(adapter.getItem(i).toString()) }
+                            .setNegativeButton(android.R.string.cancel) { _, _ -> select(locale) }
+                            .setOnCancelListener { select(locale) }
+                            .show()
                     return
                 }
                 locale = if (locales[position] is Locale) locales[position].toString() else if (locales[position].toString() == "Root") "Root" else ""

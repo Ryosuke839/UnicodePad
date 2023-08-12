@@ -124,7 +124,12 @@ class FontChooser internal constructor(private val activity: Activity, private v
                     2 -> {
                         val str: Array<String?> = arrayOfNulls(fontPaths.size)
                         for (i in str.indices) str[i] = adapter.getItem(i + 3)
-                        AlertDialog.Builder(activity).setTitle(R.string.rem).setItems(str) { _, which -> remove(which) }.setOnCancelListener { spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2) }.show()
+                        AlertDialog.Builder(activity)
+                                .setTitle(R.string.rem)
+                                .setItems(str) { _, which -> remove(which) }
+                                .setNegativeButton(android.R.string.cancel) { _, _ -> spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2) }
+                                .setOnCancelListener { spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2) }
+                                .show()
                     }
                     else -> {
                         fontIndex = position - 2

@@ -30,7 +30,7 @@ class NameDatabase(context: Context) {
     private val db: SQLiteDatabase = NameHelper(context).readableDatabase
     operator fun get(code: Int, column: String): String? {
         if (column == "name") {
-            if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return "Private Use"
+            if (code in 0xE000..0xF8FF || code in 0xF0000..0xFFFFD || code in 0x100000..0x10FFFD) return "Private Use"
             if (code in 0x3400..0x4DBF || code in 0x4E00..0x9FFF || code in 0x20000..0x2A6DF || code in 0x2A700..0x2B738 || code in 0x2B740..0x2B81D || code in 0x2B820..0x2CEA1 || code in 0x2CEB0..0x2EBE0 || code in 0x30000..0x3134A || code in 0x31350 .. 0x323AF) return "CJK Unified Ideograph"
             if (code in 0xAC00..0xD7A3) return "Hangul Syllable"
             if (code in 0x17000..0x187F7) return "Tangut Character"
@@ -56,7 +56,7 @@ class NameDatabase(context: Context) {
 
     fun getInt(code: Int, column: String): Int {
         if (column == "version") {
-            if (code in 0xE000..0xF8FF || code in 0xFFF80..0xFFFFD || code in 0x10FF80..0x10FFFD) return 600
+            if (code in 0xE000..0xF8FF || code in 0xF0000..0xFFFFD || code in 0x100000..0x10FFFD) return 600
             if (code in 0x3400..0x4DB5 || code in 0x4E00..0x9FCB || code in 0x20000..0x2A6D6 || code in 0x2A700..0x2B734 || code in 0x2B740..0x2B81D) return 600
             if (code in 0x9FCC..0x9FCC) return 610
             if (code in 0x9FCD..0x9FD5 || code in 0x2B820..0x2CEA1) return 800

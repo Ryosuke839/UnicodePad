@@ -254,7 +254,7 @@ class UnicodeActivity : AppCompatActivity() {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
             view.doOnLayout {
-                history[0] = Triple(cm.text.toString(), 0, 0)
+                history[0] = Triple(cm.text?.toString() ?: "", 0, 0)
                 editText.setText(cm.text)
             }
         }

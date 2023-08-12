@@ -632,6 +632,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                                         Toast.makeText(activity, R.string.nocode, Toast.LENGTH_SHORT).show()
                                     }
                                 }
+                                .setNegativeButton(android.R.string.cancel) { _, _ -> }
                                 .create()
                         dlg.show()
                         val btn = dlg.getButton(DialogInterface.BUTTON_POSITIVE)

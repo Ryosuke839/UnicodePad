@@ -215,7 +215,12 @@ internal class FileChooser(private val activity: Activity, private val listener:
                         ++j
                     }
                 }
-                AlertDialog.Builder(activity).setTitle(if (path.startsWith(activity.filesDir.canonicalPath)) path.substring(path.lastIndexOf('/') + 1) else path).setItems(children, this).setOnCancelListener(this).show()
+                AlertDialog.Builder(activity)
+                        .setTitle(if (path.startsWith(activity.filesDir.canonicalPath)) path.substring(path.lastIndexOf('/') + 1) else path)
+                        .setItems(children, this)
+                        .setNegativeButton(android.R.string.cancel) { _, _ -> listener.onFileCancel() }
+                        .setOnCancelListener { listener.onFileCancel() }
+                        .show()
             } catch (e: IOException) {
             }
         }

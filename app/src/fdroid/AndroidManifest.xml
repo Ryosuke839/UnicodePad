@@ -42,6 +42,7 @@
 		<activity
 			android:name="jp.ddo.hotmist.unicodepad.UnicodeActivity"
 			android:label="@string/app_name"
+			android:launchMode="singleTop"
 			android:windowSoftInputMode="adjustResize"
 			android:exported="true">
 			<intent-filter>
@@ -77,11 +78,14 @@
 				android:resource="@xml/shortcuts" />
 		</activity>
 
-		<activity android:name="SettingActivity" />
+		<activity android:name="SettingActivity"
+			android:parentActivityName=".UnicodeActivity" />
 
-		<activity android:name="TabsActivity" />
+		<activity android:name="TabsActivity"
+			android:parentActivityName=".SettingActivity"/>
 
-		<activity android:name="RestartActivity" />
+		<activity android:name="RestartActivity"
+			android:parentActivityName=".UnicodeActivity"/>
 
 		<provider
 			android:name="androidx.startup.InitializationProvider"

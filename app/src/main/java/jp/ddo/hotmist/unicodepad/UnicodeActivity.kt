@@ -365,7 +365,7 @@ class UnicodeActivity : AppCompatActivity() {
                         }
                     }
                 }
-                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
+                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setNegativeButton(android.R.string.cancel) { _, _ -> }.setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
                 val handler = Handler()
                 thread {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

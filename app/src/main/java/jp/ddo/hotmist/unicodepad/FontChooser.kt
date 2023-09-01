@@ -78,7 +78,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
         adapter.remove(adapter.getItem(which + 3))
         try {
             if (fontPaths[which].startsWith(activity.filesDir.canonicalPath)) File(fontPaths[which]).delete()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
         }
         fontPaths.removeAt(which)
         if (fontIndex == which + 1) fontIndex = 0
@@ -115,12 +115,12 @@ class FontChooser internal constructor(private val activity: Activity, private v
                         listener.onTypefaceChosen(Typeface.DEFAULT)
                         fontIndex = 0
                     }
-                    1 -> if (Build.VERSION.SDK_INT >= 19) {
+                    1 -> {
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                         intent.addCategory(Intent.CATEGORY_OPENABLE)
                         intent.type = "*/*"
                         activity.startActivityForResult(intent, FONT_REQUEST_CODE)
-                    } else FileChooser(activity, this@FontChooser, "/").show()
+                    }
                     2 -> {
                         val str: Array<String?> = arrayOfNulls(fontPaths.size)
                         for (i in str.indices) str[i] = adapter.getItem(i + 3)
@@ -155,7 +155,7 @@ class FontChooser internal constructor(private val activity: Activity, private v
             Toast.makeText(activity, R.string.cantopen, Toast.LENGTH_SHORT).show()
             try {
                 if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
-            } catch (e: IOException) {
+            } catch (_: IOException) {
             }
             spinner.setSelection(0)
         }

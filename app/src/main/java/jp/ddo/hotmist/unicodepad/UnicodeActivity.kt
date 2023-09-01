@@ -525,9 +525,7 @@ class UnicodeActivity : AppCompatActivity() {
         oldtf = tf
         oldlocale = locale
         editText.typeface = tf
-        if (Build.VERSION.SDK_INT >= 17) {
-            editText.textLocale = locale
-        }
+        editText.textLocale = locale
         adpPage.setTypeface(tf, locale)
     }
 

@@ -72,28 +72,22 @@ class SettingActivity : AppCompatActivity() {
                 }
             }
             findPreference("export").also {
-                if (Build.VERSION.SDK_INT >= 19) {
-                    it.setOnPreferenceClickListener {
-                        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                        intent.type = "application/json"
-                        startActivityForResult(intent, SETTING_EXPORT_CODE)
-                        true
-                    }
-                } else
-                    it.isEnabled = false
+                it.setOnPreferenceClickListener {
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    intent.type = "application/json"
+                    startActivityForResult(intent, SETTING_EXPORT_CODE)
+                    true
+                }
             }
             findPreference("import").also {
-                if (Build.VERSION.SDK_INT >= 19) {
-                    it.setOnPreferenceClickListener {
-                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                        intent.type = "application/json"
-                        startActivityForResult(intent, SETTING_IMPORT_CODE)
-                        true
-                    }
-                } else
-                    it.isEnabled = false
+                it.setOnPreferenceClickListener {
+                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    intent.type = "application/json"
+                    startActivityForResult(intent, SETTING_IMPORT_CODE)
+                    true
+                }
             }
             setEntry(findPreference("theme") as ListPreference)
             setText(findPreference("textsize") as EditTextPreference)
@@ -168,7 +162,7 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (Build.VERSION.SDK_INT >= 19) if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
+        if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
             val uri = data.data ?: return
             val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
             val padding = (resources.displayMetrics.density * 8f).toInt()

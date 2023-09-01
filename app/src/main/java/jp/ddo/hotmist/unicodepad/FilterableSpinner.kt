@@ -18,7 +18,7 @@ import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.ListPopupWindow
 
 
-class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) : androidx.appcompat.widget.AppCompatSpinner(context, attrs, defStyle) {
+class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) : AppCompatSpinner(context, attrs, defStyle) {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.spinnerStyle)
 

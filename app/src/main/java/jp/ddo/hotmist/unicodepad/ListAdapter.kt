@@ -529,18 +529,14 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             }
 
                         }
-                        val jmap = jump.context.resources.getStringArray(R.array.codes).map {
+                        val jmap = jump.context.resources.getStringArray(R.array.codes).associate {
                             Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
-                        }.toMap()
+                        }
                         val jdef = jump.context.resources.let {
-                            if (Build.VERSION.SDK_INT >= 17)
-                                jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
-                            else
-                                @Suppress("DEPRECATION")
-                                Resources(it.assets, it.displayMetrics, it.configuration.apply { locale = Locale.US })
-                        }.getStringArray(R.array.codes).map {
+                            jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
+                        }.getStringArray(R.array.codes).associate {
                             Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
-                        }.toMap()
+                        }
                         val jstr = fromCodePoint.keys.map { JumpItem(it, jmap.getValue(it), jdef.getValue(it)) }.toTypedArray()
                         val adp = ArrayAdapter(jump.context, android.R.layout.simple_spinner_item, jstr)
                         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)
@@ -722,7 +718,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
 
     fun mark(code: Int, name: String) {
         marks.remove(code)
-        marks[code] = if (name.isNotEmpty()) name else "Unnamed Mark"
+        marks[code] = name.ifEmpty { "Unnamed Mark" }
     }
 
     override fun save(edit: SharedPreferences.Editor) {
@@ -765,7 +761,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             val space = s.indexOf(' ')
             if (space != -1) try {
                 marks[s.substring(0, space).toInt()] = s.substring(space + 1)
-            } catch (e: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

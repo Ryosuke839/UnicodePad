@@ -409,10 +409,10 @@
 	<string name="emojicompat_false">Apenas para glifos em falta</string>
 	<string name="emojicompat_true">Para todos os glifos de emoji</string>
 
-	<string name="download_desc">Baixar fontes de Noto...</string>
+	<string name="download_desc">Baixar fontes de Noto…</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>
-	<string name="export_data">Exportar dados e configurações...</string>
-	<string name="import_data">Importar dados e configurações...</string>
+	<string name="export_data">Exportar dados e configurações…</string>
+	<string name="import_data">Importar dados e configurações…</string>
 	<string name="exported_data">Dados para exportar</string>
 	<string name="imported_data">Dados para importar</string>
 	<string name="export_confirm">Exportar</string>
@@ -463,7 +463,6 @@
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
-	<string name="modifier" translatable="false">Modifier</string>
 	<string name="malformed">Nome do arquivo mal formado no zip</string>
 	<string name="legal">Legal</string>
 	<string name="legal_uni" translatable="false">Unicode®</string>

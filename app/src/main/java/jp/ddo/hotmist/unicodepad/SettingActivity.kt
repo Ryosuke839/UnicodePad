@@ -18,13 +18,13 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.*
-import android.preference.Preference.OnPreferenceChangeListener
+import android.os.LocaleList
 import android.text.ClipboardManager
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -32,9 +32,11 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,17 @@ class SettingActivity : AppCompatActivity() {
         return true
     }
 
-    class MyPreferenceFragment : PreferenceFragment(), OnPreferenceChangeListener {
+    override fun attachBaseContext(newBase: Context?) {
+        applyOverrideConfiguration(newBase?.resources?.configuration?.also {
+            it.setLocale(Locale.getDefault())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                it.setLocales(LocaleList.getDefault())
+            }
+        })
+        super.attachBaseContext(newBase)
+    }
+
+    class MyPreferenceFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener {
         private val adCompat: AdCompat = AdCompatImpl()
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,14 +81,14 @@ class SettingActivity : AppCompatActivity() {
                 it.onPreferenceChangeListener = this
                 it.summary = it.text
             }
-            setEntry(findPreference("universion") as ListPreference)
-            setEntry(findPreference("emojicompat") as ListPreference)
-            findPreference("download").also {
+            setEntry(findPreference("universion")!!)
+            setEntry(findPreference("emojicompat")!!)
+            findPreference<Preference>("download")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage(getString(R.string.download_uri))
                 }
             }
-            findPreference("export").also {
+            findPreference<Preference>("export")!!.also {
                 it.setOnPreferenceClickListener {
                     val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
                     intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -85,7 +97,7 @@ class SettingActivity : AppCompatActivity() {
                     true
                 }
             }
-            findPreference("import").also {
+            findPreference<Preference>("import")!!.also {
                 it.setOnPreferenceClickListener {
                     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                     intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -94,34 +106,34 @@ class SettingActivity : AppCompatActivity() {
                     true
                 }
             }
-            setEntry(findPreference("theme") as ListPreference)
-            setText(findPreference("textsize") as EditTextPreference)
-            setValue(findPreference("column") as ListPreference)
-            setValue(findPreference("columnl") as ListPreference)
-            findPreference("tabs").also {
+            setEntry(findPreference("theme")!!)
+            setText(findPreference("textsize")!!)
+            setValue(findPreference("column")!!)
+            setValue(findPreference("columnl")!!)
+            findPreference<Preference>("tabs")!!.also {
                 it.setOnPreferenceClickListener {
                     startActivity(Intent(activity, TabsActivity::class.java))
                     true
                 }
             }
-            setText(findPreference("padding") as EditTextPreference)
-            setText(findPreference("gridsize") as EditTextPreference)
-            setText(findPreference("viewsize") as EditTextPreference)
-            setText(findPreference("checker") as EditTextPreference)
-            setText(findPreference("recentsize") as EditTextPreference)
-            setEntry(findPreference("scroll") as ListPreference)
-            findPreference("legal_app").also {
+            setText(findPreference("padding")!!)
+            setText(findPreference("gridsize")!!)
+            setText(findPreference("viewsize")!!)
+            setText(findPreference("checker")!!)
+            setText(findPreference("recentsize")!!)
+            setEntry(findPreference("scroll")!!)
+            findPreference<Preference>("legal_app")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage("https://github.com/Ryosuke839/UnicodePad")
                 }
             }
-            findPreference("legal_uni").also {
+            findPreference<Preference>("legal_uni")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage("https://unicode.org/")
                 }
             }
             if (!adCompat.showAdSettings) {
-                (findPreference("no-ad") as CheckBoxPreference).also {
+                findPreference<CheckBoxPreference>("no-ad")!!.also {
                     if (Build.VERSION.SDK_INT >= 26) {
                         it.parent?.removePreference(it)
                     } else {
@@ -130,10 +142,24 @@ class SettingActivity : AppCompatActivity() {
                     }
                 }
             }
+            preferenceScreen.let {
+                for (i in 0 until it.preferenceCount) {
+                    val pref = it.getPreference(i)
+                    pref.isIconSpaceReserved = false
+                    if (pref is PreferenceGroup) {
+                        for (j in 0 until pref.preferenceCount) {
+                            pref.getPreference(j).isIconSpaceReserved = false
+                        }
+                    }
+                }
+            }
             activity.setResult(RESULT_OK)
         }
 
-        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        }
+
+        override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
             if (preference.hasKey()) {
                 val key = preference.key
                 try {

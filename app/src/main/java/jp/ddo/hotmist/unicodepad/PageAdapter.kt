@@ -26,6 +26,7 @@ import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.PagerTabStrip
 import androidx.viewpager.widget.ViewPager
@@ -40,7 +41,7 @@ import kotlin.math.min
 class PageAdapter(private val activity: UnicodeActivity, private val pref: SharedPreferences, private val edit: EditText) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
     private var numPage: Int
     private val layouts = arrayOfNulls<View>(MAX_VIEWS)
-    private val views = arrayOfNulls<AbsListView>(MAX_VIEWS)
+    private val views = arrayOfNulls<ViewGroup>(MAX_VIEWS)
     private val adapterList: ListAdapter
     private val adapterFind: FindAdapter
     private val adapterRecent: RecentAdapter
@@ -99,8 +100,8 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEdit.single = bedt
         bemoji = pref.getString("single_emoji", "false") == "true"
         adapterEmoji.single = bemoji
-        return if (adapters[position].single) {
-            if (adapters[position] is DropListener || adapters[position] is RemoveListener) {
+        return if (adapters[position] is DropListener || adapters[position] is RemoveListener) {
+            if (adapters[position].single) {
                 DragSortListView(activity, null).also { view ->
                     val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE, 0, R.id.HANDLE_ID)
                     controller.isRemoveEnabled = true
@@ -111,24 +112,36 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     }.data)
                     view.setFloatViewManager(controller)
                     view.setOnTouchListener(controller)
+                    view.setDropListener(adapters[position] as? DropListener)
+                    view.setRemoveListener(adapters[position] as? RemoveListener)
                 }
             } else {
-                ListView(activity)
+                GridView(activity).also { view ->
+                    view.numColumns = column
+                }
+            }.let { view ->
+                view.adapter = adapters[position].asBaseAdapter()
+                view.onItemClickListener = this
+                view.onItemLongClickListener = this
+                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                views[position] = view
+                adapters[position].instantiate(view).also { layout ->
+                    collection.addView(layout, 0)
+                    layouts[position] = layout
+                }
             }
         } else {
-            GridView(activity).also { view ->
-                view.numColumns = column
+            RecyclerView(activity).let { view ->
                 view.adapter = adapters[position]
-            }
-        }.let { view ->
-            view.onItemClickListener = this
-            view.onItemLongClickListener = this
-            view.adapter = adapters[position]
-            view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            views[position] = view
-            adapters[position].instantiate(view).also { layout ->
-                collection.addView(layout, 0)
-                layouts[position] = layout
+                view.layoutManager = adapters[position].getLayoutManager(activity, column)
+                adapters[position].setListener(this)
+                view.adapter = adapters[position]
+                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                views[position] = view
+                adapters[position].instantiate(view).also { layout ->
+                    collection.addView(layout, 0)
+                    layouts[position] = layout
+                }
             }
         }
     }
@@ -145,26 +158,33 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (parent == null || id != -1L) {
+        onItemClick(((if (parent is DragSortListView) parent.inputAdapter else parent?.adapter) as? BaseUnicodeAdapter?)?.getBaseAdapter(), position, id)
+    }
+
+    fun onItemClick(adapter: UnicodeAdapter?, position: Int, id: Long) {
+        if (adapter == null || id != -1L) {
             adapterRecent.add(id.toInt())
-            if (recpage != -1 && page != recpage) views[recpage]?.invalidateViews()
         }
         val start = edit.selectionStart
         val end = edit.selectionEnd
         if (start == -1) return
-        edit.editableText.replace(min(start, end), max(start, end), if (parent == null || id != -1L) String(Character.toChars(id.toInt())) else parent.adapter.getItem(position) as String)
+        edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id != -1L) String(Character.toChars(id.toInt())) else adapter.getItem(position))
         dlg?.let {
             if (it.isShowing) it.dismiss()
         }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
-        showDesc(parent, position, (if (parent is DragSortListView) parent.inputAdapter else parent.adapter) as UnicodeAdapter)
+        onItemLongClick(((if (parent is DragSortListView) parent.inputAdapter else parent.adapter) as BaseUnicodeAdapter).getBaseAdapter(), position)
         return true
     }
 
+    fun onItemLongClick(adapter: UnicodeAdapter, position: Int) {
+        showDesc(adapter, position, adapter)
+    }
+
     private var dlg: AlertDialog? = null
-    fun showDesc(view: View?, index: Int, ua: UnicodeAdapter) {
+    fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
         val tab = PagerTabStrip(activity)
         tab.id = R.id.TAB_ID
         val layoutParams = ViewPager.LayoutParams()
@@ -184,24 +204,23 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         if (view != null) builder.setPositiveButton(R.string.input, DialogInterface.OnClickListener { _, _ ->
             if (adapter.id != -1L) {
                 adapterRecent.add(adapter.id.toInt())
-                if (recpage != -1 && page != recpage) views[recpage]?.invalidateViews()
             }
             val start = edit.selectionStart
             val end = edit.selectionEnd
             if (start == -1) return@OnClickListener
             edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
         })
-        if (view !is AbsListView || view.adapter !== adapterEmoji) builder.setNeutralButton(R.string.inlist) { _, _ -> find(adapter.id.toInt()) }
-        if (view is AbsListView && view.adapter === adapterRecent) builder.setNegativeButton(R.string.remrec) { _, _ ->
+        if (parentAdapter !== adapterEmoji) builder.setNeutralButton(R.string.inlist) { _, _ -> find(adapter.id.toInt()) }
+        if (parentAdapter === adapterRecent) builder.setNegativeButton(R.string.remrec) { _, _ ->
             adapterRecent.rem(adapter.id.toInt())
-            views[recpage]?.invalidateViews()
+            adapterRecent.notifyItemRemoved(adapter.index)
         }
-        if (view is AbsListView && view.adapter === adapterEdit) builder.setNegativeButton(R.string.delete) { _, _ ->
+        if (view is AbsListView && parentAdapter === adapterEdit) builder.setNegativeButton(R.string.delete) { _, _ ->
             val i = pager.currentItem
             val s = edit.editableText.toString()
             edit.editableText.delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1))
         }
-        if (view is AbsListView && view.adapter === adapterList) builder.setNegativeButton(R.string.mark) { _, _ ->
+        if (view is RecyclerView && parentAdapter === adapterList) builder.setNegativeButton(R.string.mark) { _, _ ->
             val edit = EditText(activity)
             AlertDialog.Builder(activity)
                     .setTitle(R.string.mark)
@@ -253,7 +272,6 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.setTypeface(tf, locale)
         adapterEdit.setTypeface(tf, locale)
         adapterEmoji.setTypeface(tf, locale)
-        for (i in 0 until MAX_VIEWS) views[i]?.invalidateViews()
     }
 
     fun onSizeChanged(top: Int) {

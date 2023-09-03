@@ -36,7 +36,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
     override fun getCount(): Int {
-        return adapter.count
+        return adapter.itemCount
     }
 
     override fun getPageTitle(position: Int): CharSequence {
@@ -191,7 +191,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         }
                     }
                     hl.setOnLongClickListener { view ->
-                        activity.adpPage.showDesc(view, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
+                        activity.adpPage.showDesc(null, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
                         true
                     }
                     hl.setBackgroundResource(reslist)

@@ -26,6 +26,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 
 internal class FindAdapter(activity: Activity, private val pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
@@ -35,8 +36,9 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         return R.string.find
     }
 
-    override fun instantiate(view: AbsListView): View {
+    override fun instantiate(view: View): View {
         super.instantiate(view)
+        val view = view as RecyclerView
         val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.VERTICAL
         val find = ImageButton(activity)
@@ -80,7 +82,7 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         hl.addView(find, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
         layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        layout.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         find.setOnClickListener {
             saved = text.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text.setText(saved)
@@ -90,13 +92,12 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             if ((cur?.count ?: 0) > 0)
                 adapter?.update(saved)
             (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
-            view.invalidateViews()
+            invalidateViews()
         }
         return layout
     }
 
     override fun destroy() {
-        view?.setOnScrollListener(null)
         adapter = null
         cur?.close()
         cur = null
@@ -108,7 +109,7 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         adapter?.save(edit)
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return cur?.count ?: 0
     }
 

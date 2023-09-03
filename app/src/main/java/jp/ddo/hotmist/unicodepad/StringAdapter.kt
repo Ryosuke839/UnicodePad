@@ -20,7 +20,7 @@ import java.util.*
 
 internal class StringAdapter(str: String, activity: Activity, db: NameDatabase) : UnicodeAdapter(activity, db, false) {
     private val list: ArrayList<Int> = ArrayList()
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return list.size
     }
 

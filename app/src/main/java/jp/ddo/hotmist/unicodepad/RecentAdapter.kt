@@ -30,15 +30,15 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
 
     override fun show() {
         truncate()
-        view?.invalidateViews()
+        invalidateViews()
     }
 
     override fun leave() {
         commit()
-        view?.invalidateViews()
+        invalidateViews()
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return temp.size
     }
 
@@ -51,6 +51,7 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
             list.remove(Integer.valueOf(code))
             list.add(code)
             if (list.size >= maxitems) list.removeAt(0)
+            invalidateViews()
         }
     }
 
@@ -58,7 +59,7 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
         runOnUiThread {
             list.remove(Integer.valueOf(code))
             if (list !== temp) temp.remove(Integer.valueOf(code))
-            view?.invalidateViews()
+            invalidateViews()
         }
     }
 
@@ -86,14 +87,14 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
             val i = temp.removeAt(temp.size - from - 1)
             temp.add(temp.size - to, i)
             truncate()
-            view?.invalidateViews()
+            invalidateViews()
         }
     }
 
     override fun remove(which: Int) {
         runOnUiThread {
             list.remove(temp.removeAt(temp.size - which - 1))
-            view?.invalidateViews()
+            invalidateViews()
         }
     }
 

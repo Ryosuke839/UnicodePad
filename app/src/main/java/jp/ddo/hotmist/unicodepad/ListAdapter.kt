@@ -36,6 +36,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -119,7 +121,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     }
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
-    override fun instantiate(view: AbsListView): View {
+    override fun instantiate(view: View): View {
         super.instantiate(view)
         fromIndex.clear()
         fromCodePoint.clear()
@@ -478,7 +480,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         resnormal = activity.resources.getColor(android.R.color.transparent)
         @Suppress("DEPRECATION")
         resselect = activity.resources.getColor(android.R.color.tab_indicator_text)
-        return LinearLayout(activity).also { layout ->
+        LinearLayout(activity).also { layout ->
             layout.orientation = LinearLayout.VERTICAL
             LinearLayout(activity).also { hl ->
                 hl.orientation = LinearLayout.HORIZONTAL
@@ -544,7 +546,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         jump.onItemSelectedListener = object : OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 current = position
-                                if (guard == 0) this@ListAdapter.view?.setSelection(this@ListAdapter.blockToIndex[position])
+                                if (guard == 0) this@ListAdapter.layoutManager?.scrollToPositionWithOffset(this@ListAdapter.blockToIndex[position], 0)
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -652,24 +654,29 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
             layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            this.view?.also { view ->
+            (this.view as RecyclerView?)?.also { view ->
                 view.setOnTouchListener { _, _ ->
-                    highlight = -1
-                    highTarget?.setBackgroundColor(resnormal)
-                    highTarget = null
+                    runOnUiThread {
+                        highTarget?.setBackgroundColor(resnormal)
+                        highTarget = null
+                        notifyItemChanged(highlight)
+                        highlight = -1
+                    }
                     false
                 }
                 val e = fromCodePoint.floorEntry(scroll) ?: fromCodePoint.firstEntry()
                 if (e.value.end < scroll) scroll = e.value.end
-                view.setSelection(scroll - e.key + e.value.index)
-                view.setOnScrollListener(object : AbsListView.OnScrollListener {
-                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {}
-
-                    override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                layoutManager?.scrollToPositionWithOffset(scroll - e.key + e.value.index, 0)
+                view.setOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        val manager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+                        val firstVisibleItem = manager.findFirstVisibleItemPosition()
+                        val visibleItemCount = recyclerView.childCount
                         if (visibleItemCount == 0)
                             return
                         var firstItem = firstVisibleItem
-                        if (view?.getChildAt(0)?.let { it.top * -2 > it.height } == true) firstItem += if (single) 1 else PageAdapter.column
+                        if (view.getChildAt(0)?.let { it.top * -2 > it.height } == true) firstItem += if (single) 1 else PageAdapter.column
                         val e2 = fromIndex.floorEntry(firstItem) ?: return
                         jump?.let {
                             if (guard == 0 && current != e2.value.block) {
@@ -689,11 +696,11 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                     }
                 })
             }
+            return layout
         }
     }
 
     override fun destroy() {
-        view?.setOnScrollListener(null)
         jump = null
         mark = null
         code = null
@@ -707,11 +714,15 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         if (e.value.end < code) return -1
         scroll = code
         highlight = scroll - e.key + e.value.index
-        view?.let { view ->
-            view.setSelection(scroll - e.key + e.value.index)
+        (this.view as RecyclerView?)?.let { view ->
+            val manager = view.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+            val firstVisibleItem = manager.findFirstVisibleItemPosition()
+            val lastVisibleItem = manager.findLastVisibleItemPosition()
+            layoutManager?.scrollToPositionWithOffset(scroll - e.key + e.value.index, 0)
             highTarget?.setBackgroundColor(resnormal)
-            highTarget = if (view.firstVisiblePosition <= highlight && highlight <= view.lastVisiblePosition) view.getChildAt(highlight - view.firstVisiblePosition) else null
+            highTarget = if (highlight in firstVisibleItem..lastVisibleItem) view.getChildAt(highlight - firstVisibleItem) else null
             highTarget?.setBackgroundColor(resselect)
+            notifyItemChanged(highlight)
         }
         return scroll
     }
@@ -733,13 +744,14 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         edit.putString("mark", str)
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return count
     }
 
-    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        val ret = super.getView(i, view, viewGroup)
-        if (i == highlight) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        val ret = holder.view
+        if (position == highlight) {
             highTarget?.setBackgroundColor(resnormal)
             highTarget = ret
             highTarget?.setBackgroundColor(resselect)
@@ -747,7 +759,6 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             highTarget?.setBackgroundColor(resnormal)
             highTarget = null
         }
-        return ret
     }
 
     override fun getItemId(i: Int): Long {

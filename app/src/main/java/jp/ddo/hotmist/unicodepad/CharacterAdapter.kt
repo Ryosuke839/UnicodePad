@@ -40,7 +40,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return (if (adapter.getItemId(position) != -1L) String.format("U+%04X ", adapter.getItemId(position)) else adapter.getItemString(position) + " ") + adapter.getItem(position)
+        return (if (adapter.getItemId(position) >= 0) String.format("U+%04X ", adapter.getItemId(position)) else adapter.getItemString(position) + " ") + adapter.getItem(position)
     }
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
@@ -60,7 +60,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         layout.orientation = LinearLayout.VERTICAL
         layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         val itemid = adapter.getItemId(position).toInt()
-        val emoji = itemid == -1
+        val emoji = adapter.getItemId(position) < 0
         val ver = if (!emoji) db.getInt(itemid, "version") else db.getInt(adapter.getItemString(position), "version")
         text.setValid(ver != 0 && ver <= UnicodeActivity.univer)
         val str = StringBuilder()

@@ -69,6 +69,10 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return R.string.emoji
     }
 
+    init {
+        setHasStableIds(true)
+    }
+
     @SuppressLint("InlinedApi")
     override fun instantiate(view: View): View {
         super.instantiate(view)
@@ -185,8 +189,12 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return cur?.count ?: 0
     }
 
-    override fun getItemId(arg0: Int): Long {
-        return -1
+    override fun getItemId(i: Int): Long {
+        return cur?.let {
+            if (i < 0 || i >= it.count) return -1
+            it.moveToPosition(i)
+            it.getLong(3) - 0x800000000000000L
+        } ?: -1
     }
 
     override fun getItemString(i: Int): String {

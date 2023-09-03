@@ -159,12 +159,12 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                     characterView.shrinkWidth(shrink)
                     characterView.setTypeface(typeface, locale)
                     characterView.drawSlash(true)
-                    val ver = if (getItemId(position) != -1L) db.getInt(getItemId(position).toInt(), "version") else db.getInt(getItemString(position), "version")
+                    val ver = if (getItemId(position) >= 0) db.getInt(getItemId(position).toInt(), "version") else db.getInt(getItemString(position), "version")
                     characterView.setValid(ver != 0 && ver <= UnicodeActivity.univer)
                     characterView.text = getItem(position)
                 }
                 if (holder is RowViewHolder) {
-                    if (getItemId(position) != -1L) {
+                    if (getItemId(position) >= 0) {
                         holder.codePointView.text = String.format("U+%04X", getItemId(position).toInt())
                         holder.nameView.text = db[getItemId(position).toInt(), "name"]
                     } else {

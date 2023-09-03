@@ -117,7 +117,7 @@ class NameDatabase(context: Context) {
             else -> version
         }
         return try {
-            db.rawQuery("SELECT id, grp, subgrp FROM emoji_table2 WHERE version <= $emojiVersion AND (tone = $tone OR tone = 0);", null)
+            db.rawQuery("SELECT id, grp, subgrp, rowid FROM emoji_table2 WHERE version <= $emojiVersion AND (tone = $tone OR tone = 0);", null)
         } catch (e: SQLiteException) {
             null
         }

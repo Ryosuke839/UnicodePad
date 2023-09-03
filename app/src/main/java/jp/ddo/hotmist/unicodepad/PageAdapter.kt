@@ -162,13 +162,13 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     fun onItemClick(adapter: UnicodeAdapter?, position: Int, id: Long) {
-        if (adapter == null || id != -1L) {
+        if (adapter == null || id >= 0) {
             adapterRecent.add(id.toInt())
         }
         val start = edit.selectionStart
         val end = edit.selectionEnd
         if (start == -1) return
-        edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id != -1L) String(Character.toChars(id.toInt())) else adapter.getItem(position))
+        edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id >= 0) String(Character.toChars(id.toInt())) else adapter.getItem(position))
         dlg?.let {
             if (it.isShowing) it.dismiss()
         }
@@ -202,7 +202,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val builder = AlertDialog.Builder(activity)
                 .setView(layout)
         if (view != null) builder.setPositiveButton(R.string.input, DialogInterface.OnClickListener { _, _ ->
-            if (adapter.id != -1L) {
+            if (adapter.id >= 0) {
                 adapterRecent.add(adapter.id.toInt())
             }
             val start = edit.selectionStart
@@ -249,7 +249,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     private fun find(code: Int) {
-        if (code == -1) return
+        if (code < 0) return
         activity.setPage(listpage)
         adapterList.find(code)
     }

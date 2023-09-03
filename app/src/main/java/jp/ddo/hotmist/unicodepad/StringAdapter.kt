@@ -24,7 +24,7 @@ internal class StringAdapter(str: String, activity: Activity, db: NameDatabase) 
         return list.size
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         return list[i].toLong()
     }
 

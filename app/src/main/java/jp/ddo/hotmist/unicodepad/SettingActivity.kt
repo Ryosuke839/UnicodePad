@@ -44,6 +44,11 @@ class SettingActivity : AppCompatActivity() {
         fragmentManager.beginTransaction().replace(android.R.id.content, MyPreferenceFragment()).commit()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     class MyPreferenceFragment : PreferenceFragment(), OnPreferenceChangeListener {
         private val adCompat: AdCompat = AdCompatImpl()
 

@@ -44,6 +44,10 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
 
+    init {
+        setHasStableIds(false)
+    }
+
     open fun name(): Int {
         return 0
     }
@@ -61,7 +65,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         view.let {
             when (it) {
                 is AbsListView -> it.invalidateViews()
-                is RecyclerView -> notifyItemRangeChanged(0, itemCount)
+                is RecyclerView -> notifyDataSetChanged()
             }
         }
     }
@@ -69,22 +73,89 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
     open fun save(edit: SharedPreferences.Editor) {}
     open fun show() {}
     open fun leave() {}
+
+    open fun getItemCodePoint(i: Int): Long {
+        return -1
+    }
+
     open fun getItemString(i: Int): String {
-        return String.format("%04X", getItemId(i).toInt())
+        return String.format("%04X", getItemCodePoint(i).toInt())
     }
 
     open fun getItem(i: Int): String {
-        return String(Character.toChars(getItemId(i).toInt()))
+        return String(Character.toChars(getItemCodePoint(i).toInt()))
     }
 
-    override fun getItemViewType(i: Int): Int {
+    final override fun getItemId(i: Int): Long {
+        val (itemIndex, titleIndex) = getItemIndex(i)
+        return if (itemIndex == -1) -1L - titleIndex else getItemCodePoint(itemIndex)
+    }
+
+    private fun getItemIndex(position: Int): Pair<Int, Int> {
+        val titleIndex = searchTitlePosition(position)
+        return if (titleIndex >= 0 && position == getTitlePosition(titleIndex) + titleIndex)
+            -1 to titleIndex
+        else
+            position - titleIndex - 1 to -1
+    }
+
+    abstract fun getCount(): Int
+
+    open fun getTitleCount(): Int {
         return 0
+    }
+
+    open fun getTitlePosition(i: Int): Int {
+        throw IndexOutOfBoundsException()
+    }
+
+    open fun getTitleString(i: Int): String {
+        throw IndexOutOfBoundsException()
+    }
+
+    protected fun searchTitlePosition(i: Int): Int {
+        if (getTitleCount() == 0) return -1
+        var l = 0
+        var r = getTitleCount()
+        while (l < r) {
+            val m = (l + r) / 2
+            if (getTitlePosition(m) + m <= i) l = m + 1 else r = m
+        }
+        return l - 1
+    }
+
+    protected fun searchItemPosition(i: Int): Int {
+        if (getTitleCount() == 0) return i
+        var l = 0
+        var r = getTitleCount()
+        while (l < r) {
+            val m = (l + r) / 2
+            if (getTitlePosition(m) <= i) l = m + 1 else r = m
+        }
+        return i + l
+    }
+
+    protected fun scrollToTitle(position: Int) {
+        layoutManager?.scrollToPositionWithOffset(getTitlePosition(position) + position, 0)
+    }
+
+    protected fun scrollToItem(position: Int) {
+        layoutManager?.scrollToPositionWithOffset(searchItemPosition(position), 0)
+    }
+
+    final override fun getItemCount(): Int {
+        return getCount() + getTitleCount()
+    }
+
+    final override fun getItemViewType(i: Int): Int {
+        val titleIndex = searchTitlePosition(i)
+        return if (getTitleCount() > 0 && i == getTitlePosition(titleIndex) + titleIndex) 1 else 0
     }
 
     fun setListener(listener: PageAdapter) {
         onItemClickListener = View.OnClickListener {
             val position = it.tag as Int
-            listener.onItemClick(this, position, getItemId(position))
+            listener.onItemClick(this, position, getItemCodePoint(position))
         }
         onItemLongClickListener = View.OnLongClickListener {
             val position = it.tag as Int
@@ -110,7 +181,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         val textView: TextView = view
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             1 -> GroupViewHolder(TextView(activity, null, android.R.attr.textAppearanceSmall))
             2 -> HeaderViewHolder(TextView(activity, null, android.R.attr.textAppearanceSmall))
@@ -151,6 +222,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val (itemIndex, titleIndex) = if (getItemViewType(position) != -1) getItemIndex(position) else position to -1
         when (holder) {
             is CharacterViewHolder -> {
                 holder.characterView.let { characterView ->
@@ -159,32 +231,33 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                     characterView.shrinkWidth(shrink)
                     characterView.setTypeface(typeface, locale)
                     characterView.drawSlash(true)
-                    val ver = if (getItemId(position) >= 0) db.getInt(getItemId(position).toInt(), "version") else db.getInt(getItemString(position), "version")
+                    val ver = if (getItemCodePoint(itemIndex) >= 0) db.getInt(getItemCodePoint(itemIndex).toInt(), "version") else db.getInt(getItemString(itemIndex), "version")
                     characterView.setValid(ver != 0 && ver <= UnicodeActivity.univer)
-                    characterView.text = getItem(position)
+                    characterView.text = getItem(itemIndex)
                 }
                 if (holder is RowViewHolder) {
-                    if (getItemId(position) >= 0) {
-                        holder.codePointView.text = String.format("U+%04X", getItemId(position).toInt())
-                        holder.nameView.text = db[getItemId(position).toInt(), "name"]
+                    if (getItemCodePoint(itemIndex) >= 0) {
+                        holder.codePointView.text = String.format("U+%04X", getItemCodePoint(itemIndex).toInt())
+                        holder.nameView.text = db[getItemCodePoint(itemIndex).toInt(), "name"]
                     } else {
-                        holder.codePointView.text = (" " + getItemString(position)).replace(" ", " U+").substring(1)
-                        holder.nameView.text = db[getItemString(position), "name"]
+                        holder.codePointView.text = (" " + getItemString(itemIndex)).replace(" ", " U+").substring(1)
+                        holder.nameView.text = db[getItemString(itemIndex), "name"]
                     }
-                    holder.view.setPadding(0, 0, 0, if (position == itemCount - 1) lastPadding else 0)
                 }
+                holder.view.tag = itemIndex
             }
             is GroupViewHolder -> {
-                holder.textView.text = getItem(position)
+                holder.textView.text = getTitleString(titleIndex)
             }
             is HeaderViewHolder -> {
-                holder.textView.setText(if (position == 0) R.string.shown_desc else R.string.hidden_desc)
             }
         }
-        holder.view.tag = position
+        if (holder !is CellViewHolder) {
+            holder.view.setPadding(0, 0, 0, if (position == itemCount - 1) lastPadding else 0)
+        }
     }
 
-    override fun getBaseAdapter(): UnicodeAdapter {
+    final override fun getBaseAdapter(): UnicodeAdapter {
         return this
     }
 
@@ -204,13 +277,13 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         var shrink = true
     }
 
-    var layoutManager: GridLayoutManager? = null
+    private var layoutManager: GridLayoutManager? = null
 
     fun getLayoutManager(context: Context, spanCount: Int): GridLayoutManager {
         return GridLayoutManager(context, if (single) 1 else spanCount).also {
             it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return 1
+                    return if (getItemViewType(position) != 1 || single) 1 else spanCount
                 }
             }
             layoutManager = it
@@ -226,15 +299,19 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
 
     class BaseAdapterWrapper(val adapter: UnicodeAdapter) : BaseAdapter(), BaseUnicodeAdapter {
         override fun getCount(): Int {
-            return adapter.itemCount
+            return adapter.getCount()
         }
 
-        override fun getItemId(posititon: Int): Long {
-            return adapter.getItemId(posititon)
+        override fun getItemId(position: Int): Long {
+            return adapter.getItemCodePoint(position)
         }
 
-        override fun getItem(posititon: Int): String {
-            return adapter.getItem(posititon)
+        override fun getItem(position: Int): String {
+            return adapter.getItem(position)
+        }
+
+        fun getItemString(position: Int): String {
+            return adapter.getItemString(position)
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -250,7 +327,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
                     CellViewHolder(view)
                 }
             } ?: adapter.onCreateViewHolder(parent!!, -1)).let {
-                adapter.onBindViewHolder(it, position)
+                adapter.onBindViewHolder(it, adapter.searchItemPosition(position))
                 return it.view
             }
         }
@@ -268,11 +345,11 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         }
 
         override fun hasStableIds(): Boolean {
-            return false
+            return adapter.hasStableIds()
         }
 
         override fun isEmpty(): Boolean {
-            return adapter.itemCount == 0
+            return adapter.getCount() == 0
         }
 
         override fun registerDataSetObserver(observer: DataSetObserver?) {

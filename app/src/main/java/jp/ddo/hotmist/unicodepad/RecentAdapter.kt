@@ -38,11 +38,11 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
         invalidateViews()
     }
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return temp.size
     }
 
-    override fun getItemId(arg0: Int): Long {
+    override fun getItemCodePoint(arg0: Int): Long {
         return temp[temp.size - arg0 - 1].toLong()
     }
 

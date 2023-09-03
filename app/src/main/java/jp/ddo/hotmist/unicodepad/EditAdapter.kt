@@ -63,11 +63,11 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         return R.string.edit
     }
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return list.size
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         return list[i].toLong()
     }
 

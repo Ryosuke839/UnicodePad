@@ -52,6 +52,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     private val blockToIndex: MutableList<Int> = ArrayList()
     private val marks: NavigableMap<Int, String> = TreeMap()
     private var jump: Spinner? = null
+    private var jumpAdapter: SpinnerAdapter? = null
     private var mark: Spinner? = null
     private var code: Button? = null
     private var current = -1
@@ -118,6 +119,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
 
     override fun name(): Int {
         return R.string.list
+    }
+
+    init {
+        setHasStableIds(true)
     }
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
@@ -546,7 +551,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         jump.onItemSelectedListener = object : OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 current = position
-                                if (guard == 0) this@ListAdapter.layoutManager?.scrollToPositionWithOffset(this@ListAdapter.blockToIndex[position], 0)
+                                if (guard == 0) this@ListAdapter.scrollToTitle(position)
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -666,7 +671,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 }
                 val e = fromCodePoint.floorEntry(scroll) ?: fromCodePoint.firstEntry()
                 if (e.value.end < scroll) scroll = e.value.end
-                layoutManager?.scrollToPositionWithOffset(scroll - e.key + e.value.index, 0)
+                scrollToItem(scroll - e.key + e.value.index)
                 view.setOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         super.onScrolled(recyclerView, dx, dy)
@@ -676,7 +681,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         if (visibleItemCount == 0)
                             return
                         var firstItem = firstVisibleItem
-                        if (view.getChildAt(0)?.let { it.top * -2 > it.height } == true) firstItem += if (single) 1 else PageAdapter.column
+                        val titleIndex = searchTitlePosition(firstItem)
+                        firstItem -= titleIndex
+                        if (firstItem != getTitlePosition(titleIndex)) firstItem -= 1
                         val e2 = fromIndex.floorEntry(firstItem) ?: return
                         jump?.let {
                             if (guard == 0 && current != e2.value.block) {
@@ -713,12 +720,12 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         val e = fromCodePoint.floorEntry(code) ?: fromCodePoint.firstEntry()
         if (e.value.end < code) return -1
         scroll = code
-        highlight = scroll - e.key + e.value.index
+        highlight = searchItemPosition(scroll - e.key + e.value.index)
         (this.view as RecyclerView?)?.let { view ->
             val manager = view.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
             val firstVisibleItem = manager.findFirstVisibleItemPosition()
             val lastVisibleItem = manager.findLastVisibleItemPosition()
-            layoutManager?.scrollToPositionWithOffset(scroll - e.key + e.value.index, 0)
+            scrollToItem(scroll - e.key + e.value.index)
             highTarget?.setBackgroundColor(resnormal)
             highTarget = if (highlight in firstVisibleItem..lastVisibleItem) view.getChildAt(highlight - firstVisibleItem) else null
             highTarget?.setBackgroundColor(resselect)
@@ -744,8 +751,20 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         edit.putString("mark", str)
     }
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return count
+    }
+
+    override fun getTitleCount(): Int {
+        return blockToIndex.size
+    }
+
+    override fun getTitlePosition(i: Int): Int {
+        return blockToIndex[i]
+    }
+
+    override fun getTitleString(i: Int): String {
+        return jump?.adapter?.getItem(i).toString()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -761,7 +780,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         }
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         val e = fromIndex.floorEntry(i) ?: fromIndex.firstEntry()
         return (i - e.key + e.value.codePoint).toLong()
     }

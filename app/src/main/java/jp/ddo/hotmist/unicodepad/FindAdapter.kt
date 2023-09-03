@@ -29,7 +29,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 
 internal class FindAdapter(activity: Activity, private val pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
-    private var cur: Cursor? = null
+    private var curList: Cursor? = null
+    private var curEmoji: Cursor? = null
     private var saved: String = pref.getString("find", null) ?: ""
     private var adapter: CompleteAdapter? = null
     override fun name(): Int {
@@ -87,9 +88,12 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             saved = text.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text.setText(saved)
             if (saved.isEmpty()) return@setOnClickListener
-            cur?.close()
-            cur = db.find(saved, UnicodeActivity.univer)
-            if ((cur?.count ?: 0) > 0)
+            curList?.close()
+            curEmoji?.close()
+            val curs = db.find(saved, UnicodeActivity.univer)
+            curList = curs.first
+            curEmoji = curs.second
+            if ((curList?.count ?: 0) + (curEmoji?.count ?: 0) > 0)
                 adapter?.update(saved)
             (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
             invalidateViews()
@@ -99,8 +103,10 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
 
     override fun destroy() {
         adapter = null
-        cur?.close()
-        cur = null
+        curList?.close()
+        curList = null
+        curEmoji?.close()
+        curEmoji = null
         super.destroy()
     }
 
@@ -109,24 +115,55 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         adapter?.save(edit)
     }
 
-    override fun getItemCount(): Int {
-        return cur?.count ?: 0
+    override fun getTitleCount(): Int {
+        return 2
     }
 
-    override fun getItemId(i: Int): Long {
-        return cur?.let {
-            if (i < 0 || i >= it.count) null else {
-                it.moveToPosition(i)
-                if (it.getType(0) == Cursor.FIELD_TYPE_INTEGER) it.getInt(0).toLong() else -1
-            }
-        } ?: 0
+    override fun getTitlePosition(i: Int): Int {
+        return when (i) {
+            0 -> 0
+            1 -> (curList?.count ?: 0)
+            else -> throw IndexOutOfBoundsException()
+        }
+    }
+
+    override fun getTitleString(i: Int): String {
+        return when (i) {
+            0 -> "Code Point"
+            1 -> "Emoji"
+            else -> throw IndexOutOfBoundsException()
+        }
+    }
+
+    override fun getCount(): Int {
+        return (curList?.count ?: 0) + (curEmoji?.count ?: 0)
+    }
+
+    override fun getItemCodePoint(i: Int): Long {
+        val offset = curList?.count ?: 0
+        return if (i < offset) {
+            curList?.let {
+                if (i < 0) null else {
+                    it.moveToPosition(i)
+                    it.getInt(0).toLong()
+                }
+            } ?: 0
+        } else -1
     }
 
     override fun getItemString(i: Int): String {
-        return cur?.let {
-            if (i < 0 || i >= it.count) return ""
-            it.moveToPosition(i)
-            if (it.getType(0) == Cursor.FIELD_TYPE_INTEGER) super.getItemString(i) else it.getString(0)
+        val offset = curList?.count ?: 0
+        return if (i < offset) {
+            curList?.let {
+                if (i < 0) return ""
+                super.getItemString(i)
+            }
+        } else {
+            curEmoji?.let {
+                if (i >= offset + it.count) return ""
+                it.moveToPosition(i - offset)
+                it.getString(0)
+            }
         } ?: ""
     }
 

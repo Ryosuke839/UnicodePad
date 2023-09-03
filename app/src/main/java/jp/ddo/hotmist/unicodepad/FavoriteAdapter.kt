@@ -38,11 +38,11 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
         invalidateViews()
     }
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return temp.size
     }
 
-    override fun getItemId(arg0: Int): Long {
+    override fun getItemCodePoint(arg0: Int): Long {
         return temp[arg0].toLong()
     }
 

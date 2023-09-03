@@ -20,11 +20,11 @@ import java.util.*
 
 internal class StringAdapter(str: String, activity: Activity, db: NameDatabase) : UnicodeAdapter(activity, db, false) {
     private val list: ArrayList<Int> = ArrayList()
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return list.size
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         return list[i].toLong()
     }
 

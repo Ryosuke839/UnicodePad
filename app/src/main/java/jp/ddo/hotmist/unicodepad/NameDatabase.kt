@@ -92,9 +92,9 @@ class NameDatabase(context: Context) {
     }
 
     @SuppressLint("Recycle")
-    fun find(str: String, version: Int): Cursor? {
+    fun find(str: String, version: Int): Pair<Cursor?, Cursor?> {
         val list = str.split(" +").toTypedArray()
-        if (list.isEmpty()) return null
+        if (list.isEmpty()) return null to null
         val emojiVersion = when (version) {
             600, 610, 620, 630 -> 60
             700 -> 70
@@ -102,9 +102,9 @@ class NameDatabase(context: Context) {
             else -> version
         }
         return try {
-            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version UNION ALL SELECT id FROM emoji_table2 WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
+            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version;", null) to db.rawQuery("SELECT id FROM emoji_table2 WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
         } catch (e: SQLiteException) {
-            null
+            null to null
         }
     }
 

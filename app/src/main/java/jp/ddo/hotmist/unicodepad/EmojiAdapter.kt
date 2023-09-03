@@ -41,8 +41,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
             val manager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
             var index = manager.findFirstVisibleItemPosition()
             val visibleItemCount = recyclerView.childCount
-            if (recyclerView.getChildAt(0) != null && recyclerView.getChildAt(0).top * -2 > recyclerView.getChildAt(0).height) index += if (single) 1 else PageAdapter.column
-            if (!single) index += PageAdapter.column - 1
+            index -= searchTitlePosition(index)
             if (visibleItemCount != 0) {
                 map.floorEntry(index)?.let { e ->
                     jump?.let { jump ->
@@ -60,7 +59,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     private val selectListener = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
             current = position
-            if (guard == 0) this@EmojiAdapter.layoutManager?.scrollToPositionWithOffset(idx[position], 0)
+            if (guard == 0) this@EmojiAdapter.scrollToTitle(position)
         }
 
         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -127,7 +126,6 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
                         it.setDropDownViewResource(R.layout.spinner_drop_down_item)
                     }
                     jump.setSelection(current)
-                    layoutManager?.scrollToPositionWithOffset(idx[current], 0)
                     view.setOnScrollListener(scrollListener)
                     jump.onItemSelectedListener = selectListener
                     view.post { --guard }
@@ -161,7 +159,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp).also {
             it.setDropDownViewResource(R.layout.spinner_drop_down_item)
         }
-        layoutManager?.scrollToPositionWithOffset(idx[current], 0)
+        scrollToTitle(current)
         jump.setSelection(current)
         view.setOnScrollListener(scrollListener)
         jump.onItemSelectedListener = selectListener
@@ -175,6 +173,18 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         super.destroy()
     }
 
+    override fun getTitleCount(): Int {
+        return grp.size
+    }
+
+    override fun getTitlePosition(i: Int): Int {
+        return idx[i]
+    }
+
+    override fun getTitleString(i: Int): String {
+        return grp[i]
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         if (holder is CharacterViewHolder) holder.characterView.drawSlash(false)
@@ -185,11 +195,11 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         edit.putInt("tone", tone)
     }
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return cur?.count ?: 0
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         return cur?.let {
             if (i < 0 || i >= it.count) return -1
             it.moveToPosition(i)
@@ -208,7 +218,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     override fun getItem(i: Int): String {
         return getItemString(i).let {
             if (it != "")
-                it.split(" ").joinToString("") { String(Character.toChars(it.toInt(16))) }
+                it.split(" ").joinToString("") { joined -> String(Character.toChars(joined.toInt(16))) }
             else
                 ""
         }

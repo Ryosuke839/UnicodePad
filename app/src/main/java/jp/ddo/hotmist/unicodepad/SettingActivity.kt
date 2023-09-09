@@ -234,6 +234,7 @@ class SettingActivity : AppCompatActivity() {
                                     it.put("emojicompat", pref.getString("emojicompat", null))
                                     it.put("theme", pref.getString("theme", null))
                                     it.put("no-ad", if (pref.contains("no-ad")) pref.getBoolean("no-ad", false) else null)
+                                    it.put("skip_guide", if (pref.contains("skip_guide")) pref.getBoolean("skip_guide", false) else null)
                                     it.put("cnt_shown", if (pref.contains("cnt_shown")) pref.getInt("cnt_shown", 0) else null)
                                     for (key in arrayOf("rec", "list", "emoji", "find", "fav", "edt")) {
                                         it.put("ord_$key", if (pref.contains("ord_$key")) pref.getInt("ord_$key", 0) else null)
@@ -356,6 +357,7 @@ class SettingActivity : AppCompatActivity() {
                                     (it.opt("emojicompat") as? String)?.let { str -> edit.putString("emojicompat", str) }
                                     (it.opt("theme") as? String)?.let { str -> edit.putString("theme", str) }
                                     (it.opt("no-ad") as? Boolean)?.let { bool -> edit.putBoolean("no-ad", bool) }
+                                    (it.opt("skip_guide") as? Boolean)?.let { bool -> edit.putBoolean("skip_guide", bool) }
                                     (it.opt("cnt_shown") as? Int)?.let { int -> edit.putInt("cnt_shown", int) }
                                     for (key in arrayOf("rec", "list", "emoji", "find", "fav", "edt")) {
                                         (it.opt("ord_$key") as? Int)?.let { int -> edit.putInt("ord_$key", int) }

@@ -56,6 +56,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'com.mobeta.android.dslv:library:0.9.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'com.github.mreram:showcaseview:1.4.1'
 
     playImplementation 'com.google.android.gms:play-services-ads-lite:20.6.0'
 }

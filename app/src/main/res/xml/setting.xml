@@ -61,6 +61,10 @@
 			android:defaultValue="false"
 			android:key="no-ad"
 			android:title="@string/no_ad_desc" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="skip_guide"
+			android:title="@string/skip_guide_desc" />
 		<Preference
 			android:key="tabs"
 			android:title="@string/tabs_desc" />

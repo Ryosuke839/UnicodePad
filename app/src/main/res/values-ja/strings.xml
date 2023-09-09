@@ -366,6 +366,20 @@
 	<string name="script_F0000">F0000 私用領域補助A</string>
 	<string name="script_100000">100000 私用領域補助B</string>
 
+	<string name="guide_next">次へ</string>
+	<string name="guide_skip">スキップ</string>
+	<string name="guide_finish">完了</string>
+    <string name="guide_title_1">文字パッド</string>
+	<string name="guide_content_1">Unicode のすべての文字を閲覧できます。タップすると入力、長押しすると文字情報を表示します。</string>
+	<string name="guide_title_2">コピー / 共有 / 完了</string>
+	<string name="guide_content_2">入力が完了したら、Unicode 文字列をコピーまたは共有できます。</string>
+	<string name="guide_title_3">タブ</string>
+	<string name="guide_content_3">絵文字、検索、お気に入りなど、何種類ものパッドが用意されています。</string>
+	<string name="guide_title_4">フォントセレクタ</string>
+	<string name="guide_content_4">表示されないグリフ（字体）がある場合は、対応するフォントをダウンロードし選択してください。</string>
+	<string name="guide_title_5">設定</string>
+	<string name="guide_content_5">アプリの挙動と見た目をカスタマイズできます。再度このチュートリアルを見ることもできます。</string>
+
 	<string name="general">一般</string>
 	<string name="appearance">外観</string>
 	<string name="behaviour">動作</string>
@@ -385,6 +399,7 @@
 	<string name="download_desc">Notoフォントをダウンロード…</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="no_ad_desc">広告を非表示</string>
+	<string name="skip_guide_desc">チュートリアルをスキップ</string>
 	<string name="tabs_desc">タブ設定…</string>
 	<string name="shown_desc">表示タブ</string>
 	<string name="hidden_desc">非表示タブ</string>

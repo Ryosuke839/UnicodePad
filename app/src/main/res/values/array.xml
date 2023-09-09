@@ -326,4 +326,25 @@
 		<item>@string/script_F0000</item>
 		<item>@string/script_100000</item>
 	</string-array>
+	<string-array name="guide_titles">
+		<item>@string/guide_title_1</item>
+		<item>@string/guide_title_2</item>
+		<item>@string/guide_title_3</item>
+		<item>@string/guide_title_4</item>
+		<item>@string/guide_title_5</item>
+	</string-array>
+	<string-array name="guide_contents">
+		<item>@string/guide_content_1</item>
+		<item>@string/guide_content_2</item>
+		<item>@string/guide_content_3</item>
+		<item>@string/guide_content_4</item>
+		<item>@string/guide_content_5</item>
+	</string-array>
+	<array name="guide_targets">
+		<item>@id/cpager</item>
+		<item>@id/finish</item>
+		<item>@id/ctab</item>
+		<item>@id/fontBar</item>
+		<item>@id/action_bar</item>
+	</array>
 </resources>

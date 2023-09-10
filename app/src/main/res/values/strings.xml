@@ -371,6 +371,20 @@
 	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>
 	<string name="script_100000">100000 Supplementary Private Use Area-B</string>
 
+	<string name="guide_next">Next</string>
+	<string name="guide_skip">Skip</string>
+	<string name="guide_finish">Finish</string>
+	<string name="guide_title_1">Character Pad</string>
+	<string name="guide_content_1">You can explore all characters in Unicode. Tap to input a character and long-tap to examine character information.</string>
+	<string name="guide_title_2">Copy / Share / Finish</string>
+	<string name="guide_content_2">Once you have done with editing, you can copy or share a Unicode string.</string>
+	<string name="guide_title_3">Tabs</string>
+	<string name="guide_content_3">You can use variety of pads, including emoji, find, and favorite.</string>
+	<string name="guide_title_4">Font Selector</string>
+	<string name="guide_content_4">Download and select a proper font if you find glyphs (characters rendered) missing.</string>
+	<string name="guide_title_5">Settings</string>
+	<string name="guide_content_5">You can customize behavior and appearance of the app. You can revisit this tutorial from the setting as well.</string>
+
 	<string name="general">General</string>
 	<string name="appearance">Appearance</string>
 	<string name="behaviour">Behaviour</string>
@@ -428,6 +442,7 @@
 	<string name="data_scroll">Scroll positions</string>
 	<string name="data_merge">Merge with current</string>
 	<string name="no_ad_desc">Opt-out ads</string>
+	<string name="skip_guide_desc">Skip tutorials</string>
 	<string name="tabs_desc">Tabs settings…</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>

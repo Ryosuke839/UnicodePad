@@ -372,6 +372,20 @@
 	<string name="script_F0000">F0000 补充私用区A</string>
 	<string name="script_100000">100000 补充私用区B</string>
 
+	<string name="guide_next">下一步</string>
+	<string name="guide_skip">跳过</string>
+	<string name="guide_finish">完成</string>
+	<string name="guide_title_1">字符面板</string>
+	<string name="guide_content_1">可以浏览Unicode中的所有字符。点击以输入一个字符，长按以查看字符信息。</string>
+	<string name="guide_title_2">复制／分享／完成</string>
+	<string name="guide_content_2">编辑完毕后，可以复制或者分享Unicode字符串。</string>
+	<string name="guide_title_3">标签页</string>
+	<string name="guide_content_3">可以使用多种面板，包括绘文字，查找和收藏。</string>
+	<string name="guide_title_4">字体选择</string>
+	<string name="guide_content_4">若发现字形（字符）有缺失，可以下载并选择合适的字体。</string>
+	<string name="guide_title_5">设置</string>
+	<string name="guide_content_5">可以自定义APP的行为和外观。可以在设置中再次查看此向导。</string>
+
 	<string name="general">常规</string>
 	<string name="appearance">外观</string>
 	<string name="behaviour">行为</string>
@@ -407,6 +421,7 @@
 	<string name="data_scroll">滚动位置</string>
 	<string name="data_merge">与现有记录合并</string>
 	<string name="no_ad_desc">不显示广告</string>
+	<string name="skip_guide_desc">跳过向导</string>
 	<string name="tabs_desc">标签设置…</string>
 	<string name="shown_desc">已显示标签</string>
 	<string name="hidden_desc">已隐藏标签</string>

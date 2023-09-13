@@ -355,7 +355,8 @@
 	<string name="script_2B740">2B740 中日韓統一表意文字擴充D區</string>
 	<string name="script_2B820">2B820 中日韓統一表意文字擴充E區</string>
 	<string name="script_2CEB0">2CEB0 中日韓統一表意文字擴充F區</string>
-	<string name="script_2F800">2F800 中日韓相容表意文字增補</string>
+    <string name="script_2EBF0">2EBF0 中日韓統一表意文字擴充I區</string>
+    <string name="script_2F800">2F800 中日韓相容表意文字增補</string>
 	<string name="script_30000">30000 中日韓統一表意文字擴充G區</string>
         <string name="script_31350">31350 中日韓統一表意文字擴充H區</string>
 	<string name="script_E0000">E0000 標籤</string>
@@ -372,7 +373,7 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (15.0.0)</string>
+	<string name="version_latest">最新 (15.1.0)</string>
 
 	<string name="download_desc">下載 Noto 字型…</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>

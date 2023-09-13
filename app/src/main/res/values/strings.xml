@@ -363,6 +363,7 @@
 	<string name="script_2B740">2B740 CJK Unified Ideographs Extension D</string>
 	<string name="script_2B820">2B820 CJK Unified Ideographs Extension E</string>
 	<string name="script_2CEB0">2CEB0 CJK Unified Ideographs Extension F</string>
+	<string name="script_2EBF0">2EBF0 CJK Unified Ideographs Extension I</string>
 	<string name="script_2F800">2F800 CJK Compatibility Ideographs Supplement</string>
 	<string name="script_30000">30000 CJK Unified Ideographs Extension G</string>
 	<string name="script_31350">31350 CJK Unified Ideographs Extension H</string>
@@ -416,7 +417,8 @@
 	<string name="version_1300" translatable="false">13.0.0</string>
 	<string name="version_1400" translatable="false">14.0.0</string>
 	<string name="version_1500" translatable="false">15.0.0</string>
-	<string name="version_latest">Latest (15.0.0)</string>
+	<string name="version_1510" translatable="false">15.1.0</string>
+	<string name="version_latest">Latest (15.1.0)</string>
 
 	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
 	<string name="emojicompat_null">Never</string>

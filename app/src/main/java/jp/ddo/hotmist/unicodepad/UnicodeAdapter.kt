@@ -64,7 +64,10 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
     open fun invalidateViews() {
         view.let {
             when (it) {
-                is AbsListView -> it.invalidateViews()
+                is AbsListView -> {
+                    baseAdapter.notifyDataSetChanged()
+                    it.invalidateViews()
+                }
                 is RecyclerView -> notifyDataSetChanged()
             }
         }

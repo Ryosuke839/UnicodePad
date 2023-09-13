@@ -363,7 +363,8 @@
 	<string name="script_2B740">2B740 Expansão D da União de Ideógrafos do CJK</string>
 	<string name="script_2B820">2B820 Expansão E da União de Ideógrafos do CJK</string>
 	<string name="script_2CEB0">2CEB0 Expansão F da União de Ideógrafos do CJK</string>
-	<string name="script_2F800">2F800 Ideógrafos de Compatibilidade Suplementares do CJK</string>
+    <string name="script_2EBF0">2EBF0 Expansão I da União de Ideógrafos do CJK</string>
+    <string name="script_2F800">2F800 Ideógrafos de Compatibilidade Suplementares do CJK</string>
 	<string name="script_30000">30000 Expansão G da União de Ideógrafos do CJK</string>
 	<string name="script_31350">31350 Expansão H da União de Ideógrafos do CJK</string>
 	<string name="script_E0000">E0000 Marcações</string>
@@ -402,7 +403,7 @@
 	<string name="version_1300" translatable="false">13.0.0</string>
 	<string name="version_1400" translatable="false">14.0.0</string>
 	<string name="version_1500" translatable="false">15.0.0</string>
-	<string name="version_latest">Mais recente (15.0.0)</string>
+	<string name="version_latest">Mais recente (15.1.0)</string>
 
 	<string name="emojicompat_desc">Utilize o EmojiCompat para exibir emojis</string>
 	<string name="emojicompat_null">Nunca</string>

@@ -6,6 +6,24 @@ import re
 from ftplib import FTP
 from urllib.parse import urlparse
 
+UNICODE_VERSIONS = [
+  600,
+  610,
+  620,
+  630,
+  700,
+  800,
+  900,
+  1000,
+  1100,
+  1200,
+  1210,
+  1300,
+  1400,
+  1500,
+  1510,
+]
+
 def main():
   with FTP('www.unicode.org') as ftp:
     print(ftp.getwelcome())
@@ -51,7 +69,7 @@ def main():
           except:
             print(exp)
             raise
-      for version in [600, 610, 620, 630, 700, 800, 900, 1000, 1100, 1200, 1210, 1300, 1400, 1500]:
+      for version in UNICODE_VERSIONS:
         ftp.encoding = 'cp1252' if version < 620 else 'utf-8'
         print(ftp.cwd(f'/Public/{version // 100}.{version // 10 % 10}.{version % 10}/ucd/'))
         current = None
@@ -100,15 +118,13 @@ def main():
           current.update()
       for v in characters.values():
         v.insert()
-      print(f'RETR /Public/emoji/15.0/')
-      print(ftp.cwd('/Public/emoji/15.0/'))
+      print(f'RETR /Public/emoji/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}/')
+      print(ftp.cwd(f'/Public/emoji/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}/'))
       group = ''
       subgroup = ''
-      pending = None
       def emoji_line(line):
         nonlocal group
         nonlocal subgroup
-        nonlocal pending
         if len(line) == 0:
           return
         if line[0] == '#':
@@ -117,46 +133,40 @@ def main():
           if line.startswith('# subgroup: '):
             subgroup = line[12:]
           return
-        m = re.match('^((?:[0-9A-F]+ )+) *; ([^ ]+) *# [^ ]+ E([0-9]+)\.([0-9]) (.*)$', line)
+        m = re.match(r'^((?:[0-9A-F]+ )+) *; ([^ ]+) *# [^ ]+ E([0-9]+)\.([0-9]) (.*)$', line)
         if not m:
           print(f'Malformed line: {line}', file=sys.stderr)
           return
         if m.group(2) != 'fully-qualified':
           return
-        exp = 'INSERT INTO emoji_table2 (id, name, version, grp, subgrp, tone) values (\'{}\', \'{}\', {}, \'{}\', \'{}\','.format(
-          m.group(1).rstrip(' '), m.group(5), int(m.group(3) + m.group(4) + '0'), group, subgroup)
-        m = re.search(' (1F3F[B-F]) ', m.group(1))
-        if m:
-          if pending is not None:
-            try:
-              cur.execute(pending + '11034);')
-            except:
-              print(pending + '11034);')
-              raise
-            pending = None
-          try:
-            cur.execute(exp + str(int(m.group(1), 16)) + ');')
-          except:
-            print(exp + str(int(m.group(1), 16)) + ');')
-            raise
-        else:
-          if pending is not None:
-            try:
-              cur.execute(pending + '0);')
-            except:
-              print(pending + '0);')
-              raise
-          pending = exp
-      cur.execute('CREATE TABLE emoji_table2 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL);')
-      print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
-      if pending is not None:
+        id = m.group(1).rstrip(' ')
+        m_tone = re.match(r'^(.*?) (1F3F[B-F])(| .*)$', id)
+        m_direction = re.match(r'(.*?) 200D (27A1)(?: FE0F)?$', id)
+        exp = 'INSERT INTO emoji_table1510 (id, name, version, grp, subgrp, tone, direction) values (\'{}\', \'{}\', {}, \'{}\', \'{}\', {}, {});'.format(
+          id, m.group(5), int(m.group(3) + m.group(4) + '0'), group, subgroup, str(int(m_tone.group(2), 16)) if m_tone else '0', str(int(m_direction.group(2), 16)) if m_direction else '0')
         try:
-          cur.execute(pending + '0);')
+          cur.execute(exp)
         except:
-          print(pending + '0);')
+          print(exp)
           raise
+        if m_tone:
+          exp = 'UPDATE emoji_table1510 SET tone = 11034 WHERE id = \'{}\';'.format(m_tone.group(1) + re.sub(r' (1F3F[B-F])', '', m_tone.group(3)))
+          try:
+            cur.execute(exp)
+          except:
+            print(exp)
+            raise
+        if m_direction:
+          exp = 'UPDATE emoji_table1510 SET direction = 11013 WHERE id = \'{}\';'.format(m_direction.group(1))
+          try:
+            cur.execute(exp)
+          except:
+            print(exp)
+            raise
+      cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
+      print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table2\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table2\';']:
+      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table1510\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table1510\';']:
         print(cmd)
         cur.execute(cmd)
         r = cur.fetchone()
@@ -164,3 +174,12 @@ def main():
 
 if __name__ == '__main__':
   main()
+
+#SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table1510'
+#(2,)
+#SELECT COUNT(*) FROM 'name_table';
+#(34936,)
+#SELECT COUNT(*) FROM 'emoji_table1510';
+#(3773,)
+#1F469 200D 2764 FE0F 200D 1F48B 200D 1F469
+#1F469 1F3FB 200D 2764 FE0F 200D 1F48B 200D 1F469 1F3FB

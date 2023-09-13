@@ -474,6 +474,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0x2B740, 0x2B81F)
         if (univer >= 800) add(0x2B820, 0x2CEAF)
         if (univer >= 1000) add(0x2CEB0, 0x2EBEF)
+        if (univer >= 1510) add(0x2EBF0, 0x2EE5F)
         add(0x2F800, 0x2FA1F)
         if (univer >= 1300) add(0x30000, 0x3134F)
         if (univer >= 1500) add(0x31350, 0x323AF)

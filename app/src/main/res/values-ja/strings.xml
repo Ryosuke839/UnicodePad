@@ -358,7 +358,8 @@
 	<string name="script_2B740">2B740 CJK統合漢字拡張D</string>
 	<string name="script_2B820">2B820 CJK統合漢字拡張E</string>
 	<string name="script_2CEB0">2CEB0 CJK統合漢字拡張F</string>
-	<string name="script_2F800">2F800 CJK互換漢字補助</string>
+    <string name="script_2EBF0">2EBF0 CJK統合漢字拡張I</string>
+    <string name="script_2F800">2F800 CJK互換漢字補助</string>
 	<string name="script_30000">30000 CJK統合漢字拡張G</string>
     <string name="script_31350">31350 CJK統合漢字拡張H</string>
 	<string name="script_E0000">E0000 タグ</string>
@@ -389,7 +390,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (15.0.0)</string>
+	<string name="version_latest">最新 (15.1.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>

@@ -48,7 +48,7 @@
 
 	<string name="version_desc">Unicode-ის ვერსია</string>
 
-	<string name="version_latest">უახლესი (15.0.0)</string>
+	<string name="version_latest">უახლესი (15.1.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat-ის გამოყენება ემოჯების საჩვენებლად</string>
 	<string name="emojicompat_null">არასდროს</string>

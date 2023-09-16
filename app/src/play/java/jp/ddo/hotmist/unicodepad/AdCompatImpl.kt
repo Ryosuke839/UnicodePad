@@ -25,7 +25,7 @@ internal class AdCompatImpl : AdCompat {
                             val outMetrics = DisplayMetrics()
                             @Suppress("DEPRECATION")
                             activity.windowManager.defaultDisplay.getMetrics(outMetrics)
-                            it.adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, (outMetrics.widthPixels / outMetrics.density).toInt())
+                            it.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, (outMetrics.widthPixels / outMetrics.density).toInt()))
                             it.adUnitId = "ca-app-pub-8779692709020298/6882844952"
                             (activity.findViewById<View>(R.id.adContainer) as LinearLayout).addView(it)
                             val adRequest = AdRequest.Builder().build()

@@ -665,8 +665,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                     runOnUiThread {
                         highTarget?.setBackgroundColor(resnormal)
                         highTarget = null
-                        notifyItemChanged(highlight)
-                        highlight = -1
+                        if (highlight != -1) {
+                            notifyItemChanged(highlight)
+                            highlight = -1
+                        }
                     }
                     false
                 }

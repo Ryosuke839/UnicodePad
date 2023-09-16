@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "jp.ddo.hotmist.unicodepad"
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 56
-        versionName "2.12.3"
+        versionName "2.13.0"
     }
 
     compileOptions {
@@ -51,14 +51,14 @@ android {
 dependencies {
     implementation "androidx.core:core-ktx:$kotlin_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'androidx.emoji2:emoji2:1.2.0'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.emoji2:emoji2:1.4.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.mobeta.android.dslv:library:0.9.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.github.mreram:showcaseview:1.4.1'
 
-    playImplementation 'com.google.android.gms:play-services-ads-lite:20.6.0'
+    playImplementation 'com.google.android.gms:play-services-ads-lite:22.3.0'
 }
 repositories {
     mavenCentral()

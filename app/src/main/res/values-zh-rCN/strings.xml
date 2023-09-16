@@ -21,6 +21,10 @@
 	<string name="copied">已复制到剪贴板</string>
 	<string name="finish">完成</string>
 	<string name="share">分享</string>
+	<string name="undo">撤销</string>
+	<string name="redo">恢复</string>
+	<string name="convert">转换</string>
+	<string name="convert_">转换…</string>
 	<string name="font">字体</string>
 	<string name="favorite">收藏</string>
 	<string name="recent">最近使用</string>
@@ -28,10 +32,10 @@
 	<string name="edit">输入</string>
 	<string name="emoji">绘文字</string>
 	<string name="normal">默认</string>
-	<string name="input">输入</string>
 	<string name="locale_default">默认 (%s)</string>
 	<string name="locale_other">其他…</string>
 	<string name="locale_title">区域设置</string>
+	<string name="input">输入</string>
 	<string name="remrec">移除</string>
 	<string name="add">选择…</string>
 	<string name="mark">标记</string>
@@ -359,14 +363,28 @@
 	<string name="script_2B740">2B740 中日韩统一汉字扩展D</string>
 	<string name="script_2B820">2B820 中日韩统一汉字扩展E</string>
 	<string name="script_2CEB0">2CEB0 中日韩统一汉字扩展F</string>
-    <string name="script_2EBF0">2EBF0 中日韩统一汉字扩展I</string>
-    <string name="script_2F800">2F800 中日韩兼容汉字补充</string>
+	<string name="script_2EBF0">2EBF0 中日韩统一汉字扩展I</string>
+	<string name="script_2F800">2F800 中日韩兼容汉字补充</string>
 	<string name="script_30000">30000 中日韩统一汉字扩展G</string>
 	<string name="script_31350">31350 中日韩统一汉字扩展H</string>
 	<string name="script_E0000">E0000 标签</string>
 	<string name="script_E0100">E0100 异体选择符补充</string>
 	<string name="script_F0000">F0000 补充私用区A</string>
 	<string name="script_100000">100000 补充私用区B</string>
+
+	<string name="guide_next">下一步</string>
+	<string name="guide_skip">跳过</string>
+	<string name="guide_finish">完成</string>
+	<string name="guide_title_1">字符面板</string>
+	<string name="guide_content_1">可以浏览Unicode中的所有字符。点击以输入一个字符，长按以查看字符信息。</string>
+	<string name="guide_title_2">复制／分享／完成</string>
+	<string name="guide_content_2">编辑完毕后，可以复制或者分享Unicode字符串。</string>
+	<string name="guide_title_3">标签页</string>
+	<string name="guide_content_3">可以使用多种面板，包括绘文字，查找和收藏。</string>
+	<string name="guide_title_4">字体选择</string>
+	<string name="guide_content_4">若发现字形（字符）有缺失，可以下载并选择合适的字体。</string>
+	<string name="guide_title_5">设置</string>
+	<string name="guide_content_5">可以自定义APP的行为和外观。可以在设置中再次查看此向导。</string>
 
 	<string name="general">常规</string>
 	<string name="appearance">外观</string>
@@ -403,12 +421,14 @@
 	<string name="data_scroll">滚动位置</string>
 	<string name="data_merge">与现有记录合并</string>
 	<string name="no_ad_desc">不显示广告</string>
+	<string name="skip_guide_desc">跳过向导</string>
 	<string name="tabs_desc">标签设置…</string>
 	<string name="shown_desc">已显示标签</string>
 	<string name="hidden_desc">已隐藏标签</string>
 
 	<string name="multiplecolumns">多列，仅显示字符</string>
 	<string name="singlecolumn">单列，显示描述</string>
+	<string name="sort">排序</string>
 
 	<string name="padding_desc">网格内留白</string>
 	<string name="gridsize_desc">网格文字大小</string>
@@ -433,6 +453,7 @@
 
 	<string name="ime_desc">禁用输入法</string>
 	<string name="clear_desc">显示清除按钮</string>
+	<string name="buttons_desc">显示按钮栏</string>
 	<string name="malformed">压缩包中文件含有非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。

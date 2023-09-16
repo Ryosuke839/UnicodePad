@@ -18,51 +18,77 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.*
-import android.preference.Preference.OnPreferenceChangeListener
+import android.os.LocaleList
 import android.text.ClipboardManager
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 
-class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
-    private val adCompat: AdCompat = AdCompatImpl()
+class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.setting)
-        fun setEntry(it: ListPreference) = run {
-            it.onPreferenceChangeListener = this
-            it.summary = it.entry
-        }
-        fun setValue(it: ListPreference) = run {
-            it.onPreferenceChangeListener = this
-            it.summary = it.value
-        }
-        fun setText(it: EditTextPreference) = run {
-            it.onPreferenceChangeListener = this
-            it.summary = it.text
-        }
-        setEntry(findPreference("universion") as ListPreference)
-        setEntry(findPreference("emojicompat") as ListPreference)
-        findPreference("download").also {
-            it.setOnPreferenceClickListener {
-                openPage(getString(R.string.download_uri))
+        fragmentManager.beginTransaction().replace(android.R.id.content, MyPreferenceFragment()).commit()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        applyOverrideConfiguration(newBase?.resources?.configuration?.also {
+            it.setLocale(Locale.getDefault())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                it.setLocales(LocaleList.getDefault())
             }
-        }
-        findPreference("export").also {
-            if (Build.VERSION.SDK_INT >= 19) {
+        })
+        super.attachBaseContext(newBase)
+    }
+
+    class MyPreferenceFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener {
+        private val adCompat: AdCompat = AdCompatImpl()
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.setting)
+            fun setEntry(it: ListPreference) = run {
+                it.onPreferenceChangeListener = this
+                it.summary = it.entry
+            }
+
+            fun setValue(it: ListPreference) = run {
+                it.onPreferenceChangeListener = this
+                it.summary = it.value
+            }
+
+            fun setText(it: EditTextPreference) = run {
+                it.onPreferenceChangeListener = this
+                it.summary = it.text
+            }
+            setEntry(findPreference("universion")!!)
+            setEntry(findPreference("emojicompat")!!)
+            findPreference<Preference>("download")!!.also {
+                it.setOnPreferenceClickListener {
+                    openPage(getString(R.string.download_uri))
+                }
+            }
+            findPreference<Preference>("export")!!.also {
                 it.setOnPreferenceClickListener {
                     val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
                     intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -70,11 +96,8 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                     startActivityForResult(intent, SETTING_EXPORT_CODE)
                     true
                 }
-            } else
-                it.isEnabled = false
-        }
-        findPreference("import").also {
-            if (Build.VERSION.SDK_INT >= 19) {
+            }
+            findPreference<Preference>("import")!!.also {
                 it.setOnPreferenceClickListener {
                     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                     intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -82,81 +105,95 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                     startActivityForResult(intent, SETTING_IMPORT_CODE)
                     true
                 }
-            } else
-                it.isEnabled = false
-        }
-        setEntry(findPreference("theme") as ListPreference)
-        setText(findPreference("textsize") as EditTextPreference)
-        setValue(findPreference("column") as ListPreference)
-        setValue(findPreference("columnl") as ListPreference)
-        findPreference("tabs").also {
-            it.setOnPreferenceClickListener {
-                startActivity(Intent(this, TabsActivity::class.java))
-                true
             }
-        }
-        setText(findPreference("padding") as EditTextPreference)
-        setText(findPreference("gridsize") as EditTextPreference)
-        setText(findPreference("viewsize") as EditTextPreference)
-        setText(findPreference("checker") as EditTextPreference)
-        setText(findPreference("recentsize") as EditTextPreference)
-        setEntry(findPreference("scroll") as ListPreference)
-        findPreference("legal_app").also {
-            it.setOnPreferenceClickListener {
-                openPage("https://github.com/Ryosuke839/UnicodePad")
-            }
-        }
-        findPreference("legal_uni").also {
-            it.setOnPreferenceClickListener {
-                openPage("https://unicode.org/")
-            }
-        }
-        if (!adCompat.showAdSettings) {
-            (findPreference("no-ad") as CheckBoxPreference).also {
-                if (Build.VERSION.SDK_INT >= 26) {
-                    it.parent?.removePreference(it)
-                } else {
-                    it.isEnabled = false
-                    it.isChecked = true
+            setEntry(findPreference("theme")!!)
+            setText(findPreference("textsize")!!)
+            setValue(findPreference("column")!!)
+            setValue(findPreference("columnl")!!)
+            findPreference<Preference>("tabs")!!.also {
+                it.setOnPreferenceClickListener {
+                    startActivity(Intent(activity, TabsActivity::class.java))
+                    true
                 }
             }
-        }
-        setResult(RESULT_OK)
-    }
-
-    override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        if (preference.hasKey()) {
-            val key = preference.key
-            try {
-                if (key == "column" || key == "padding" || key == "recentsize") newValue.toString().toInt()
-                if (key == "textsize" || key == "gridsize" || key == "viewsize" || key == "checker") newValue.toString().toFloat()
-            } catch (e: NumberFormatException) {
-                return false
+            setText(findPreference("padding")!!)
+            setText(findPreference("gridsize")!!)
+            setText(findPreference("viewsize")!!)
+            setText(findPreference("checker")!!)
+            setText(findPreference("recentsize")!!)
+            setEntry(findPreference("scroll")!!)
+            findPreference<Preference>("legal_app")!!.also {
+                it.setOnPreferenceClickListener {
+                    openPage("https://github.com/Ryosuke839/UnicodePad")
+                }
             }
-            if (key == "theme" || key == "emojicompat") {
-                Toast.makeText(this, R.string.theme_title, Toast.LENGTH_SHORT).show()
-                setResult(RESULT_FIRST_USER)
+            findPreference<Preference>("legal_uni")!!.also {
+                it.setOnPreferenceClickListener {
+                    openPage("https://unicode.org/")
+                }
             }
+            if (!adCompat.showAdSettings) {
+                findPreference<CheckBoxPreference>("no-ad")!!.also {
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        it.parent?.removePreference(it)
+                    } else {
+                        it.isEnabled = false
+                        it.isChecked = true
+                    }
+                }
+            }
+            preferenceScreen.let {
+                for (i in 0 until it.preferenceCount) {
+                    val pref = it.getPreference(i)
+                    pref.isIconSpaceReserved = false
+                    if (pref is PreferenceGroup) {
+                        for (j in 0 until pref.preferenceCount) {
+                            pref.getPreference(j).isIconSpaceReserved = false
+                        }
+                    }
+                }
+            }
+            activity.setResult(RESULT_OK)
         }
-        preference.summary = if (preference is ListPreference) preference.entries[preference.findIndexOfValue(newValue.toString())] else newValue.toString()
-        return true
-    }
 
-    private fun openPage(uri: String): Boolean {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-        if (this.packageManager.queryIntentActivities(intent, 0).size > 0) {
-            // Show web page
-            startActivity(intent)
-        } else {
-            // Copy URI
-            (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).text = uri
-            Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         }
-        return true
+
+        override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+            if (preference.hasKey()) {
+                val key = preference.key
+                try {
+                    if (key == "column" || key == "padding" || key == "recentsize") newValue.toString().toInt()
+                    if (key == "textsize" || key == "gridsize" || key == "viewsize" || key == "checker") newValue.toString().toFloat()
+                } catch (e: NumberFormatException) {
+                    return false
+                }
+                if (key == "theme" || key == "emojicompat") {
+                    Toast.makeText(activity, R.string.theme_title, Toast.LENGTH_SHORT).show()
+                    activity.setResult(RESULT_FIRST_USER)
+                }
+            }
+            preference.summary = if (preference is ListPreference) preference.entries[preference.findIndexOfValue(newValue.toString())] else newValue.toString()
+            return true
+        }
+
+        private fun openPage(uri: String): Boolean {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+            if (activity.packageManager.queryIntentActivities(intent, 0).size > 0) {
+                // Show web page
+                startActivity(intent)
+            } else {
+                // Copy URI
+                (activity.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).text = uri
+                Toast.makeText(activity, R.string.copied, Toast.LENGTH_SHORT).show()
+            }
+            return true
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (Build.VERSION.SDK_INT >= 19) if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
             val uri = data.data ?: return
             val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
             val padding = (resources.displayMetrics.density * 8f).toInt()
@@ -197,6 +234,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                                     it.put("emojicompat", pref.getString("emojicompat", null))
                                     it.put("theme", pref.getString("theme", null))
                                     it.put("no-ad", if (pref.contains("no-ad")) pref.getBoolean("no-ad", false) else null)
+                                    it.put("skip_guide", if (pref.contains("skip_guide")) pref.getBoolean("skip_guide", false) else null)
                                     it.put("cnt_shown", if (pref.contains("cnt_shown")) pref.getInt("cnt_shown", 0) else null)
                                     for (key in arrayOf("rec", "list", "emoji", "find", "fav", "edt")) {
                                         it.put("ord_$key", if (pref.contains("ord_$key")) pref.getInt("ord_$key", 0) else null)
@@ -239,7 +277,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                     Toast.makeText(this, resources.getString(R.string.export_fail_io, e), Toast.LENGTH_LONG).show()
                     e.printStackTrace()
                 }
-            }.create().show()
+            }.setNegativeButton(android.R.string.cancel) { _, _ -> }.create().show()
         }
         if (requestCode == SETTING_IMPORT_CODE) if (resultCode == RESULT_OK && data != null) {
             val uri = data.data ?: return
@@ -319,6 +357,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                                     (it.opt("emojicompat") as? String)?.let { str -> edit.putString("emojicompat", str) }
                                     (it.opt("theme") as? String)?.let { str -> edit.putString("theme", str) }
                                     (it.opt("no-ad") as? Boolean)?.let { bool -> edit.putBoolean("no-ad", bool) }
+                                    (it.opt("skip_guide") as? Boolean)?.let { bool -> edit.putBoolean("skip_guide", bool) }
                                     (it.opt("cnt_shown") as? Int)?.let { int -> edit.putInt("cnt_shown", int) }
                                     for (key in arrayOf("rec", "list", "emoji", "find", "fav", "edt")) {
                                         (it.opt("ord_$key") as? Int)?.let { int -> edit.putInt("ord_$key", int) }
@@ -378,7 +417,7 @@ class SettingActivity : PreferenceActivity(), OnPreferenceChangeListener {
                             Toast.makeText(this, R.string.imported_notice, Toast.LENGTH_SHORT).show()
                             setResult(RESULT_FIRST_USER)
                             finish()
-                        }.create().show()
+                        }.setNegativeButton(android.R.string.cancel) { _, _ -> }.create().show()
                     } catch (e: JSONException) {
                         Toast.makeText(this, resources.getString(R.string.import_fail_json, e), Toast.LENGTH_LONG).show()
                     }

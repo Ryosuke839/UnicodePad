@@ -18,7 +18,7 @@ import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.ListPopupWindow
 
 
-class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) : androidx.appcompat.widget.AppCompatSpinner(context, attrs, defStyle) {
+class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) : AppCompatSpinner(context, attrs, defStyle) {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.spinnerStyle)
 
@@ -115,7 +115,6 @@ class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private class DropDownAdapter(private val mAdapter: SpinnerAdapter?,
                                   dropDownTheme: Theme?) : android.widget.ListAdapter, SpinnerAdapter {
-        private var mListAdapter: ListAdapter? = null
         override fun getCount(): Int {
             return mAdapter?.count ?: 0
         }
@@ -149,13 +148,11 @@ class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
 
         override fun areAllItemsEnabled(): Boolean {
-            val adapter = mListAdapter
-            return adapter?.areAllItemsEnabled() ?: true
+            return true
         }
 
         override fun isEnabled(position: Int): Boolean {
-            val adapter = mListAdapter
-            return adapter?.isEnabled(position) ?: true
+            return true
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -171,9 +168,6 @@ class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
 
         init {
-            if (mAdapter is ListAdapter) {
-                mListAdapter = mAdapter
-            }
             if (dropDownTheme != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && mAdapter is ThemedSpinnerAdapter) {

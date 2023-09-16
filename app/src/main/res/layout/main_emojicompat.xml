@@ -124,6 +124,7 @@
 			</LinearLayout>
 
 			<LinearLayout
+				android:id="@+id/fontBar"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
 

@@ -19,7 +19,6 @@
 	package="jp.ddo.hotmist.unicodepad"
 	android:installLocation="auto">
 
-	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<queries>
@@ -37,9 +36,6 @@
 		android:supportsRtl="false"
 		android:fullBackupContent="@xml/backup_descriptor"
 		android:dataExtractionRules="@xml/data_extraction_rules">
-		<meta-data
-			android:name="com.google.android.gms.ads.APPLICATION_ID"
-			android:value="ca-app-pub-8779692709020298~3817697917"/>
 		<meta-data
 			android:name="preloaded_fonts"
 			android:resource="@array/preloaded_fonts" />

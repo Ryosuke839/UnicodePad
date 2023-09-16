@@ -36,11 +36,11 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
     override fun getCount(): Int {
-        return adapter.count
+        return adapter.getCount()
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return (if (adapter.getItemId(position) != -1L) String.format("U+%04X ", adapter.getItemId(position)) else adapter.getItemString(position) + " ") + adapter.getItem(position)
+        return (if (adapter.getItemCodePoint(position) >= 0) String.format("U+%04X ", adapter.getItemCodePoint(position)) else adapter.getItemString(position) + " ") + adapter.getItem(position)
     }
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
@@ -59,8 +59,8 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.VERTICAL
         layout.addView(text, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        val itemid = adapter.getItemId(position).toInt()
-        val emoji = itemid == -1
+        val itemid = adapter.getItemCodePoint(position).toInt()
+        val emoji = adapter.getItemCodePoint(position) < 0
         val ver = if (!emoji) db.getInt(itemid, "version") else db.getInt(adapter.getItemString(position), "version")
         text.setValid(ver != 0 && ver <= UnicodeActivity.univer)
         val str = StringBuilder()
@@ -191,7 +191,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         }
                     }
                     hl.setOnLongClickListener { view ->
-                        activity.adpPage.showDesc(view, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
+                        activity.adpPage.showDesc(null, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
                         true
                     }
                     hl.setBackgroundResource(reslist)
@@ -220,7 +220,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
     }
 
     val id: Long
-        get() = adapter.getItemId(index)
+        get() = adapter.getItemCodePoint(index)
 
     companion object {
         var fontsize = 160f

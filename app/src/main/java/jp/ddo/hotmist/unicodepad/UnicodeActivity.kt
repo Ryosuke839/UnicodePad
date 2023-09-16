@@ -32,6 +32,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.provider.FontRequest
 import androidx.core.view.doOnLayout
 import androidx.emoji2.text.EmojiCompat
@@ -39,6 +40,8 @@ import androidx.emoji2.text.EmojiCompat.InitCallback
 import androidx.emoji2.text.FontRequestEmojiCompatConfig
 import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -161,6 +164,7 @@ class UnicodeActivity : AppCompatActivity() {
         findViewById<Button>(R.id.paste).also {
             it.setOnClickListener {
                 editText.setText(cm.text)
+                editText.setSelection(editText.length())
             }
         }
         btnFinish = findViewById<Button>(R.id.finish).also {
@@ -254,8 +258,9 @@ class UnicodeActivity : AppCompatActivity() {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
             view.doOnLayout {
-                history[0] = Triple(cm.text.toString(), 0, 0)
+                history[0] = Triple(cm.text?.toString() ?: "", 0, 0)
                 editText.setText(cm.text)
+                editText.setSelection(editText.length())
             }
         }
         when {
@@ -266,6 +271,7 @@ class UnicodeActivity : AppCompatActivity() {
         }?.let {
             history[0] = Triple(it, 0, 0)
             editText.setText(it)
+            editText.setSelection(editText.length())
         }
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             editText.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -277,6 +283,76 @@ class UnicodeActivity : AppCompatActivity() {
         }
         adCompat.renderAdToContainer(this, pref)
         created = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!pref.getBoolean("skip_guide", false)) {
+            showGuide()
+        }
+    }
+
+    private fun showGuide(index: Int = 0) {
+        val titles = resources.getStringArray(R.array.guide_titles)
+        val contents = resources.getStringArray(R.array.guide_contents)
+        val targets = resources.obtainTypedArray(R.array.guide_targets).run {
+            val ids = (0 until length()).map { getResourceIdOrThrow(it) }
+            recycle()
+            ids
+        }
+        val count = min(min(titles.size, contents.size), targets.size)
+        if (index >= count || pref.getBoolean("skip_guide", false)) {
+            pref.edit().putBoolean("skip_guide", true).apply()
+            return
+        }
+        val targetView = when (targets[index]) {
+            R.id.action_bar -> findViewById<ViewGroup>(targets[index]).run {
+                (getChildAt(childCount - 1) as ViewGroup).run {
+                    getChildAt(childCount - 1)
+                }
+            }
+            else -> findViewById(targets[index])
+        }
+        GuideView.Builder(this)
+                .setTitle(titles[index])
+                .setContentText(contents[index])
+                .setDismissType(DismissType.anywhere)
+                .setTargetView(targetView)
+                .setGuideListener {
+                    showGuide(index + 1)
+                }
+                .build().also { guide ->
+                    Button(this).let { button ->
+                        button.text = resources.getText(
+                                if (index != count - 1)
+                                    R.string.guide_next
+                                else
+                                    R.string.guide_finish)
+                        button.setOnClickListener {
+                            guide.dismiss()
+                        }
+                        guide.addView(button, 0, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                            gravity = Gravity.BOTTOM or Gravity.END
+                            marginEnd = button.paddingEnd
+                            bottomMargin = guide.navigationBarSize + button.paddingBottom
+                        })
+                    }
+                    if (index != count - 1) {
+                        Button(this).let { button ->
+                            button.text = resources.getText(R.string.guide_skip)
+                            button.setOnClickListener {
+                                pref.edit().putBoolean("skip_guide", true).apply()
+                                guide.dismiss()
+                            }
+                            guide.addView(button, 0, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                                gravity = Gravity.BOTTOM or Gravity.START
+                                marginStart = button.paddingStart
+                                bottomMargin = guide.navigationBarSize + button.paddingBottom
+                            })
+                        }
+                    }
+                }
+                .show()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -330,7 +406,10 @@ class UnicodeActivity : AppCompatActivity() {
                     itemRedo.isEnabled = historyCursor < history.size - 1
                 }
             }
-            MENU_ID_PASTE -> editText.setText(cm.text)
+            MENU_ID_PASTE -> {
+                editText.setText(cm.text)
+                editText.setSelection(editText.length())
+            }
             MENU_ID_CONVERT-> {
                 val text = editText.text.toString()
                 val adapter = object : ArrayAdapter<Pair<String, String>>(this, android.R.layout.simple_list_item_2, mutableListOf<Pair<String, String>>().apply {
@@ -365,7 +444,7 @@ class UnicodeActivity : AppCompatActivity() {
                         }
                     }
                 }
-                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
+                val dialog = AlertDialog.Builder(this).setTitle(R.string.convert_).setNegativeButton(android.R.string.cancel) { _, _ -> }.setAdapter(adapter) { _, i -> editText.setText(adapter.getItem(i)?.second) }.show()
                 val handler = Handler()
                 thread {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -519,9 +598,7 @@ class UnicodeActivity : AppCompatActivity() {
         oldtf = tf
         oldlocale = locale
         editText.typeface = tf
-        if (Build.VERSION.SDK_INT >= 17) {
-            editText.textLocale = locale
-        }
+        editText.textLocale = locale
         adpPage.setTypeface(tf, locale)
     }
 

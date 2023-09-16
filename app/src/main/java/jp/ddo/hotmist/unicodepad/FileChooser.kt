@@ -109,7 +109,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                                 }
                                 try {
                                     if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
-                                } catch (e: IOException) {
+                                } catch (_: IOException) {
                                 }
                                 path = of.canonicalPath
                             }
@@ -122,7 +122,7 @@ internal class FileChooser(private val activity: Activity, private val listener:
                         Toast.makeText(activity, R.string.malformed, Toast.LENGTH_SHORT).show()
                         listener.onFileCancel()
                         return
-                    } catch (e: IOException) {
+                    } catch (_: IOException) {
                     }
                 }
             } else {
@@ -215,8 +215,13 @@ internal class FileChooser(private val activity: Activity, private val listener:
                         ++j
                     }
                 }
-                AlertDialog.Builder(activity).setTitle(if (path.startsWith(activity.filesDir.canonicalPath)) path.substring(path.lastIndexOf('/') + 1) else path).setItems(children, this).setOnCancelListener(this).show()
-            } catch (e: IOException) {
+                AlertDialog.Builder(activity)
+                        .setTitle(if (path.startsWith(activity.filesDir.canonicalPath)) path.substring(path.lastIndexOf('/') + 1) else path)
+                        .setItems(children, this)
+                        .setNegativeButton(android.R.string.cancel) { _, _ -> listener.onFileCancel() }
+                        .setOnCancelListener { listener.onFileCancel() }
+                        .show()
+            } catch (_: IOException) {
             }
         }
     }

@@ -16,14 +16,14 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.mobeta.android.dslv.DragSortController
 import com.mobeta.android.dslv.DragSortListView
 
-class TabsActivity : Activity() {
+class TabsActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(THEME[(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
@@ -38,6 +38,11 @@ class TabsActivity : Activity() {
         view.setOnTouchListener(controller)
         view.adapter = TabsAdapter(this, view)
         setContentView(view)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     companion object {

@@ -28,7 +28,8 @@ import java.util.*
 internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean, private val edit: EditText) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
     private val list: ArrayList<Int> = ArrayList()
     private var suspend = false
-    override fun instantiate(view: AbsListView): View {
+    override fun instantiate(view: View): View {
+        val view = view as AbsListView
         list.clear()
         val str = edit.editableText.toString()
         var i = 0
@@ -66,7 +67,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         return list.size
     }
 
-    override fun getItemId(i: Int): Long {
+    override fun getItemCodePoint(i: Int): Long {
         return list[i].toLong()
     }
 
@@ -81,7 +82,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             list.add(code)
             i += Character.charCount(code)
         }
-        view?.invalidateViews()
+        invalidateViews()
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -107,7 +108,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.add(to, ch)
-            view?.invalidateViews()
+            invalidateViews()
         }
     }
 
@@ -125,7 +126,7 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
             edit.editableText.replace(0, edit.editableText.length, edit.editableText)
             suspend = false
             list.removeAt(which)
-            view?.invalidateViews()
+            invalidateViews()
         }
     }
 }

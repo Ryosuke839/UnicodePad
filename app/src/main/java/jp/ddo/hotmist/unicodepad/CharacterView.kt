@@ -66,7 +66,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                         span = spans[0]
                     }
                 }
-            } catch (e: IllegalStateException) {
+            } catch (_: IllegalStateException) {
             }
             requestLayout()
         }
@@ -74,9 +74,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
     fun setTypeface(tf: Typeface?, locale: Locale) {
         if (paint.typeface != tf) invalid = true
         paint.typeface = tf
-        if (Build.VERSION.SDK_INT >= 17) {
-            paint.textLocale = locale
-        }
+        paint.textLocale = locale
         requestLayout()
     }
 
@@ -171,10 +169,8 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         val measure = (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar || !drawSlash
         var widthNew: Int
         widthNew = (if (measure) paint.measureText(str) else fm.descent - fm.ascent).toInt() + paddingLeft + paddingRight
-        if (Build.VERSION.SDK_INT >= 19) {
-            span?.let{
-                widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
-            }
+        span?.let{
+            widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
         }
         if (widthMode != MeasureSpec.EXACTLY) if (widthMode == MeasureSpec.UNSPECIFIED || widthSize > widthNew) widthSize = widthNew
         if (!shrinkHeight) if (heightMode != MeasureSpec.EXACTLY) if (heightMode == MeasureSpec.UNSPECIFIED || heightSize > heightNew) heightSize = heightNew
@@ -184,10 +180,8 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             fm = paint.fontMetrics
             fmi = paint.fontMetricsInt
             widthNew = (if (measure) paint.measureText(str) else fm.descent - fm.ascent).toInt() + paddingLeft + paddingRight
-            if (Build.VERSION.SDK_INT >= 19) {
-                span?.let {
-                    widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
-                }
+            span?.let {
+                widthNew = it.getSize(paint, str, 0, str.length, fmi) + paddingLeft + paddingRight
             }
             heightNew = (-fm.top + fm.bottom).toInt()
             heightNew += paddingTop + paddingBottom
@@ -249,9 +243,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
             if (span != null || (Build.VERSION.SDK_INT < 23 || paint.hasGlyph(str)) && validChar && paint.measureText(str) > 0f) {
                 var w = paint.measureText(str)
                 span?.let {
-                    if (Build.VERSION.SDK_INT >= 19) {
-                        w = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt).toFloat()
-                    }
+                    w = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt).toFloat()
                 }
                 if (w > 256f) {
                     val size = paint.textSize
@@ -259,35 +251,27 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                     val fm = paint.fontMetrics
                     var w2 = paint.measureText(str).toInt()
                     span?.let {
-                        if (Build.VERSION.SDK_INT >= 19) {
-                            w2 = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt)
-                        }
+                        w2 = it.getSize(paint, str, 0, str.length, paint.fontMetricsInt)
                     }
                     val bm = Bitmap.createBitmap(w2, (-fm.top + fm.bottom).toInt(), Bitmap.Config.ARGB_8888)
                     val tr = Bitmap.createBitmap(w2, (-fm.top + fm.bottom).toInt(), Bitmap.Config.ARGB_8888)
                     val cv = Canvas(bm)
                     span?.let {
-                        if (Build.VERSION.SDK_INT >= 19) {
-                            it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
-                            true
-                        } else null
+                        it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                        true
                     } ?: cv.drawText(str, 0f, -fm.top, paint)
                     if (!bm.sameAs(tr)) {
                         cv.drawColor(0, PorterDuff.Mode.CLEAR)
                         paint.style = Paint.Style.STROKE
                         span?.let {
-                            if (Build.VERSION.SDK_INT >= 19) {
-                                it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
-                                true
-                            } else null
+                            it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                            true
                         } ?: cv.drawText(str, 0f, -fm.top, paint)
                         if (bm.sameAs(tr)) {
                             paint.style = Paint.Style.FILL
                             span?.let {
-                                if (Build.VERSION.SDK_INT >= 19) {
-                                    it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
-                                    true
-                                } else null
+                                it.draw(cv, str, 0, str.length, 0f, 0, (-fm.top).toInt(), (-fm.top + fm.descent).toInt(), paint)
+                                true
                             } ?: cv.drawText(str, 0f, -fm.top, paint)
                             emojicache = bm
                             cacheRect.set(0, 0, bm.width, bm.height)

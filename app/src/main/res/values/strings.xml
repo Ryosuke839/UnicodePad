@@ -363,6 +363,7 @@
 	<string name="script_2B740">2B740 CJK Unified Ideographs Extension D</string>
 	<string name="script_2B820">2B820 CJK Unified Ideographs Extension E</string>
 	<string name="script_2CEB0">2CEB0 CJK Unified Ideographs Extension F</string>
+	<string name="script_2EBF0">2EBF0 CJK Unified Ideographs Extension I</string>
 	<string name="script_2F800">2F800 CJK Compatibility Ideographs Supplement</string>
 	<string name="script_30000">30000 CJK Unified Ideographs Extension G</string>
 	<string name="script_31350">31350 CJK Unified Ideographs Extension H</string>
@@ -370,6 +371,20 @@
 	<string name="script_E0100">E0100 Variation Selectors Supplement</string>
 	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>
 	<string name="script_100000">100000 Supplementary Private Use Area-B</string>
+
+	<string name="guide_next">Next</string>
+	<string name="guide_skip">Skip</string>
+	<string name="guide_finish">Finish</string>
+	<string name="guide_title_1">Character Pad</string>
+	<string name="guide_content_1">You can explore all characters in Unicode. Tap to input a character and long-tap to examine character information.</string>
+	<string name="guide_title_2">Copy / Share / Finish</string>
+	<string name="guide_content_2">Once you have done with editing, you can copy or share a Unicode string.</string>
+	<string name="guide_title_3">Tabs</string>
+	<string name="guide_content_3">You can use variety of pads, including emoji, find, and favorite.</string>
+	<string name="guide_title_4">Font Selector</string>
+	<string name="guide_content_4">Download and select a proper font if you find glyphs (characters rendered) missing.</string>
+	<string name="guide_title_5">Settings</string>
+	<string name="guide_content_5">You can customize behavior and appearance of the app. You can revisit this tutorial from the setting as well.</string>
 
 	<string name="general">General</string>
 	<string name="appearance">Appearance</string>
@@ -402,7 +417,8 @@
 	<string name="version_1300" translatable="false">13.0.0</string>
 	<string name="version_1400" translatable="false">14.0.0</string>
 	<string name="version_1500" translatable="false">15.0.0</string>
-	<string name="version_latest">Latest (15.0.0)</string>
+	<string name="version_1510" translatable="false">15.1.0</string>
+	<string name="version_latest">Latest (15.1.0)</string>
 
 	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
 	<string name="emojicompat_null">Never</string>
@@ -428,6 +444,7 @@
 	<string name="data_scroll">Scroll positions</string>
 	<string name="data_merge">Merge with current</string>
 	<string name="no_ad_desc">Opt-out ads</string>
+	<string name="skip_guide_desc">Skip tutorials</string>
 	<string name="tabs_desc">Tabs settings…</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>
@@ -463,15 +480,14 @@
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
-	<string name="modifier" translatable="false">Modifier</string>
 	<string name="malformed">Malformed file name in zip</string>
 	<string name="legal">Legal</string>
 	<string name="legal_uni" translatable="false">Unicode®</string>
 	<string name="legal_uni2">This application includes a modified version of Unicode Data File.
-Copyright © 1991-2022 Unicode, Inc. All rights reserved.
+Copyright © 1991-2023 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.12.1</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.13.0</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

@@ -358,13 +358,28 @@
 	<string name="script_2B740">2B740 CJK統合漢字拡張D</string>
 	<string name="script_2B820">2B820 CJK統合漢字拡張E</string>
 	<string name="script_2CEB0">2CEB0 CJK統合漢字拡張F</string>
-	<string name="script_2F800">2F800 CJK互換漢字補助</string>
+    <string name="script_2EBF0">2EBF0 CJK統合漢字拡張I</string>
+    <string name="script_2F800">2F800 CJK互換漢字補助</string>
 	<string name="script_30000">30000 CJK統合漢字拡張G</string>
     <string name="script_31350">31350 CJK統合漢字拡張H</string>
 	<string name="script_E0000">E0000 タグ</string>
 	<string name="script_E0100">E0100 字形選択子補助</string>
 	<string name="script_F0000">F0000 私用領域補助A</string>
 	<string name="script_100000">100000 私用領域補助B</string>
+
+	<string name="guide_next">次へ</string>
+	<string name="guide_skip">スキップ</string>
+	<string name="guide_finish">完了</string>
+    <string name="guide_title_1">文字パッド</string>
+	<string name="guide_content_1">Unicode のすべての文字を閲覧できます。タップすると入力、長押しすると文字情報を表示します。</string>
+	<string name="guide_title_2">コピー / 共有 / 完了</string>
+	<string name="guide_content_2">入力が完了したら、Unicode 文字列をコピーまたは共有できます。</string>
+	<string name="guide_title_3">タブ</string>
+	<string name="guide_content_3">絵文字、検索、お気に入りなど、何種類ものパッドが用意されています。</string>
+	<string name="guide_title_4">フォントセレクタ</string>
+	<string name="guide_content_4">表示されないグリフ（字体）がある場合は、対応するフォントをダウンロードし選択してください。</string>
+	<string name="guide_title_5">設定</string>
+	<string name="guide_content_5">アプリの挙動と見た目をカスタマイズできます。再度このチュートリアルを見ることもできます。</string>
 
 	<string name="general">一般</string>
 	<string name="appearance">外観</string>
@@ -375,7 +390,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (15.0.0)</string>
+	<string name="version_latest">最新 (15.1.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>
@@ -385,6 +400,7 @@
 	<string name="download_desc">Notoフォントをダウンロード…</string>
 	<string name="download_uri">https://fonts.google.com/noto</string>
 	<string name="no_ad_desc">広告を非表示</string>
+	<string name="skip_guide_desc">チュートリアルをスキップ</string>
 	<string name="tabs_desc">タブ設定…</string>
 	<string name="shown_desc">表示タブ</string>
 	<string name="hidden_desc">非表示タブ</string>
@@ -419,7 +435,7 @@
 	<string name="malformed">ZIP内のファイル名が破損</string>
 	<string name="legal">法的表記</string>
 	<string name="legal_uni2">本アプリケーションはUnicode Data Fileの改変された版を含んでいます。
-Copyright © 1991-2022 Unicode, Inc. All rights reserved.
+Copyright © 1991-2023 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
     <string name="locale_default">デフォルト (%s)</string>

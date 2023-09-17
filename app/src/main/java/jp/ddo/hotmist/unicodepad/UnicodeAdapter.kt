@@ -94,7 +94,7 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
         return if (itemIndex == -1) -1L - titleIndex else getItemCodePoint(itemIndex)
     }
 
-    private fun getItemIndex(position: Int): Pair<Int, Int> {
+    protected fun getItemIndex(position: Int): Pair<Int, Int> {
         val titleIndex = searchTitlePosition(position)
         return if (titleIndex >= 0 && position == getTitlePosition(titleIndex) + titleIndex)
             -1 to titleIndex
@@ -282,13 +282,19 @@ abstract class UnicodeAdapter(protected val activity: Activity, private val db: 
 
     private var layoutManager: GridLayoutManager? = null
 
+    open fun instantiateSpanSizeLookup(context: Context, spanCount: Int): GridLayoutManager.SpanSizeLookup {
+        return object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (getItemViewType(position) != 1 || single) 1 else spanCount
+            }
+        }.also {
+            it.isSpanIndexCacheEnabled = true
+        }
+    }
+
     fun getLayoutManager(context: Context, spanCount: Int): GridLayoutManager {
         return GridLayoutManager(context, if (single) 1 else spanCount).also {
-            it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (getItemViewType(position) != 1 || single) 1 else spanCount
-                }
-            }
+            it.spanSizeLookup = instantiateSpanSizeLookup(context, spanCount)
             layoutManager = it
         }
     }

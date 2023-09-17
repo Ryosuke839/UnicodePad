@@ -665,8 +665,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                     runOnUiThread {
                         highTarget?.setBackgroundColor(resnormal)
                         highTarget = null
-                        notifyItemChanged(highlight)
-                        highlight = -1
+                        if (highlight != -1) {
+                            notifyItemChanged(highlight)
+                            highlight = -1
+                        }
                     }
                     false
                 }
@@ -705,6 +707,34 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 })
             }
             return layout
+        }
+    }
+
+    override fun instantiateSpanSizeLookup(context: Context, spanCount: Int): GridLayoutManager.SpanSizeLookup {
+        return object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (getItemViewType(position) != 1 || single) 1 else spanCount
+            }
+
+            override fun getSpanIndex(position: Int, spanCount: Int): Int {
+                val (itemIndex, titleIndex) = getItemIndex(position)
+                return if (titleIndex != -1) {
+                    0
+                } else {
+                    itemIndex % spanCount
+                }
+            }
+
+            override fun getSpanGroupIndex(adapterPosition: Int, spanCount: Int): Int {
+                val (itemIndex, titleIndex) = getItemIndex(adapterPosition)
+                return if (titleIndex != -1) {
+                    titleIndex + (adapterPosition - titleIndex) / spanCount
+                } else {
+                    adapterPosition - itemIndex + itemIndex / spanCount
+                }
+            }
+        }.also {
+            it.isSpanIndexCacheEnabled = false
         }
     }
 

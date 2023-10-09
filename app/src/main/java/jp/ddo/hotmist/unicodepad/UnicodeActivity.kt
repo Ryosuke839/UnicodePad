@@ -31,7 +31,6 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.provider.FontRequest
 import androidx.core.view.doOnLayout
@@ -53,7 +52,7 @@ import kotlin.math.min
 
 
 @Suppress("DEPRECATION")
-class UnicodeActivity : AppCompatActivity() {
+class UnicodeActivity : BaseActivity() {
     private lateinit var editText: EditText
     private lateinit var btnClear: ImageButton
     private lateinit var btnRow: LinearLayout
@@ -98,7 +97,6 @@ class UnicodeActivity : AppCompatActivity() {
                         }
                     }))
         }
-        setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setContentView(if (useEmoji == "null") R.layout.main else R.layout.main_emojicompat)
@@ -616,10 +614,6 @@ class UnicodeActivity : AppCompatActivity() {
         private const val MENU_ID_SHARE = 36
         private const val MENU_ID_SEND = 37
         private const val MAX_HISTORY = 256
-        private val THEME = intArrayOf(
-                R.style.Theme,
-                R.style.Theme_Light,
-                R.style.Theme_Light_DarkActionBar)
         private var fontsize = 24.0f
         internal var univer = 1000
     }

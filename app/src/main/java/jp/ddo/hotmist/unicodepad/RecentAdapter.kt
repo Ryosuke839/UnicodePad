@@ -58,8 +58,8 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
     }
 
     fun rem(code: Int) {
-        val position = getPositionForItem(code)
-        if (position != RecyclerView.NO_POSITION) {
+        val position = mItemList.indexOf(code)
+        if (position != -1) {
             removeItem(position)
         }
     }

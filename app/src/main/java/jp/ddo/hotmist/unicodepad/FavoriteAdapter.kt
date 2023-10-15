@@ -44,13 +44,13 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
     override fun leave() {
     }
 
-    override fun getItemCodePoint(arg0: Int): Long {
-        return mItemList[arg0].toLong()
+    override fun getItemCodePoint(i: Int): Long {
+        return mItemList[i].toLong()
     }
 
     fun add(code: Int) {
-        val position = getPositionForItem(code)
-        if (position != RecyclerView.NO_POSITION) {
+        val position = mItemList.indexOf(code)
+        if (position != -1) {
             changeItemPosition(position, 0)
         } else {
             addItem(itemCount, code)
@@ -58,8 +58,8 @@ internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: 
     }
 
     fun rem(code: Int) {
-        val position = getPositionForItem(code)
-        if (position != RecyclerView.NO_POSITION) {
+        val position = mItemList.indexOf(code)
+        if (position != -1) {
             removeItem(position)
         }
     }

@@ -17,85 +17,57 @@ package jp.ddo.hotmist.unicodepad
 
 import android.app.Activity
 import android.content.SharedPreferences
-import com.mobeta.android.dslv.DragSortListView.DropListener
-import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
-    private var list = ArrayList<Int>()
-    private var temp = list
+internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : DragListUnicodeAdapter<Int>(activity, db, single) {
+    override fun getUniqueItemId(position: Int): Long {
+        return getItemCodePoint(position)
+    }
+
+    override fun onItemDragStarted(position: Int) {
+    }
+
+    override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
+    }
+
+    override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
+    }
+
     override fun name(): Int {
         return R.string.recent
     }
 
     override fun show() {
-        truncate()
-        invalidateViews()
     }
 
     override fun leave() {
-        commit()
-        invalidateViews()
     }
 
-    override fun getCount(): Int {
-        return temp.size
-    }
-
-    override fun getItemCodePoint(arg0: Int): Long {
-        return temp[temp.size - arg0 - 1].toLong()
+    override fun getItemCodePoint(i: Int): Long {
+        return mItemList[i].toLong()
     }
 
     fun add(code: Int) {
-        runOnUiThread {
-            list.remove(Integer.valueOf(code))
-            list.add(code)
-            if (list.size >= maxitems) list.removeAt(0)
-            invalidateViews()
+        val position = mItemList.indexOf(code)
+        if (position != -1) {
+            changeItemPosition(position, 0)
+        } else {
+            addItem(0, code)
         }
     }
 
     fun rem(code: Int) {
-        runOnUiThread {
-            list.remove(Integer.valueOf(code))
-            if (list !== temp) temp.remove(Integer.valueOf(code))
-            invalidateViews()
-        }
-    }
-
-    private fun commit() {
-        runOnUiThread {
-            if (list !== temp) temp = list
-        }
-    }
-
-    private fun truncate() {
-        runOnUiThread {
-            if (list === temp) temp = ArrayList(list)
+        val position = getPositionForItem(code)
+        if (position != RecyclerView.NO_POSITION) {
+            removeItem(position)
         }
     }
 
     override fun save(edit: SharedPreferences.Editor) {
         var str = ""
-        for (i in list) str += String(Character.toChars(i))
+        for (i in mItemList) str += String(Character.toChars(i))
         edit.putString("rec", str)
-    }
-
-    override fun drop(from: Int, to: Int) {
-        runOnUiThread {
-            list = temp
-            val i = temp.removeAt(temp.size - from - 1)
-            temp.add(temp.size - to, i)
-            truncate()
-            invalidateViews()
-        }
-    }
-
-    override fun remove(which: Int) {
-        runOnUiThread {
-            list.remove(temp.removeAt(temp.size - which - 1))
-            invalidateViews()
-        }
     }
 
     companion object {
@@ -112,9 +84,10 @@ internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: Na
             i += Character.charCount(code)
         }
         i = 0
+        mItemList = ArrayList()
         while (i < str.length) {
             val code = str.codePointAt(i)
-            if (--num < maxitems) list.add(code)
+            if (--num < maxitems) mItemList.add(code)
             i += Character.charCount(code)
         }
     }

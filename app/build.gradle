@@ -54,7 +54,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.emoji2:emoji2:1.4.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'com.mobeta.android.dslv:library:0.9.0'
+    implementation 'com.github.woxthebox:draglistview:1.7.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.github.mreram:showcaseview:1.4.1'
 

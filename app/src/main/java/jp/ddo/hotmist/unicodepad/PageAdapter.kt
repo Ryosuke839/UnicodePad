@@ -21,24 +21,31 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.text.style.TextAppearanceSpan
-import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.PagerTabStrip
 import androidx.viewpager.widget.ViewPager
-import com.mobeta.android.dslv.DragSortController
-import com.mobeta.android.dslv.DragSortListView
-import com.mobeta.android.dslv.DragSortListView.DropListener
-import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import com.woxthebox.draglistview.DragListView
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
 class PageAdapter(private val activity: UnicodeActivity, private val pref: SharedPreferences, private val edit: EditText) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
+    class DynamicDragListView(context: android.content.Context?, attrs: android.util.AttributeSet?) : DragListView(context, attrs) {
+        init {
+            super.onFinishInflate()
+        }
+
+        @SuppressLint("MissingSuperCall")
+        override fun onFinishInflate() {
+        }
+    }
+
     private var numPage: Int
     private val layouts = arrayOfNulls<View>(MAX_VIEWS)
     private val views = arrayOfNulls<ViewGroup>(MAX_VIEWS)
@@ -100,47 +107,34 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEdit.single = bedt
         bemoji = pref.getString("single_emoji", "false") == "true"
         adapterEmoji.single = bemoji
-        return if (adapters[position] is DropListener || adapters[position] is RemoveListener) {
-            if (adapters[position].single) {
-                DragSortListView(activity, null).also { view ->
-                    val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE, 0, R.id.HANDLE_ID)
-                    controller.isRemoveEnabled = true
-                    controller.removeMode = DragSortController.FLING_REMOVE
-                    controller.isSortEnabled = true
-                    controller.setBackgroundColor(TypedValue().also { tv ->
-                        activity.theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
-                    }.data)
-                    view.setFloatViewManager(controller)
-                    view.setOnTouchListener(controller)
-                    view.setDropListener(adapters[position] as? DropListener)
-                    view.setRemoveListener(adapters[position] as? RemoveListener)
+        return adapters[position].let { adapter ->
+            adapter.setListener(this)
+            if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
+                DynamicDragListView(activity, null).also { view ->
+                    view.setLayoutManager(LinearLayoutManager(activity))
+                    view.setDragListListener(adapter)
+                    view.setAdapter(adapter, false)
+                    view.setCanDragHorizontally(false)
+                    view.setCanDragVertically(true)
+                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    views[position] = view
+                    adapter.instantiate(view).also { layout ->
+                        collection.addView(layout, 0)
+                        layouts[position] = layout
+                    }
                 }
             } else {
-                GridView(activity).also { view ->
-                    view.numColumns = column
-                }
-            }.let { view ->
-                view.adapter = adapters[position].asBaseAdapter()
-                view.onItemClickListener = this
-                view.onItemLongClickListener = this
-                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                views[position] = view
-                adapters[position].instantiate(view).also { layout ->
-                    collection.addView(layout, 0)
-                    layouts[position] = layout
-                }
-            }
-        } else {
-            RecyclerView(activity).let { view ->
-                view.adapter = adapters[position]
-                view.layoutManager = adapters[position].getLayoutManager(activity, column)
-                adapters[position].setListener(this)
-                view.adapter = adapters[position]
-                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                views[position] = view
-                adapters[position].instantiate(view).also { layout ->
-                    collection.addView(layout, 0)
-                    layouts[position] = layout
+                check(adapter is RecyclerView.Adapter<*>)
+                RecyclerView(activity).let { view ->
+                    view.adapter = adapter
+                    view.layoutManager = adapter.getLayoutManager(activity, column)
+                    view.adapter = adapter
+                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    views[position] = view
+                    adapter.instantiate(view).also { layout ->
+                        collection.addView(layout, 0)
+                        layouts[position] = layout
+                    }
                 }
             }
         }
@@ -158,7 +152,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        onItemClick(((if (parent is DragSortListView) parent.inputAdapter else parent?.adapter) as? BaseUnicodeAdapter?)?.getBaseAdapter(), position, id)
+        onItemClick(parent?.adapter as? UnicodeAdapter, position, id)
     }
 
     fun onItemClick(adapter: UnicodeAdapter?, position: Int, id: Long) {
@@ -175,7 +169,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
-        onItemLongClick(((if (parent is DragSortListView) parent.inputAdapter else parent.adapter) as BaseUnicodeAdapter).getBaseAdapter(), position)
+        onItemLongClick(parent.adapter as UnicodeAdapter, position)
         return true
     }
 

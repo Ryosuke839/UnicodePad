@@ -17,92 +17,70 @@ package jp.ddo.hotmist.unicodepad
 
 import android.app.Activity
 import android.content.SharedPreferences
-import com.mobeta.android.dslv.DragSortListView.DropListener
-import com.mobeta.android.dslv.DragSortListView.RemoveListener
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single), DropListener, RemoveListener {
-    private var list: ArrayList<Int>
-    private var temp: ArrayList<Int>
+internal class FavoriteAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : DragListUnicodeAdapter<Int>(activity, db, single) {
+    override fun getUniqueItemId(position: Int): Long {
+        return getItemCodePoint(position)
+    }
+
+    override fun onItemDragStarted(position: Int) {
+    }
+
+    override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
+    }
+
+    override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
+    }
+
     override fun name(): Int {
         return R.string.favorite
     }
 
     override fun show() {
-        truncate()
-        invalidateViews()
     }
 
     override fun leave() {
-        commit()
-        invalidateViews()
-    }
-
-    override fun getCount(): Int {
-        return temp.size
     }
 
     override fun getItemCodePoint(arg0: Int): Long {
-        return temp[arg0].toLong()
+        return mItemList[arg0].toLong()
     }
 
     fun add(code: Int) {
-        list.remove(Integer.valueOf(code))
-        list.add(code)
-    }
-
-    fun rem(code: Int) {
-        list.remove(Integer.valueOf(code))
-    }
-
-    private fun commit() {
-        runOnUiThread {
-            if (list !== temp) {
-                temp = list
-            }
+        val position = getPositionForItem(code)
+        if (position != RecyclerView.NO_POSITION) {
+            changeItemPosition(position, 0)
+        } else {
+            addItem(itemCount, code)
         }
     }
 
-    private fun truncate() {
-        runOnUiThread {
-            if (list === temp) temp = ArrayList(list)
+    fun rem(code: Int) {
+        val position = getPositionForItem(code)
+        if (position != RecyclerView.NO_POSITION) {
+            removeItem(position)
         }
     }
 
     fun isFavorite(code: Int): Boolean {
-        return list.contains(code)
+        return mItemList.contains(code)
     }
 
     override fun save(edit: SharedPreferences.Editor) {
         var str = ""
-        for (i in list) str += String(Character.toChars(i))
+        for (i in mItemList) str += String(Character.toChars(i))
         edit.putString("fav", str)
     }
 
-    override fun drop(from: Int, to: Int) {
-        runOnUiThread {
-            list = temp
-            list.add(to, list.removeAt(from))
-            truncate()
-            invalidateViews()
-        }
-    }
-
-    override fun remove(which: Int) {
-        runOnUiThread {
-            list.remove(temp.removeAt(which))
-            invalidateViews()
-        }
-    }
-
     init {
-        list = ArrayList()
-        temp = list
+        mItemList = ArrayList()
         val str = pref.getString("fav", null) ?: ""
         var i = 0
         while (i < str.length) {
             val code = str.codePointAt(i)
-            list.add(code)
+            mItemList.add(code)
             i += Character.charCount(code)
         }
     }

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woxthebox.draglistview.DragItemAdapter
 import com.woxthebox.draglistview.DragListView
 import java.util.*
+import kotlin.collections.ArrayList
 
 interface UnicodeAdapter {
     val activity: Activity
@@ -50,6 +51,10 @@ interface UnicodeAdapter {
 
     fun destroy() {
         view = null
+    }
+
+    fun freeze(): UnicodeAdapter {
+        return this
     }
 
     fun invalidateViews()
@@ -346,6 +351,35 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
     override val reslist = TypedValue().also {
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
+
+    class ClonedDragListUnicodeAdapter<T>(base: DragListUnicodeAdapter<T>) : DragListUnicodeAdapter<Int>(base.activity, base.db, base.single) {
+        init {
+            mItemList = ArrayList()
+            for (i in base.mItemList.indices) {
+                mItemList.add(base.getItemCodePoint(i).toInt())
+            }
+        }
+
+        override fun getUniqueItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun onItemDragStarted(position: Int) {
+        }
+
+        override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
+        }
+
+        override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
+        }
+
+        override fun getItemCodePoint(i: Int): Long {
+            return mItemList[i].toLong()
+        }
+    }
+    override fun freeze(): UnicodeAdapter {
+        return ClonedDragListUnicodeAdapter(this)
+    }
 
     override fun invalidateViews() {
         notifyDataSetChanged()

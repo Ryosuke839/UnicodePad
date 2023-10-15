@@ -187,7 +187,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         layoutParams.gravity = Gravity.TOP
         val pager = ViewPager(activity)
         pager.addView(tab, layoutParams)
-        val adapter = CharacterAdapter(activity, ua, tf, locale, db, adapterFavorite)
+        val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
         pager.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (activity.resources.displayMetrics.scaledDensity * (CharacterAdapter.fontsize * 1.8f + TextAppearanceSpan(activity, android.R.style.TextAppearance_Small).textSize * 2.4f + 32f)).toInt())

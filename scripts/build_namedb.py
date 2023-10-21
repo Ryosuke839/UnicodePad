@@ -150,14 +150,14 @@ def main():
           print(exp)
           raise
         if m_tone:
-          exp = 'UPDATE emoji_table1510 SET tone = 11034 WHERE id = \'{}\';'.format(m_tone.group(1) + re.sub(r' (1F3F[B-F])', '', m_tone.group(3)))
+          exp = 'UPDATE emoji_table1510 SET tone = 11034 WHERE id = \'{0}\' or id = \'{0} FE0F\';'.format(m_tone.group(1) + re.sub(r' (1F3F[B-F])', '', m_tone.group(3)))
           try:
             cur.execute(exp)
           except:
             print(exp)
             raise
         if m_direction:
-          exp = 'UPDATE emoji_table1510 SET direction = 11013 WHERE id = \'{}\';'.format(m_direction.group(1))
+          exp = 'UPDATE emoji_table1510 SET direction = 11013 WHERE id = \'{0}\' or id = \'{0} FE0F\';'.format(m_direction.group(1))
           try:
             cur.execute(exp)
           except:

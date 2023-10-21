@@ -150,14 +150,14 @@ def main():
           print(exp)
           raise
         if m_tone:
-          exp = 'UPDATE emoji_table1510 SET tone = 11034 WHERE id = \'{}\';'.format(m_tone.group(1) + re.sub(r' (1F3F[B-F])', '', m_tone.group(3)))
+          exp = 'UPDATE emoji_table1510 SET tone = 11034 WHERE id = \'{0}\' or id = \'{0} FE0F\';'.format(m_tone.group(1) + re.sub(r' (1F3F[B-F])', '', m_tone.group(3)))
           try:
             cur.execute(exp)
           except:
             print(exp)
             raise
         if m_direction:
-          exp = 'UPDATE emoji_table1510 SET direction = 11013 WHERE id = \'{}\';'.format(m_direction.group(1))
+          exp = 'UPDATE emoji_table1510 SET direction = 11013 WHERE id = \'{0}\' or id = \'{0} FE0F\';'.format(m_direction.group(1))
           try:
             cur.execute(exp)
           except:
@@ -166,11 +166,12 @@ def main():
       cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table1510\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table1510\';']:
-        print(cmd)
-        cur.execute(cmd)
-        r = cur.fetchone()
-        print(r)
+      cur.execute('CREATE TABLE version_code as SELECT 58 as version;')
+      con.commit()
+      print('SELECT * FROM \'version_code\';')
+      cur.execute('SELECT * FROM \'version_code\';')
+      r = cur.fetchone()
+      print(r)
 
 if __name__ == '__main__':
   main()

@@ -50,7 +50,7 @@
 		android:key="app"
 		android:title="@string/appearance">
 		<ListPreference
-			android:defaultValue="2131492983"
+			android:defaultValue="2131492986"
 			android:dialogTitle="@string/theme_desc"
 			android:entries="@array/theme"
 			android:entryValues="@array/theme_val"

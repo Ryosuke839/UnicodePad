@@ -683,6 +683,8 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                             return
                         var firstItem = firstVisibleItem
                         val titleIndex = searchTitlePosition(firstItem)
+                        if (titleIndex == -1)
+                            return
                         firstItem -= titleIndex
                         if (firstItem != getTitlePosition(titleIndex)) firstItem -= 1
                         val e2 = fromIndex.floorEntry(firstItem) ?: return

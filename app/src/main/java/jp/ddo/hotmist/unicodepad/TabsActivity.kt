@@ -17,12 +17,10 @@ package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woxthebox.draglistview.DragListView
 
-class TabsActivity : AppCompatActivity() {
+class TabsActivity : BaseActivity() {
     class DynamicDragListView(context: android.content.Context?, attrs: android.util.AttributeSet?) : DragListView(context, attrs) {
         init {
             super.onFinishInflate()
@@ -33,8 +31,8 @@ class TabsActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(THEME[(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
         val view = DynamicDragListView(this, null)
         val adapter = TabsAdapter(this)
@@ -49,12 +47,5 @@ class TabsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
-    }
-
-    companion object {
-        private val THEME = intArrayOf(
-                R.style.Theme,
-                R.style.Theme_Light,
-                R.style.Theme_Light_DarkActionBar)
     }
 }

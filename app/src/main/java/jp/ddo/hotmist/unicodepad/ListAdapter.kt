@@ -21,10 +21,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
-import android.content.res.Resources
+import android.content.res.Configuration
 import android.database.DataSetObserver
 import android.graphics.*
-import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -540,11 +539,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         val jmap = jump.context.resources.getStringArray(R.array.codes).associate {
                             Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
                         }
-                        val jdef = jump.context.resources.let {
-                            jump.context.createConfigurationContext(jump.context.resources.configuration.apply { setLocale(Locale.US) }).resources
-                        }.getStringArray(R.array.codes).associate {
-                            Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
-                        }
+                        val jdef = jump.context.createConfigurationContext(Configuration().apply { setLocale(Locale.US) }).resources
+                            .getStringArray(R.array.codes).associate {
+                                Integer.valueOf(it.substring(0, it.indexOf(' ')), 16) to it.substring(it.indexOf(' ') + 1)
+                            }
                         val jstr = fromCodePoint.keys.map { JumpItem(it, jmap.getValue(it), jdef.getValue(it)) }.toTypedArray()
                         val adp = ArrayAdapter(jump.context, android.R.layout.simple_spinner_item, jstr)
                         adp.setDropDownViewResource(R.layout.spinner_drop_down_item)

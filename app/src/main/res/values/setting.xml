@@ -85,11 +85,13 @@
 		<item>@string/theme_dark</item>
 		<item>@string/theme_light</item>
 		<item>@string/theme_darktitle</item>
+		<item>@string/theme_system</item>
 	</string-array>
 	<string-array name="theme_val">
 		<item>2131492983</item>
 		<item>2131492984</item>
 		<item>2131492985</item>
+		<item>2131492986</item>
 	</string-array>
 	<string-array name="scroll" tools:ignore="MissingTranslation">
 		<item>@string/scroll_never</item>

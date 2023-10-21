@@ -441,6 +441,7 @@
 	<string name="theme_dark">어둡게</string>
 	<string name="theme_light">밝게</string>
 	<string name="theme_darktitle">밝게 + 제목 표시줄 어둡게</string>
+	<string name="theme_system">시스템 기본값</string>
 
 	<string name="theme_title">재시작 후 적용됨</string>
 	<string name="list_title">목록 탭은 숨길 수 없음</string>

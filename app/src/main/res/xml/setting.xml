@@ -55,7 +55,6 @@
 			android:entries="@array/theme"
 			android:entryValues="@array/theme_val"
 			android:key="theme"
-			android:summary="@string/theme_title"
 			android:title="@string/theme_desc" />
 		<CheckBoxPreference
 			android:defaultValue="false"

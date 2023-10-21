@@ -132,17 +132,9 @@ class NameDatabase(context: Context) {
             return try {
                 val db = SQLiteDatabase.openDatabase(context.getFileStreamPath(dbpath).absolutePath, null, SQLiteDatabase.OPEN_READONLY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
                 try {
-                    db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='name_table' OR name='emoji_table1510';", null).use { cur ->
+                    db.rawQuery("SELECT * FROM version_code;", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 2) throw SQLiteException()
-                    }
-                    db.rawQuery("SELECT COUNT(*) FROM 'name_table';", null).use { cur ->
-                        cur.moveToFirst()
-                        if (cur.getInt(0) != 34936) throw SQLiteException()
-                    }
-                    db.rawQuery("SELECT COUNT(*) FROM 'emoji_table1510';", null).use { cur ->
-                        cur.moveToFirst()
-                        if (cur.getInt(0) != 3773) throw SQLiteException()
+                        if (cur.getInt(0) != 58) throw SQLiteException()
                     }
                 } catch (e: SQLiteException) {
                     db.close()

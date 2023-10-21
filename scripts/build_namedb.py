@@ -166,11 +166,12 @@ def main():
       cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      for cmd in ['SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'name_table\' OR name=\'emoji_table1510\'', 'SELECT COUNT(*) FROM \'name_table\';', 'SELECT COUNT(*) FROM \'emoji_table1510\';']:
-        print(cmd)
-        cur.execute(cmd)
-        r = cur.fetchone()
-        print(r)
+      cur.execute('CREATE TABLE version_code as SELECT 58 as version;')
+      con.commit()
+      print('SELECT * FROM \'version_code\';')
+      cur.execute('SELECT * FROM \'version_code\';')
+      r = cur.fetchone()
+      print(r)
 
 if __name__ == '__main__':
   main()

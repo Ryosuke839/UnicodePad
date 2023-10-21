@@ -25,6 +25,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import java.util.*
+import kotlin.math.min
 
 internal class CompleteAdapter(context: Context, pref: SharedPreferences) : BaseAdapter(), Filterable {
     private val lock = Any()
@@ -48,7 +49,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
 
     fun save(edit: SharedPreferences.Editor) {
         var str = ""
-        for (s in list) str += """
+        for (s in list.subList(0, min(list.size, 255))) str += """
      $s
      
      """.trimIndent()
@@ -60,7 +61,7 @@ internal class CompleteAdapter(context: Context, pref: SharedPreferences) : Base
     }
 
     override fun getItem(position: Int): Any {
-        return current + list[position] + " "
+        return current + list[position]
     }
 
     override fun getItemId(position: Int): Long {

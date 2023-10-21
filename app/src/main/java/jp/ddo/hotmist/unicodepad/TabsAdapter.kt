@@ -15,75 +15,56 @@
 */
 package jp.ddo.hotmist.unicodepad
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
-import android.graphics.Typeface
-import android.util.TypedValue
-import androidx.preference.PreferenceManager
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.*
-import com.mobeta.android.dslv.DragSortListView.DropListener
+import androidx.preference.PreferenceManager
+import com.woxthebox.draglistview.DragItemAdapter
+import com.woxthebox.draglistview.DragListView
 import java.util.*
 import kotlin.math.max
 
-class TabsAdapter internal constructor(private val activity: Activity, private val list: AbsListView?) : BaseAdapter(), View.OnClickListener, DropListener {
+
+class TabsAdapter internal constructor(private val activity: Activity) : DragItemAdapter<Int, TabsAdapter.ViewHolder>(), OnClickListener, DragListView.DragListListener {
     private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
     private val idx: ArrayList<Int> = ArrayList(NUM_TABS + 2)
     private val single: ArrayList<Boolean> = ArrayList(NUM_TABS)
     private var shownNum = pref.getInt("cnt_shown", NUM_TABS)
-    override fun getCount(): Int {
-        return NUM_TABS + 2
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return if (viewType == 0) {
+            HeaderViewHolder(activity.layoutInflater.inflate(R.layout.spinwidget_title, parent, false))
+        } else {
+            ItemViewHolder(activity.layoutInflater.inflate(R.layout.spinwidget, parent, false).also {
+                it.findViewById<RadioButton>(R.id.tabs_multiple).setOnClickListener(this)
+                it.findViewById<RadioButton>(R.id.tabs_single).setOnClickListener(this)
+            })
+        }
     }
 
-    override fun getViewTypeCount(): Int {
-        return 2
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (holder is HeaderViewHolder) {
+            holder.title.setText(if (position == 0) R.string.shown_desc else R.string.hidden_desc)
+        } else if (holder is ItemViewHolder) {
+            val i = idx[position]
+            holder.title.setText(RESOURCES[i])
+            holder.multiple.isChecked = !single[i]
+            holder.multiple.tag = i
+            holder.single.isChecked = single[i]
+            holder.single.tag = i
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0) return 0
-        return if (position == shownNum + 1) 0 else 1
+        return if (idx[position] < 0) 0 else 1
     }
 
-    override fun getItem(i: Int): Any {
-        return Any()
-    }
-
-    override fun getItemId(i: Int): Long {
-        return idx[i].toLong()
-    }
-
-    @SuppressLint("InflateParams")
-    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        return if (getItemViewType(i) == 0) {
-            (view as TextView? ?: TextView(activity).also {
-                it.setTextColor(TypedValue().also { tv ->
-                    activity.theme.resolveAttribute(android.R.attr.textColorLink, tv, true)
-                }.data)
-                it.typeface = Typeface.DEFAULT_BOLD
-                (activity.resources.displayMetrics.density * 16).toInt().let { padding ->
-                    it.setPadding(padding, padding / 2, padding, padding / 2)
-                }
-            }).also {
-                it.setText(if (i == 0) R.string.shown_desc else R.string.hidden_desc)
-            }
-        } else {
-            (view ?: activity.layoutInflater.inflate(R.layout.spinwidget, null).also {
-                it.findViewById<RadioButton>(R.id.tabs_multiple).setOnClickListener(this)
-                it.findViewById<RadioButton>(R.id.tabs_single).setOnClickListener(this)
-            }).also {
-                it.findViewById<TextView>(R.id.tabs_title).setText(RESOURCES[idx[i]])
-                it.findViewById<RadioButton>(R.id.tabs_multiple).let { rb ->
-                    rb.isChecked = !single[idx[i]]
-                    rb.tag = idx[i]
-                }
-                it.findViewById<RadioButton>(R.id.tabs_single).let { rb ->
-                    rb.isChecked = single[idx[i]]
-                    rb.tag = idx[i]
-                }
-            }
-        }
+    override fun getUniqueItemId(position: Int): Long {
+        return idx[position].toLong()
     }
 
     override fun onClick(view: View) {
@@ -94,18 +75,22 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
         edit.apply()
     }
 
-    override fun drop(from: Int, to: Int) {
-        if (idx[from] == 1 && to > shownNum) {
-            Toast.makeText(activity, R.string.list_title, Toast.LENGTH_SHORT).show()
+    override fun onItemDragStarted(position: Int) {
+    }
+
+    override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
+    }
+
+    override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
+        if (idx[toPosition] == 1 && toPosition > shownNum || idx[0] != -2) {
+            idx.add(max(fromPosition, 1), idx.removeAt(toPosition))
+            notifyItemRangeChanged(fromPosition, toPosition - fromPosition + 1)
+            if (idx[0] == -2) {
+                Toast.makeText(activity, R.string.list_title, Toast.LENGTH_SHORT).show()
+            }
             return
         }
-        if (from < shownNum + 1) --shownNum
-        if (shownNum == 0) {
-            ++shownNum
-            return
-        }
-        if (to <= shownNum + 1) ++shownNum
-        idx.add(max(to, 1), idx.removeAt(from))
+        shownNum = idx.indexOf(-3) - 1
         val edit = pref.edit()
         edit.putInt("cnt_shown", shownNum)
         for (i in 1 until NUM_TABS + 2) {
@@ -115,14 +100,25 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
             edit.putInt("ord_" + KEYS[idx[i]], ord)
         }
         edit.apply()
-        list?.invalidateViews()
+    }
+
+    abstract class ViewHolder(itemView: View) : DragItemAdapter.ViewHolder(itemView, R.id.HANDLE_ID, false)
+
+    class HeaderViewHolder(itemView: View) : ViewHolder(itemView) {
+        val title: TextView = itemView.findViewById(R.id.tabs_title)
+    }
+
+    class ItemViewHolder(itemView: View) : ViewHolder(itemView) {
+        val title: TextView = itemView.findViewById(R.id.tabs_title)
+        val multiple: RadioButton = itemView.findViewById(R.id.tabs_multiple)
+        val single: RadioButton = itemView.findViewById(R.id.tabs_single)
     }
 
     init {
         for (i in 0 until NUM_TABS + 2) idx.add(-2)
         for (i in 0 until NUM_TABS) single.add(false)
-        idx[0] = -1
-        idx[shownNum + 1] = -1
+        idx[0] = -2
+        idx[shownNum + 1] = -3
         for (i in 0 until NUM_TABS) {
             var ord = pref.getInt("ord_" + KEYS[i], i) + 1
             if (ord > shownNum) ++ord
@@ -132,6 +128,7 @@ class TabsAdapter internal constructor(private val activity: Activity, private v
             }
             single[i] = pref.getString("single_" + KEYS[i], null)?.toBoolean() ?: DEFAULTS[i]
         }
+        mItemList = idx
     }
 
     companion object {

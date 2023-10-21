@@ -43,7 +43,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 
-internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
+internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private data class FromIndex(val codePoint: Int, val block: Int)
     private data class FromCodePoint(val index: Int, val end: Int, val block: Int)
     private var count = 0
@@ -798,9 +798,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return jump?.adapter?.getItem(i).toString()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        val ret = holder.view
+        val ret = holder.itemView
         if (position == highlight) {
             highTarget?.setBackgroundColor(resnormal)
             highTarget = ret

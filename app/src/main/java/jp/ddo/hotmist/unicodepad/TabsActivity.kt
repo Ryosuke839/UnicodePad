@@ -21,6 +21,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.woxthebox.draglistview.DragListView
 
 class TabsActivity : BaseActivity() {
+    class DynamicDragListView(context: android.content.Context?, attrs: android.util.AttributeSet?) : DragListView(context, attrs) {
+        init {
+            super.onFinishInflate()
+        }
+
+        @SuppressLint("MissingSuperCall")
+        override fun onFinishInflate() {
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

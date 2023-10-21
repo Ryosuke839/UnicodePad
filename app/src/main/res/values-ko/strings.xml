@@ -372,15 +372,29 @@
 	<string name="script_F0000">F0000 사용자 영역 보충 A</string>
 	<string name="script_100000">100000 사용자 영역 보충 B</string>
 
+	<string name="guide_next">다음</string>
+	<string name="guide_skip">건너뛰기</string>
+	<string name="guide_finish">완료</string>
+	<string name="guide_title_1">문자판</string>
+	<string name="guide_content_1">Unicode의 모든 문자를 탐색할 수 있습니다. 짧게 눌러 문자를 입력하고 길게 눌러 문자 정보를 확인합니다.</string>
+	<string name="guide_title_2">복사 / 공유 / 완료</string>
+	<string name="guide_content_2">편집이 끝났다면, Unicode 문자열을 복사하거나 공유할 수 있습니다.</string>
+	<string name="guide_title_3">탭</string>
+	<string name="guide_content_3">이모지, 검색, 즐겨찾기 등 여러 문자판을 이용할 수 있습니다.</string>
+	<string name="guide_title_4">글꼴 선택기</string>
+	<string name="guide_content_4">글리프(렌더링한 문자)가 누락된 경우 적절한 글꼴을 내려받고 선택합니다.</string>
+	<string name="guide_title_5">설정</string>
+	<string name="guide_content_5">앱의 동작과 모양을 사용자 지정할 수 있습니다. 또 설정에서 이 안내를 다시 확인할 수 있습니다.</string>
+
 	<string name="general">일반</string>
 	<string name="appearance">표시</string>
 	<string name="behaviour">기능</string>
 	<string name="textsize_desc">편집 상자의 글자 크기</string>
 	<string name="column_desc">열 개수</string>
 	<string name="columnl_desc">열 개수 (가로모드)</string>
-
 	<string name="version_desc">Unicode 버전</string>
-	<string name="version_latest">최근 (15.1.0)</string>
+	
+	<string name="version_latest">최신 (15.1.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat으로 이모지 표시</string>
 	<string name="emojicompat_null">꺼짐</string>
@@ -406,6 +420,7 @@
 	<string name="data_scroll">스크롤 위치</string>
 	<string name="data_merge">현재 데이터와 합치기</string>
 	<string name="no_ad_desc">광고 숨기기</string>
+	<string name="skip_guide_desc">안내 건너뛰기</string>
 	<string name="tabs_desc">탭 설정…</string>
 	<string name="shown_desc">보이는 탭</string>
 	<string name="hidden_desc">숨긴 탭</string>
@@ -437,7 +452,8 @@
 	<string name="scroll_always">항상</string>
 
 	<string name="ime_desc">IME 비활성화</string>
-	<string name="clear_desc">초기화 버튼 보이기</string>
+	<string name="clear_desc">초기화 버튼 표시</string>
+	<string name="buttons_desc">버튼 줄 표시</string>
 	<string name="malformed">ZIP 파일 이름이 잘못됨</string>
 	<string name="legal">라이선스</string>
 	<string name="legal_uni2">This application includes a modified version of Unicode Data File.

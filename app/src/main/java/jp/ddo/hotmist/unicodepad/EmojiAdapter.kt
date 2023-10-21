@@ -26,7 +26,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : UnicodeAdapter(activity, db, single) {
+internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
     private var jump: Spinner? = null
     private lateinit var map: NavigableMap<Int, Int>
@@ -183,9 +183,9 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return grp[i]
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        if (holder is CharacterViewHolder) holder.characterView.drawSlash(false)
+        if (holder is UnicodeAdapter.CharacterViewHolder) holder.characterView.drawSlash(false)
     }
 
     override fun save(edit: SharedPreferences.Editor) {

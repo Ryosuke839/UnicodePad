@@ -18,47 +18,36 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.LocaleList
 import android.text.ClipboardManager
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.*
 
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        setTheme(THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
-        fragmentManager.beginTransaction().replace(android.R.id.content, MyPreferenceFragment()).commit()
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                .replace(android.R.id.content, MyPreferenceFragment())
+                .commit()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
-    }
-
-    override fun attachBaseContext(newBase: Context?) {
-        applyOverrideConfiguration(newBase?.resources?.configuration?.also {
-            it.setLocale(Locale.getDefault())
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                it.setLocales(LocaleList.getDefault())
-            }
-        })
-        super.attachBaseContext(newBase)
     }
 
     class MyPreferenceFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener {
@@ -168,7 +157,10 @@ class SettingActivity : AppCompatActivity() {
                 } catch (e: NumberFormatException) {
                     return false
                 }
-                if (key == "theme" || key == "emojicompat") {
+                if (key == "theme") {
+                    activity.recreate()
+                }
+                if (key == "emojicompat") {
                     Toast.makeText(activity, R.string.theme_title, Toast.LENGTH_SHORT).show()
                     activity.setResult(RESULT_FIRST_USER)
                 }
@@ -430,10 +422,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val THEME = intArrayOf(
-                androidx.appcompat.R.style.Theme_AppCompat,
-                androidx.appcompat.R.style.Theme_AppCompat_Light,
-                androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar)
         private const val SETTING_EXPORT_CODE = 43
         private const val SETTING_IMPORT_CODE = 44
     }

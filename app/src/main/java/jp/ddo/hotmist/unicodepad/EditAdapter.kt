@@ -16,28 +16,46 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.Activity
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AbsListView
 import android.widget.EditText
-import com.mobeta.android.dslv.DragSortListView.DropListener
-import com.mobeta.android.dslv.DragSortListView.RemoveListener
 import java.util.*
+import kotlin.streams.toList
 
-internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean, private val edit: EditText) : UnicodeAdapter(activity, db, single), TextWatcher, DropListener, RemoveListener {
-    private val list: ArrayList<Int> = ArrayList()
+internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean, private val edit: EditText) : DragListUnicodeAdapter<Long>(activity, db, single), TextWatcher {
     private var suspend = false
-    override fun instantiate(view: View): View {
-        val view = view as AbsListView
-        list.clear()
-        val str = edit.editableText.toString()
-        var i = 0
-        while (i < str.length) {
-            val code = str.codePointAt(i)
-            list.add(code)
-            i += Character.charCount(code)
+    private var sequence = 0L
+
+    private fun setString(s: CharSequence) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mItemList = s.codePoints().mapToLong { it.toLong() or (sequence++ shl 32) }.toList().toMutableList()
+        } else {
+            mItemList = ArrayList()
+            for (i in s.indices) {
+                if (Character.isLowSurrogate(s[i])) continue
+                mItemList.add(Character.codePointAt(s, i).toLong() or (sequence++ shl 32))
+            }
         }
+        notifyDataSetChanged()
+    }
+
+    private fun isSameString(s: CharSequence): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mItemList.map { it.toInt() } == s.codePoints().toList()
+        } else {
+            val list = ArrayList<Int>()
+            for (i in s.indices) {
+                if (Character.isLowSurrogate(s[i])) continue
+                list.add(Character.codePointAt(s, i))
+            }
+            mItemList.map { it.toInt() } == list
+        }
+    }
+
+    override fun instantiate(view: View): View {
+        setString(edit.editableText)
         edit.addTextChangedListener(this)
         return super.instantiate(view)
     }
@@ -49,13 +67,44 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
 
     fun updateString() {
         if (suspend) return
-        val str = edit.editableText.toString()
-        list.clear()
-        var i = 0
-        while (i < str.length) {
-            val code = str.codePointAt(i)
-            list.add(code)
-            i += Character.charCount(code)
+        setString(edit.editableText)
+    }
+
+    override fun getUniqueItemId(position: Int): Long {
+        return mItemList[position].toLong()
+    }
+
+    override fun onItemDragStarted(position: Int) {
+    }
+
+    override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
+    }
+
+    override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
+        runOnUiThread {
+            suspend = true
+            val count = Character.charCount(mItemList[toPosition].toInt())
+            val (from, to) = if (fromPosition < toPosition) {
+                val p = mItemList.subList(0, fromPosition).sumOf { ch ->
+                    Character.charCount(ch.toInt())
+                }
+                p to p + mItemList.subList(fromPosition, toPosition).sumOf { ch ->
+                    Character.charCount(ch.toInt())
+                }
+            } else {
+                val p = mItemList.subList(0, toPosition).sumOf { ch ->
+                    Character.charCount(ch.toInt())
+                }
+                p + mItemList.subList(toPosition + 1, fromPosition + 1).sumOf { ch ->
+                    Character.charCount(ch.toInt())
+                } to p
+            }
+            edit.editableText.delete(from, from + count)
+            edit.editableText.insert(to, String(Character.toChars(mItemList[toPosition].toInt())))
+            suspend = false
+            if (!isSameString(edit.editableText)) {
+                setString(edit.editableText)
+            }
         }
     }
 
@@ -63,70 +112,62 @@ internal class EditAdapter(activity: Activity, db: NameDatabase, single: Boolean
         return R.string.edit
     }
 
-    override fun getCount(): Int {
-        return list.size
-    }
-
     override fun getItemCodePoint(i: Int): Long {
-        return list[i].toLong()
+        return (mItemList[i] and 0x1FFFFF).toLong()
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if (suspend) return
-        if (before == 0 && count == 0) return
-        val str = s.toString()
-        list.clear()
-        var i = 0
-        while (i < str.length) {
-            val code = str.codePointAt(i)
-            list.add(code)
-            i += Character.charCount(code)
+        if (count == 0) return
+        val startCp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            s.subSequence(0, start).codePoints().count().toInt()
+        } else {
+            Character.codePointCount(s, 0, start)
         }
-        invalidateViews()
+        val cps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            s.subSequence(start, start + count).codePoints().toList()
+        } else {
+            val list = ArrayList<Int>()
+            for (i in 0 until count) {
+                if (Character.isLowSurrogate(s[start + i])) continue
+                list.add(Character.codePointAt(s, start + i))
+            }
+            list
+        }
+        cps.forEachIndexed { index, i ->
+            mItemList.add(startCp + index, i.toLong() or (sequence++ shl 32))
+        }
+        notifyItemRangeInserted(startCp, cps.size)
+        if (!isSameString(edit.editableText)) {
+            setString(edit.editableText)
+        }
     }
 
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        if (suspend) return
+        if (count == 0) return
+        if (!isSameString(edit.editableText)) {
+            setString(edit.editableText)
+        }
+        val startCp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            s.subSequence(0, start).codePoints().count().toInt()
+        } else {
+            Character.codePointCount(s, 0, start)
+        }
+        val countCp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            s.subSequence(start, start + count).codePoints().count().toInt()
+        } else {
+            Character.codePointCount(s, start, start + count)
+        }
+        for (i in 0 until countCp) {
+            mItemList.removeAt(startCp)
+        }
+        notifyItemRangeRemoved(startCp, countCp)
+    }
+
     override fun afterTextChanged(s: Editable) {}
-    override fun drop(from: Int, to: Int) {
-        runOnUiThread {
-            suspend = true
-            var fromBegin = 0
-            var fromEnd = 0
-            for (i in list.indices) {
-                if (i == from) fromBegin = fromEnd
-                fromEnd += Character.charCount(list[i])
-                if (i == from) break
-            }
-            edit.editableText.delete(fromBegin, fromEnd)
-            val ch = list.removeAt(from)
-            var toBegin = 0
-            for (i in list.indices) {
-                if (i == to) break
-                toBegin += Character.charCount(list[i])
-            }
-            edit.editableText.insert(toBegin, String(Character.toChars(ch)))
-            edit.editableText.replace(0, edit.editableText.length, edit.editableText)
-            suspend = false
-            list.add(to, ch)
-            invalidateViews()
-        }
-    }
 
-    override fun remove(which: Int) {
-        runOnUiThread {
-            suspend = true
-            var whichBegin = 0
-            var whichEnd = 0
-            for (i in list.indices) {
-                if (i == which) whichBegin = whichEnd
-                whichEnd += Character.charCount(list[i])
-                if (i == which) break
-            }
-            edit.editableText.delete(whichBegin, whichEnd)
-            edit.editableText.replace(0, edit.editableText.length, edit.editableText)
-            suspend = false
-            list.removeAt(which)
-            invalidateViews()
-        }
+    init {
+        mItemList = ArrayList()
     }
 }

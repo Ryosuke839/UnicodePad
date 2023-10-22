@@ -17,38 +17,35 @@ package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
-import com.mobeta.android.dslv.DragSortController
-import com.mobeta.android.dslv.DragSortListView
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.woxthebox.draglistview.DragListView
 
-class TabsActivity : AppCompatActivity() {
+class TabsActivity : BaseActivity() {
+    class DynamicDragListView(context: android.content.Context?, attrs: android.util.AttributeSet?) : DragListView(context, attrs) {
+        init {
+            super.onFinishInflate()
+        }
+
+        @SuppressLint("MissingSuperCall")
+        override fun onFinishInflate() {
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(THEME[(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983])
         super.onCreate(savedInstanceState)
-        val view = DragSortListView(this, null)
-        val controller = DragSortController(view, R.id.HANDLE_ID, DragSortController.ON_DRAG, DragSortController.FLING_REMOVE)
-        controller.isSortEnabled = true
-        controller.setBackgroundColor(TypedValue().also { tv ->
-            theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
-        }.data)
-        view.setFloatViewManager(controller)
-        view.setOnTouchListener(controller)
-        view.adapter = TabsAdapter(this, view)
+        val view = DynamicDragListView(this, null)
+        val adapter = TabsAdapter(this)
+        view.setLayoutManager(LinearLayoutManager(this))
+        view.setDragListListener(adapter)
+        view.setAdapter(adapter, true)
+        view.setCanDragHorizontally(false)
+        view.setCanDragVertically(true)
         setContentView(view)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
-    }
-
-    companion object {
-        private val THEME = intArrayOf(
-                R.style.Theme,
-                R.style.Theme_Light,
-                R.style.Theme_Light_DarkActionBar)
     }
 }

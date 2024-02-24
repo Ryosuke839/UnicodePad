@@ -62,7 +62,7 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
                 val spanned = emojiCompat.process(str)
                 if (spanned is Spannable) {
                     val spans = spanned.getSpans(0, str.length, EmojiSpan::class.java)
-                    if (spans.isNotEmpty()) {
+                    if (spans.count() == 1) {
                         span = spans[0]
                     }
                 }

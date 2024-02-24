@@ -32,11 +32,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.res.getResourceIdOrThrow
-import androidx.core.provider.FontRequest
 import androidx.core.view.doOnLayout
+import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
-import androidx.emoji2.text.FontRequestEmojiCompatConfig
 import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
@@ -80,11 +79,7 @@ class UnicodeActivity : BaseActivity() {
         onActivityResult(-1, 0, null)
         val useEmoji = pref.getString("emojicompat", "false")
         if (useEmoji != "null") {
-            EmojiCompat.init(FontRequestEmojiCompatConfig(this, FontRequest(
-                    "com.google.android.gms.fonts",
-                    "com.google.android.gms",
-                    "Noto Color Emoji Compat",
-                    R.array.com_google_android_gms_fonts_certs))
+            EmojiCompat.init(BundledEmojiCompatConfig(this)
                     .setReplaceAll(useEmoji == "true")
                     .registerInitCallback(object : InitCallback() {
                         override fun onInitialized() {

@@ -107,7 +107,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
                 setDropDownViewResource(R.layout.spinner_drop_down_item)
             }
             adapter = adp
-            setSelection(adp.getPosition(Character.toChars(tone).concatToString()))
+            setSelection(adp.getPosition(Character.toChars(direction).concatToString() + "\uFE0F"))
             onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
                     val item = adp.getItem(position)!!.codePointAt(0)
@@ -191,6 +191,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     override fun save(edit: SharedPreferences.Editor) {
         edit.putInt("emoji", current)
         edit.putInt("tone", tone)
+        edit.putInt("emoji_direction", direction)
     }
 
     override fun getCount(): Int {

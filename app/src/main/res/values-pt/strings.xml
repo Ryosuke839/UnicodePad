@@ -379,30 +379,8 @@
 	<string name="column_desc">Colunas em grade</string>
 	<string name="columnl_desc">Colunas em grade (modo paisagem)</string>
 
-	<string name="column_1" translatable="false">1</string>
-	<string name="column_2" translatable="false">2</string>
-	<string name="column_4" translatable="false">4</string>
-	<string name="column_8" translatable="false">8</string>
-	<string name="column_16" translatable="false">16</string>
-	<string name="column_32" translatable="false">32</string>
-	<string name="column_64" translatable="false">64</string>
-
 	<string name="version_desc">Versão do Unicode</string>
 
-	<string name="version_600" translatable="false">6.0.0</string>
-	<string name="version_610" translatable="false">6.1.0</string>
-	<string name="version_620" translatable="false">6.2.0</string>
-	<string name="version_630" translatable="false">6.3.0</string>
-	<string name="version_700" translatable="false">7.0.0</string>
-	<string name="version_800" translatable="false">8.0.0</string>
-	<string name="version_900" translatable="false">9.0.0</string>
-	<string name="version_1000" translatable="false">10.0.0</string>
-	<string name="version_1100" translatable="false">11.0.0</string>
-	<string name="version_1200" translatable="false">12.0.0</string>
-	<string name="version_1210" translatable="false">12.1.0</string>
-	<string name="version_1300" translatable="false">13.0.0</string>
-	<string name="version_1400" translatable="false">14.0.0</string>
-	<string name="version_1500" translatable="false">15.0.0</string>
 	<string name="version_latest">Mais recente (15.1.0)</string>
 
 	<string name="emojicompat_desc">Utilize o EmojiCompat para exibir emojis</string>
@@ -461,17 +439,10 @@
 	<string name="ime_desc">Desabilitar IME</string>
 	<string name="clear_desc">Exibir botão para limpar</string>
 	<string name="buttons_desc">Exibir fileira de botões</string>
-	<string name="clear" translatable="false">⌧</string>
-	<string name="erase" translatable="false">⌫</string>
-	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="malformed">Nome do arquivo mal formado no zip</string>
 	<string name="legal">Legal</string>
-	<string name="legal_uni" translatable="false">Unicode®</string>
 	<string name="legal_uni2">Esse aplicativo inclui uma versão modificada do Unicode Data File.
-Copyright © 1991-2023 Unicode, Inc. Todos os direitos reservados.
-Distribuido sob os Termos de Uso em
+Copyright © 1991-2023 Unicode, Inc. All rights reserved.
+Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.12.3</string>
-	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
-https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

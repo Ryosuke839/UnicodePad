@@ -1,0 +1,7 @@
+<resources>
+	<string name="favorite">Favourite</string>
+	<string name="guide_content_3">You can use variety of pads, including emoji, find, and favourite.</string>
+	<string name="guide_content_5">You can customise behaviour and appearance of the app. You can revisit this tutorial from the setting as well.</string>
+	<string name="behaviour">Behaviour</string>
+	<string name="data_favorite">Favourite (%1$d)</string>
+</resources>

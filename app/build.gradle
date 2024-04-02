@@ -47,6 +47,7 @@ android {
             versionNameSuffix "-fdroid"
         }
     }
+    namespace 'jp.ddo.hotmist.unicodepad'
 }
 
 dependencies {

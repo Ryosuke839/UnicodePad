@@ -18,8 +18,10 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.AlertDialog
+import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -33,7 +35,6 @@ import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 
 class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +112,7 @@ class SettingActivity : BaseActivity() {
             setText(findPreference("checker")!!)
             setText(findPreference("recentsize")!!)
             setEntry(findPreference("scroll")!!)
+            findPreference<Preference>("process_text")!!.onPreferenceChangeListener = this
             findPreference<Preference>("legal_app")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage("https://github.com/Ryosuke839/UnicodePad")
@@ -163,6 +165,16 @@ class SettingActivity : BaseActivity() {
                 if (key == "emojicompat") {
                     Toast.makeText(activity, R.string.theme_title, Toast.LENGTH_SHORT).show()
                     activity.setResult(RESULT_FIRST_USER)
+                }
+                if (key == "process_text") {
+                    val packageName = activity.packageName
+                    val newState =
+                        if (newValue as Boolean) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    activity.packageManager.setComponentEnabledSetting(
+                        ComponentName(packageName, "$packageName.UnicodeActivityAlias"),
+                        newState, PackageManager.DONT_KILL_APP
+                    )
+                    return true
                 }
             }
             preference.summary = if (preference is ListPreference) preference.entries[preference.findIndexOfValue(newValue.toString())] else newValue.toString()
@@ -243,6 +255,7 @@ class SettingActivity : BaseActivity() {
                                         it.put("ime", if (pref.contains("ime")) pref.getBoolean("ime", true) else null)
                                         it.put("clear", if (pref.contains("clear")) pref.getBoolean("clear", true) else null)
                                         it.put("buttons", if (pref.contains("buttons")) pref.getBoolean("buttons", true) else null)
+                                        it.put("process_text", if (pref.contains("process_text")) pref.getBoolean("process_text", true) else null)
                                         it.put("scroll", pref.getString("scroll", null))
                                         it.put("recentsize", pref.getString("recentsize", null))
                                     })
@@ -366,6 +379,7 @@ class SettingActivity : BaseActivity() {
                                         (it.opt("ime") as? Boolean)?.let { bool -> edit.putBoolean("ime", bool) }
                                         (it.opt("clear") as? Boolean)?.let { bool -> edit.putBoolean("clear", bool) }
                                         (it.opt("buttons") as? Boolean)?.let { bool -> edit.putBoolean("buttons", bool) }
+                                        (it.opt("process_text") as? Boolean)?.let { bool -> edit.putBoolean("process_text", bool) }
                                         (it.opt("scroll") as? String)?.let { str -> edit.putString("scroll", str) }
                                         (it.opt("recentsize") as? String)?.let { str -> edit.putString("recentsize", str) }
                                     }

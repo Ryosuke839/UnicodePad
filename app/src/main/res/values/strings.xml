@@ -478,6 +478,7 @@
 	<string name="ime_desc">Disable IME</string>
 	<string name="clear_desc">Show clear button</string>
 	<string name="buttons_desc">Show button row</string>
+	<string name="process_text_desc">Launch from text selection context menu</string>
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>

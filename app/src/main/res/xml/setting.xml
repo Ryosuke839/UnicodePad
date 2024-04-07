@@ -157,6 +157,10 @@
 			android:inputType="number"
 			android:summary=""
 			android:title="@string/recent_desc" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="process_text"
+			android:title="@string/process_text_desc" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:key="legal"

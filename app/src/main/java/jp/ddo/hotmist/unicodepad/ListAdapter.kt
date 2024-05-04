@@ -51,7 +51,6 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     private val blockToIndex: MutableList<Int> = ArrayList()
     private val marks: NavigableMap<Int, String> = TreeMap()
     private var jump: Spinner? = null
-    private var jumpAdapter: SpinnerAdapter? = null
     private var mark: Spinner? = null
     private var code: Button? = null
     private var current = -1

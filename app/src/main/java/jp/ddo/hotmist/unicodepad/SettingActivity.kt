@@ -198,7 +198,7 @@ class SettingActivity : BaseActivity() {
             super.onActivityResult(requestCode, resultCode, data)
             if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
                 val uri = data.data ?: return
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this.activity)
+                val pref = PreferenceManager.getDefaultSharedPreferences(this.activity)
                 val padding = (resources.displayMetrics.density * 8f).toInt()
                 val cbSetting = CheckBox(this.activity).also {
                     it.setText(R.string.data_setting)
@@ -353,7 +353,7 @@ class SettingActivity : BaseActivity() {
                                 hl.addView(cbFavoriteMerge, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                                 hl.addView(cbScroll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                             }).setTitle(R.string.imported_data).setPositiveButton(R.string.import_confirm) { _: DialogInterface, _: Int ->
-                                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this.activity)
+                                val pref = PreferenceManager.getDefaultSharedPreferences(this.activity)
                                 val edit = pref.edit()
                                 if (cbSetting.isChecked) {
                                     obj.optJSONObject("setting")?.also {

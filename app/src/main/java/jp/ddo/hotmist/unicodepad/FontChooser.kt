@@ -18,7 +18,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.os.Build
 import androidx.preference.PreferenceManager
 import android.view.View
 import android.widget.AdapterView

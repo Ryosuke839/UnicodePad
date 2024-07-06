@@ -290,9 +290,7 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
         val textView: TextView = view
     }
 
-    class HeaderViewHolder(view: TextView) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view
-    }
+    class HeaderViewHolder(view: TextView) : RecyclerView.ViewHolder(view)
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

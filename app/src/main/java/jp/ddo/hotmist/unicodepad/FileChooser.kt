@@ -139,7 +139,6 @@ internal class FileChooser(private val activity: Activity, private val listener:
             try {
                 if (path.length == 1) {
                     val dirs = Array(4) {""}
-                    @Suppress("DEPRECATION")
                     dirs[0] = Environment.getExternalStorageDirectory().canonicalPath
                     dirs[1] = Environment.getDataDirectory().canonicalPath
                     dirs[2] = Environment.getDownloadCacheDirectory().canonicalPath

@@ -23,6 +23,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.viewpager.widget.PagerAdapter
 import java.nio.charset.Charset
 import java.util.*
@@ -65,6 +66,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         text.setValid(ver != 0 && ver <= UnicodeActivity.univer)
         val str = StringBuilder()
         if (!emoji) str.append(adapter.getItem(position))
+        val textPadding = (6 * activity.resources.displayMetrics.scaledDensity).toInt()
         for (i in 0 until if (!emoji) 10 else 7) {
             if (emoji && i == 5) continue
             if (i == 2) {
@@ -72,6 +74,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                 val desc = TextView(activity)
                 desc.text = if (!emoji) mods[i].toString() + String.format(Locale.US, "%d.%d.%d", v / 100, v / 10 % 10, v % 10) + (if (v == 600) " or earlier" else "") else mode[i].toString() + String.format(Locale.US, "%d.%d", v / 100, v / 10 % 10)
                 desc.gravity = Gravity.CENTER_VERTICAL
+                desc.setPadding(textPadding, 0, textPadding, 0)
                 layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 continue
             }
@@ -87,6 +90,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
             if (r == null && i == 0) {
                 val desc = TextView(activity)
                 desc.setText(R.string.notacharacter)
+                desc.setPadding(textPadding, 0, textPadding, 0)
                 layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 break
             }
@@ -108,8 +112,12 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         hl.orientation = LinearLayout.HORIZONTAL
                         hl.addView(desc, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
                         hl.addView(fav, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                        hl.setPadding(textPadding, 0, textPadding, 0)
                         layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                    } else layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    } else {
+                        desc.setPadding(textPadding, 0, textPadding, 0)
+                        layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    }
                     continue
                 }
                 val hl = LinearLayout(activity)
@@ -196,14 +204,15 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                     }
                     hl.setBackgroundResource(reslist)
                 }
+                hl.setPadding(textPadding, 0, textPadding, 0)
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
         }
-        val scroll = ScrollView(activity)
+        val scroll = NestedScrollView(activity)
         scroll.addView(layout)
         collection.addView(scroll)
         collection.findViewById<View>(R.id.TAB_ID).measure(MeasureSpec.makeMeasureSpec(10, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
-        layout.setPadding(0, 0, 0, collection.findViewById<View>(R.id.TAB_ID).measuredHeight * 2)
+        scroll.setTag(R.id.TAB_ID, position)
         return scroll
     }
 

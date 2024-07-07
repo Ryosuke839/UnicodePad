@@ -483,8 +483,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0x100000, 0x10FFFF)
         @Suppress("DEPRECATION")
         resnormal = activity.resources.getColor(android.R.color.transparent)
-        @Suppress("DEPRECATION")
-        resselect = activity.resources.getColor(android.R.color.tab_indicator_text)
+        resselect = TypedValue().also { tv ->
+            activity.theme.resolveAttribute(R.attr.colorControlHighlight, tv, true)
+        }.data
         LinearLayout(activity).also { layout ->
             layout.orientation = LinearLayout.VERTICAL
             LinearLayout(activity).also { hl ->

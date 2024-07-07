@@ -20,6 +20,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.content.res.Resources.getSystem
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +33,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
@@ -56,22 +58,27 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.view.doOnLayout
+import androidx.core.view.setMargins
 import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerTabStrip
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.ViewPagerBottomSheetBehavior
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 import java.util.zip.CRC32
 import kotlin.concurrent.thread
 import kotlin.math.max
@@ -92,6 +99,8 @@ class UnicodeActivity : BaseActivity() {
     private var scroll: LockableScrollView? = null
     private lateinit var pager: ViewPager
     internal lateinit var adpPage: PageAdapter
+    private lateinit var bottomSheetBehavior: ViewPagerBottomSheetBehavior<View>
+    private lateinit var bottomSheetView: ViewGroup
     private lateinit var itemUndo: MenuItem
     private lateinit var itemRedo: MenuItem
     private val adCompat: AdCompat = AdCompatImpl()
@@ -469,25 +478,75 @@ class UnicodeActivity : BaseActivity() {
                         }
                     }
                 }
-                if (scrollUi) {
-                    AndroidView(
-                        factory = { context -> LockableScrollView(context).also {
-                            scroll = it
-                            it.addView(ComposeView(it.context).apply {
+                AndroidView(
+                    factory = { context -> CoordinatorLayout(context).apply {
+                        addView(if (scrollUi) {
+                            LockableScrollView(context).also {
+                                    scroll = it
+                                    it.addView(ComposeView(it.context).apply {
+                                        setContent {
+                                            MainView()
+                                        }
+                                    })
+                                    it.clipToOutline = true
+                                }
+                        } else {
+                            scroll = null
+                            ComposeView(context).apply {
                                 setContent {
                                     MainView()
                                 }
+                            }
+                        })
+                        addView(LinearLayout(context).apply {
+                            orientation = LinearLayout.VERTICAL
+                            setBackgroundResource(R.drawable.bottom_sheet_background)
+                            elevation = 30f
+                            addView(ImageView(context).apply {
+                                setImageResource(R.drawable.bottom_sheet_bar)
+                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (4 * getSystem().displayMetrics.density).toInt()).apply {
+                                setMargins((6 * getSystem().displayMetrics.density).toInt())
+                                gravity = Gravity.CENTER
                             })
-                            it.clipToOutline = true
-                        } },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                    )
-                } else {
-                    MainView()
-                    scroll = null
-                }
+                            addView(LinearLayout(context).apply {
+                                orientation = LinearLayout.VERTICAL
+                                bottomSheetView = this
+                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+                        }, CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, getSystem().displayMetrics.heightPixels / 2).apply {
+                            behavior = ViewPagerBottomSheetBehavior<View>().apply {
+                                state = BottomSheetBehavior.STATE_HIDDEN
+                                isHideable = true
+                                bottomSheetBehavior = this
+                            }.also { behavior ->
+                                val bottomSheetBackCallback = object : OnBackPressedCallback(true) {
+                                    override fun handleOnBackPressed() {
+                                        if (behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                        } else {
+                                            isEnabled = false
+                                            onBackPressed()
+                                        }
+                                    }
+                                }
+                                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                                        bottomSheetBackCallback.isEnabled = newState != BottomSheetBehavior.STATE_HIDDEN
+                                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                                            bottomSheetView.removeAllViews()
+                                        } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                        }
+                                    }
+
+                                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                                    }
+                                })
+                                onBackPressedDispatcher.addCallback(this@UnicodeActivity, bottomSheetBackCallback)
+                            }
+                        })
+                    }},
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 if (adCompat.showAdSettings) {
                     AndroidView(
                         factory = { context -> LinearLayout(context).apply {
@@ -557,6 +616,44 @@ class UnicodeActivity : BaseActivity() {
         }
         created = true
     }
+
+    fun setBottomSheetContent(view: View, ua: UnicodeAdapter?) {
+        if (ua != null) {
+            val observer = object : RecyclerView.AdapterDataObserver() {
+                override fun onChanged() {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+            ua.registerDataObserver(observer)
+            view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {}
+                override fun onViewDetachedFromWindow(v: View) {
+                    ua.unregisterDataObserver(observer)
+                }
+            })
+        }
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetView.removeAllViews()
+        bottomSheetView.addView(view)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
 
     private fun showGuide(index: Int = 0) {
         val titles = resources.getStringArray(R.array.guide_titles)

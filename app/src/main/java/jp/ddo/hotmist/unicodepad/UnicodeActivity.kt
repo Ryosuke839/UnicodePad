@@ -512,6 +512,7 @@ class UnicodeActivity : BaseActivity() {
                                 orientation = LinearLayout.VERTICAL
                                 bottomSheetView = this
                             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+                            setOnTouchListener { _, _ -> true }
                         }, CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, getSystem().displayMetrics.heightPixels / 2).apply {
                             behavior = ViewPagerBottomSheetBehavior<View>().apply {
                                 state = BottomSheetBehavior.STATE_HIDDEN

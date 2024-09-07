@@ -200,6 +200,13 @@ interface UnicodeAdapter {
             layoutManager = it
         }
     }
+
+    interface DataObserver {
+        fun onChanged()
+    }
+
+    fun registerDataObserver(observer: RecyclerView.AdapterDataObserver)
+    fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver)
 }
 
 abstract class RecyclerUnicodeAdapter(override val activity: Activity, private val db: NameDatabase, override var single: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), UnicodeAdapter {
@@ -219,6 +226,14 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
 
     override fun invalidateViews() {
         notifyDataSetChanged()
+    }
+
+    override fun registerDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        registerAdapterDataObserver(observer)
+    }
+
+    override fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        unregisterAdapterDataObserver(observer)
     }
 
     final override fun getItemId(i: Int): Long {
@@ -381,6 +396,14 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
 
     override fun invalidateViews() {
         notifyDataSetChanged()
+    }
+
+    override fun registerDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        registerAdapterDataObserver(observer)
+    }
+
+    override fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        unregisterAdapterDataObserver(observer)
     }
 
     override fun getCount(): Int {

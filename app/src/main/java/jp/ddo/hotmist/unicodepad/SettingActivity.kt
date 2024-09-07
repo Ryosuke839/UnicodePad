@@ -249,6 +249,7 @@ class SettingActivity : BaseActivity() {
                                         it.put("column", pref.getString("column", null))
                                         it.put("columnl", pref.getString("columnl", null))
                                         it.put("textsize", pref.getString("textsize", null))
+                                        it.put("multiline", if (pref.contains("multiline")) pref.getBoolean("multiline", false) else null)
                                         it.put("viewsize", pref.getString("viewsize", null))
                                         it.put("lines", if (pref.contains("lines")) pref.getBoolean("lines", true) else null)
                                         it.put("shrink", if (pref.contains("shrink")) pref.getBoolean("shrink", true) else null)
@@ -373,6 +374,7 @@ class SettingActivity : BaseActivity() {
                                         (it.opt("column") as? String)?.let { str -> edit.putString("column", str) }
                                         (it.opt("columnl") as? String)?.let { str -> edit.putString("columnl", str) }
                                         (it.opt("textsize") as? String)?.let { str -> edit.putString("textsize", str) }
+                                        (it.opt("multiline") as? Boolean)?.let { bool -> edit.putBoolean("multiline", bool) }
                                         (it.opt("viewsize") as? String)?.let { str -> edit.putString("viewsize", str) }
                                         (it.opt("lines") as? Boolean)?.let { bool -> edit.putBoolean("lines", bool) }
                                         (it.opt("shrink") as? Boolean)?.let { bool -> edit.putBoolean("shrink", bool) }

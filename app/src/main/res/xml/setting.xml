@@ -104,6 +104,10 @@
 			android:inputType="numberDecimal"
 			android:summary=""
 			android:title="@string/textsize_desc" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="multiline"
+			android:title="@string/multiline_desc" />
 		<EditTextPreference
 			android:defaultValue="@string/viewsize_def"
 			android:dialogTitle="@string/viewsize_desc"

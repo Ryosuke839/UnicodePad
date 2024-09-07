@@ -385,6 +385,7 @@
 	<string name="appearance">外観</string>
 	<string name="behaviour">動作</string>
 	<string name="textsize_desc">エディットボックスのフォントサイズ</string>
+	<string name="multiline_desc">エディットボックスで改行</string>
 	<string name="column_desc">表の列数</string>
 	<string name="columnl_desc">表の列数 (横位置)</string>
 

@@ -39,11 +39,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -56,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -143,11 +144,11 @@ class UnicodeActivity : BaseActivity() {
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
+                        .fillMaxWidth(),
                 ) {
+                    val multiline = pref.getBoolean("multiline", false)
                     Box(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).heightIn(max = if (multiline) fontsize.dp * 4 else Dp.Unspecified),
                     ) {
                         AndroidView(
                             factory = { context ->
@@ -161,8 +162,8 @@ class UnicodeActivity : BaseActivity() {
                                         true
                                     }
                                     textSize = fontsize
-                                    maxLines = 1
-                                    inputType = InputType.TYPE_CLASS_TEXT
+                                    maxLines = if (multiline) 3 else 1
+                                    inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
                                     setOnEditorActionListener { _, actionId, keyEvent ->
                                         if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
                                             btnFinish.performClick()
@@ -287,7 +288,7 @@ class UnicodeActivity : BaseActivity() {
                         } },
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .fillMaxHeight(),
+                            .height(fontsize.dp * 2),
                     )
                 }
                 @Composable
@@ -943,6 +944,9 @@ class UnicodeActivity : BaseActivity() {
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
             scrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
+            val multiline = pref.getBoolean("multiline", false)
+            editText.maxLines = if (multiline) 3 else 1
+            editText.inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
         }
         if (requestCode != -1) {
             adCompat.renderAdToContainer(this, pref)

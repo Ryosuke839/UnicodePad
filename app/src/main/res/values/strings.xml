@@ -390,6 +390,7 @@
 	<string name="appearance">Appearance</string>
 	<string name="behaviour">Behavior</string>
 	<string name="textsize_desc">Text size of edit box</string>
+	<string name="multiline_desc">Multiline edit box</string>
 	<string name="column_desc">Columns in grid</string>
 	<string name="columnl_desc">Columns in grid (landscape)</string>
 

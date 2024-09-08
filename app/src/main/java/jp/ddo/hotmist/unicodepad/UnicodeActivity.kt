@@ -100,6 +100,7 @@ class UnicodeActivity : BaseActivity() {
     private lateinit var pref: SharedPreferences
     private var action: String? = null
     private var created = false
+    private var multiline = false
     private var disableime = false
     private var delay: Runnable? = null
     private var timer = 500
@@ -137,9 +138,8 @@ class UnicodeActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxWidth(),
                 ) {
-                    val multiline = pref.getBoolean("multiline", false)
                     Box(
-                        modifier = Modifier.weight(1f).heightIn(max = if (multiline) fontsize.dp * 4 else Dp.Unspecified),
+                        modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
                     ) {
                         AndroidView(
                             factory = { context ->
@@ -156,7 +156,7 @@ class UnicodeActivity : BaseActivity() {
                                     maxLines = if (multiline) 3 else 1
                                     inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
                                     setOnEditorActionListener { _, actionId, keyEvent ->
-                                        if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
+                                        if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
                                             btnFinish.performClick()
                                             true
                                         } else
@@ -529,6 +529,7 @@ class UnicodeActivity : BaseActivity() {
         }
 
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        multiline = pref.getBoolean("multiline", false)
         disableime = pref.getBoolean("ime", true)
         val it = intent
         action = it.action
@@ -839,6 +840,7 @@ class UnicodeActivity : BaseActivity() {
         UnicodeAdapter.shrink = pref.getBoolean("shrink", true)
         CharacterAdapter.shrink = pref.getBoolean("shrink", true)
         RecentAdapter.maxitems = pref.getString("recentsize", null)?.toIntOrNull() ?: 256
+        multiline = pref.getBoolean("multiline", false)
         disableime = pref.getBoolean("ime", true)
         showBtnClear = pref.getBoolean("clear", false)
         showBtnRow = pref.getBoolean("buttons", true)
@@ -846,7 +848,6 @@ class UnicodeActivity : BaseActivity() {
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
             scrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
-            val multiline = pref.getBoolean("multiline", false)
             editText.maxLines = if (multiline) 3 else 1
             editText.inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
         }

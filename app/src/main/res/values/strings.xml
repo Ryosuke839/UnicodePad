@@ -482,6 +482,7 @@
 	<string name="process_text_desc">Launch from text selection context menu</string>
 	<string name="clear" translatable="false">⌧</string>
 	<string name="erase" translatable="false">⌫</string>
+	<string name="grapheme_cluster">Grapheme Clustering</string>
 	<string name="notacharacter" translatable="false">&lt;not a character&gt;</string>
 	<string name="malformed">Malformed file name in zip</string>
 	<string name="legal">Legal</string>

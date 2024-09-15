@@ -109,7 +109,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return adapters[position].let { adapter ->
             adapter.setListener(this)
             if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
-                DynamicDragListView(activity, null).also { view ->
+                DynamicDragListView(activity, null).let { view ->
                     view.setLayoutManager(LinearLayoutManager(activity))
                     view.setDragListListener(adapter)
                     view.setAdapter(adapter, false)
@@ -312,7 +312,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         if (recpage >= numPage) recpage = -1
         adapterFavorite = FavoriteAdapter(activity, pref, db, bfav)
         adapters[pref.getInt("ord_fav", 4)] = adapterFavorite
-        adapterEdit = EditAdapter(activity, db, bedt, edit)
+        adapterEdit = EditAdapter(activity, pref, db, bedt, edit)
         adapters[pref.getInt("ord_edt", 5)] = adapterEdit
         adapterEmoji = EmojiAdapter(activity, pref, db, bemoji)
         adapters[pref.getInt("ord_emoji", 2)] = adapterEmoji

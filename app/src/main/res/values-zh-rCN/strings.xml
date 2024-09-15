@@ -228,6 +228,7 @@
 	<string name="script_10500">10500 爱尔巴桑文字</string>
 	<string name="script_10530">10530 高加索阿尔巴尼亚文字</string>
 	<string name="script_10570">10570 维斯库奇文字</string>
+	<string name="script_105C0">105C0 托兹里文字</string>
 	<string name="script_10600">10600 线形文字A</string>
 	<string name="script_10780">10780 拉丁文字扩展F</string>
 	<string name="script_10800">10800 塞浦路斯音节文字</string>
@@ -250,6 +251,7 @@
 	<string name="script_10C00">10C00 古突厥文字</string>
 	<string name="script_10C80">10C80 古匈牙利文字</string>
 	<string name="script_10D00">10D00 哈乃斐罗兴亚文字</string>
+	<string name="script_10D40">10D40 加来文字</string>
 	<string name="script_10E60">10E60 鲁米数字符号</string>
 	<string name="script_10E80">10E80 雅兹迪文字</string>
 	<string name="script_10EC0">10EC0 阿拉伯文字扩展C</string>
@@ -269,12 +271,14 @@
 	<string name="script_11280">11280 穆尔塔尼文字</string>
 	<string name="script_112B0">112B0 信德文字</string>
 	<string name="script_11300">11300 格兰塔文字</string>
+	<string name="script_11380">11380 图卢提加拉里文字</string>
 	<string name="script_11400">11400 尼瓦文字</string>
 	<string name="script_11480">11480 提尔胡塔文字</string>
 	<string name="script_11580">11580 悉昙文字</string>
 	<string name="script_11600">11600 莫迪文字</string>
 	<string name="script_11660">11660 蒙古文字补充</string>
 	<string name="script_11680">11680 泰克里文字</string>
+	<string name="script_116D0">116D0 缅甸文字扩展C</string>
 	<string name="script_11700">11700 阿洪姆文字</string>
 	<string name="script_11800">11800 多格拉文字</string>
 	<string name="script_118A0">118A0 瓦兰齐地文字</string>
@@ -285,6 +289,7 @@
 	<string name="script_11AB0">11AB0 统一加拿大原住民音节文字扩展A</string>
 	<string name="script_11AC0">11AC0 包钦豪文字</string>
 	<string name="script_11B00">11B00 天城文字扩展A</string>
+	<string name="script_11BC0">11BC0 苏努瓦尔文字</string>
 	<string name="script_11C00">11C00 拜克舒基文字</string>
 	<string name="script_11C70">11C70 玛钦文字</string>
 	<string name="script_11D00">11D00 马萨拉姆贡德文字</string>
@@ -299,12 +304,15 @@
 	<string name="script_12F90">12F90 塞浦路斯-米诺斯文字</string>
 	<string name="script_13000">13000 埃及象形文字</string>
 	<string name="script_13430">13430 埃及象形文字格式控制符</string>
+	<string name="script_13460">13460 埃及象形文字扩展A</string>
 	<string name="script_14400">14400 安纳托利亚象形文字</string>
+	<string name="script_16100">16100 古隆凯玛文字</string>
 	<string name="script_16800">16800 巴姆穆文字补充</string>
 	<string name="script_16A40">16A40 木如文字</string>
 	<string name="script_16A70">16A70 唐撒文字</string>
 	<string name="script_16AD0">16AD0 巴萨文字</string>
 	<string name="script_16B00">16B00 杨松录苗文</string>
+	<string name="script_16D40">16D40 基拉特拉伊文字</string>
 	<string name="script_16E40">16E40 梅德法伊德林文字</string>
 	<string name="script_16F00">16F00 柏格理苗文</string>
 	<string name="script_16FE0">16FE0 表意文字符号及标点</string>
@@ -319,6 +327,7 @@
 	<string name="script_1B170">1B170 女书</string>
 	<string name="script_1BC00">1BC00 杜普雷速记文字</string>
 	<string name="script_1BCA0">1BCA0 速记格式控制符</string>
+	<string name="script_1CC00">1CC00 传统计算机符号补充</string>
 	<string name="script_1CF00">1CF00 兹纳缅内乐谱记号</string>
 	<string name="script_1D000">1D000 拜占庭乐谱符号</string>
 	<string name="script_1D100">1D100 乐谱符号</string>
@@ -336,6 +345,7 @@
 	<string name="script_1E290">1E290 投投文字</string>
 	<string name="script_1E2C0">1E2C0 万却文字</string>
 	<string name="script_1E4D0">1E4D0 纳格蒙达里文字</string>
+	<string name="script_1E5D0">1E5D0 奥尔奥诺尔文字</string>
 	<string name="script_1E7E0">1E7E0 埃塞俄比亚文字扩展B</string>
 	<string name="script_1E800">1E800 门德基卡库文字</string>
 	<string name="script_1E900">1E900 阿德拉姆文字</string>
@@ -395,7 +405,7 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (15.1.0)</string>
+	<string name="version_latest">最新 (16.0.0)</string>
 	
 	<string name="emojicompat_desc">使用EmojiCompat方式显示Emoji</string>
 	<string name="emojicompat_null">禁用</string>

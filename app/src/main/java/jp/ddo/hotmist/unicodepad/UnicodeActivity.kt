@@ -153,6 +153,7 @@ class UnicodeActivity : BaseActivity() {
                         AndroidView(
                             factory = { context ->
                                 if (useEmoji != "null") { AppCompatEditText(context) } else { EditText(context) }.apply {
+                                    id = R.id.editText
                                     setOnTouchListener { view: View, motionEvent: MotionEvent ->
                                         view.onTouchEvent(motionEvent)
                                         if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
@@ -165,7 +166,7 @@ class UnicodeActivity : BaseActivity() {
                                     maxLines = if (multiline) 3 else 1
                                     inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
                                     setOnEditorActionListener { _, actionId, keyEvent ->
-                                        if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN || actionId == EditorInfo.IME_ACTION_DONE) {
+                                        if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
                                             btnFinish.performClick()
                                             true
                                         } else
@@ -530,6 +531,7 @@ class UnicodeActivity : BaseActivity() {
                                         }
                                     }
                                 }
+                                bottomSheetBackCallback.isEnabled = false
                                 behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                                         bottomSheetBackCallback.isEnabled = newState != BottomSheetBehavior.STATE_HIDDEN
@@ -940,13 +942,22 @@ class UnicodeActivity : BaseActivity() {
         disableime = pref.getBoolean("ime", true)
         showBtnClear = pref.getBoolean("clear", false)
         showBtnRow = pref.getBoolean("buttons", true)
+        scrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
         if (created) {
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
-            scrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
-            val multiline = pref.getBoolean("multiline", false)
-            editText.maxLines = if (multiline) 3 else 1
-            editText.inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
+            editText.apply {
+                val multiline = pref.getBoolean("multiline", false)
+                editText.maxLines = if (multiline) 3 else 1
+                editText.inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
+                setOnEditorActionListener { _, actionId, keyEvent ->
+                    if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
+                        btnFinish.performClick()
+                        true
+                    } else
+                        false
+                }
+            }
         }
         if (requestCode != -1) {
             adCompat.renderAdToContainer(this, pref)

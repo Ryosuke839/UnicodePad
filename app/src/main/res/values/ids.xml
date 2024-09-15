@@ -22,4 +22,6 @@
 	<item name="fontBar" type="id"/>
 	<item name="finish" type="id"/>
 	<item name="adContainer" type="id"/>
+	<item name="editText" type="id"/>
+	<item name="searchText" type="id"/>
 </resources>

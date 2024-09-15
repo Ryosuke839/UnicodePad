@@ -502,7 +502,7 @@
 Copyright © 1991-2023 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.14.0</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.14.1</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

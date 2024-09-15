@@ -148,7 +148,7 @@ class UnicodeActivity : BaseActivity() {
                 ) {
                     val multiline = pref.getBoolean("multiline", false)
                     Box(
-                        modifier = Modifier.weight(1f).heightIn(max = if (multiline) fontsize.dp * 4 else Dp.Unspecified),
+                        modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
                     ) {
                         AndroidView(
                             factory = { context ->

@@ -395,7 +395,7 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (15.1.0)</string>
+	<string name="version_latest">最新 (16.0.0)</string>
 	
 	<string name="emojicompat_desc">使用EmojiCompat方式显示Emoji</string>
 	<string name="emojicompat_null">禁用</string>

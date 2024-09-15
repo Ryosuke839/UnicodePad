@@ -381,7 +381,7 @@
 
 	<string name="version_desc">Versão do Unicode</string>
 
-	<string name="version_latest">Mais recente (15.1.0)</string>
+	<string name="version_latest">Mais recente (16.0.0)</string>
 
 	<string name="emojicompat_desc">Utilize o EmojiCompat para exibir emojis</string>
 	<string name="emojicompat_null">Nunca</string>

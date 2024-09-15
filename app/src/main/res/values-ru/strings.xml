@@ -395,7 +395,7 @@
 
 	<string name="version_desc">Версия Unicode</string>
 
-	<string name="version_latest">Последняя (15.1.0)</string>
+	<string name="version_latest">Последняя (16.0.0)</string>
 
 	<string name="emojicompat_desc">Использовать EmojiCompat для эмодзи</string>
 	<string name="emojicompat_null">Не использовать</string>

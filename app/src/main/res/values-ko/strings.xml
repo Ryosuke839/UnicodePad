@@ -394,7 +394,7 @@
 	<string name="columnl_desc">열 개수 (가로모드)</string>
 	<string name="version_desc">Unicode 버전</string>
 	
-	<string name="version_latest">최신 (15.1.0)</string>
+	<string name="version_latest">최신 (16.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat으로 이모지 표시</string>
 	<string name="emojicompat_null">꺼짐</string>

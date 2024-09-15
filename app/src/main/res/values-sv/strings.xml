@@ -384,7 +384,7 @@
 
 	<string name="version_desc">Unicode-version</string>
 
-	<string name="version_latest">Senaste (15.1.0)</string>
+	<string name="version_latest">Senaste (16.0.0)</string>
 
 	<string name="emojicompat_desc">Använd framåtkompatibilitet för emoji</string>
 	<string name="emojicompat_null">Aldrig</string>

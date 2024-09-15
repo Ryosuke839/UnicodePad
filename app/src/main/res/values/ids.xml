@@ -17,4 +17,11 @@
 <resources>
 	<item name="TAB_ID" type="id"/>
 	<item name="HANDLE_ID" type="id"/>
+	<item name="cpager" type="id"/>
+	<item name="ctab" type="id"/>
+	<item name="fontBar" type="id"/>
+	<item name="finish" type="id"/>
+	<item name="adContainer" type="id"/>
+	<item name="editText" type="id"/>
+	<item name="searchText" type="id"/>
 </resources>

@@ -16,14 +16,13 @@
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	package="jp.ddo.hotmist.unicodepad"
 	android:installLocation="auto">
 
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<queries>
 		<intent>
-			<action android:name="android.intent.action.VIEW" />
+			<action android:name="android.intent.action.PROCESS_TEXT" />
 		</intent>
 	</queries>
 
@@ -62,20 +61,22 @@
 
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
+			<meta-data android:name="android.app.shortcuts"
+				android:resource="@xml/shortcuts" />
+		</activity>
+
+		<activity-alias
+			android:name="UnicodeActivityAlias"
+			android:targetActivity="UnicodeActivity"
+			android:enabled="true"
+			android:exported="true">
+
 			<intent-filter android:icon="@mipmap/ic_launcher">
 				<action android:name="android.intent.action.PROCESS_TEXT" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="text/plain" />
 			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" />
-				<data android:scheme="https" />
-			</intent-filter>
-			<meta-data android:name="android.app.shortcuts"
-				android:resource="@xml/shortcuts" />
-		</activity>
+		</activity-alias>
 
 		<activity android:name="SettingActivity"
 			android:parentActivityName=".UnicodeActivity" />

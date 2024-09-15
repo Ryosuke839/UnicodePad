@@ -200,6 +200,13 @@ interface UnicodeAdapter {
             layoutManager = it
         }
     }
+
+    interface DataObserver {
+        fun onChanged()
+    }
+
+    fun registerDataObserver(observer: RecyclerView.AdapterDataObserver)
+    fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver)
 }
 
 abstract class RecyclerUnicodeAdapter(override val activity: Activity, private val db: NameDatabase, override var single: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), UnicodeAdapter {
@@ -219,6 +226,14 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
 
     override fun invalidateViews() {
         notifyDataSetChanged()
+    }
+
+    override fun registerDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        registerAdapterDataObserver(observer)
+    }
+
+    override fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        unregisterAdapterDataObserver(observer)
     }
 
     final override fun getItemId(i: Int): Long {
@@ -290,9 +305,7 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
         val textView: TextView = view
     }
 
-    class HeaderViewHolder(view: TextView) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view
-    }
+    class HeaderViewHolder(view: TextView) : RecyclerView.ViewHolder(view)
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -352,11 +365,13 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
 
-    class ClonedDragListUnicodeAdapter<T>(base: DragListUnicodeAdapter<T>) : DragListUnicodeAdapter<Int>(base.activity, base.db, base.single) {
+    class ClonedDragListUnicodeAdapter<T>(base: DragListUnicodeAdapter<T>) : DragListUnicodeAdapter<ClonedDragListUnicodeAdapter.Data>(base.activity, base.db, base.single) {
+        data class Data(val codePoint: Long, val item: String, val itemString: String)
+
         init {
             mItemList = ArrayList()
             for (i in base.mItemList.indices) {
-                mItemList.add(base.getItemCodePoint(i).toInt())
+                mItemList.add(Data(base.getItemCodePoint(i), base.getItem(i), base.getItemString(i)))
             }
         }
 
@@ -374,7 +389,15 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
         }
 
         override fun getItemCodePoint(i: Int): Long {
-            return mItemList[i].toLong()
+            return mItemList[i].codePoint
+        }
+
+        override fun getItem(i: Int): String {
+            return mItemList[i].item
+        }
+
+        override fun getItemString(i: Int): String {
+            return mItemList[i].itemString
         }
     }
     override fun freeze(): UnicodeAdapter {
@@ -383,6 +406,14 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
 
     override fun invalidateViews() {
         notifyDataSetChanged()
+    }
+
+    override fun registerDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        registerAdapterDataObserver(observer)
+    }
+
+    override fun unregisterDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        unregisterAdapterDataObserver(observer)
     }
 
     override fun getCount(): Int {

@@ -385,12 +385,13 @@
 	<string name="appearance">外観</string>
 	<string name="behaviour">動作</string>
 	<string name="textsize_desc">エディットボックスのフォントサイズ</string>
+	<string name="multiline_desc">エディットボックスで改行</string>
 	<string name="column_desc">表の列数</string>
 	<string name="columnl_desc">表の列数 (横位置)</string>
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (15.1.0)</string>
+	<string name="version_latest">最新 (16.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>
@@ -433,6 +434,8 @@
 	<string name="ime_desc">IMEを無効化</string>
 	<string name="clear_desc">全削除ボタンを表示</string>
 	<string name="buttons_desc">ボタン行を表示</string>
+	<string name="process_text_desc">テキスト選択メニューから起動する</string>
+	<string name="grapheme_cluster">書記素クラスタ</string>
 	<string name="malformed">ZIP内のファイル名が破損</string>
 	<string name="legal">法的表記</string>
 	<string name="legal_uni2">本アプリケーションはUnicode Data Fileの改変された版を含んでいます。

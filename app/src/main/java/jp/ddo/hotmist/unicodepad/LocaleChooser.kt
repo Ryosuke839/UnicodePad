@@ -42,14 +42,7 @@ class LocaleChooser internal constructor(private val context: Context, private v
                 }
                 while (locales.last() !is String)
                     locales.removeLast()
-                locales.add(if (Build.VERSION.SDK_INT >= 21) Locale.forLanguageTag(locale) else {
-                    val components = locale.split("_")
-                    when (components.size) {
-                        1 -> Locale(components[0])
-                        2 -> Locale(components[0], components[1])
-                        else -> Locale(components[0], components[1], components[2])
-                    }
-                })
+                locales.add(Locale.forLanguageTag(locale))
                 adapter.notifyDataSetChanged()
                 spinner.setSelection(locales.lastIndex)
             }

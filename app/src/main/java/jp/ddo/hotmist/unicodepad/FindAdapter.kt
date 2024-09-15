@@ -47,6 +47,7 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             activity.theme.resolveAttribute(R.attr.search, it, true)
         }.resourceId, null))
         val text = AutoCompleteTextView(activity)
+        text.id = R.id.searchText
         text.setSingleLine()
         text.setText(saved)
         text.setHint(R.string.fhint)

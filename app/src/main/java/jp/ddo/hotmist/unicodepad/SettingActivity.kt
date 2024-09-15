@@ -18,8 +18,10 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.app.AlertDialog
+import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -33,7 +35,6 @@ import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 
 class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +112,7 @@ class SettingActivity : BaseActivity() {
             setText(findPreference("checker")!!)
             setText(findPreference("recentsize")!!)
             setEntry(findPreference("scroll")!!)
+            findPreference<Preference>("process_text")!!.onPreferenceChangeListener = this
             findPreference<Preference>("legal_app")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage("https://github.com/Ryosuke839/UnicodePad")
@@ -164,6 +166,16 @@ class SettingActivity : BaseActivity() {
                     Toast.makeText(activity, R.string.theme_title, Toast.LENGTH_SHORT).show()
                     activity.setResult(RESULT_FIRST_USER)
                 }
+                if (key == "process_text") {
+                    val packageName = activity.packageName
+                    val newState =
+                        if (newValue as Boolean) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    activity.packageManager.setComponentEnabledSetting(
+                        ComponentName(packageName, "$packageName.UnicodeActivityAlias"),
+                        newState, PackageManager.DONT_KILL_APP
+                    )
+                    return true
+                }
             }
             preference.summary = if (preference is ListPreference) preference.entries[preference.findIndexOfValue(newValue.toString())] else newValue.toString()
             return true
@@ -186,7 +198,7 @@ class SettingActivity : BaseActivity() {
             super.onActivityResult(requestCode, resultCode, data)
             if (requestCode == SETTING_EXPORT_CODE) if (resultCode == RESULT_OK && data != null) {
                 val uri = data.data ?: return
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this.activity)
+                val pref = PreferenceManager.getDefaultSharedPreferences(this.activity)
                 val padding = (resources.displayMetrics.density * 8f).toInt()
                 val cbSetting = CheckBox(this.activity).also {
                     it.setText(R.string.data_setting)
@@ -237,12 +249,14 @@ class SettingActivity : BaseActivity() {
                                         it.put("column", pref.getString("column", null))
                                         it.put("columnl", pref.getString("columnl", null))
                                         it.put("textsize", pref.getString("textsize", null))
+                                        it.put("multiline", if (pref.contains("multiline")) pref.getBoolean("multiline", false) else null)
                                         it.put("viewsize", pref.getString("viewsize", null))
                                         it.put("lines", if (pref.contains("lines")) pref.getBoolean("lines", true) else null)
                                         it.put("shrink", if (pref.contains("shrink")) pref.getBoolean("shrink", true) else null)
                                         it.put("ime", if (pref.contains("ime")) pref.getBoolean("ime", true) else null)
                                         it.put("clear", if (pref.contains("clear")) pref.getBoolean("clear", true) else null)
                                         it.put("buttons", if (pref.contains("buttons")) pref.getBoolean("buttons", true) else null)
+                                        it.put("process_text", if (pref.contains("process_text")) pref.getBoolean("process_text", true) else null)
                                         it.put("scroll", pref.getString("scroll", null))
                                         it.put("recentsize", pref.getString("recentsize", null))
                                     })
@@ -340,7 +354,7 @@ class SettingActivity : BaseActivity() {
                                 hl.addView(cbFavoriteMerge, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                                 hl.addView(cbScroll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                             }).setTitle(R.string.imported_data).setPositiveButton(R.string.import_confirm) { _: DialogInterface, _: Int ->
-                                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this.activity)
+                                val pref = PreferenceManager.getDefaultSharedPreferences(this.activity)
                                 val edit = pref.edit()
                                 if (cbSetting.isChecked) {
                                     obj.optJSONObject("setting")?.also {
@@ -360,12 +374,14 @@ class SettingActivity : BaseActivity() {
                                         (it.opt("column") as? String)?.let { str -> edit.putString("column", str) }
                                         (it.opt("columnl") as? String)?.let { str -> edit.putString("columnl", str) }
                                         (it.opt("textsize") as? String)?.let { str -> edit.putString("textsize", str) }
+                                        (it.opt("multiline") as? Boolean)?.let { bool -> edit.putBoolean("multiline", bool) }
                                         (it.opt("viewsize") as? String)?.let { str -> edit.putString("viewsize", str) }
                                         (it.opt("lines") as? Boolean)?.let { bool -> edit.putBoolean("lines", bool) }
                                         (it.opt("shrink") as? Boolean)?.let { bool -> edit.putBoolean("shrink", bool) }
                                         (it.opt("ime") as? Boolean)?.let { bool -> edit.putBoolean("ime", bool) }
                                         (it.opt("clear") as? Boolean)?.let { bool -> edit.putBoolean("clear", bool) }
                                         (it.opt("buttons") as? Boolean)?.let { bool -> edit.putBoolean("buttons", bool) }
+                                        (it.opt("process_text") as? Boolean)?.let { bool -> edit.putBoolean("process_text", bool) }
                                         (it.opt("scroll") as? String)?.let { str -> edit.putString("scroll", str) }
                                         (it.opt("recentsize") as? String)?.let { str -> edit.putString("recentsize", str) }
                                     }

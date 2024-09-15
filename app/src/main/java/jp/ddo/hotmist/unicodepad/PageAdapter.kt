@@ -17,10 +17,9 @@ package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Typeface
-import android.text.style.TextAppearanceSpan
 import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -110,7 +109,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return adapters[position].let { adapter ->
             adapter.setListener(this)
             if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
-                DynamicDragListView(activity, null).also { view ->
+                DynamicDragListView(activity, null).let { view ->
                     view.setLayoutManager(LinearLayoutManager(activity))
                     view.setDragListListener(adapter)
                     view.setAdapter(adapter, false)
@@ -190,45 +189,65 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
-        pager.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (activity.resources.displayMetrics.scaledDensity * (CharacterAdapter.fontsize * 1.8f + TextAppearanceSpan(activity, android.R.style.TextAppearance_Small).textSize * 2.4f + 32f)).toInt())
-        val layout = LinearLayout(activity)
-        layout.addView(pager)
-        val builder = AlertDialog.Builder(activity)
-                .setView(layout)
-        if (view != null) builder.setPositiveButton(R.string.input, DialogInterface.OnClickListener { _, _ ->
-            if (adapter.id >= 0) {
-                adapterRecent.add(adapter.id.toInt())
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {
+                pager.requestLayout()
             }
-            val start = edit.selectionStart
-            val end = edit.selectionEnd
-            if (start == -1) return@OnClickListener
-            edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
+            override fun onPageScrollStateChanged(state: Int) {}
         })
-        if (parentAdapter !== adapterEmoji) builder.setNeutralButton(R.string.inlist) { _, _ -> find(adapter.id.toInt()) }
-        if (parentAdapter === adapterRecent) builder.setNegativeButton(R.string.remrec) { _, _ ->
-            adapterRecent.rem(adapter.id.toInt())
-            adapterRecent.notifyItemRemoved(adapter.index)
+        val layout = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
         }
-        if (view is AbsListView && parentAdapter === adapterEdit) builder.setNegativeButton(R.string.delete) { _, _ ->
-            val i = pager.currentItem
-            val s = edit.editableText.toString()
-            edit.editableText.delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1))
-        }
-        if (view is RecyclerView && parentAdapter === adapterList) builder.setNegativeButton(R.string.mark) { _, _ ->
-            val edit = EditText(activity)
-            AlertDialog.Builder(activity)
-                    .setTitle(R.string.mark)
-                    .setView(edit)
-                    .setPositiveButton(R.string.mark) { _, _ -> adapterList.mark(adapter.id.toInt(), edit.text.toString()) }
-                    .create().show()
-        }
-        dlg?.let {
-            if (it.isShowing) it.dismiss()
-        }
-        builder.create().let {
-            dlg = it
-            it.show()
-        }
+        layout.addView(pager, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        layout.addView(LinearLayout(activity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            if (parentAdapter === adapterRecent) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.remrec)
+                setOnClickListener {
+                    adapterRecent.rem(adapter.id.toInt())
+                    adapterRecent.notifyItemRemoved(adapter.index)
+                }
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            if (view is AbsListView && parentAdapter === adapterEdit) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.delete)
+                setOnClickListener {
+                    val i = pager.currentItem
+                    val s = edit.editableText.toString()
+                    edit.editableText.delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1))
+                }
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            if (view is RecyclerView && parentAdapter === adapterList) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.mark)
+                setOnClickListener {
+                    val edit = EditText(activity)
+                    AlertDialog.Builder(activity)
+                            .setTitle(R.string.mark)
+                            .setView(edit)
+                            .setPositiveButton(R.string.mark) { _, _ -> adapterList.mark(adapter.id.toInt(), edit.text.toString()) }
+                            .create().show()
+                }
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
+            if (parentAdapter !== adapterEmoji) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.inlist)
+                setOnClickListener { find(adapter.id.toInt()) }
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
+            if (view != null) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.input)
+                setOnClickListener {
+                    if (adapter.id >= 0) {
+                        adapterRecent.add(adapter.id.toInt())
+                    }
+                    val start = edit.selectionStart
+                    val end = edit.selectionEnd
+                    if (start == -1) return@setOnClickListener
+                    edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
+                }
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        activity.setBottomSheetContent(layout, if (parentAdapter === adapterList) null else ua)
     }
 
     override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -293,7 +312,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         if (recpage >= numPage) recpage = -1
         adapterFavorite = FavoriteAdapter(activity, pref, db, bfav)
         adapters[pref.getInt("ord_fav", 4)] = adapterFavorite
-        adapterEdit = EditAdapter(activity, db, bedt, edit)
+        adapterEdit = EditAdapter(activity, pref, db, bedt, edit)
         adapters[pref.getInt("ord_edt", 5)] = adapterEdit
         adapterEmoji = EmojiAdapter(activity, pref, db, bemoji)
         adapters[pref.getInt("ord_emoji", 2)] = adapterEmoji

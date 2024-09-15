@@ -17,7 +17,6 @@ package jp.ddo.hotmist.unicodepad
 
 import android.app.Activity
 import android.content.SharedPreferences
-import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 internal class RecentAdapter(activity: Activity, pref: SharedPreferences, db: NameDatabase, single: Boolean) : DragListUnicodeAdapter<Int>(activity, db, single) {

@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "jp.ddo.hotmist.unicodepad"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
-        versionCode 61
-        versionName "2.13.4"
+        versionCode 63
+        versionName "2.14.1"
     }
 
     compileOptions {
@@ -19,6 +19,14 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 
     buildTypes {
@@ -47,6 +55,7 @@ android {
             versionNameSuffix "-fdroid"
         }
     }
+    namespace 'jp.ddo.hotmist.unicodepad'
 }
 
 dependencies {
@@ -58,6 +67,13 @@ dependencies {
     implementation 'com.github.woxthebox:draglistview:1.7.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.github.mreram:showcaseview:1.4.1'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'com.google.android.material:material:1.12.0'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.compose.ui:ui-android:1.6.5'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation 'androidx.compose.material:material-icons-extended:1.6.5'
 
     playImplementation 'com.google.android.gms:play-services-ads-lite:22.3.0'
 }

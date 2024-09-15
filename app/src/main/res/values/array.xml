@@ -183,6 +183,7 @@
 		<item>@string/script_10500</item>
 		<item>@string/script_10530</item>
 		<item>@string/script_10570</item>
+		<item>@string/script_105C0</item>
 		<item>@string/script_10600</item>
 		<item>@string/script_10780</item>
 		<item>@string/script_10800</item>
@@ -205,6 +206,7 @@
 		<item>@string/script_10C00</item>
 		<item>@string/script_10C80</item>
 		<item>@string/script_10D00</item>
+		<item>@string/script_10D40</item>
 		<item>@string/script_10E60</item>
 		<item>@string/script_10E80</item>
 		<item>@string/script_10EC0</item>
@@ -224,12 +226,14 @@
 		<item>@string/script_11280</item>
 		<item>@string/script_112B0</item>
 		<item>@string/script_11300</item>
+		<item>@string/script_11380</item>
 		<item>@string/script_11400</item>
 		<item>@string/script_11480</item>
 		<item>@string/script_11580</item>
 		<item>@string/script_11600</item>
 		<item>@string/script_11660</item>
 		<item>@string/script_11680</item>
+		<item>@string/script_116D0</item>
 		<item>@string/script_11700</item>
 		<item>@string/script_11800</item>
 		<item>@string/script_118A0</item>
@@ -240,6 +244,7 @@
 		<item>@string/script_11AB0</item>
 		<item>@string/script_11AC0</item>
 		<item>@string/script_11B00</item>
+		<item>@string/script_11BC0</item>
 		<item>@string/script_11C00</item>
 		<item>@string/script_11C70</item>
 		<item>@string/script_11D00</item>
@@ -254,12 +259,15 @@
 		<item>@string/script_12F90</item>
 		<item>@string/script_13000</item>
 		<item>@string/script_13430</item>
+		<item>@string/script_13460</item>
 		<item>@string/script_14400</item>
+		<item>@string/script_16100</item>
 		<item>@string/script_16800</item>
 		<item>@string/script_16A40</item>
 		<item>@string/script_16A70</item>
 		<item>@string/script_16AD0</item>
 		<item>@string/script_16B00</item>
+		<item>@string/script_16D40</item>
 		<item>@string/script_16E40</item>
 		<item>@string/script_16F00</item>
 		<item>@string/script_16FE0</item>
@@ -274,6 +282,7 @@
 		<item>@string/script_1B170</item>
 		<item>@string/script_1BC00</item>
 		<item>@string/script_1BCA0</item>
+		<item>@string/script_1CC00</item>
 		<item>@string/script_1CF00</item>
 		<item>@string/script_1D000</item>
 		<item>@string/script_1D100</item>
@@ -291,6 +300,7 @@
 		<item>@string/script_1E290</item>
 		<item>@string/script_1E2C0</item>
 		<item>@string/script_1E4D0</item>
+		<item>@string/script_1E5D0</item>
 		<item>@string/script_1E7E0</item>
 		<item>@string/script_1E800</item>
 		<item>@string/script_1E900</item>

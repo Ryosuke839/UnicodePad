@@ -228,6 +228,7 @@
 	<string name="script_10500">10500 Elbasan</string>
 	<string name="script_10530">10530 Caucasian Albanian</string>
 	<string name="script_10570">10570 Vithkuqi</string>
+	<string name="script_105C0">105C0 Todhri</string>
 	<string name="script_10600">10600 Linear A</string>
 	<string name="script_10780">10780 Latin Extended-F</string>
 	<string name="script_10800">10800 Cypriot Syllabary</string>
@@ -250,6 +251,7 @@
 	<string name="script_10C00">10C00 Old Turkic</string>
 	<string name="script_10C80">10C80 Old Hungarian</string>
 	<string name="script_10D00">10D00 Hanifi Rohingya</string>
+	<string name="script_10D40">10D40 Garay</string>
 	<string name="script_10E60">10E60 Rumi Numeral Symbols</string>
 	<string name="script_10E80">10E80 Yezidi</string>
 	<string name="script_10EC0">10EC0 Arabic Extended-C</string>
@@ -269,12 +271,14 @@
 	<string name="script_11280">11280 Multani</string>
 	<string name="script_112B0">112B0 Khudawadi</string>
 	<string name="script_11300">11300 Grantha</string>
+	<string name="script_11380">11380 Tulu-Tigalari</string>
 	<string name="script_11400">11400 Newa</string>
 	<string name="script_11480">11480 Tirhuta</string>
 	<string name="script_11580">11580 Siddham</string>
 	<string name="script_11600">11600 Modi</string>
 	<string name="script_11660">11660 Mongolian Supplement</string>
 	<string name="script_11680">11680 Takri</string>
+	<string name="script_116D0">116D0 Myanmar Extended-C</string>
 	<string name="script_11700">11700 Ahom</string>
 	<string name="script_11800">11800 Dogra</string>
 	<string name="script_118A0">118A0 Warang Citi</string>
@@ -285,6 +289,7 @@
 	<string name="script_11AB0">11AB0 Unified Canadian Aboriginal Syllabics Extended-A</string>
 	<string name="script_11AC0">11AC0 Pau Cin Hau</string>
 	<string name="script_11B00">11B00 Devanagari Extended-A</string>
+	<string name="script_11BC0">11BC0 Sunuwar</string>
 	<string name="script_11C00">11C00 Bhaiksuki</string>
 	<string name="script_11C70">11C70 Marchen</string>
 	<string name="script_11D00">11D00 Masaram Gondi</string>
@@ -299,12 +304,15 @@
 	<string name="script_12F90">12F90 Cypro-Minoan</string>
 	<string name="script_13000">13000 Egyptian Hieroglyphs</string>
 	<string name="script_13430">13430 Egyptian Hieroglyph Format Controls</string>
+	<string name="script_13460">13460 Egyptian Hieroglyphs Extended-A</string>
 	<string name="script_14400">14400 Anatolian Hieroglyphs</string>
+	<string name="script_16100">16100 Gurung Khema</string>
 	<string name="script_16800">16800 Bamum Supplement</string>
 	<string name="script_16A40">16A40 Mro</string>
 	<string name="script_16A70">16A70 Tangsa</string>
 	<string name="script_16AD0">16AD0 Bassa Vah</string>
 	<string name="script_16B00">16B00 Pahawh Hmong</string>
+	<string name="script_16D40">16D40 Kirat Rai</string>
 	<string name="script_16E40">16E40 Medefaidrin</string>
 	<string name="script_16F00">16F00 Miao</string>
 	<string name="script_16FE0">16FE0 Ideographic Symbols and Punctuation</string>
@@ -319,6 +327,7 @@
 	<string name="script_1B170">1B170 Nushu</string>
 	<string name="script_1BC00">1BC00 Duployan</string>
 	<string name="script_1BCA0">1BCA0 Shorthand Format Controls</string>
+	<string name="script_1CC00">1CC00 Symbols for Legacy Computing Supplement</string>
 	<string name="script_1CF00">1CF00 Znamenny Musical Notation</string>
 	<string name="script_1D000">1D000 Byzantine Musical Symbols</string>
 	<string name="script_1D100">1D100 Musical Symbols</string>
@@ -336,6 +345,7 @@
 	<string name="script_1E290">1E290 Toto</string>
 	<string name="script_1E2C0">1E2C0 Wancho</string>
 	<string name="script_1E4D0">1E4D0 Nag Mundari</string>
+	<string name="script_1E5D0">1E5D0 Ol Onal</string>
 	<string name="script_1E7E0">1E7E0 Ethiopic Extended-B</string>
 	<string name="script_1E800">1E800 Mende Kikakui</string>
 	<string name="script_1E900">1E900 Adlam</string>
@@ -419,7 +429,8 @@
 	<string name="version_1400" translatable="false">14.0.0</string>
 	<string name="version_1500" translatable="false">15.0.0</string>
 	<string name="version_1510" translatable="false">15.1.0</string>
-	<string name="version_latest">Latest (15.1.0)</string>
+	<string name="version_1600" translatable="false">16.0.0</string>
+	<string name="version_latest">Latest (16.0.0)</string>
 
 	<string name="emojicompat_desc">Use EmojiCompat to show emojis</string>
 	<string name="emojicompat_null">Never</string>

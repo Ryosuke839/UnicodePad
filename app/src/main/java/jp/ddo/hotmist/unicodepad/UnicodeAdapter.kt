@@ -365,11 +365,13 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
     }.resourceId
 
-    class ClonedDragListUnicodeAdapter<T>(base: DragListUnicodeAdapter<T>) : DragListUnicodeAdapter<Int>(base.activity, base.db, base.single) {
+    class ClonedDragListUnicodeAdapter<T>(base: DragListUnicodeAdapter<T>) : DragListUnicodeAdapter<ClonedDragListUnicodeAdapter.Data>(base.activity, base.db, base.single) {
+        data class Data(val codePoint: Long, val item: String, val itemString: String)
+
         init {
             mItemList = ArrayList()
             for (i in base.mItemList.indices) {
-                mItemList.add(base.getItemCodePoint(i).toInt())
+                mItemList.add(Data(base.getItemCodePoint(i), base.getItem(i), base.getItemString(i)))
             }
         }
 
@@ -387,7 +389,15 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
         }
 
         override fun getItemCodePoint(i: Int): Long {
-            return mItemList[i].toLong()
+            return mItemList[i].codePoint
+        }
+
+        override fun getItem(i: Int): String {
+            return mItemList[i].item
+        }
+
+        override fun getItemString(i: Int): String {
+            return mItemList[i].itemString
         }
     }
     override fun freeze(): UnicodeAdapter {

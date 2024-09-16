@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import java.util.*
 
-class LocaleChooser internal constructor(private val context: Context, private val spinner : Spinner, private val listener : Listener) {
+class LocaleChooser internal constructor(private val context: Context, val spinner : Spinner, private val listener : Listener) {
     private var locale: String
     private val locales = mutableListOf(context.resources.getString(R.string.locale_default).format(Locale.getDefault().toString()), "Root", Locale.JAPAN, Locale.KOREA, Locale.CHINA, Locale.TAIWAN, Locale("zh", "HK"), Locale("zh", "MO"), context.resources.getString(R.string.locale_other))
     private val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, locales)

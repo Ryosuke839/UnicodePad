@@ -138,6 +138,30 @@ class UnicodeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
+        editText = if (useEmoji != "null") { AppCompatEditText(this) } else { EditText(this) }
+        adpPage = PageAdapter(this, pref, editText)
+        pager = LockableViewPager(this).apply {
+            addView(PagerTabStrip(this@UnicodeActivity).apply {
+                viewTargets[R.id.ctab] = this
+            }, ViewPager.LayoutParams().apply {
+                width = ViewPager.LayoutParams.MATCH_PARENT
+                height = ViewPager.LayoutParams.WRAP_CONTENT
+                gravity = Gravity.TOP
+            })
+        }
+        chooser = FontChooser(this@UnicodeActivity, Spinner(this).apply {
+            viewTargets[R.id.fontBar] = this
+        }, object : FontChooser.Listener {
+            override fun onTypefaceChosen(typeface: Typeface?) {
+                setTypeface(typeface, oldlocale)
+            }
+        })
+        locale = LocaleChooser(this@UnicodeActivity, Spinner(this), object : LocaleChooser.Listener {
+            override fun onLocaleChosen(locale: Locale) {
+                setTypeface(oldtf, locale)
+            }
+        })
+
         setContent {
             Column(
                 modifier = Modifier.fillMaxHeight(),
@@ -151,8 +175,8 @@ class UnicodeActivity : BaseActivity() {
                         modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
                     ) {
                         AndroidView(
-                            factory = { context ->
-                                if (useEmoji != "null") { AppCompatEditText(context) } else { EditText(context) }.apply {
+                            factory = {
+                                editText.apply {
                                     id = R.id.editText
                                     setOnTouchListener { view: View, motionEvent: MotionEvent ->
                                         view.onTouchEvent(motionEvent)
@@ -216,7 +240,6 @@ class UnicodeActivity : BaseActivity() {
                                         }
                                     })
                                     requestFocus()
-                                    editText = this
                                 }
                             },
                             update = {
@@ -412,29 +435,13 @@ class UnicodeActivity : BaseActivity() {
                                     .padding(start = 8.dp),
                             )
                             AndroidView(
-                                factory = { context -> Spinner(context).apply {
-                                    viewTargets[R.id.fontBar] = this
-                                } },
-                                update = {
-                                    chooser = FontChooser(this@UnicodeActivity, it, object : FontChooser.Listener {
-                                        override fun onTypefaceChosen(typeface: Typeface?) {
-                                            setTypeface(typeface, oldlocale)
-                                        }
-                                    })
-                                },
+                                factory = { chooser.spinner },
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .weight(2f),
                             )
                             AndroidView(
-                                factory = { context -> Spinner(context) },
-                                update = {
-                                    locale = LocaleChooser(this@UnicodeActivity, it, object : LocaleChooser.Listener {
-                                        override fun onLocaleChosen(locale: Locale) {
-                                            setTypeface(oldtf, locale)
-                                        }
-                                    })
-                                },
+                                factory = { locale.spinner },
                                 modifier = Modifier.align(Alignment.CenterVertically).weight(1f),
                             )
                         }
@@ -454,19 +461,10 @@ class UnicodeActivity : BaseActivity() {
                                 )
                             }
                             AndroidView(
-                                factory = { context -> LockableViewPager(context).apply {
-                                    addView(PagerTabStrip(context).apply {
-                                        viewTargets[R.id.ctab] = this
-                                    }, ViewPager.LayoutParams().apply {
-                                        width = ViewPager.LayoutParams.MATCH_PARENT
-                                        height = ViewPager.LayoutParams.WRAP_CONTENT
-                                        gravity = Gravity.TOP
-                                    })
-                                    pager = this
-                                } },
+                                factory = { pager },
                                 update = {
                                     pager.offscreenPageLimit = 3
-                                    adpPage = PageAdapter(this@UnicodeActivity, pref, editText).also { adp ->
+                                    adpPage.also { adp ->
                                         pager.adapter = adp
                                         scroll?.setAdapter(adp)
                                     }
@@ -549,7 +547,7 @@ class UnicodeActivity : BaseActivity() {
                             }
                         })
                     }},
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().weight(1f),
                 )
                 if (adCompat.showAdSettings) {
                     AndroidView(

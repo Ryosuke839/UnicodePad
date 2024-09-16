@@ -29,7 +29,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class FontChooser internal constructor(private val activity: Activity, private val spinner: Spinner, private val listener: Listener) : FileChooser.Listener {
+class FontChooser internal constructor(private val activity: Activity, val spinner: Spinner, private val listener: Listener) : FileChooser.Listener {
     private val adapter: ArrayAdapter<String> = ArrayAdapter(activity, android.R.layout.simple_spinner_item)
     private var fontIndex: Int
     private val fontPaths = ArrayList<String>()

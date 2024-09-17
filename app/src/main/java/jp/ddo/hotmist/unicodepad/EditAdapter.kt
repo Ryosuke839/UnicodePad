@@ -219,6 +219,11 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return mItemList[i].first.toString()
     }
 
+    override fun onBindViewHolder(holder: UnicodeAdapter.ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (holder is UnicodeAdapter.CharacterViewHolder) holder.characterView.drawSlash(false)
+    }
+
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if (suspend) return
 

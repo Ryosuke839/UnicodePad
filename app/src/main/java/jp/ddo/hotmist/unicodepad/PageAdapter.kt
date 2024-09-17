@@ -178,14 +178,15 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
 
     private var dlg: AlertDialog? = null
     fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
-        val tab = PagerTabStrip(activity)
-        tab.id = R.id.TAB_ID
-        val layoutParams = ViewPager.LayoutParams()
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        layoutParams.gravity = Gravity.TOP
         val pager = ViewPager(activity)
-        pager.addView(tab, layoutParams)
+        pager.addView(PagerTabStrip(activity).apply {
+            id = R.id.TAB_ID
+        }, ViewPager.LayoutParams().apply {
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            gravity = Gravity.TOP
+            isDecor = true
+        })
         val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
         pager.adapter = adapter
         pager.setCurrentItem(index, false)

@@ -147,6 +147,7 @@ class UnicodeActivity : BaseActivity() {
                 width = ViewPager.LayoutParams.MATCH_PARENT
                 height = ViewPager.LayoutParams.WRAP_CONTENT
                 gravity = Gravity.TOP
+                isDecor = true
             })
         }
         chooser = FontChooser(this@UnicodeActivity, Spinner(this).apply {

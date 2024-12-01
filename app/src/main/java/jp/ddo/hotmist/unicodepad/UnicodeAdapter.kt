@@ -97,16 +97,18 @@ interface UnicodeAdapter {
             it.tag.let { tag ->
                 check(tag is ViewHolder)
                 val position = getItemIndex(tag.absoluteAdapterPosition).first
-                check(position >= 0)
-                listener.onItemClick(this, position, getItemCodePoint(position))
+                if (position >= 0) {
+                    listener.onItemClick(this, position, getItemCodePoint(position))
+                }
             }
         }
         onItemLongClickListener = View.OnLongClickListener {
             it.tag.let { tag ->
                 check(tag is ViewHolder)
                 val position = getItemIndex(tag.absoluteAdapterPosition).first
-                check(position >= 0)
-                listener.onItemLongClick(this, position)
+                if (position >= 0) {
+                    listener.onItemLongClick(this, position)
+                }
             }
             true
         }

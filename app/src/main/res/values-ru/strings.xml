@@ -228,6 +228,7 @@
 	<string name="script_10500">10500 Эльбасанское письмо</string>
 	<string name="script_10530">10530 Агванское письмо (Кавказская Албания)</string>
 	<string name="script_10570">10570 Виткутьское письмо</string>
+	<string name="script_105C0">105C0 Тодри</string>
 	<string name="script_10600">10600 Линейное письмо А</string>
 	<string name="script_10780">10780 Расширенная латиница — F</string>
 	<string name="script_10800">10800 Кипрское письмо</string>
@@ -250,6 +251,7 @@
 	<string name="script_10C00">10C00 Древнетюркское руническое письмо</string>
 	<string name="script_10C80">10C80 Венгерские руны</string>
 	<string name="script_10D00">10D00 Ханифи</string>
+	<string name="script_10D40">10D40 Гарай</string>
 	<string name="script_10E60">10E60 Цифры руми</string>
 	<string name="script_10E80">10E80 Езидское письмо</string>
 	<string name="script_10EC0">10EC0 Расширенное арабское письмо — C</string>
@@ -269,12 +271,14 @@
 	<string name="script_11280">11280 Мултани</string>
 	<string name="script_112B0">112B0 Худабади</string>
 	<string name="script_11300">11300 Грантха</string>
+	<string name="script_11380">11380 Тулу-Тигалари</string>
 	<string name="script_11400">11400 Неварское письмо</string>
 	<string name="script_11480">11480 Тирхута</string>
 	<string name="script_11580">11580 Сиддхаматрика</string>
 	<string name="script_11600">11600 Моди</string>
 	<string name="script_11660">11660 Дополнение к монгольскому письму</string>
 	<string name="script_11680">11680 Такри</string>
+	<string name="script_116D0">116D0 Расширенное бирманское письмо — C</string>
 	<string name="script_11700">11700 Ахом</string>
 	<string name="script_11800">11800 Догра</string>
 	<string name="script_118A0">118A0 Варанг-кшити</string>
@@ -285,6 +289,7 @@
 	<string name="script_11AB0">11AB0 Расширенное канадское слоговое письмо — A</string>
 	<string name="script_11AC0">11AC0 По Чин Хо</string>
 	<string name="script_11B00">11B00 Расширенное деванагари — A</string>
+	<string name="script_11BC0">11BC0 Сунувар</string>
 	<string name="script_11C00">11C00 Бхайкшуки</string>
 	<string name="script_11C70">11C70 Марчен</string>
 	<string name="script_11D00">11D00 Гонди Масарама</string>
@@ -299,12 +304,15 @@
 	<string name="script_12F90">12F90 Кипро-минойское письмо</string>
 	<string name="script_13000">13000 Египетские иероглифы</string>
 	<string name="script_13430">13430 Управляющие символы форматирования египетских иероглифов</string>
+	<string name="script_13460">13460 Расширенные египетские иероглифы — A</string>
 	<string name="script_14400">14400 Анатолийские иероглифы</string>
+	<string name="script_16100">16100 Гурунг хема</string>
 	<string name="script_16800">16800 Дополнение к бамуму</string>
 	<string name="script_16A40">16A40 Мро</string>
 	<string name="script_16A70">16A70 Тангса</string>
 	<string name="script_16AD0">16AD0 Письмо басса</string>
 	<string name="script_16B00">16B00 Пахау</string>
+	<string name="script_16D40">16D40 Кират Рай</string>
 	<string name="script_16E40">16E40 Медефайдрин</string>
 	<string name="script_16F00">16F00 Письмо Полларда (мяо)</string>
 	<string name="script_16FE0">16FE0 Идеографические символы и пунктуация</string>
@@ -319,6 +327,7 @@
 	<string name="script_1B170">1B170 Нюй-шу</string>
 	<string name="script_1BC00">1BC00 Стенография Дюплойе</string>
 	<string name="script_1BCA0">1BCA0 Форматирующие символы стенографии</string>
+	<string name="script_1CC00">1CC00 Символы для устаревших вычислительных систем</string>
 	<string name="script_1CF00">1CF00 Знаменное нотное письмо</string>
 	<string name="script_1D000">1D000 Византийские музыкальные символы</string>
 	<string name="script_1D100">1D100 Музыкальные символы</string>
@@ -336,6 +345,7 @@
 	<string name="script_1E290">1E290 Тото</string>
 	<string name="script_1E2C0">1E2C0 Ванчо</string>
 	<string name="script_1E4D0">1E4D0 Символы Мундари</string>
+	<string name="script_1E5D0">1E5D0 Ол Онал</string>
 	<string name="script_1E7E0">1E7E0 Расширенное эфиопское письмо — B</string>
 	<string name="script_1E800">1E800 Письмо кикакуи для языка менде</string>
 	<string name="script_1E900">1E900 Адлам</string>
@@ -390,6 +400,7 @@
 	<string name="appearance">Внешний вид</string>
 	<string name="behaviour">Поведение</string>
 	<string name="textsize_desc">Размер текста поля редактирования</string>
+	<string name="multiline_desc">Многострочное поле редактирования</string>
 	<string name="column_desc">Столбцы в сетке</string>
 	<string name="columnl_desc">Столбцы в сетке (альбомная ориентация)</string>
 
@@ -454,6 +465,8 @@
 	<string name="ime_desc">Отключить IME</string>
 	<string name="clear_desc">Показывать кнопку очистки</string>
 	<string name="buttons_desc">Показывать строку кнопок</string>
+	<string name="process_text_desc">Запуск из контекстного меню выделенного текста</string>
+	<string name="grapheme_cluster">Кластеризация графем</string>
 	<string name="malformed">Неправильное имя файла в ZIP–архиве</string>
 	<string name="legal">Лицензия</string>
 	<string name="legal_uni2">Это приложение включает модифицированную версию файла данных Unicode.

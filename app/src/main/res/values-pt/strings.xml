@@ -43,8 +43,8 @@
 	<string name="code">Pontos de código</string>
 	<string name="nocode">Ponto de código inválido</string>
 	<string name="cantopen">Não foi possível abrir a fonte</string>
-	<string name="cantread">Impossível acessar; o aplicativo pode não ter permissão de leitura</string>
-	<string name="denied">Você negou o acesso. Para navegar pelo cartão SD, por favor garanta permissão ao armazenamento pela Configuração do app.</string>
+	<string name="cantread">Não é possível acessar; o aplicativo pode não ter permissão de leitura</string>
+	<string name="denied">Você negou o acesso. Para navegar pelo cartão SD, por favor, garanta permissão ao armazenamento pelas Configurações do app.</string>
 
 	<string name="script_0">0 Latim Básico</string>
 	<string name="script_80">80 Latim Suplementar 1</string>
@@ -116,7 +116,7 @@
 	<string name="script_1D00">1D00 Expansões Fonéticas</string>
 	<string name="script_1D80">1D80 Expansões Fonéticas Suplementares</string>
 	<string name="script_1DC0">1DC0 Marcas Diacríticas Combinantes Suplementares</string>
-	<string name="script_1E00">1E00 Latim Expandido Adicional</string>
+	<string name="script_1E00">1E00 Expansão Adicional do Latim</string>
 	<string name="script_1F00">1F00 Expansões do Grego</string>
 	<string name="script_2000">2000 Pontuação Geral</string>
 	<string name="script_2070">2070 Superscripts e Subscripts</string>
@@ -153,7 +153,7 @@
 	<string name="script_2E80">2E80 Suplemento de Radicais do CJK</string>
 	<string name="script_2F00">2F00 Radicais Kangxi</string>
 	<string name="script_2FF0">2FF0 Caracteres de Descrição Ideográfica</string>
-	<string name="script_3000">3000 Símbolos e Pontuação do CJK</string>
+	<string name="script_3000">3000 Símbolos e Pontuações do CJK</string>
 	<string name="script_3040">3040 Hiragana</string>
 	<string name="script_30A0">30A0 Katakana</string>
 	<string name="script_3100">3100 Bopomofo</string>
@@ -201,7 +201,7 @@
 	<string name="script_FB50">FB50 Formas A de Apresentação em Arábe</string>
 	<string name="script_FE00">FE00 Seletores de Variação</string>
 	<string name="script_FE10">FE10 Formas Verticais</string>
-	<string name="script_FE20">FE20 Marcas Combinando Pela Metade</string>
+	<string name="script_FE20">FE20 Marcas Combinantes do Meio</string>
 	<string name="script_FE30">FE30 Formas de Compatibilidade do CJK</string>
 	<string name="script_FE50">FE50 Variantes de Formas Pequenas</string>
 	<string name="script_FE70">FE70 Formas B de Apresentação em Arábe</string>

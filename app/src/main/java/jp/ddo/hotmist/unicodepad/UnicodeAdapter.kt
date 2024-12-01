@@ -19,6 +19,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -28,6 +29,16 @@ import com.woxthebox.draglistview.DragItemAdapter
 import com.woxthebox.draglistview.DragListView
 import java.util.*
 import kotlin.collections.ArrayList
+
+class GridLayoutManagerWrapper(context: Context, spanCount: Int) : GridLayoutManager(context, spanCount) {
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
+        try {
+            super.onLayoutChildren(recycler, state)
+        } catch (e: IndexOutOfBoundsException) {
+            Log.e("GridLayoutManager", "onLayoutChildren: $e")
+        }
+    }
+}
 
 interface UnicodeAdapter {
     val activity: Activity
@@ -196,7 +207,7 @@ interface UnicodeAdapter {
     var layoutManager: GridLayoutManager?
 
     fun getLayoutManager(context: Context, spanCount: Int): GridLayoutManager {
-        return GridLayoutManager(context, if (single) 1 else spanCount).also {
+        return GridLayoutManagerWrapper(context, if (single) 1 else spanCount).also {
             layoutManager = it
         }
     }
@@ -347,7 +358,7 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
     }
 
     override fun getLayoutManager(context: Context, spanCount: Int): GridLayoutManager {
-        return GridLayoutManager(context, if (single) 1 else spanCount).also {
+        return GridLayoutManagerWrapper(context, if (single) 1 else spanCount).also {
             it.spanSizeLookup = instantiateSpanSizeLookup(context, spanCount)
             layoutManager = it
         }

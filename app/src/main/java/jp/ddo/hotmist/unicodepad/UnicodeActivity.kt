@@ -599,7 +599,7 @@ class UnicodeActivity : BaseActivity() {
             // the ClipboardManager text becomes valid when the view is in focus.
             view.doOnLayout {
                 history[0] = Triple(cm.text?.toString() ?: "", 0, 0)
-                initialText = cm.text.toString()
+                initialText = cm.text?.toString()
             }
         }
         when {

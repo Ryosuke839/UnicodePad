@@ -23,6 +23,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.NestedScrollView
 import androidx.viewpager.widget.PagerAdapter
 import java.nio.charset.Charset
@@ -98,26 +99,33 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
             val l = r.split(if (emoji && i == 6) " " else "\n").toTypedArray()
             for (s in l) {
                 if (i == 0) {
-                    val desc = TextView(activity, null, android.R.attr.textAppearanceMedium)
-                    desc.text = s
-                    desc.setTextIsSelectable(true)
-                    desc.gravity = Gravity.CENTER_VERTICAL
-                    if (!emoji) {
-                        val fav = CheckBox(activity)
-                        fav.setButtonDrawable(android.R.drawable.btn_star)
-                        fav.gravity = Gravity.TOP
-                        fav.isChecked = afav.isFavorite(itemid)
-                        fav.setOnCheckedChangeListener { _, b -> if (b) afav.add(itemid) else afav.rem(itemid) }
-                        val hl = LinearLayout(activity)
-                        hl.orientation = LinearLayout.HORIZONTAL
-                        hl.addView(desc, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-                        hl.addView(fav, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                        hl.setPadding(textPadding, 0, textPadding, 0)
-                        layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                    } else {
-                        desc.setPadding(textPadding, 0, textPadding, 0)
-                        layout.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                    }
+                    layout.addView(LinearLayout(activity).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        addView(TextView(activity, null, android.R.attr.textAppearanceMedium).apply {
+                            this.text = if (adapter.getItemCodePoint(position) >= 0) String.format("U+%04X", adapter.getItemCodePoint(position)) else adapter.getItemString(position)
+                            setTextIsSelectable(true)
+                            gravity = Gravity.CENTER_VERTICAL
+                            maxWidth = activity.resources.displayMetrics.widthPixels / 2 - (ResourcesCompat.getDrawable(activity.resources, android.R.drawable.btn_star, null)?.intrinsicWidth ?: 0)
+                        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                        addView(TextView(activity, null, android.R.attr.textAppearanceMedium).apply {
+                            this.text = ": "
+                            gravity = Gravity.CENTER_VERTICAL
+                        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                        addView(TextView(activity, null, android.R.attr.textAppearanceMedium).apply {
+                            this.text = s
+                            setTextIsSelectable(true)
+                            gravity = Gravity.CENTER_VERTICAL
+                        }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                        if (!emoji) {
+                            addView(CheckBox(activity).apply {
+                                setButtonDrawable(android.R.drawable.btn_star)
+                                gravity = Gravity.TOP
+                                isChecked = afav.isFavorite(itemid)
+                                setOnCheckedChangeListener { _, b -> if (b) afav.add(itemid) else afav.rem(itemid) }
+                            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                        }
+                        setPadding(textPadding, 0, textPadding, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                     continue
                 }
                 val hl = LinearLayout(activity)

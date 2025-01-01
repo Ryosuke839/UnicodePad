@@ -56,7 +56,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -338,7 +337,7 @@ class UnicodeActivity : BaseActivity() {
                             )
                             AndroidView(
                                 factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    text = resources.getText(R.string.find)
+                                    text = resources.getText(R.string.desc)
                                 } },
                                 update = {
                                     it.setOnClickListener {
@@ -370,11 +369,13 @@ class UnicodeActivity : BaseActivity() {
                                 update = {
                                     it.setOnClickListener {
                                         cm.text = editText.text.toString()
-                                        Toast.makeText(
-                                            this@UnicodeActivity,
-                                            R.string.copied,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        if (Build.VERSION.SDK_INT <= 32) {
+                                            Toast.makeText(
+                                                this@UnicodeActivity,
+                                                R.string.copied,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
@@ -875,12 +876,12 @@ class UnicodeActivity : BaseActivity() {
         super.onPause()
     }
 
-    override fun dispatchKeyEvent(e: KeyEvent): Boolean {
-        if (e.keyCode == KeyEvent.KEYCODE_MENU && e.action == KeyEvent.ACTION_UP) {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode == KeyEvent.KEYCODE_MENU && event.action == KeyEvent.ACTION_UP) {
             startActivityForResult(Intent(this, SettingActivity::class.java), 0)
             return true
         }
-        return super.dispatchKeyEvent(e)
+        return super.dispatchKeyEvent(event)
     }
 
     @Deprecated("Deprecated in Java")

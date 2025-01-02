@@ -17,6 +17,9 @@ package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woxthebox.draglistview.DragListView
 
@@ -34,14 +37,21 @@ class TabsActivity : BaseActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = DynamicDragListView(this, null)
-        val adapter = TabsAdapter(this)
-        view.setLayoutManager(LinearLayoutManager(this))
-        view.setDragListListener(adapter)
-        view.setAdapter(adapter, true)
-        view.setCanDragHorizontally(false)
-        view.setCanDragVertically(true)
-        setContentView(view)
+        setContentView(LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(TextView(this@TabsActivity).apply {
+                setText(R.string.tabs_hint)
+                setPadding((8 * this@TabsActivity.resources.displayMetrics.density).toInt())
+            })
+            val view = DynamicDragListView(this@TabsActivity, null)
+            val adapter = TabsAdapter(this@TabsActivity)
+            view.setLayoutManager(LinearLayoutManager(this@TabsActivity))
+            view.setDragListListener(adapter)
+            view.setAdapter(adapter, true)
+            view.setCanDragHorizontally(false)
+            view.setCanDragVertically(true)
+            addView(view)
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {

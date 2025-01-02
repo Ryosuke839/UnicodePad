@@ -458,6 +458,7 @@
 	<string name="no_ad_desc">Opt-out ads</string>
 	<string name="skip_guide_desc">Skip tutorials</string>
 	<string name="tabs_desc">Tabs settings…</string>
+	<string name="tabs_hint">Hint: You can quickly switch between single / multiple columns by pinching in and out on lists</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>
 

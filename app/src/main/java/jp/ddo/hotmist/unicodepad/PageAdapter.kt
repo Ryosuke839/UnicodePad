@@ -109,31 +109,55 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return adapters[position].let { adapter ->
             adapter.setListener(this)
             if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
-                DynamicDragListView(activity, null).let { view ->
+                DynamicDragListView(activity, null).also { view ->
                     view.setLayoutManager(LinearLayoutManager(activity))
                     view.setDragListListener(adapter)
                     view.setAdapter(adapter, false)
                     view.setCanDragHorizontally(false)
                     view.setCanDragVertically(true)
-                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    views[position] = view
-                    adapter.instantiate(view).also { layout ->
-                        collection.addView(layout, 0)
-                        layouts[position] = layout
-                    }
                 }
             } else {
                 check(adapter is RecyclerView.Adapter<*>)
-                RecyclerView(activity).let { view ->
+                RecyclerView(activity).also { view ->
                     view.adapter = adapter
                     view.layoutManager = adapter.getLayoutManager(activity, column)
                     view.adapter = adapter
-                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    views[position] = view
-                    adapter.instantiate(view).also { layout ->
-                        collection.addView(layout, 0)
-                        layouts[position] = layout
+                }
+            }.let { view ->
+                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                views[position] = view
+                adapter.instantiate(view).also { layout ->
+                    val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                        override fun onScale(detector: ScaleGestureDetector): Boolean {
+                            return (if (detector.scaleFactor > 1.05f) {
+                                true
+                            } else if (detector.scaleFactor < 0.95f) {
+                                false
+                            } else {
+                                null
+                            })?.let {
+                                if (adapter.single != it) {
+                                    pref.edit().putString(
+                                        if (adapter === adapterRecent) "single_rec" else
+                                            if (adapter === adapterList) "single_list" else
+                                                if (adapter === adapterFind) "single_find" else
+                                                    if (adapter === adapterFavorite) "single_fav" else
+                                                        if (adapter === adapterEdit) "single_edt" else
+                                                            if (adapter === adapterEmoji) "single_emoji" else null,
+                                        it.toString()
+                                    ).apply()
+                                    notifyDataSetChanged()
+                                }
+                                true
+                            } ?: false
+                        }
+                    })
+                    (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
+                        scaleDetector.onTouchEvent(event)
+                        scaleDetector.isInProgress
                     }
+                    collection.addView(layout, 0)
+                    layouts[position] = layout
                 }
             }
         }

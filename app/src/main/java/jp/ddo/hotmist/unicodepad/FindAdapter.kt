@@ -39,7 +39,7 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
 
     override fun instantiate(view: View): View {
         super.instantiate(view)
-        val view = view as RecyclerView
+        check(view is RecyclerView)
         val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.VERTICAL
         val find = ImageButton(activity)
@@ -104,10 +104,6 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
 
     override fun destroy() {
         adapter = null
-        curList?.close()
-        curList = null
-        curEmoji?.close()
-        curEmoji = null
         super.destroy()
     }
 

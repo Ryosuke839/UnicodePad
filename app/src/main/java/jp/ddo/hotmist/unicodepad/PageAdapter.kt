@@ -154,6 +154,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                         }
                     })
                     (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
+                        adapter.onTouch()
                         scaleDetector.onTouchEvent(event)
                         scaleDetector.isInProgress
                     }

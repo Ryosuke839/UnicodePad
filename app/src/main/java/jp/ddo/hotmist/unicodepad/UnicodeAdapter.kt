@@ -208,6 +208,8 @@ interface UnicodeAdapter {
         activity.runOnUiThread(action)
     }
 
+    fun onTouch() {}
+
     var layoutManager: GridLayoutManager?
 
     fun getLayoutManager(context: Context, spanCount: Int): GridLayoutManager {

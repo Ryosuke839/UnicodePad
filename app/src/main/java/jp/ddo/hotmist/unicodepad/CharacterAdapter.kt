@@ -21,7 +21,6 @@ import android.view.*
 import android.view.View.MeasureSpec
 import android.widget.CheckBox
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.NestedScrollView
@@ -68,8 +67,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         val str = StringBuilder()
         if (!emoji) str.append(adapter.getItem(position))
         val textPadding = (6 * activity.resources.displayMetrics.scaledDensity).toInt()
-        for (i in 0 until if (!emoji) 10 else 7) {
-            if (emoji && i == 5) continue
+        for (i in 0 until if (!emoji) 4 else 5) {
             if (i == 2) {
                 val v = if (!emoji) db.getInt(itemid, cols[i]) else db.getInt(adapter.getItemString(position), emjs[i])
                 val desc = TextView(activity)
@@ -96,7 +94,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                 break
             }
             if (r == null) continue
-            val l = r.split(if (emoji && i == 6) " " else "\n").toTypedArray()
+            val l = r.split("\n").toTypedArray()
             for (s in l) {
                 if (i == 0) {
                     layout.addView(LinearLayout(activity).apply {
@@ -132,85 +130,92 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                 hl.orientation = LinearLayout.HORIZONTAL
                 val it = TextView(activity)
                 it.gravity = Gravity.CENTER_VERTICAL
-                it.text = (if (!emoji) mods else mode)[i]
-                hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                if (i < 6) {
+                if (!emoji && i == 3) {
+                    val charMap = mapOf(
+                        "*" to "\u2022 ",
+                        "=" to "= ",
+                        "%" to "\u203B ",
+                        "x" to "\u2192 ",
+                        "~" to "~ ",
+                        ":" to "\u2261 ",
+                        "#" to "\u2248 ",
+                        "@" to "\u2022 ",
+                    )
+                    it.text = charMap[s.substring(0, 1)] ?: s.substring(0, 1)
+                    hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    if (s.startsWith("*") || s.startsWith("=") || s.startsWith("%") || s.startsWith("@")) {
+                        it.gravity = Gravity.TOP
+                        val desc = TextView(activity)
+                        desc.text = s.substring(2)
+                        desc.setTextIsSelectable(true)
+                        hl.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                    } else {
+                        var cs = ""
+                        var ps = ""
+                        val ns = mutableListOf<String>()
+                        Scanner(s.substring(2)).use { sc ->
+                            while (sc.hasNext()) {
+                                val ss = sc.next()
+                                if (Regex("[0-9A-Fa-f]{4,6}").matches(ss)) {
+                                    val tgt = Integer.parseInt(ss, 16)
+                                    cs += String(Character.toChars(tgt))
+                                    ps += String.format("U+%04X ", tgt)
+                                } else {
+                                    ns.add(ss)
+                                }
+                            }
+                        }
+                        if (ps.isEmpty()) continue
+                        ps = ps.substring(0, ps.length - 1)
+                        val ct = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
+                        ct.setPadding(0, 0, 0, 0)
+                        ct.setPadding(UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding)
+                        ct.drawSlash(false)
+                        ct.setTextSize(UnicodeAdapter.fontsize)
+                        ct.text = cs
+                        ct.setTypeface(tf, locale)
+                        hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.fontsize * 2 + UnicodeAdapter.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+                        val pt = TextView(activity, null, android.R.attr.textAppearanceSmall)
+                        pt.setPadding(0, 0, 0, 0)
+                        pt.gravity = Gravity.CENTER_VERTICAL
+                        pt.text = ps
+                        if (ns.isNotEmpty()) {
+                            val nt = TextView(activity, null, android.R.attr.textAppearanceSmall)
+                            nt.setPadding(0, 0, 0, 0)
+                            nt.gravity = Gravity.CENTER_VERTICAL
+                            nt.text = ns.joinToString(" ")
+                            val vl = LinearLayout(activity)
+                            vl.orientation = LinearLayout.VERTICAL
+                            vl.addView(pt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                            vl.addView(nt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                            hl.addView(vl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                        } else hl.addView(pt, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                        hl.id = 0x3F000000 + str.codePointCount(0, str.length)
+                        str.append(cs)
+                        hl.isEnabled = true
+                        hl.isClickable = true
+                        hl.isFocusable = true
+                        hl.setOnClickListener { view ->
+                            var j = 0
+                            while (j < cs.length) {
+                                val code = cs.codePointAt(j)
+                                activity.adpPage.onItemClick(null, view, -1, code.toLong())
+                                j += Character.charCount(code)
+                            }
+                        }
+                        hl.setOnLongClickListener { view ->
+                            activity.adpPage.showDesc(null, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
+                            true
+                        }
+                        hl.setBackgroundResource(reslist)
+                    }
+                } else {
+                    it.text = (if (!emoji) mods else mode)[i]
+                    hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
                     val desc = TextView(activity)
                     desc.text = s
                     desc.setTextIsSelectable(true)
                     hl.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-                } else {
-                    var cs = ""
-                    var ps = ""
-                    var ns: String? = null
-                    Scanner(s).use { sc ->
-                        var j = 0
-                        while (sc.hasNext()) {
-                            if (i == 9 && j == 0 && s[0] == '<') {
-                                ns = sc.next()
-                                ++j
-                                continue
-                            }
-                            val tgt = sc.nextInt(16)
-                            cs += String(Character.toChars(tgt))
-                            ps += String.format("U+%04X ", tgt)
-                            if (i == 6) {
-                                val n = db[tgt, "name"]
-                                ns = n ?: "<not a character>"
-                                break
-                            }
-                            if (i == 7 && j == 1) {
-                                sc.useDelimiter("\n")
-                                sc.skip(" ")
-                                ns = if (sc.hasNext()) sc.next() else ""
-                                break
-                            }
-                            ++j
-                        }
-                    }
-                    if (ps.isEmpty()) continue
-                    ps = ps.substring(0, ps.length - 1)
-                    val ct = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
-                    ct.setPadding(0, 0, 0, 0)
-                    ct.setPadding(UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding, UnicodeAdapter.padding)
-                    ct.drawSlash(false)
-                    ct.setTextSize(UnicodeAdapter.fontsize)
-                    ct.text = cs
-                    ct.setTypeface(tf, locale)
-                    hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.fontsize * 2 + UnicodeAdapter.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
-                    val pt = TextView(activity, null, android.R.attr.textAppearanceSmall)
-                    pt.setPadding(0, 0, 0, 0)
-                    pt.gravity = Gravity.CENTER_VERTICAL
-                    pt.text = ps
-                    if (ns != null) {
-                        val nt = TextView(activity, null, android.R.attr.textAppearanceSmall)
-                        nt.setPadding(0, 0, 0, 0)
-                        nt.gravity = Gravity.CENTER_VERTICAL
-                        nt.text = ns
-                        val vl = LinearLayout(activity)
-                        vl.orientation = LinearLayout.VERTICAL
-                        vl.addView(pt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                        vl.addView(nt, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                        hl.addView(vl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-                    } else hl.addView(pt, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-                    hl.id = 0x3F000000 + str.codePointCount(0, str.length)
-                    str.append(cs)
-                    hl.isEnabled = true
-                    hl.isClickable = true
-                    hl.isFocusable = true
-                    hl.setOnClickListener { view ->
-                        var j = 0
-                        while (j < cs.length) {
-                            val code = cs.codePointAt(j)
-                            activity.adpPage.onItemClick(null, view, -1, code.toLong())
-                            j += Character.charCount(code)
-                        }
-                    }
-                    hl.setOnLongClickListener { view ->
-                        activity.adpPage.showDesc(null, view.id - 0x3F000000, StringAdapter(str.toString(), activity, db))
-                        true
-                    }
-                    hl.setBackgroundResource(reslist)
                 }
                 hl.setPadding(textPadding, 0, textPadding, 0)
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -244,9 +249,9 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         var checker = 10f
         var lines = true
         var shrink = true
-        private val cols = arrayOf("name", "utf8", "version", "comment", "alias", "formal", "xref", "vari", "decomp", "compat")
-        private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "\u2022 ", "= ", "\u203B ", "\u2192 ", "~ ", "\u2261 ", "\u2248 ")
-        private val emjs = arrayOf("name", "utf8", "version", "grp", "subgrp", "", "id")
-        private val mode = arrayOf(null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ", null, "")
+        private val cols = arrayOf("name", "utf8", "version", "lines")
+        private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "")
+        private val emjs = arrayOf("name", "utf8", "version", "grp", "subgrp")
+        private val mode = arrayOf(null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ")
     }
 }

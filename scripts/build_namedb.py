@@ -31,40 +31,34 @@ def main():
     print(ftp.login())
     with sqlite3.connect('namedb') as con:
       cur = con.cursor()
-      cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text NOT NULL, name text NOT NULL, version integer NOT NULL, comment text, alias text, formal text, xref text, vari text, decomp text, compat text);')
+      cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text NOT NULL, name text NOT NULL, version integer NOT NULL, lines text);')
       characters = {}
       class OneCharacter:
         id = None
         name = None
         version = 0
-        comment = []
-        alias = []
-        formal = []
-        xref = []
-        vari = []
-        decomp = []
-        compat = []
+        words = []
+        lines = []
         def __init__(self, code, name, version):
           self.id = int(code, 16)
           self.name = name
           self.version = version
-          self.comment = []
-          self.alias = []
-          self.formal = []
-          self.xref = []
-          self.vari = []
-          self.decomp = []
-          self.compat = []
+          self.words = [name]
+          self.lines = []
         def update(self):
           nonlocal characters
           if self.id in characters:
             self.version = characters[self.id].version
           characters[self.id] = self
+        def append_line(self, line_type, line, is_word=False):
+          if is_word:
+            self.words.append(line.replace('\'', '\'\''))
+          self.lines.append(line_type + ' ' + line.replace('\'', '\'\''))
         def insert(self):
           nonlocal cur
           def list_to_str(l):
             return '\'' + '\n'.join(l) + '\'' if len(l) > 0 else 'NULL'
-          exp = f'INSERT INTO name_table (id, words, name, version, comment, alias, formal, xref, vari, decomp, compat) values ({self.id}, \'{" ".join([self.name] + self.alias + self.formal)}\', \'{self.name}\', {self.version}, {list_to_str(self.comment)}, {list_to_str(self.alias)}, {list_to_str(self.formal)}, {list_to_str(self.xref)}, {list_to_str(self.vari)}, {list_to_str(self.decomp)}, {list_to_str(self.compat)});'
+          exp = f'INSERT INTO name_table (id, words, name, version, lines) values ({self.id}, \'{" ".join(self.words)}\', \'{self.name}\', {self.version}, {list_to_str(self.lines)});'
           try:
             cur.execute(exp)
           except:
@@ -78,9 +72,9 @@ def main():
           nonlocal current
           if len(line) == 0:
             return
-          elif line[0] in ['@', ';']:
+          elif line[0] in ['@', ';'] and not line.startswith('@+'):
             return
-          elif line[0] == '\t':
+          elif line[0] == '\t' or line.startswith('@+'):
             if current is None:
               return
             if len(line) < 3:
@@ -89,19 +83,21 @@ def main():
             if line[1] == '\t':
               return
             if line[1] == '*':
-              current.comment.append(line[3:].replace('\'', '\'\''))
+              current.append_line('*', line[3:])
+            if line.startswith('@+'):
+              current.append_line('@', line[3:].lstrip('\t').lstrip('* '))
             if line[1] == '=':
-              current.alias.append(line[3:].replace('\'', '\'\''))
+              current.append_line('=', line[3:], True)
             if line[1] == '%':
-              current.formal.append(line[3:].replace('\'', '\'\''))
+              current.append_line('%', line[3:], True)
             if line[1] == 'x':
-              current.xref.append((line.split(' ')[-1][:-1] if line[3] == '(' else line[3:]).lstrip('0').replace('\'', '\'\''))
+              current.append_line('x', (line.split(' - ')[0][4:] + ' ' + line.split(' ')[-1][:-1] if line[3] == '(' else line[3:]).lstrip('0'))
             if line[1] == '~':
-              current.vari.append(' '.join(s.lstrip('0') for s in line[3:].split(' ')).replace('\'', '\'\''))
+              current.append_line('~', line[3:])
             if line[1] == ':':
-              current.decomp.append(' '.join(s.lstrip('0') for s in line[3:].split(' ') if re.match('^[0-9A-F]+$', s)).replace('\'', '\'\''))
+              current.append_line(':', line[3:])
             if line[1] == '#':
-              current.compat.append(' '.join(s.lstrip('0') for s in line[3:].split(' ') if re.match('^([0-9A-F]+|<.*>)$', s)).replace('\'', '\'\''))
+              current.append_line('#', line[3:])
           else:
             if current is not None:
               current.update()
@@ -167,7 +163,7 @@ def main():
       cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      cur.execute('CREATE TABLE version_code as SELECT 59 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 60 as version;')
       con.commit()
       print('SELECT * FROM \'version_code\';')
       cur.execute('SELECT * FROM \'version_code\';')

@@ -203,6 +203,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
 
     private var dlg: AlertDialog? = null
     fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
+        activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)?.let {
+            (it as android.view.inputmethod.InputMethodManager).hideSoftInputFromWindow(edit.windowToken, 0)
+        }
         val pager = ViewPager(activity)
         pager.addView(PagerTabStrip(activity).apply {
             id = R.id.TAB_ID
@@ -257,12 +260,12 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
             addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
                 text = activity.getString(R.string.find)
-                isEnabled = adapter.id >= 0
+                isEnabled = adapter.getItemId(index) >= 0
                 setOnClickListener { if (adapter.id >= 0) find(adapter.id.toInt()) }
                 pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                     override fun onPageSelected(position: Int) {
-                        isEnabled = adapter.id >= 0
+                        isEnabled = adapter.getItemId(position) >= 0
                     }
                     override fun onPageScrollStateChanged(state: Int) {}
                 })

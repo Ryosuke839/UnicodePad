@@ -244,6 +244,10 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
     val id: Long
         get() = adapter.getItemCodePoint(index)
 
+    fun getItemId(position: Int): Long {
+        return adapter.getItemCodePoint(position)
+    }
+
     companion object {
         var fontsize = 160f
         var checker = 10f

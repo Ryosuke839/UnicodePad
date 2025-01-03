@@ -403,6 +403,7 @@
 	<string name="no_ad_desc">広告を非表示</string>
 	<string name="skip_guide_desc">チュートリアルをスキップ</string>
 	<string name="tabs_desc">タブ設定…</string>
+	<string name="tabs_hint">ヒント: リスト上でピンチイン・アウトすると1列と複数列を素早く切り替えられます</string>
 	<string name="shown_desc">表示タブ</string>
 	<string name="hidden_desc">非表示タブ</string>
 

@@ -36,6 +36,8 @@ class GridLayoutManagerWrapper(context: Context, spanCount: Int) : GridLayoutMan
             super.onLayoutChildren(recycler, state)
         } catch (e: IndexOutOfBoundsException) {
             Log.e("GridLayoutManager", "onLayoutChildren: $e")
+        } catch (e: IllegalArgumentException) {
+            Log.e("GridLayoutManager", "onLayoutChildren: $e")
         }
     }
 }

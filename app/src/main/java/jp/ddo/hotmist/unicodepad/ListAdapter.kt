@@ -670,22 +670,19 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             }
             layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             (this.view as RecyclerView?)?.also { view ->
-                view.setOnTouchListener { _, _ ->
-                    runOnUiThread {
-                        highTarget?.setBackgroundColor(resnormal)
-                        highTarget = null
-                        if (highlight != -1) {
-                            notifyItemChanged(highlight)
-                            highlight = -1
-                        }
-                    }
-                    false
-                }
                 val e = fromCodePoint.floorEntry(scroll) ?: fromCodePoint.firstEntry()
                 if (e.value.end < scroll) scroll = e.value.end
                 scrollToItem(scroll - e.key + e.value.index)
                 view.setOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        runOnUiThread {
+                            highTarget?.setBackgroundColor(resnormal)
+                            highTarget = null
+                            if (highlight != -1) {
+                                notifyItemChanged(highlight)
+                                highlight = -1
+                            }
+                        }
                         super.onScrolled(recyclerView, dx, dy)
                         val manager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
                         val firstVisibleItem = manager.findFirstVisibleItemPosition()

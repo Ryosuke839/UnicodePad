@@ -482,22 +482,31 @@ class UnicodeActivity : BaseActivity() {
                 }
                 AndroidView(
                     factory = { context -> CoordinatorLayout(context).apply {
-                        addView(if (scrollUi) {
-                            LockableScrollView(context).also {
-                                    scroll = it
-                                    it.addView(ComposeView(it.context).apply {
-                                        setContent {
-                                            MainView()
-                                        }
-                                    })
-                                    it.clipToOutline = true
+                        addView(LinearLayout(context).apply {
+                            orientation = LinearLayout.VERTICAL
+                            addView(if (scrollUi) {
+                                LockableScrollView(context).also {
+                                        scroll = it
+                                        it.addView(ComposeView(it.context).apply {
+                                            setContent {
+                                                MainView()
+                                            }
+                                        })
+                                        it.clipToOutline = true
+                                    }
+                            } else {
+                                scroll = null
+                                ComposeView(context).apply {
+                                    setContent {
+                                        MainView()
+                                    }
                                 }
-                        } else {
-                            scroll = null
-                            ComposeView(context).apply {
-                                setContent {
-                                    MainView()
-                                }
+                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+                            if (adCompat.showAdSettings) {
+                                addView(LinearLayout(context).apply {
+                                    id = R.id.adContainer
+                                    orientation = LinearLayout.VERTICAL
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
                             }
                         })
                         addView(LinearLayout(context).apply {
@@ -549,20 +558,13 @@ class UnicodeActivity : BaseActivity() {
                             }
                         })
                     }},
+                    update = {
+                        if (adCompat.showAdSettings) {
+                            adCompat.renderAdToContainer(this@UnicodeActivity, pref)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth().weight(1f),
                 )
-                if (adCompat.showAdSettings) {
-                    AndroidView(
-                        factory = { context -> LinearLayout(context).apply {
-                            id = R.id.adContainer
-                            orientation = LinearLayout.VERTICAL
-                        } },
-                        update = {
-                            adCompat.renderAdToContainer(this@UnicodeActivity, pref)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
             }
 
             LaunchedEffect(Unit) {

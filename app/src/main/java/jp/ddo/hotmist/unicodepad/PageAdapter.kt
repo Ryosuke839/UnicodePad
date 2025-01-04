@@ -131,9 +131,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                 adapter.instantiate(view).also { layout ->
                     val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                         override fun onScale(detector: ScaleGestureDetector): Boolean {
-                            return (if (detector.scaleFactor > 1.05f) {
+                            return (if (detector.scaleFactor > 1f) {
                                 true
-                            } else if (detector.scaleFactor < 0.95f) {
+                            } else if (detector.scaleFactor < 1f) {
                                 false
                             } else {
                                 null

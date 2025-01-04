@@ -20,6 +20,7 @@ import android.app.AlertDialog
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Typeface
+import android.os.Build
 import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -54,6 +55,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private val adapterFavorite: FavoriteAdapter
     internal val adapterEdit: EditAdapter
     private val adapterEmoji: EmojiAdapter
+    private var adapterCharacter: CharacterAdapter? = null
     private var blist = false
     private var bfind = false
     private var brec = false
@@ -109,31 +111,56 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         return adapters[position].let { adapter ->
             adapter.setListener(this)
             if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
-                DynamicDragListView(activity, null).let { view ->
+                DynamicDragListView(activity, null).also { view ->
                     view.setLayoutManager(LinearLayoutManager(activity))
                     view.setDragListListener(adapter)
                     view.setAdapter(adapter, false)
                     view.setCanDragHorizontally(false)
                     view.setCanDragVertically(true)
-                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    views[position] = view
-                    adapter.instantiate(view).also { layout ->
-                        collection.addView(layout, 0)
-                        layouts[position] = layout
-                    }
                 }
             } else {
                 check(adapter is RecyclerView.Adapter<*>)
-                RecyclerView(activity).let { view ->
+                RecyclerView(activity).also { view ->
                     view.adapter = adapter
                     view.layoutManager = adapter.getLayoutManager(activity, column)
                     view.adapter = adapter
-                    view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    views[position] = view
-                    adapter.instantiate(view).also { layout ->
-                        collection.addView(layout, 0)
-                        layouts[position] = layout
+                }
+            }.let { view ->
+                view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                views[position] = view
+                adapter.instantiate(view).also { layout ->
+                    val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                        override fun onScale(detector: ScaleGestureDetector): Boolean {
+                            return (if (detector.scaleFactor > 1f) {
+                                true
+                            } else if (detector.scaleFactor < 1f) {
+                                false
+                            } else {
+                                null
+                            })?.let {
+                                if (adapter.single != it) {
+                                    pref.edit().putString(
+                                        if (adapter === adapterRecent) "single_rec" else
+                                            if (adapter === adapterList) "single_list" else
+                                                if (adapter === adapterFind) "single_find" else
+                                                    if (adapter === adapterFavorite) "single_fav" else
+                                                        if (adapter === adapterEdit) "single_edt" else
+                                                            if (adapter === adapterEmoji) "single_emoji" else null,
+                                        it.toString()
+                                    ).apply()
+                                    notifyDataSetChanged()
+                                }
+                                true
+                            } ?: false
+                        }
+                    })
+                    (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
+                        adapter.onTouch()
+                        scaleDetector.onTouchEvent(event)
+                        scaleDetector.isInProgress
                     }
+                    collection.addView(layout, 0)
+                    layouts[position] = layout
                 }
             }
         }
@@ -162,9 +189,6 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val end = edit.selectionEnd
         if (start == -1) return
         edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id >= 0) String(Character.toChars(id.toInt())) else adapter.getItem(position))
-        dlg?.let {
-            if (it.isShowing) it.dismiss()
-        }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
@@ -176,8 +200,10 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         showDesc(adapter, position, adapter)
     }
 
-    private var dlg: AlertDialog? = null
     fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
+        activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)?.let {
+            (it as android.view.inputmethod.InputMethodManager).hideSoftInputFromWindow(edit.windowToken, 0)
+        }
         val pager = ViewPager(activity)
         pager.addView(PagerTabStrip(activity).apply {
             id = R.id.TAB_ID
@@ -188,6 +214,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             isDecor = true
         })
         val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
+        adapterCharacter = adapter
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -209,7 +236,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     adapterRecent.rem(adapter.id.toInt())
                     adapterRecent.notifyItemRemoved(adapter.index)
                 }
-            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
             if (view is AbsListView && parentAdapter === adapterEdit) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
                 text = activity.getString(R.string.delete)
                 setOnClickListener {
@@ -217,7 +244,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     val s = edit.editableText.toString()
                     edit.editableText.delete(s.offsetByCodePoints(0, i), s.offsetByCodePoints(0, i + 1))
                 }
-            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
             if (view is RecyclerView && parentAdapter === adapterList) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
                 text = activity.getString(R.string.mark)
                 setOnClickListener {
@@ -228,25 +255,45 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                             .setPositiveButton(R.string.mark) { _, _ -> adapterList.mark(adapter.id.toInt(), edit.text.toString()) }
                             .create().show()
                 }
-            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
             addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
-            if (parentAdapter !== adapterEmoji) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
-                text = activity.getString(R.string.inlist)
-                setOnClickListener { find(adapter.id.toInt()) }
-            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
-            addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
-            if (view != null) addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
-                text = activity.getString(R.string.input)
-                setOnClickListener {
-                    if (adapter.id >= 0) {
-                        adapterRecent.add(adapter.id.toInt())
+            addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                text = activity.getString(R.string.find)
+                isEnabled = adapter.getItemId(index) >= 0
+                setOnClickListener { if (adapter.id >= 0) find(adapter.id.toInt()) }
+                pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                    override fun onPageSelected(position: Int) {
+                        isEnabled = adapter.getItemId(position) >= 0
                     }
-                    val start = edit.selectionStart
-                    val end = edit.selectionEnd
-                    if (start == -1) return@setOnClickListener
-                    edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
-                }
-            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 3, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    override fun onPageScrollStateChanged(state: Int) {}
+                })
+            }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
+            addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
+            if (view != null) {
+                addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                    text = activity.getString(android.R.string.copy)
+                    setOnClickListener {
+                        val cm = activity.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                        cm.setPrimaryClip(android.content.ClipData.newPlainText(null, ua.getItem(adapter.index)))
+                        if (Build.VERSION.SDK_INT <= 32) {
+                            Toast.makeText(activity, R.string.copied, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
+                addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
+                    text = activity.getString(R.string.input)
+                    setOnClickListener {
+                        if (adapter.id >= 0) {
+                            adapterRecent.add(adapter.id.toInt())
+                        }
+                        val start = edit.selectionStart
+                        val end = edit.selectionEnd
+                        if (start == -1) return@setOnClickListener
+                        edit.editableText.replace(min(start, end), max(start, end), ua.getItem(adapter.index))
+                    }
+                }, LinearLayout.LayoutParams(Resources.getSystem().displayMetrics.widthPixels / 4, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }
         }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         activity.setBottomSheetContent(layout, if (parentAdapter === adapterList) null else ua)
     }
@@ -286,6 +333,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.setTypeface(tf, locale)
         adapterEdit.setTypeface(tf, locale)
         adapterEmoji.setTypeface(tf, locale)
+        adapterCharacter?.setTypeface(tf, locale)
     }
 
     fun onSizeChanged(top: Int) {

@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListPopupWindow.INPUT_METHOD_FROM_FOCUSABLE
 import android.widget.SpinnerAdapter
 import android.widget.ThemedSpinnerAdapter
 import androidx.appcompat.widget.AppCompatEditText
@@ -32,7 +31,8 @@ class FilterableSpinner(context: Context, attrs: AttributeSet?, defStyle: Int) :
             popupField.isAccessible = true
             val popup = popupField.get(this as AppCompatSpinner)
             if (popup is ListPopupWindow) {
-                popup.inputMethodMode = INPUT_METHOD_FROM_FOCUSABLE
+                popup.inputMethodMode = ListPopupWindow.INPUT_METHOD_FROM_FOCUSABLE
+                popup.show()
             }
         } catch (e: NoSuchFieldException) {
             e.printStackTrace()

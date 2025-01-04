@@ -670,17 +670,6 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             }
             layout.addView(this.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             (this.view as RecyclerView?)?.also { view ->
-                view.setOnTouchListener { _, _ ->
-                    runOnUiThread {
-                        highTarget?.setBackgroundColor(resnormal)
-                        highTarget = null
-                        if (highlight != -1) {
-                            notifyItemChanged(highlight)
-                            highlight = -1
-                        }
-                    }
-                    false
-                }
                 val e = fromCodePoint.floorEntry(scroll) ?: fromCodePoint.firstEntry()
                 if (e.value.end < scroll) scroll = e.value.end
                 scrollToItem(scroll - e.key + e.value.index)
@@ -825,6 +814,17 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     override fun getItemCodePoint(i: Int): Long {
         val e = fromIndex.floorEntry(i) ?: fromIndex.firstEntry()
         return (i - e.key + e.value.codePoint).toLong()
+    }
+
+    override fun onTouch() {
+        runOnUiThread {
+            highTarget?.setBackgroundColor(resnormal)
+            highTarget = null
+            if (highlight != -1) {
+                notifyItemChanged(highlight)
+                highlight = -1
+            }
+        }
     }
 
     init {

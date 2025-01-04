@@ -56,7 +56,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -338,7 +337,7 @@ class UnicodeActivity : BaseActivity() {
                             )
                             AndroidView(
                                 factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    text = resources.getText(R.string.find)
+                                    text = resources.getText(R.string.desc)
                                 } },
                                 update = {
                                     it.setOnClickListener {
@@ -348,17 +347,13 @@ class UnicodeActivity : BaseActivity() {
                                         if (start == -1) return@setOnClickListener
                                         val end = editText.selectionEnd
                                         adpPage.adapterEdit.updateString()
-                                        adpPage.showDesc(
-                                            null,
-                                            str.codePointCount(
-                                                0,
-                                                if (start == end) if (start == 0) 0 else start - 1 else min(
-                                                    start,
-                                                    end
-                                                )
-                                            ),
-                                            adpPage.adapterEdit
-                                        )
+                                        var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
+                                        var i = 0
+                                        while (pos > 0) {
+                                            pos -= adpPage.adapterEdit.getItem(i++).length
+                                        }
+                                        if (pos < 0) i--
+                                        adpPage.showDesc(null, i, adpPage.adapterEdit)
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
@@ -370,11 +365,13 @@ class UnicodeActivity : BaseActivity() {
                                 update = {
                                     it.setOnClickListener {
                                         cm.text = editText.text.toString()
-                                        Toast.makeText(
-                                            this@UnicodeActivity,
-                                            R.string.copied,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        if (Build.VERSION.SDK_INT <= 32) {
+                                            Toast.makeText(
+                                                this@UnicodeActivity,
+                                                R.string.copied,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
@@ -481,22 +478,31 @@ class UnicodeActivity : BaseActivity() {
                 }
                 AndroidView(
                     factory = { context -> CoordinatorLayout(context).apply {
-                        addView(if (scrollUi) {
-                            LockableScrollView(context).also {
-                                    scroll = it
-                                    it.addView(ComposeView(it.context).apply {
-                                        setContent {
-                                            MainView()
-                                        }
-                                    })
-                                    it.clipToOutline = true
+                        addView(LinearLayout(context).apply {
+                            orientation = LinearLayout.VERTICAL
+                            addView(if (scrollUi) {
+                                LockableScrollView(context).also {
+                                        scroll = it
+                                        it.addView(ComposeView(it.context).apply {
+                                            setContent {
+                                                MainView()
+                                            }
+                                        })
+                                        it.clipToOutline = true
+                                    }
+                            } else {
+                                scroll = null
+                                ComposeView(context).apply {
+                                    setContent {
+                                        MainView()
+                                    }
                                 }
-                        } else {
-                            scroll = null
-                            ComposeView(context).apply {
-                                setContent {
-                                    MainView()
-                                }
+                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+                            if (adCompat.showAdSettings) {
+                                addView(LinearLayout(context).apply {
+                                    id = R.id.adContainer
+                                    orientation = LinearLayout.VERTICAL
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
                             }
                         })
                         addView(LinearLayout(context).apply {
@@ -548,20 +554,13 @@ class UnicodeActivity : BaseActivity() {
                             }
                         })
                     }},
+                    update = {
+                        if (adCompat.showAdSettings) {
+                            adCompat.renderAdToContainer(this@UnicodeActivity, pref)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth().weight(1f),
                 )
-                if (adCompat.showAdSettings) {
-                    AndroidView(
-                        factory = { context -> LinearLayout(context).apply {
-                            id = R.id.adContainer
-                            orientation = LinearLayout.VERTICAL
-                        } },
-                        update = {
-                            adCompat.renderAdToContainer(this@UnicodeActivity, pref)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
             }
 
             LaunchedEffect(Unit) {
@@ -834,7 +833,13 @@ class UnicodeActivity : BaseActivity() {
                 if (start == -1) return@run
                 val end = editText.selectionEnd
                 adpPage.adapterEdit.updateString()
-                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
+                var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
+                var i = 0
+                while (pos > 0) {
+                    pos -= adpPage.adapterEdit.getItem(i++).length
+                }
+                if (pos < 0) i--
+                adpPage.showDesc(null, i, adpPage.adapterEdit)
             }
             MENU_ID_COPY -> {
                 cm.text = editText.text.toString()
@@ -875,12 +880,12 @@ class UnicodeActivity : BaseActivity() {
         super.onPause()
     }
 
-    override fun dispatchKeyEvent(e: KeyEvent): Boolean {
-        if (e.keyCode == KeyEvent.KEYCODE_MENU && e.action == KeyEvent.ACTION_UP) {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode == KeyEvent.KEYCODE_MENU && event.action == KeyEvent.ACTION_UP) {
             startActivityForResult(Intent(this, SettingActivity::class.java), 0)
             return true
         }
-        return super.dispatchKeyEvent(e)
+        return super.dispatchKeyEvent(event)
     }
 
     @Deprecated("Deprecated in Java")
@@ -976,6 +981,16 @@ class UnicodeActivity : BaseActivity() {
         editText.typeface = tf
         editText.textLocale = locale
         adpPage.setTypeface(tf, locale)
+        fun visit(view: View) {
+            if (view is ViewGroup) {
+                for (i in 0 until view.childCount) {
+                    visit(view.getChildAt(i))
+                }
+            } else if (view is CharacterView) {
+                view.setTypeface(tf, locale)
+            }
+        }
+        visit(bottomSheetView)
     }
 
     companion object {

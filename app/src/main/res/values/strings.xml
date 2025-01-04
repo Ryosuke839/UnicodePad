@@ -458,6 +458,7 @@
 	<string name="no_ad_desc">Opt-out ads</string>
 	<string name="skip_guide_desc">Skip tutorials</string>
 	<string name="tabs_desc">Tabs settings…</string>
+	<string name="tabs_hint">Hint: You can quickly switch between single / multiple columns by pinching in and out on lists</string>
 	<string name="shown_desc">Shown tabs</string>
 	<string name="hidden_desc">Hidden tabs</string>
 
@@ -502,7 +503,7 @@
 Copyright © 1991-2023 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.15.1</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.16.0</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

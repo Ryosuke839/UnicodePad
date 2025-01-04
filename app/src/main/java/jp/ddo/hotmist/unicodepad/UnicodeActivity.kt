@@ -347,17 +347,13 @@ class UnicodeActivity : BaseActivity() {
                                         if (start == -1) return@setOnClickListener
                                         val end = editText.selectionEnd
                                         adpPage.adapterEdit.updateString()
-                                        adpPage.showDesc(
-                                            null,
-                                            str.codePointCount(
-                                                0,
-                                                if (start == end) if (start == 0) 0 else start - 1 else min(
-                                                    start,
-                                                    end
-                                                )
-                                            ),
-                                            adpPage.adapterEdit
-                                        )
+                                        var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
+                                        var i = 0
+                                        while (pos > 0) {
+                                            pos -= adpPage.adapterEdit.getItem(i++).length
+                                        }
+                                        if (pos < 0) i--
+                                        adpPage.showDesc(null, i, adpPage.adapterEdit)
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
@@ -837,7 +833,13 @@ class UnicodeActivity : BaseActivity() {
                 if (start == -1) return@run
                 val end = editText.selectionEnd
                 adpPage.adapterEdit.updateString()
-                adpPage.showDesc(null, str.codePointCount(0, if (start == end) if (start == 0) 0 else start - 1 else min(start, end)), adpPage.adapterEdit)
+                var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
+                var i = 0
+                while (pos > 0) {
+                    pos -= adpPage.adapterEdit.getItem(i++).length
+                }
+                if (pos < 0) i--
+                adpPage.showDesc(null, i, adpPage.adapterEdit)
             }
             MENU_ID_COPY -> {
                 cm.text = editText.text.toString()
@@ -979,6 +981,16 @@ class UnicodeActivity : BaseActivity() {
         editText.typeface = tf
         editText.textLocale = locale
         adpPage.setTypeface(tf, locale)
+        fun visit(view: View) {
+            if (view is ViewGroup) {
+                for (i in 0 until view.childCount) {
+                    visit(view.getChildAt(i))
+                }
+            } else if (view is CharacterView) {
+                view.setTypeface(tf, locale)
+            }
+        }
+        visit(bottomSheetView)
     }
 
     companion object {

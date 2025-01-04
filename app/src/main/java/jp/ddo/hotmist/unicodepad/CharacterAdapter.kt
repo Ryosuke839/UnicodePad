@@ -30,7 +30,7 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-internal class CharacterAdapter(private val activity: UnicodeActivity, private val adapter: UnicodeAdapter, private val tf: Typeface?, private val locale: Locale, private val db: NameDatabase, private val afav: FavoriteAdapter) : PagerAdapter() {
+internal class CharacterAdapter(private val activity: UnicodeActivity, private val adapter: UnicodeAdapter, private var typeface: Typeface?, private var locale: Locale, private val db: NameDatabase, private val afav: FavoriteAdapter) : PagerAdapter() {
     var index = 0
         private set
     private val reslist = TypedValue().also {
@@ -48,7 +48,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         val text = CharacterView(activity)
         text.text = adapter.getItem(position)
         text.setTextSize(fontsize)
-        text.setTypeface(tf, locale)
+        text.setTypeface(typeface, locale)
         text.drawSlash(false)
         text.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         text.setTextColor(Color.BLACK)
@@ -173,7 +173,7 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         ct.drawSlash(false)
                         ct.setTextSize(UnicodeAdapter.fontsize)
                         ct.text = cs
-                        ct.setTypeface(tf, locale)
+                        ct.setTypeface(typeface, locale)
                         hl.addView(ct, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.fontsize * 2 + UnicodeAdapter.padding * 2).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
                         val pt = TextView(activity, null, android.R.attr.textAppearanceSmall)
                         pt.setPadding(0, 0, 0, 0)
@@ -243,6 +243,15 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
 
     val id: Long
         get() = adapter.getItemCodePoint(index)
+
+    fun getItemId(position: Int): Long {
+        return adapter.getItemCodePoint(position)
+    }
+
+    fun setTypeface(typeface: Typeface?, locale: Locale) {
+        this.typeface = typeface
+        this.locale = locale
+    }
 
     companion object {
         var fontsize = 160f

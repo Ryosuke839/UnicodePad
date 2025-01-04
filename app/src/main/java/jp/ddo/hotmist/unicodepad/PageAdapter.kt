@@ -55,6 +55,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private val adapterFavorite: FavoriteAdapter
     internal val adapterEdit: EditAdapter
     private val adapterEmoji: EmojiAdapter
+    private var adapterCharacter: CharacterAdapter? = null
     private var blist = false
     private var bfind = false
     private var brec = false
@@ -130,9 +131,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                 adapter.instantiate(view).also { layout ->
                     val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                         override fun onScale(detector: ScaleGestureDetector): Boolean {
-                            return (if (detector.scaleFactor > 1.05f) {
+                            return (if (detector.scaleFactor > 1f) {
                                 true
-                            } else if (detector.scaleFactor < 0.95f) {
+                            } else if (detector.scaleFactor < 1f) {
                                 false
                             } else {
                                 null
@@ -154,6 +155,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                         }
                     })
                     (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
+                        adapter.onTouch()
                         scaleDetector.onTouchEvent(event)
                         scaleDetector.isInProgress
                     }
@@ -187,9 +189,6 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val end = edit.selectionEnd
         if (start == -1) return
         edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id >= 0) String(Character.toChars(id.toInt())) else adapter.getItem(position))
-        dlg?.let {
-            if (it.isShowing) it.dismiss()
-        }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
@@ -201,8 +200,10 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         showDesc(adapter, position, adapter)
     }
 
-    private var dlg: AlertDialog? = null
     fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
+        activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)?.let {
+            (it as android.view.inputmethod.InputMethodManager).hideSoftInputFromWindow(edit.windowToken, 0)
+        }
         val pager = ViewPager(activity)
         pager.addView(PagerTabStrip(activity).apply {
             id = R.id.TAB_ID
@@ -213,6 +214,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             isDecor = true
         })
         val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
+        adapterCharacter = adapter
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -257,12 +259,12 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             addView(View(activity), LinearLayout.LayoutParams(0, 1, 1f))
             addView(Button(activity, null, android.R.attr.buttonBarButtonStyle).apply {
                 text = activity.getString(R.string.find)
-                isEnabled = adapter.id >= 0
+                isEnabled = adapter.getItemId(index) >= 0
                 setOnClickListener { if (adapter.id >= 0) find(adapter.id.toInt()) }
                 pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                     override fun onPageSelected(position: Int) {
-                        isEnabled = adapter.id >= 0
+                        isEnabled = adapter.getItemId(position) >= 0
                     }
                     override fun onPageScrollStateChanged(state: Int) {}
                 })
@@ -331,6 +333,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.setTypeface(tf, locale)
         adapterEdit.setTypeface(tf, locale)
         adapterEmoji.setTypeface(tf, locale)
+        adapterCharacter?.setTypeface(tf, locale)
     }
 
     fun onSizeChanged(top: Int) {

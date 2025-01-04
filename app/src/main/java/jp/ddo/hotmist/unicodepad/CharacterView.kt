@@ -72,7 +72,10 @@ class CharacterView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
 
     fun setTypeface(tf: Typeface?, locale: Locale) {
-        if (paint.typeface != tf) invalid = true
+        if (paint.typeface != tf || paint.textLocale != locale) {
+            invalid = true
+            invalidate()
+        }
         paint.typeface = tf
         paint.textLocale = locale
         requestLayout()

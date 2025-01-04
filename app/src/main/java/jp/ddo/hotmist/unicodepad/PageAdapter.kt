@@ -55,6 +55,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private val adapterFavorite: FavoriteAdapter
     internal val adapterEdit: EditAdapter
     private val adapterEmoji: EmojiAdapter
+    private var adapterCharacter: CharacterAdapter? = null
     private var blist = false
     private var bfind = false
     private var brec = false
@@ -188,9 +189,6 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         val end = edit.selectionEnd
         if (start == -1) return
         edit.editableText.replace(min(start, end), max(start, end), if (adapter == null || id >= 0) String(Character.toChars(id.toInt())) else adapter.getItem(position))
-        dlg?.let {
-            if (it.isShowing) it.dismiss()
-        }
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
@@ -202,7 +200,6 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         showDesc(adapter, position, adapter)
     }
 
-    private var dlg: AlertDialog? = null
     fun showDesc(parentAdapter: UnicodeAdapter?, index: Int, ua: UnicodeAdapter) {
         activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)?.let {
             (it as android.view.inputmethod.InputMethodManager).hideSoftInputFromWindow(edit.windowToken, 0)
@@ -217,6 +214,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             isDecor = true
         })
         val adapter = CharacterAdapter(activity, ua.freeze(), tf, locale, db, adapterFavorite)
+        adapterCharacter = adapter
         pager.adapter = adapter
         pager.setCurrentItem(index, false)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -335,6 +333,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.setTypeface(tf, locale)
         adapterEdit.setTypeface(tf, locale)
         adapterEmoji.setTypeface(tf, locale)
+        adapterCharacter?.setTypeface(tf, locale)
     }
 
     fun onSizeChanged(top: Int) {

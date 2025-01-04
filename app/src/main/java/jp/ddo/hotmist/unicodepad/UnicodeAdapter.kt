@@ -24,6 +24,7 @@ import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woxthebox.draglistview.DragItemAdapter
 import com.woxthebox.draglistview.DragListView
@@ -119,7 +120,6 @@ interface UnicodeAdapter {
     fun setTypeface(typeface: Typeface?, locale: Locale) {
         this.typeface = typeface
         this.locale = locale
-        invalidateViews()
     }
 
     companion object {
@@ -130,7 +130,11 @@ interface UnicodeAdapter {
 
     abstract class ViewHolder(val view: View) : DragItemAdapter.ViewHolder(view, R.id.HANDLE_ID, false)
 
-    abstract class CharacterViewHolder(view: View, val characterView: CharacterView) : ViewHolder(view)
+    abstract class CharacterViewHolder(view: View, val characterView: CharacterView) : ViewHolder(view) {
+        fun setTypeface(typeface: Typeface?, locale: Locale) {
+            characterView.setTypeface(typeface, locale)
+        }
+    }
 
     class CellViewHolder(view: LinearLayout, characterView: CharacterView) : CharacterViewHolder(view, characterView)
 
@@ -317,6 +321,17 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
         return if (getTitleCount() > 0 && i == getTitlePosition(titleIndex) + titleIndex) 1 else 0
     }
 
+    override fun setTypeface(typeface: Typeface?, locale: Locale) {
+        super.setTypeface(typeface, locale)
+        layoutManager?.let { layoutManager ->
+            for (i in layoutManager.findFirstVisibleItemPosition()..layoutManager.findLastVisibleItemPosition()) {
+                val holder = (view as RecyclerView?)?.findViewHolderForAdapterPosition(i)
+                if (holder is UnicodeAdapter.CharacterViewHolder) {
+                    holder.setTypeface(typeface, locale)
+                }
+            }
+        }
+    }
 
     class GroupViewHolder(view: TextView) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view
@@ -435,6 +450,20 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
 
     override fun getCount(): Int {
         return itemCount
+    }
+
+    override fun setTypeface(typeface: Typeface?, locale: Locale) {
+        super.setTypeface(typeface, locale)
+        ((view as? DragListView)?.recyclerView ?: view as? RecyclerView)?.let { recyclerView ->
+            (recyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                for (i in layoutManager.findFirstVisibleItemPosition()..layoutManager.findLastVisibleItemPosition()) {
+                    val holder = recyclerView.findViewHolderForAdapterPosition(i)
+                    if (holder is UnicodeAdapter.CharacterViewHolder) {
+                        holder.setTypeface(typeface, locale)
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnicodeAdapter.ViewHolder {

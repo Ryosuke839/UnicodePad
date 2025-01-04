@@ -981,6 +981,16 @@ class UnicodeActivity : BaseActivity() {
         editText.typeface = tf
         editText.textLocale = locale
         adpPage.setTypeface(tf, locale)
+        fun visit(view: View) {
+            if (view is ViewGroup) {
+                for (i in 0 until view.childCount) {
+                    visit(view.getChildAt(i))
+                }
+            } else if (view is CharacterView) {
+                view.setTypeface(tf, locale)
+            }
+        }
+        visit(bottomSheetView)
     }
 
     companion object {

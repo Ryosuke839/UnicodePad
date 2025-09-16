@@ -23,6 +23,7 @@ UNICODE_VERSIONS = [
   1500,
   1510,
   1600,
+  1700,
 ]
 
 def main():
@@ -115,8 +116,8 @@ def main():
           current.update()
       for v in characters.values():
         v.insert()
-      print(f'RETR /Public/emoji/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}/')
-      print(ftp.cwd(f'/Public/emoji/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}/'))
+      print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{version % 10}/emoji/')
+      print(ftp.cwd(f'/Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{version % 10}/emoji/'))
       group = ''
       subgroup = ''
       def emoji_line(line):
@@ -163,7 +164,7 @@ def main():
       cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      cur.execute('CREATE TABLE version_code as SELECT 60 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 71 as version;')
       con.commit()
       print('SELECT * FROM \'version_code\';')
       cur.execute('SELECT * FROM \'version_code\';')

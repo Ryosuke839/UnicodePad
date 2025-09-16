@@ -193,6 +193,7 @@
 		<item>@string/script_108E0</item>
 		<item>@string/script_10900</item>
 		<item>@string/script_10920</item>
+		<item>@string/script_10940</item>
 		<item>@string/script_10980</item>
 		<item>@string/script_109A0</item>
 		<item>@string/script_10A00</item>
@@ -244,11 +245,13 @@
 		<item>@string/script_11AB0</item>
 		<item>@string/script_11AC0</item>
 		<item>@string/script_11B00</item>
+		<item>@string/script_11B60</item>
 		<item>@string/script_11BC0</item>
 		<item>@string/script_11C00</item>
 		<item>@string/script_11C70</item>
 		<item>@string/script_11D00</item>
 		<item>@string/script_11D60</item>
+		<item>@string/script_11DB0</item>
 		<item>@string/script_11EE0</item>
 		<item>@string/script_11F00</item>
 		<item>@string/script_11FB0</item>
@@ -269,12 +272,14 @@
 		<item>@string/script_16B00</item>
 		<item>@string/script_16D40</item>
 		<item>@string/script_16E40</item>
+		<item>@string/script_16EA0</item>
 		<item>@string/script_16F00</item>
 		<item>@string/script_16FE0</item>
 		<item>@string/script_17000</item>
 		<item>@string/script_18800</item>
 		<item>@string/script_18B00</item>
 		<item>@string/script_18D00</item>
+		<item>@string/script_18D80</item>
 		<item>@string/script_1AFF0</item>
 		<item>@string/script_1B000</item>
 		<item>@string/script_1B100</item>
@@ -283,6 +288,7 @@
 		<item>@string/script_1BC00</item>
 		<item>@string/script_1BCA0</item>
 		<item>@string/script_1CC00</item>
+		<item>@string/script_1CEC0</item>
 		<item>@string/script_1CF00</item>
 		<item>@string/script_1D000</item>
 		<item>@string/script_1D100</item>
@@ -301,6 +307,7 @@
 		<item>@string/script_1E2C0</item>
 		<item>@string/script_1E4D0</item>
 		<item>@string/script_1E5D0</item>
+		<item>@string/script_1E6C0</item>
 		<item>@string/script_1E7E0</item>
 		<item>@string/script_1E800</item>
 		<item>@string/script_1E900</item>
@@ -332,6 +339,7 @@
 		<item>@string/script_2F800</item>
 		<item>@string/script_30000</item>
 		<item>@string/script_31350</item>
+		<item>@string/script_323B0</item>
 		<item>@string/script_E0000</item>
 		<item>@string/script_E0100</item>
 		<item>@string/script_F0000</item>

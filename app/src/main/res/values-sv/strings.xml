@@ -384,7 +384,7 @@
 
 	<string name="version_desc">Unicode-version</string>
 
-	<string name="version_latest">Senaste (16.0.0)</string>
+	<string name="version_latest">Senaste (17.0.0)</string>
 
 	<string name="emojicompat_desc">Använd framåtkompatibilitet för emoji</string>
 	<string name="emojicompat_null">Aldrig</string>
@@ -446,7 +446,7 @@
 	<string name="malformed">Felaktigt filnamn på zip-fil</string>
 	<string name="legal">Juridisk information</string>
 	<string name="legal_uni2">Denna applikation innehåller en modifierad version av Unicode Data File.
-Copyright © 1991-2023 Unicode, Inc. All rights reserved.
+Copyright © 1991-2025 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
 </resources>

@@ -233,6 +233,7 @@
 	<string name="script_108E0">108E0 ハトラ文字</string>
 	<string name="script_10900">10900 フェニキア文字</string>
 	<string name="script_10920">10920 リディア文字</string>
+	<string name="script_10940">10940 シデ文字</string>
 	<string name="script_10980">10980 メロエ記念碑書体</string>
 	<string name="script_109A0">109A0 メロエ草書体</string>
 	<string name="script_10A00">10A00 カローシュティー文字</string>
@@ -271,6 +272,7 @@
 	<string name="script_11600">11600 モーディー文字</string>
 	<string name="script_11660">11660 モンゴル文字補助</string>
 	<string name="script_11680">11680 タクリ文字</string>
+	<string name="script_116D0">116D0 ミャンマー文字拡張C</string>
 	<string name="script_11700">11700 アーホム文字</string>
 	<string name="script_11800">11800 ドーグラー文字</string>
 	<string name="script_118A0">118A0 ワラング・クシティ文字</string>
@@ -285,6 +287,7 @@
 	<string name="script_11C70">11C70 マルチェン文字</string>
 	<string name="script_11D00">11D00 マサラム・ゴーンディー文字</string>
 	<string name="script_11D60">11D60 グンジャラ・ゴーンディー文字</string>
+	<string name="script_11DB0">11DB0 トロン・シキ文字</string>
 	<string name="script_11EE0">11EE0 マカサル文字</string>
 	<string name="script_11F00">11F00 カウィ文字</string>
 	<string name="script_11FB0">11FB0 リス文字補助</string>
@@ -302,12 +305,14 @@
 	<string name="script_16AD0">16AD0 バサ文字</string>
 	<string name="script_16B00">16B00 パハウ・フモン文字</string>
 	<string name="script_16E40">16E40 メデファイドリン文字</string>
+	<string name="script_16EA0">16EA0 ザガワ・ベリア文字</string>
 	<string name="script_16F00">16F00 ポラード文字</string>
 	<string name="script_16FE0">16FE0 漢字の記号及び句読点</string>
 	<string name="script_17000">17000 西夏文字</string>
 	<string name="script_18800">18800 西夏文字構成要素</string>
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字補助</string>
+	<string name="script_18D80">18D80 西夏文字構成要素補助</string>
 	<string name="script_1AFF0">1AFF0 仮名文字拡張B</string>
 	<string name="script_1B000">1B000 仮名文字補助</string>
 	<string name="script_1B100">1B100 仮名文字拡張A</string>
@@ -362,6 +367,7 @@
     <string name="script_2F800">2F800 CJK互換漢字補助</string>
 	<string name="script_30000">30000 CJK統合漢字拡張G</string>
     <string name="script_31350">31350 CJK統合漢字拡張H</string>
+	<string name="script_323B0">323B0 CJK統合漢字拡張J</string>
 	<string name="script_E0000">E0000 タグ</string>
 	<string name="script_E0100">E0100 字形選択子補助</string>
 	<string name="script_F0000">F0000 私用領域補助A</string>
@@ -391,7 +397,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (16.0.0)</string>
+	<string name="version_latest">最新 (17.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>
@@ -440,7 +446,7 @@
 	<string name="malformed">ZIP内のファイル名が破損</string>
 	<string name="legal">法的表記</string>
 	<string name="legal_uni2">本アプリケーションはUnicode Data Fileの改変された版を含んでいます。
-Copyright © 1991-2023 Unicode, Inc. All rights reserved.
+Copyright © 1991-2025 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
     <string name="locale_default">デフォルト (%s)</string>
@@ -462,4 +468,6 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="data_favorite">お気に入り (%1$d)</string>
 	<string name="data_scroll">スクロール位置</string>
 	<string name="data_merge">現在の値と合成</string>
+	<string name="script_11B60">11B60 シャラダ文字補助</string>
+	<string name="script_10570">10570 ビタクチェ文字</string>
 </resources>

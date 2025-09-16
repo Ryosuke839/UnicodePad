@@ -8,8 +8,8 @@ android {
         applicationId "jp.ddo.hotmist.unicodepad"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 70
-        versionName "2.16.1"
+        versionCode 71
+        versionName "2.17.0"
     }
 
     compileOptions {
@@ -60,7 +60,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$kotlin_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.emoji2:emoji2-bundled:1.5.0'
+    implementation 'androidx.emoji2:emoji2-bundled:1.6.0-rc01'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.github.woxthebox:draglistview:1.7.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

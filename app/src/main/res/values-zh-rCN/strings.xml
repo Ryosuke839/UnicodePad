@@ -480,7 +480,7 @@
 	<string name="malformed">压缩包中文件含有非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。
-版权所有 © 1991-2025 Unicode, Inc. 保留所有权利。
-根据以下使用条款分发
+Copyright © 1991-2025 Unicode, Inc. All rights reserved.
+Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
 </resources>

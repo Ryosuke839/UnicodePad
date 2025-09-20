@@ -90,7 +90,7 @@
 	<string name="script_1400">1400 Канадское слоговое письмо</string>
 	<string name="script_1680">1680 Огамическое письмо</string>
 	<string name="script_16A0">16A0 Руны</string>
-	<string name="script_1700">1700 Тагальская письменность. Байбайин</string>
+	<string name="script_1700">1700 Тагальское письмо. Байбайин</string>
 	<string name="script_1720">1720 Хануноо</string>
 	<string name="script_1740">1740 Бухид</string>
 	<string name="script_1760">1760 Тагбанва</string>
@@ -98,11 +98,11 @@
 	<string name="script_1800">1800 Старомонгольское письмо</string>
 	<string name="script_18B0">18B0 Расширенное канадское слоговое письмо</string>
 	<string name="script_1900">1900 Лимбу</string>
-	<string name="script_1950">1950 Тай лы</string>
-	<string name="script_1980">1980 Новый тай лы</string>
+	<string name="script_1950">1950 Лы</string>
+	<string name="script_1980">1980 Новое письмо лы</string>
 	<string name="script_19E0">19E0 Кхмерские символы</string>
 	<string name="script_1A00">1A00 Бугийское письмо. Лонтара</string>
-	<string name="script_1A20">1A20 Тай Тхам</string>
+	<string name="script_1A20">1A20 Ланна</string>
 	<string name="script_1AB0">1AB0 Расширенные комбинируемые диакритические знаки</string>
 	<string name="script_1B00">1B00 Балийское письмо</string>
 	<string name="script_1B80">1B80 Сунданское письмо</string>
@@ -150,14 +150,14 @@
 	<string name="script_2D80">2D80 Расширенное эфиопское письмо</string>
 	<string name="script_2DE0">2DE0 Расширенная кириллица — A</string>
 	<string name="script_2E00">2E00 Дополнительная пунктуация</string>
-	<string name="script_2E80">2E80 Дополнительные к ключам ККЯ</string>
-	<string name="script_2F00">2F00 Ключи Канси</string>
+	<string name="script_2E80">2E80 Дополнение к ключам ККЯ</string>
+	<string name="script_2F00">2F00 Ключи канси</string>
 	<string name="script_2FF0">2FF0 Идеографические пояснительные символы</string>
 	<string name="script_3000">3000 Символы и пунктуация ККЯ</string>
 	<string name="script_3040">3040 Хирагана</string>
 	<string name="script_30A0">30A0 Катакана</string>
 	<string name="script_3100">3100 Чжуинь фухао (бопомофо)</string>
-	<string name="script_3130">3130 Совместимые элементы Хангыля</string>
+	<string name="script_3130">3130 Совместимые элементы хангыля</string>
 	<string name="script_3190">3190 Камбун</string>
 	<string name="script_31A0">31A0 Расширенное чжуинь фухао (бопомофо)</string>
 	<string name="script_31C0">31C0 Черты ККЯ</string>
@@ -191,7 +191,7 @@
 	<string name="script_AAE0">AAE0 Расширения мейтей (манипури)</string>
 	<string name="script_AB00">AB00 Расширенное эфиопское письмо — A</string>
 	<string name="script_AB30">AB30 Расширенная латиница — E</string>
-	<string name="script_AB70">AB70 Дополнение к Чероки</string>
+	<string name="script_AB70">AB70 Дополнение к чероки</string>
 	<string name="script_ABC0">ABC0 Мейтей (Манипури)</string>
 	<string name="script_AC00">AC00 Слоговое письмо хангыля</string>
 	<string name="script_D7B0">D7B0 Расширенные элементы хангыля — B</string>
@@ -238,6 +238,7 @@
 	<string name="script_108E0">108E0 Хатран</string>
 	<string name="script_10900">10900 Финикийское письмо</string>
 	<string name="script_10920">10920 Лидийское письмо</string>
+	<string name="script_10940">10940 Сидетское письмо</string>
 	<string name="script_10980">10980 Мероитские иероглифы</string>
 	<string name="script_109A0">109A0 Мероитский курсив</string>
 	<string name="script_10A00">10A00 Кхароштхи</string>
@@ -289,11 +290,13 @@
 	<string name="script_11AB0">11AB0 Расширенное канадское слоговое письмо — A</string>
 	<string name="script_11AC0">11AC0 По Чин Хо</string>
 	<string name="script_11B00">11B00 Расширенное деванагари — A</string>
+	<string name="script_11B60">11B60 Дополнение к шараде</string>
 	<string name="script_11BC0">11BC0 Сунувар</string>
 	<string name="script_11C00">11C00 Бхайкшуки</string>
 	<string name="script_11C70">11C70 Марчен</string>
 	<string name="script_11D00">11D00 Гонди Масарама</string>
 	<string name="script_11D60">11D60 Гунджалское гонди</string>
+	<string name="script_11DB0">11DB0 Толонг-сики</string>
 	<string name="script_11EE0">11EE0 Макасарское письмо</string>
 	<string name="script_11F00">11F00 Старояванское письмо (кави)</string>
 	<string name="script_11FB0">11FB0 Дополнение к лису</string>
@@ -314,12 +317,14 @@
 	<string name="script_16B00">16B00 Пахау</string>
 	<string name="script_16D40">16D40 Кират Рай</string>
 	<string name="script_16E40">16E40 Медефайдрин</string>
+	<string name="script_16EA0">16EA0 Берия-эрфе</string>
 	<string name="script_16F00">16F00 Письмо Полларда (мяо)</string>
 	<string name="script_16FE0">16FE0 Идеографические символы и пунктуация</string>
 	<string name="script_17000">17000 Тангутское письмо</string>
 	<string name="script_18800">18800 Элементы тангутского письма</string>
 	<string name="script_18B00">18B00 Малое киданьское письмо</string>
 	<string name="script_18D00">18D00 Дополнение к тангутскому письму</string>
+	<string name="script_18D80">18D80 Дополнение к элементам тангутского письма</string>
 	<string name="script_1AFF0">1AFF0 Расширенная кана — B</string>
 	<string name="script_1B000">1B000 Дополнение к кане</string>
 	<string name="script_1B100">1B100 Расширенная кана — A</string>
@@ -328,6 +333,7 @@
 	<string name="script_1BC00">1BC00 Стенография Дюплойе</string>
 	<string name="script_1BCA0">1BCA0 Форматирующие символы стенографии</string>
 	<string name="script_1CC00">1CC00 Символы для устаревших вычислительных систем</string>
+	<string name="script_1CEC0">1CEC0 Дополнение к различным символам</string>
 	<string name="script_1CF00">1CF00 Знаменное нотное письмо</string>
 	<string name="script_1D000">1D000 Византийские музыкальные символы</string>
 	<string name="script_1D100">1D100 Музыкальные символы</string>
@@ -346,6 +352,7 @@
 	<string name="script_1E2C0">1E2C0 Ванчо</string>
 	<string name="script_1E4D0">1E4D0 Символы Мундари</string>
 	<string name="script_1E5D0">1E5D0 Ол Онал</string>
+	<string name="script_1E6C0">1E6C0 Тай-йо</string>
 	<string name="script_1E7E0">1E7E0 Расширенное эфиопское письмо — B</string>
 	<string name="script_1E800">1E800 Письмо кикакуи для языка менде</string>
 	<string name="script_1E900">1E900 Адлам</string>
@@ -377,6 +384,7 @@
 	<string name="script_2F800">2F800 Дополнение к совместимым иероглифам ККЯ</string>
 	<string name="script_30000">30000 Унифицированные идеограммы ККЯ — расширение G</string>
 	<string name="script_31350">31350 Унифицированные идеограммы ККЯ — расширение H</string>
+	<string name="script_323B0">323B0 Унифицированные идеограммы ККЯ — расширение J</string>
 	<string name="script_E0000">E0000 Теги</string>
 	<string name="script_E0100">E0100 Дополнение к вариантным селекторам</string>
 	<string name="script_F0000">F0000 Дополнительная область для частного использования — A</string>
@@ -433,6 +441,7 @@
 	<string name="no_ad_desc">Отказаться от рекламы</string>
 	<string name="skip_guide_desc">Не показывать руководство</string>
 	<string name="tabs_desc">Настройки вкладок…</string>
+	<string name="tabs_hint">Совет: вы можете быстро переключаться между одним или несколькими столбцами, сжимая и разжимая списки</string>
 	<string name="shown_desc">Отображаемые вкладки</string>
 	<string name="hidden_desc">Скрытые вкладки</string>
 

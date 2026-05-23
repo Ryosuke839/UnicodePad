@@ -4,7 +4,9 @@ import sys
 import sqlite3
 import re
 from ftplib import FTP
+import io
 from urllib.parse import urlparse
+import zipfile
 
 UNICODE_VERSIONS = [
   600,
@@ -27,11 +29,87 @@ UNICODE_VERSIONS = [
 ]
 
 def main():
-  with FTP('www.unicode.org') as ftp:
+  with FTP('ftp.unicode.org') as ftp:
     print(ftp.getwelcome())
     print(ftp.login())
     with sqlite3.connect('namedb') as con:
       cur = con.cursor()
+
+      print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/')
+      print(ftp.cwd(f'/Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/'))
+      cur.execute('CREATE TABLE unihan_table (id integer NOT NULL PRIMARY KEY, kRSUnicode text, kTotalStrokes text, kAlternateTotalStrokes text, kCantonese text, kDefinition text, kFanqie text, kHangul text, kHanyuPinlu text, kHanyuPinyin text, kJapanese text, kJapaneseKun text, kJapaneseOn text, kKorean text, kMandarin text, kSMSZD2003Readings text, kTang text, kTGHZ2013 text, kVietnamese text, kXHC1983 text, kZhuang text, kSemanticVariant text, kSimplifiedVariant text, kSpecializedSemanticVariant text, kSpoofingVariant text, kTraditionalVariant text, kZVariant text);')
+      cur.execute('CREATE TABLE rsindex_table (id integer NOT NULL PRIMARY KEY, radical integer NOT NULL, codepoint integer NOT NULL);')
+      with io.BytesIO() as b:
+        ftp.retrbinary('RETR Unihan.zip', b.write)
+        with zipfile.ZipFile(b) as z:
+          blocks = [
+            (0x4E00, 0), # CJK Unified Ideographs
+            (0x3400, 1), # CJK Unified Ideographs Extension A
+            (0x20000, 2), # CJK Unified Ideographs Extension B
+            (0x2A700, 3), # CJK Unified Ideographs Extension C
+            (0x2B740, 4), # CJK Unified Ideographs Extension D
+            (0x2B820, 5), # CJK Unified Ideographs Extension E
+            (0x2CEB0, 6), # CJK Unified Ideographs Extension F
+            (0x30000, 7), # CJK Unified Ideographs Extension G
+            (0x31350, 8), # CJK Unified Ideographs Extension H
+            (0x2EBF0, 9), # CJK Unified Ideographs Extension I
+            (0x323B0, 10), # CJK Unified Ideographs Extension J
+            (0xF900, 254), # CJK Compatibility Ideographs
+            (0x2F800, 255), # CJK Compatibility Ideographs Supplement
+          ]
+          last_codepoint: int | None = None
+          properties: dict[str, str] = {}
+          def set_or_insert(codepoint, prop, value):
+            nonlocal last_codepoint
+            nonlocal properties
+            if last_codepoint is not None and codepoint != last_codepoint:
+              if len(properties) > 0:
+                values = ("'" + v.replace("'", "''") + "'" for v in properties.values())
+                set_expr = (f"{k} = excluded.{k}" for k in properties.keys())
+                exp = f'INSERT INTO unihan_table (id, {", ".join(properties.keys())}) values ({last_codepoint}, {", ".join(values)}) on conflict(id) do update set {", ".join(set_expr)};'
+                try:
+                  cur.execute(exp)
+                except:
+                  print(exp)
+                  raise
+              properties = {}
+            if codepoint is not None:
+              properties[prop] = value
+              last_codepoint = codepoint
+          def process_file(filename, columns):
+            with z.open(filename) as f:
+              for line in f:
+                line = line.decode('utf-8').rstrip('\n')
+                if len(line) == 0 or line[0] == '#':
+                  continue
+                tokens = line.split('\t')
+                if len(tokens) != 3:
+                  print(f'Malformed line: {line}', file=sys.stderr)
+                  continue
+                codepoint = int(tokens[0][2:], 16)
+                if tokens[1] in columns:
+                  set_or_insert(codepoint, tokens[1], tokens[2])
+                if tokens[1] == 'kRSUnicode':
+                  for token in tokens[2].split(' '):
+                    m = re.match(r'^([1-9]\d{0,2})(\'{0,3})\.(-?\d{1,2})$', token)
+                    if not m:
+                      print(f'Malformed kRSUnicode value: {token}', file=sys.stderr)
+                      continue
+                    key = codepoint | [r for b, r in blocks if codepoint >= b][0] << 20 | len(m.group(2)) << 28 | max(int(m.group(3)), 0) << 36 | int(m.group(1)) << 44
+                    exp = f'INSERT INTO rsindex_table (id, radical, codepoint) values ({key}, {m.group(1)}, {codepoint});'
+                    try:
+                      cur.execute(exp)
+                    except:
+                      print(exp)
+                      raise
+              else:
+                set_or_insert(None, None, None)
+          process_file('Unihan_IRGSources.txt', ['kRSUnicode', 'kTotalStrokes'])
+          process_file('Unihan_DictionaryLikeData.txt', ['kAlternateTotalStrokes'])
+          process_file('Unihan_Readings.txt', ['kCantonese', 'kDefinition', 'kFanqie', 'kHangul', 'kHanyuPinlu', 'kHanyuPinyin', 'kJapanese', 'kJapaneseKun', 'kJapaneseOn', 'kKorean', 'kMandarin', 'kSMSZD2003Readings', 'kTang', 'kTGHZ2013', 'kVietnamese', 'kXHC1983', 'kZhuang'])
+          process_file('Unihan_Variants.txt', ['kSemanticVariant', 'kSimplifiedVariant', 'kSpecializedSemanticVariant', 'kSpoofingVariant', 'kTraditionalVariant', 'kZVariant'])
+      con.commit()
+
       cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text NOT NULL, name text NOT NULL, version integer NOT NULL, lines text);')
       characters = {}
       class OneCharacter:
@@ -164,8 +242,10 @@ def main():
       cur.execute('CREATE TABLE emoji_table1510 (id text NOT NULL PRIMARY KEY, name text NOT NULL, version integer NOT NULL, grp text NOT NULL, subgrp text NOT NULL, tone integer NOT NULL, direction integer NOT NULL);')
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
-      cur.execute('CREATE TABLE version_code as SELECT 71 as version;')
+
+      cur.execute('CREATE TABLE version_code as SELECT 72 as version;')
       con.commit()
+
       print('SELECT * FROM \'version_code\';')
       cur.execute('SELECT * FROM \'version_code\';')
       r = cur.fetchone()

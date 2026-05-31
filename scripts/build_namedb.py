@@ -38,7 +38,7 @@ def main():
       print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/')
       print(ftp.cwd(f'/Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/'))
       cur.execute('CREATE TABLE unihan_table (id integer NOT NULL PRIMARY KEY, kRSUnicode text, kTotalStrokes text, kAlternateTotalStrokes text, kCantonese text, kDefinition text, kFanqie text, kHangul text, kHanyuPinlu text, kHanyuPinyin text, kJapanese text, kJapaneseKun text, kJapaneseOn text, kKorean text, kMandarin text, kSMSZD2003Readings text, kTang text, kTGHZ2013 text, kVietnamese text, kXHC1983 text, kZhuang text, kSemanticVariant text, kSimplifiedVariant text, kSpecializedSemanticVariant text, kSpoofingVariant text, kTraditionalVariant text, kZVariant text);')
-      cur.execute('CREATE TABLE rsindex_table (id integer NOT NULL PRIMARY KEY, radical integer NOT NULL, codepoint integer NOT NULL);')
+      cur.execute('CREATE TABLE rsindex_table (id integer NOT NULL PRIMARY KEY, radical integer NOT NULL, strokes integer NOT NULL, codepoint integer NOT NULL);')
       with io.BytesIO() as b:
         ftp.retrbinary('RETR Unihan.zip', b.write)
         with zipfile.ZipFile(b) as z:
@@ -96,7 +96,7 @@ def main():
                       print(f'Malformed kRSUnicode value: {token}', file=sys.stderr)
                       continue
                     key = codepoint | [r for b, r in blocks if codepoint >= b][0] << 20 | len(m.group(2)) << 28 | max(int(m.group(3)), 0) << 36 | int(m.group(1)) << 44
-                    exp = f'INSERT INTO rsindex_table (id, radical, codepoint) values ({key}, {m.group(1)}, {codepoint});'
+                    exp = f'INSERT INTO rsindex_table (id, radical, strokes, codepoint) values ({key}, {m.group(1)}, {max(int(m.group(3)), 0)}, {codepoint});'
                     try:
                       cur.execute(exp)
                     except:

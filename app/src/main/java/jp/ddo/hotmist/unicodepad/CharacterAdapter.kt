@@ -23,6 +23,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.setPadding
 import androidx.core.widget.NestedScrollView
 import androidx.viewpager.widget.PagerAdapter
 import java.nio.charset.Charset
@@ -221,6 +222,75 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                 layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
         }
+        if (!emoji) {
+            var hasHeader = false
+            for (col in unihanCols) {
+                val r = db[itemid, col.first] ?: continue
+                if (!hasHeader) {
+                    layout.addView(TextView(activity).apply {
+                        setText(R.string.unihan)
+                        setPadding(textPadding, 0, textPadding, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    hasHeader = true
+                }
+                layout.addView(LinearLayout(activity).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    addView(TextView(activity).apply {
+                        setText(col.second)
+                        gravity = Gravity.CENTER_VERTICAL
+                        setPadding(textPadding, 0, 0, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    addView(TextView(activity).apply {
+                        setText(": ")
+                        gravity = Gravity.CENTER_VERTICAL
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    if (col.first.endsWith("Variant")) {
+                        addView(LinearLayout(activity).apply {
+                            orientation = LinearLayout.HORIZONTAL
+                            val l = r.split(" ").toTypedArray()
+                            val cps = l.map { s -> Integer.parseInt(s.substring(2, s.indexOf('<').let { if (it == -1) s.length else it }), 16) }
+                            for (i in cps.indices) {
+                                addView(CharacterView(activity, null, android.R.attr.textAppearanceLarge).apply {
+                                    setPadding(UnicodeAdapter.padding)
+                                    drawSlash(false)
+                                    setTextSize(UnicodeAdapter.fontsize)
+                                    this.text = Character.toChars(cps[i]).concatToString()
+                                    setTypeface(typeface, locale)
+                                    isEnabled = true
+                                    isClickable = true
+                                    isFocusable = true
+                                    setOnClickListener { view ->
+                                        activity.adpPage.onItemClick(null, view, -1, cps[i].toLong())
+                                    }
+                                    setOnLongClickListener { view ->
+                                        activity.adpPage.showDesc(null, i, StringAdapter(cps.flatMap { Character.toChars(it).asIterable() }.joinToString(""), activity, db))
+                                        true
+                                    }
+                                    setBackgroundResource(reslist)
+                                }, LinearLayout.LayoutParams((activity.resources.displayMetrics.scaledDensity * UnicodeAdapter.fontsize * 2 + UnicodeAdapter.padding * 2).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT))
+                            }
+                        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                    } else {
+                        addView(TextView(activity).apply {
+                            setText(if (col.first == "kRSUnicode") {
+                                r.split(" ").joinToString(" ") { s ->
+                                    val p = s.indexOfFirst { !it.isDigit() }
+                                        .let { if (it == -1) s.length else it }
+                                    val first = s.substring(0, p)
+                                    val second = s.substring(p)
+                                    "$first(${String(Character.toChars(Integer.parseInt(first) - 1 + 0x2F00))})$second"
+                                }
+                            } else {
+                                r
+                            })
+                            gravity = Gravity.CENTER_VERTICAL
+                            setTextIsSelectable(true)
+                        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+                    }
+                    setPadding(textPadding, 0, textPadding, 0)
+                }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }
+        }
         val scroll = NestedScrollView(activity)
         scroll.addView(layout)
         collection.addView(scroll)
@@ -259,6 +329,39 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
         var lines = true
         var shrink = true
         private val cols = arrayOf("name", "utf8", "version", "lines")
+        private val unihanCols = arrayOf(
+            "kRSUnicode" to R.string.unihan_rs_unicode,
+            "kTotalStrokes" to R.string.unihan_total_strokes,
+            "kAlternateTotalStrokes" to R.string.unihan_alternate_total_strokes,
+            "kDefinition" to R.string.unihan_definition,
+
+            "kMandarin" to R.string.unihan_mandarin,
+            "kCantonese" to R.string.unihan_cantonese,
+            "kTang" to R.string.unihan_tang,
+            "kHanyuPinlu" to R.string.unihan_hanyu_pinlu,
+            "kXHC1983" to R.string.unihan_xhc1983,
+            "kHanyuPinyin" to R.string.unihan_hanyu_pinyin,
+            "kTGHZ2013" to R.string.unihan_tghz2013,
+            "kSMSZD2003Readings" to R.string.unihan_smszd2003_readings,
+            "kFanqie" to R.string.unihan_fanqie,
+            "kZhuang" to R.string.unihan_zhuang,
+
+            "kJapaneseKun" to R.string.unihan_japanese_kun,
+            "kJapaneseOn" to R.string.unihan_japanese_on,
+            "kJapanese" to R.string.unihan_japanese,
+
+            "kKorean" to R.string.unihan_korean,
+            "kHangul" to R.string.unihan_hangul,
+
+            "kVietnamese" to R.string.unihan_vietnamese,
+
+            "kSemanticVariant" to R.string.unihan_semantic_variant,
+            "kSimplifiedVariant" to R.string.unihan_simplified_variant,
+            "kSpecializedSemanticVariant" to R.string.unihan_specialized_semantic_variant,
+            "kSpoofingVariant" to R.string.unihan_spoofing_variant,
+            "kTraditionalVariant" to R.string.unihan_traditional_variant,
+            "kZVariant" to R.string.unihan_z_variant
+        )
         private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "")
         private val emjs = arrayOf("name", "utf8", "version", "grp", "subgrp")
         private val mode = arrayOf(null, "UTF-8: ", "from Unicode Emoji ", "Group: ", "Subgroup: ")

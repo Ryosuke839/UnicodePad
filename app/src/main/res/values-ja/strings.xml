@@ -31,6 +31,9 @@
 	<string name="list">一覧</string>
 	<string name="edit">入力</string>
 	<string name="emoji">絵文字</string>
+	<string name="rsindex">部首画数</string>
+	<string name="rsindex_group">部首 #%1$d (%2$s) %3$s</string>
+	<string name="rsindex_subgroup">部首 #%1$d (%2$s) %3$s / %4$d 画</string>
 	<string name="normal">デフォルト</string>
 	<string name="input">入力</string>
 	<string name="remrec">削除</string>
@@ -372,6 +375,36 @@
 	<string name="script_E0100">E0100 字形選択子補助</string>
 	<string name="script_F0000">F0000 私用領域補助A</string>
 	<string name="script_100000">100000 私用領域補助B</string>
+
+	<string name="search_title_name">コードポイント</string>
+	<string name="search_title_emoji">絵文字</string>
+	<string name="unihan">Unihan</string>
+	<string name="unihan_rs_unicode">標準部首画数</string>
+	<string name="unihan_total_strokes">総画数</string>
+	<string name="unihan_alternate_total_strokes">別の総画数</string>
+	<string name="unihan_cantonese">広東語読み</string>
+	<string name="unihan_definition">定義</string>
+	<string name="unihan_fanqie">反切読み</string>
+	<string name="unihan_hangul">韓国語発音（ハングル）</string>
+	<string name="unihan_hanyu_pinlu">現代漢語頻率詞典の発音と頻度</string>
+	<string name="unihan_hanyu_pinyin">拼音読み</string>
+	<string name="unihan_japanese">日本語読み（かな）</string>
+	<string name="unihan_japanese_kun">日本語訓読み</string>
+	<string name="unihan_japanese_on">日本語音読み</string>
+	<string name="unihan_korean">韓国語読み</string>
+	<string name="unihan_mandarin">拼音読み</string>
+	<string name="unihan_smszd2003_readings">商務新字典の北京語と広東語読み</string>
+	<string name="unihan_tang">唐音発音</string>
+	<string name="unihan_tghz2013">通用规范汉字字典の拼音読み</string>
+	<string name="unihan_vietnamese">ベトナム語発音</string>
+	<string name="unihan_xhc1983">现代汉语词典の拼音読み</string>
+	<string name="unihan_zhuang">壯語読み</string>
+	<string name="unihan_semantic_variant">意味的異体字</string>
+	<string name="unihan_simplified_variant">簡体字</string>
+	<string name="unihan_specialized_semantic_variant">特定意味的異体字</string>
+	<string name="unihan_spoofing_variant">スプーフィング異体字</string>
+	<string name="unihan_traditional_variant">繁体字</string>
+	<string name="unihan_z_variant">Z-異体字</string>
 
 	<string name="guide_next">次へ</string>
 	<string name="guide_skip">スキップ</string>

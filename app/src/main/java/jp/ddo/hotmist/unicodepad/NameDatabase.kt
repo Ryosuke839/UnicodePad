@@ -27,6 +27,15 @@ import java.io.IOException
 import java.util.zip.ZipInputStream
 
 class NameDatabase(context: Context) {
+    enum class SearchType {
+        NAME, EMOJI,
+        UNIHAN_DEFINITION,
+        UNIHAN_MANDARIN, UNIHAN_CANTONESE, UNIHAN_TANG, UNIHAN_HANYU_PINLU, UNIHAN_XHC1983, UNIHAN_HANYU_PINYIN, UNIHAN_TGHZ2013, UNIHAN_SMSZD2003_READINGS, UNIHAN_FANQIE, UNIHAN_ZHUANG,
+        UNIHAN_JAPANESE_KUN, UNIHAN_JAPANESE_ON, UNIHAN_JAPANESE,
+        UNIHAN_KOREAN, UNIHAN_HANGUL,
+        UNIHAN_VIETNAMESE,
+    }
+
     private val db: SQLiteDatabase = NameHelper(context).readableDatabase
     operator fun get(code: Int, column: String): String? {
         if (column == "name") {
@@ -36,7 +45,11 @@ class NameDatabase(context: Context) {
             if (code in 0x17000..0x187FF) return "Tangut Ideograph"
             if (code in 0x18D00..0x18D1E) return "Tangut Ideograph"
         }
-        return get("name_table", code.toString(), column)
+        return get(if (column.length >= 2 && column[0] == 'k' && column[1].isUpperCase()) {
+            "unihan_table"
+        } else {
+            "name_table"
+        }, code.toString(), column)
     }
 
     operator fun get(code: String, column: String): String? {
@@ -94,19 +107,49 @@ class NameDatabase(context: Context) {
     }
 
     @SuppressLint("Recycle")
-    fun find(str: String, version: Int): Pair<Cursor?, Cursor?> {
+    fun find(str: String, version: Int, searchType: SearchType): Cursor? {
         val list = str.split(" +").toTypedArray()
-        if (list.isEmpty()) return null to null
-        val emojiVersion = when (version) {
-            600, 610, 620, 630 -> 60
-            700 -> 70
-            800 -> 100
-            else -> version
-        }
+        if (list.isEmpty()) return null
         return try {
-            db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version;", null) to db.rawQuery("SELECT id FROM emoji_table1510 WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
+            when (searchType) {
+                SearchType.NAME -> {
+                    db.rawQuery("SELECT id FROM name_table WHERE " + list.joinToString(" ") { "words LIKE '%$it%' AND " } + "version <= $version;", null)
+                }
+                SearchType.EMOJI -> {
+                    val emojiVersion = when (version) {
+                        600, 610, 620, 630 -> 60
+                        700 -> 70
+                        800 -> 100
+                        else -> version
+                    }
+                    db.rawQuery("SELECT id FROM emoji_table1510 WHERE " + list.joinToString(" ") { "name LIKE '%$it%' AND " } + "version <= $emojiVersion;", null)
+                }
+                else -> {
+                    val columnName = when (searchType) {
+                        SearchType.UNIHAN_CANTONESE -> "kCantonese"
+                        SearchType.UNIHAN_DEFINITION -> "kDefinition"
+                        SearchType.UNIHAN_FANQIE -> "kFanqie"
+                        SearchType.UNIHAN_HANGUL -> "kHangul"
+                        SearchType.UNIHAN_HANYU_PINLU -> "kHanyuPinlu"
+                        SearchType.UNIHAN_HANYU_PINYIN -> "kHanyuPinyin"
+                        SearchType.UNIHAN_JAPANESE -> "kJapanese"
+                        SearchType.UNIHAN_JAPANESE_KUN -> "kJapaneseKun"
+                        SearchType.UNIHAN_JAPANESE_ON -> "kJapaneseOn"
+                        SearchType.UNIHAN_KOREAN -> "kKorean"
+                        SearchType.UNIHAN_MANDARIN -> "kMandarin"
+                        SearchType.UNIHAN_SMSZD2003_READINGS -> "kSMSZD2003Readings"
+                        SearchType.UNIHAN_TANG -> "kTang"
+                        SearchType.UNIHAN_TGHZ2013 -> "kTGHZ2013"
+                        SearchType.UNIHAN_VIETNAMESE -> "kVietnamese"
+                        SearchType.UNIHAN_XHC1983 -> "kXHC1983"
+                        SearchType.UNIHAN_ZHUANG -> "kZhuang"
+                        else -> throw IllegalArgumentException()
+                    }
+                    db.rawQuery("SELECT id FROM unihan_table WHERE " + list.joinToString(" ") { "$columnName LIKE '%$it%' AND " } + "TRUE;", null)
+                }
+            }
         } catch (e: SQLiteException) {
-            null to null
+            null
         }
     }
 
@@ -125,6 +168,14 @@ class NameDatabase(context: Context) {
         }
     }
 
+    fun rsindex(): Cursor? {
+        return try {
+            db.rawQuery("SELECT id, radical, strokes, codepoint FROM rsindex_table;", null)
+        } catch (e: SQLiteException) {
+            null
+        }
+    }
+
     internal inner class NameHelper(private val context: Context) : SQLiteOpenHelper(context, "namedb", null, 1) {
         private val dbpath = "namedb"
         override fun onCreate(db: SQLiteDatabase) {}
@@ -135,7 +186,7 @@ class NameDatabase(context: Context) {
                 try {
                     db.rawQuery("SELECT * FROM version_code;", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 71) throw SQLiteException()
+                        if (cur.getInt(0) != 72) throw SQLiteException()
                     }
                 } catch (e: SQLiteException) {
                     db.close()

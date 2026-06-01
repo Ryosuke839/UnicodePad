@@ -29,8 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 
 internal class FindAdapter(activity: Activity, private val pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
-    private var curList: Cursor? = null
-    private var curEmoji: Cursor? = null
+    private var cur: List<Pair<NameDatabase.SearchType, Cursor>> = emptyList()
     private var saved: String = pref.getString("find", null) ?: ""
     private var adapter: CompleteAdapter? = null
     override fun name(): Int {
@@ -89,12 +88,12 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             saved = text.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text.setText(saved)
             if (saved.isEmpty()) return@setOnClickListener
-            curList?.close()
-            curEmoji?.close()
-            val curs = db.find(saved, UnicodeActivity.univer)
-            curList = curs.first
-            curEmoji = curs.second
-            if ((curList?.count ?: 0) + (curEmoji?.count ?: 0) > 0)
+            cur.forEach { it.second.close() }
+            cur = NameDatabase.SearchType.entries.mapNotNull {
+                val c = db.find(saved, UnicodeActivity.univer, it) ?: return@mapNotNull null
+                if (c.count > 0) it to c else null
+            }.toList()
+            if (!cur.isEmpty())
                 adapter?.update(saved)
             (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
             invalidateViews()
@@ -113,58 +112,102 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
     }
 
     override fun getTitleCount(): Int {
-        return 2
+        return cur.size
     }
 
     override fun getTitlePosition(i: Int): Int {
-        return when (i) {
-            0 -> 0
-            1 -> (curList?.count ?: 0)
-            else -> throw IndexOutOfBoundsException()
-        }
+        return cur.subList(0, i).sumOf { it.second.count }
     }
 
     override fun getTitleString(i: Int): String {
-        return when (i) {
-            0 -> "Code Point"
-            1 -> "Emoji"
-            else -> throw IndexOutOfBoundsException()
+        return when (cur[i].first) {
+            NameDatabase.SearchType.NAME -> activity.resources.getString(R.string.search_title_name)
+            NameDatabase.SearchType.EMOJI -> activity.resources.getString(R.string.search_title_emoji)
+            NameDatabase.SearchType.UNIHAN_CANTONESE -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_cantonese)
+            NameDatabase.SearchType.UNIHAN_DEFINITION -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_definition)
+            NameDatabase.SearchType.UNIHAN_FANQIE -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_fanqie)
+            NameDatabase.SearchType.UNIHAN_HANGUL -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_hangul)
+            NameDatabase.SearchType.UNIHAN_HANYU_PINLU -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_hanyu_pinlu)
+            NameDatabase.SearchType.UNIHAN_HANYU_PINYIN -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_hanyu_pinyin)
+            NameDatabase.SearchType.UNIHAN_JAPANESE -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_japanese)
+            NameDatabase.SearchType.UNIHAN_JAPANESE_KUN -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_japanese_kun)
+            NameDatabase.SearchType.UNIHAN_JAPANESE_ON -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_japanese_on)
+            NameDatabase.SearchType.UNIHAN_KOREAN -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_korean)
+            NameDatabase.SearchType.UNIHAN_MANDARIN -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_mandarin)
+            NameDatabase.SearchType.UNIHAN_SMSZD2003_READINGS -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_smszd2003_readings)
+            NameDatabase.SearchType.UNIHAN_TANG -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_tang)
+            NameDatabase.SearchType.UNIHAN_TGHZ2013 -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_tghz2013)
+            NameDatabase.SearchType.UNIHAN_VIETNAMESE -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_vietnamese)
+            NameDatabase.SearchType.UNIHAN_XHC1983 -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_xhc1983)
+            NameDatabase.SearchType.UNIHAN_ZHUANG -> activity.resources.getString(R.string.unihan) + " " + activity.resources.getString(R.string.unihan_zhuang)
         }
     }
 
     override fun getCount(): Int {
-        return (curList?.count ?: 0) + (curEmoji?.count ?: 0)
+        return cur.sumOf { it.second.count }
     }
 
     override fun getItemCodePoint(i: Int): Long {
-        val offset = curList?.count ?: 0
-        return if (i < offset) {
-            curList?.let {
-                if (i < 0) null else {
-                    it.moveToPosition(i)
-                    it.getInt(0).toLong()
+        var rem = i
+        cur.forEach {
+            if (rem < it.second.count) {
+                if (it.first == NameDatabase.SearchType.EMOJI) {
+                    return -1
                 }
-            } ?: 0
-        } else -1
+                it.second.moveToPosition(rem)
+                return it.second.getInt(0).toLong()
+            }
+            rem -= it.second.count
+        }
+        return -1
     }
 
     override fun getItemString(i: Int): String {
-        val offset = curList?.count ?: 0
-        return if (i < offset) {
-            curList?.let {
-                if (i < 0) return ""
-                super.getItemString(i)
+        var rem = i
+        cur.forEach {
+            if (rem < it.second.count) {
+                if (it.first == NameDatabase.SearchType.EMOJI) {
+                    it.second.moveToPosition(rem)
+                    return it.second.getString(0)
+                }
+                return super.getItemString(i)
             }
-        } else {
-            curEmoji?.let {
-                if (i >= offset + it.count) return ""
-                it.moveToPosition(i - offset)
-                it.getString(0)
-            }
-        } ?: ""
+            rem -= it.second.count
+        }
+        return ""
     }
 
     override fun getItem(i: Int): String {
         return getItemString(i).split(" ").joinToString("") { String(Character.toChars(it.toInt(16))) }
+    }
+
+    override fun getItemTextColumn(i: Int): String {
+        var rem = i
+        cur.forEach {
+            if (rem < it.second.count) {
+                return when (it.first) {
+                    NameDatabase.SearchType.UNIHAN_CANTONESE -> "kCantonese"
+                    NameDatabase.SearchType.UNIHAN_DEFINITION -> "kDefinition"
+                    NameDatabase.SearchType.UNIHAN_FANQIE -> "kFanqie"
+                    NameDatabase.SearchType.UNIHAN_HANGUL -> "kHangul"
+                    NameDatabase.SearchType.UNIHAN_HANYU_PINLU -> "kHanyuPinlu"
+                    NameDatabase.SearchType.UNIHAN_HANYU_PINYIN -> "kHanyuPinyin"
+                    NameDatabase.SearchType.UNIHAN_JAPANESE -> "kJapanese"
+                    NameDatabase.SearchType.UNIHAN_JAPANESE_KUN -> "kJapaneseKun"
+                    NameDatabase.SearchType.UNIHAN_JAPANESE_ON -> "kJapaneseOn"
+                    NameDatabase.SearchType.UNIHAN_KOREAN -> "kKorean"
+                    NameDatabase.SearchType.UNIHAN_MANDARIN -> "kMandarin"
+                    NameDatabase.SearchType.UNIHAN_SMSZD2003_READINGS -> "kSMSZD2003Readings"
+                    NameDatabase.SearchType.UNIHAN_TANG -> "kTang"
+                    NameDatabase.SearchType.UNIHAN_TGHZ2013 -> "kTGHZ2013"
+                    NameDatabase.SearchType.UNIHAN_VIETNAMESE -> "kVietnamese"
+                    NameDatabase.SearchType.UNIHAN_XHC1983 -> "kXHC1983"
+                    NameDatabase.SearchType.UNIHAN_ZHUANG -> "kZhuang"
+                    else -> super.getItemTextColumn(i)
+                }
+            }
+            rem -= it.second.count
+        }
+        return super.getItemTextColumn(i)
     }
 }

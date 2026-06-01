@@ -85,6 +85,10 @@ interface UnicodeAdapter {
         return String.format("%04X", getItemCodePoint(i).toInt())
     }
 
+    fun getItemTextColumn(i: Int): String {
+        return "name"
+    }
+
     fun getItem(i: Int): String {
         return String(Character.toChars(getItemCodePoint(i).toInt()))
     }
@@ -199,7 +203,7 @@ interface UnicodeAdapter {
         if (holder is RowViewHolder) {
             if (getItemCodePoint(position) >= 0) {
                 holder.codePointView.text = String.format("U+%04X", getItemCodePoint(position).toInt())
-                holder.nameView.text = db[getItemCodePoint(position).toInt(), "name"]
+                holder.nameView.text = db[getItemCodePoint(position).toInt(), getItemTextColumn(position)]
             } else {
                 holder.codePointView.text = (" " + getItemString(position)).replace(" ", " U+").substring(1)
                 holder.nameView.text = db[getItemString(position), "name"]

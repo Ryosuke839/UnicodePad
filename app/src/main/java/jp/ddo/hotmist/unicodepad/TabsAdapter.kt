@@ -132,9 +132,9 @@ class TabsAdapter internal constructor(private val activity: Activity) : DragIte
     }
 
     companion object {
-        private const val NUM_TABS = 6
-        private val KEYS = arrayOf("rec", "list", "emoji", "find", "fav", "edt")
-        private val RESOURCES = intArrayOf(R.string.recent, R.string.list, R.string.emoji, R.string.find, R.string.favorite, R.string.edit)
-        private val DEFAULTS = booleanArrayOf(false, false, false, true, false, true)
+        private const val NUM_TABS = 7
+        private val KEYS = arrayOf("rec", "list", "emoji", "find", "fav", "edt", "rsindex")
+        private val RESOURCES = intArrayOf(R.string.recent, R.string.list, R.string.emoji, R.string.find, R.string.favorite, R.string.edit, R.string.rsindex)
+        private val DEFAULTS = booleanArrayOf(false, false, false, true, false, true, false)
     }
 }

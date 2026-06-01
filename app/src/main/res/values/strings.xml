@@ -16,7 +16,7 @@
 	<string name="delete">Delete</string>
 	<string name="desc">Detail</string>
 	<string name="find">Find</string>
-	<string name="fhint">Enter a character name</string>
+	<string name="fhint">Enter a character name or Unihan reading</string>
 	<string name="inlist">Find in list</string>
 	<string name="copied">Copied to clipboard</string>
 	<string name="finish">Enter</string>
@@ -31,6 +31,9 @@
 	<string name="list">List</string>
 	<string name="edit">Input</string>
 	<string name="emoji">Emoji</string>
+	<string name="rsindex">RSIndex</string>
+	<string name="rsindex_group">Radical #%1$d (%2$s) %3$s</string>
+	<string name="rsindex_subgroup">Radical #%1$d (%2$s) %3$s / %4$d strokes</string>
 	<string name="normal">Default</string>
 	<string name="locale_default">Default (%s)</string>
 	<string name="locale_other">Other…</string>
@@ -390,6 +393,36 @@
 	<string name="script_F0000">F0000 Supplementary Private Use Area-A</string>
 	<string name="script_100000">100000 Supplementary Private Use Area-B</string>
 
+	<string name="search_title_name">Code Point</string>
+	<string name="search_title_emoji">Emoji</string>
+	<string name="unihan">Unihan</string>
+	<string name="unihan_rs_unicode">standard radical-stroke count</string>
+	<string name="unihan_total_strokes">total number of strokes</string>
+	<string name="unihan_alternate_total_strokes">alternate total number of strokes</string>
+	<string name="unihan_cantonese">Cantonese reading</string>
+	<string name="unihan_definition">definition</string>
+	<string name="unihan_fanqie">Fanqie reading</string>
+	<string name="unihan_hangul">Korean pronunciation in Hangul</string>
+	<string name="unihan_hanyu_pinlu">pronunciation and frequency\nby Xiandai Hanyu Pinlu Cidian</string>
+	<string name="unihan_hanyu_pinyin">Hànyǔ Pīnyīn reading</string>
+	<string name="unihan_japanese">Japanese reading in Kana</string>
+	<string name="unihan_japanese_kun">Japanese pronunciation</string>
+	<string name="unihan_japanese_on">Sino-Japanese pronunciation</string>
+	<string name="unihan_korean">Korean pronunciation</string>
+	<string name="unihan_mandarin">pīnyīn reading</string>
+	<string name="unihan_smszd2003_readings">Mandarin and Cantonese readings\nin the Soengmou San Zidin</string>
+	<string name="unihan_tang">Tang dynasty pronunciation</string>
+	<string name="unihan_tghz2013">Hànyǔ Pīnyīn reading\nin Tōngyòng Guīfàn Hànzì Zìdiǎn</string>
+	<string name="unihan_vietnamese">pronunciation in Quốc ngữ</string>
+	<string name="unihan_xhc1983">Hànyǔ Pīnyīn reading\nin the Xiàndài Hànyǔ Cídiǎn</string>
+	<string name="unihan_zhuang">Zhuang reading</string>
+	<string name="unihan_semantic_variant">semantic variant</string>
+	<string name="unihan_simplified_variant">simplified Chinese variant</string>
+	<string name="unihan_specialized_semantic_variant">specialized semantic variant</string>
+	<string name="unihan_spoofing_variant">spoofing variant</string>
+	<string name="unihan_traditional_variant">traditional Chinese variant</string>
+	<string name="unihan_z_variant">z-variant</string>
+
 	<string name="guide_next">Next</string>
 	<string name="guide_skip">Skip</string>
 	<string name="guide_finish">Finish</string>
@@ -512,7 +545,7 @@
 Copyright © 1991-2025 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.17.0</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.18.0</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

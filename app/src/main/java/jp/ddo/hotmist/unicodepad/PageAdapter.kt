@@ -55,6 +55,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private val adapterFavorite: FavoriteAdapter
     internal val adapterEdit: EditAdapter
     private val adapterEmoji: EmojiAdapter
+    private val adapterRSIndex: RSIndexAdapter
     private var adapterCharacter: CharacterAdapter? = null
     private var blist = false
     private var bfind = false
@@ -62,6 +63,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private var bfav = false
     private var bedt = false
     private var bemoji = false
+    private var brsindex = false
     private val adapters: Array<UnicodeAdapter>
     private var recpage = -1
     private var listpage = -1
@@ -81,7 +83,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     }
 
     override fun notifyDataSetChanged() {
-        numPage = pref.getInt("cnt_shown", 6)
+        numPage = pref.getInt("cnt_shown", 7)
         adapters[pref.getInt("ord_list", 1)] = adapterList
         listpage = pref.getInt("ord_list", 1)
         adapters[pref.getInt("ord_find", 3)] = adapterFind
@@ -91,6 +93,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapters[pref.getInt("ord_fav", 4)] = adapterFavorite
         adapters[pref.getInt("ord_edt", 5)] = adapterEdit
         adapters[pref.getInt("ord_emoji", 2)] = adapterEmoji
+        adapters[pref.getInt("ord_rsindex", 6)] = adapterRSIndex
         super.notifyDataSetChanged()
     }
 
@@ -108,6 +111,8 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEdit.single = bedt
         bemoji = pref.getString("single_emoji", "false") == "true"
         adapterEmoji.single = bemoji
+        brsindex = pref.getString("single_rsindex", "false") == "true"
+        adapterRSIndex.single = brsindex
         return adapters[position].let { adapter ->
             adapter.setListener(this)
             if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
@@ -322,6 +327,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.save(edit)
         adapterEdit.save(edit)
         adapterEmoji.save(edit)
+        adapterRSIndex.save(edit)
     }
 
     fun setTypeface(tf: Typeface?, locale: Locale) {
@@ -333,6 +339,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterFavorite.setTypeface(tf, locale)
         adapterEdit.setTypeface(tf, locale)
         adapterEmoji.setTypeface(tf, locale)
+        adapterRSIndex.setTypeface(tf, locale)
         adapterCharacter?.setTypeface(tf, locale)
     }
 
@@ -344,12 +351,12 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
 
     companion object {
         var column = 8
-        private const val MAX_VIEWS: Int = 6
+        private const val MAX_VIEWS: Int = 7
     }
 
     init {
         val adapters = arrayOfNulls<UnicodeAdapter>(MAX_VIEWS)
-        numPage = pref.getInt("cnt_shown", 6)
+        numPage = pref.getInt("cnt_shown", 7)
         adapterList = ListAdapter(activity, pref, db, blist)
         adapters[pref.getInt("ord_list", 1)] = adapterList
         listpage = pref.getInt("ord_list", 1)
@@ -365,6 +372,8 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapters[pref.getInt("ord_edt", 5)] = adapterEdit
         adapterEmoji = EmojiAdapter(activity, pref, db, bemoji)
         adapters[pref.getInt("ord_emoji", 2)] = adapterEmoji
+        adapterRSIndex = RSIndexAdapter(activity, pref, db, brsindex)
+        adapters[pref.getInt("ord_rsindex", 6)] = adapterRSIndex
         this.adapters = adapters.filterNotNull().toTypedArray()
         page = -1
         tf = null

@@ -124,7 +124,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
     }
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         super.instantiate(view)
         fromIndex.clear()
         fromCodePoint.clear()

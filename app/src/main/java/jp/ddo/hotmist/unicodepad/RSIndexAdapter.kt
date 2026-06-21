@@ -23,10 +23,13 @@ import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
+    private var codepoints: MutableList<Long>? = null
     private var jump: Spinner? = null
     private lateinit var map: NavigableMap<Int, Int>
     private lateinit var group: MutableList<String>
@@ -72,7 +75,7 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     @SuppressLint("InlinedApi")
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         super.instantiate(view)
         val view = view as RecyclerView
         val layout = LinearLayout(activity)
@@ -90,39 +93,44 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
         return layout
     }
 
-    private fun initViews() {
+    private suspend fun initViews() {
         val view = (this.view as RecyclerView)
         val jump = this.jump!!
         view.setOnScrollListener(null)
         jump.onItemSelectedListener = null
         jump.adapter = null
-        cur?.close()
-        cur = db.rsindex()
-        map = TreeMap()
-        group = ArrayList()
-        groupIndex = ArrayList()
-        subGroup = ArrayList()
-        var last = 0 to 0
-        cur?.let {
-            it.moveToFirst()
-            while (!it.isAfterLast) {
-                val curr = it.getInt(1) to it.getInt(2)
-                if (curr == last) {
+        withContext(Dispatchers.IO) {
+            cur?.close()
+            cur = db.rsindex()
+            map = TreeMap()
+            group = ArrayList()
+            groupIndex = ArrayList()
+            subGroup = ArrayList()
+            var last = 0 to 0
+            cur?.let {
+                it.moveToFirst()
+                val codepoints = ArrayList<Long>(it.count)
+                while (!it.isAfterLast) {
+                    codepoints.add(it.getLong(3))
+                    val curr = it.getInt(1) to it.getInt(2)
+                    if (curr == last) {
+                        it.moveToNext()
+                        continue
+                    }
+                    val cp = curr.first - 1 + 0x2F00
+                    if (curr.first != last.first) {
+                        map[it.position] = map.size
+                        group.add(activity.resources.getString(R.string.rsindex_group, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp))))
+                        groupIndex.add(subGroup.size)
+                    }
+                    last = curr
+                    subGroup.add(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second) to it.position)
                     it.moveToNext()
-                    continue
                 }
-                val cp = curr.first - 1 + 0x2F00
-                if (curr.first != last.first) {
-                    map[it.position] = map.size
-                    group.add(activity.resources.getString(R.string.rsindex_group, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp))))
-                    groupIndex.add(subGroup.size)
-                }
-                last = curr
-                subGroup.add(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second) to it.position)
-                it.moveToNext()
+                this@RSIndexAdapter.codepoints = codepoints
             }
+            if (current >= group.size) current = group.size - 1
         }
-        if (current >= group.size) current = group.size - 1
         invalidateViews()
         jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, group).also {
             it.setDropDownViewResource(R.layout.spinner_drop_down_item)
@@ -135,6 +143,7 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
 
     override fun destroy() {
         jump = null
+        codepoints = null
         cur?.close()
         cur = null
         super.destroy()
@@ -157,7 +166,7 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     override fun getCount(): Int {
-        return cur?.count ?: 0
+        return codepoints?.size ?: 0
     }
 
     override fun getItemTextColumn(i: Int): String {
@@ -165,10 +174,6 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     override fun getItemCodePoint(i: Int): Long {
-        return cur?.let {
-            if (i < 0 || i >= it.count) return -1
-            it.moveToPosition(i)
-            it.getLong(3)
-        } ?: -1
+        return codepoints?.getOrNull(i) ?: -1
     }
 }

@@ -74,7 +74,7 @@ internal class EditAdapter(activity: Activity, pref: SharedPreferences, db: Name
         return strToSequence(s).map { it.toString() }.toList() == mItemList.map { it.first.toString() }.toList()
     }
 
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         setString(edit.editableText)
         edit.addTextChangedListener(this)
         super.instantiate(view)

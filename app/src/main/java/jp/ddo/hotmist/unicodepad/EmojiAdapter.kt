@@ -19,15 +19,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.os.Build
 import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
+    private var items: MutableList<Pair<String, Long>>? = null
     private var jump: Spinner? = null
     private lateinit var map: NavigableMap<Int, Int>
     private lateinit var grp: MutableList<String>
@@ -36,6 +40,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     private var tone = pref.getInt("tone", 0x2B1A)
     private var direction = pref.getInt("emoji_direction", 0x2B05)
     private var guard = 0
+    private val scope = MainScope()
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -74,7 +79,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     }
 
     @SuppressLint("InlinedApi")
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         super.instantiate(view)
         val view = view as RecyclerView
         val layout = LinearLayout(activity)
@@ -96,9 +101,11 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
                     val item = adp.getItem(position)!!.codePointAt(0)
                     if (tone == item) return
                     tone = item
-                    ++guard
-                    initViews()
-                    view.post { --guard }
+                    scope.launch {
+                        ++guard
+                        initViews()
+                        view.post { --guard }
+                    }
                 }
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             } }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -113,9 +120,11 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
                     val item = adp.getItem(position)!!.codePointAt(0)
                     if (direction == item) return
                     direction = item
-                    ++guard
-                    initViews()
-                    view.post { --guard }
+                    scope.launch {
+                        ++guard
+                        initViews()
+                        view.post { --guard }
+                    }
                 }
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             } }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -126,34 +135,39 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
         return layout
     }
 
-    private fun initViews() {
+    private suspend fun initViews() {
         val view = (this.view as RecyclerView)
         val jump = this.jump!!
         view.setOnScrollListener(null)
         jump.onItemSelectedListener = null
         jump.adapter = null
-        cur?.close()
-        cur = db.emoji(UnicodeActivity.univer, tone, direction)
-        map = TreeMap()
-        grp = ArrayList()
-        idx = ArrayList()
-        var last = ""
-        cur?.let {
-            it.moveToFirst()
-            while (!it.isAfterLast) {
-                val curr = it.getString(1) + " / " + it.getString(2)
-                if (curr == last) {
+        withContext(Dispatchers.IO) {
+            cur?.close()
+            cur = db.emoji(UnicodeActivity.univer, tone, direction)
+            map = TreeMap()
+            grp = ArrayList()
+            idx = ArrayList()
+            var last = ""
+            cur?.let {
+                it.moveToFirst()
+                val items = ArrayList<Pair<String, Long>>(it.count)
+                while (!it.isAfterLast) {
+                    items.add(it.getString(0) to it.getLong(3) - 0x800000000000000L)
+                    val curr = it.getString(1) + " / " + it.getString(2)
+                    if (curr == last) {
+                        it.moveToNext()
+                        continue
+                    }
+                    last = curr
+                    map[it.position] = map.size
+                    grp.add(curr)
+                    idx.add(it.position)
                     it.moveToNext()
-                    continue
                 }
-                last = curr
-                map[it.position] = map.size
-                grp.add(curr)
-                idx.add(it.position)
-                it.moveToNext()
+                this@EmojiAdapter.items = items
             }
+            if (current >= grp.size) current = grp.size - 1
         }
-        if (current >= grp.size) current = grp.size - 1
         invalidateViews()
         jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp).also {
             it.setDropDownViewResource(R.layout.spinner_drop_down_item)
@@ -166,6 +180,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
 
     override fun destroy() {
         jump = null
+        items = null
         cur?.close()
         cur = null
         super.destroy()
@@ -195,23 +210,15 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     }
 
     override fun getCount(): Int {
-        return cur?.count ?: 0
+        return items?.size ?: 0
     }
 
     override fun getItemCodePoint(i: Int): Long {
-        return cur?.let {
-            if (i < 0 || i >= it.count) return -1
-            it.moveToPosition(i)
-            it.getLong(3) - 0x800000000000000L
-        } ?: -1
+        return items?.getOrNull(i)?.second ?: -1
     }
 
     override fun getItemString(i: Int): String {
-        return cur?.let {
-            if (i < 0 || i >= it.count) return ""
-            it.moveToPosition(i)
-            it.getString(0)
-        } ?: ""
+        return items?.getOrNull(i)?.first ?: ""
     }
 
     override fun getItem(i: Int): String {

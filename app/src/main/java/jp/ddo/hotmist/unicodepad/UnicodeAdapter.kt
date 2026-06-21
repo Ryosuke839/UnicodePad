@@ -58,7 +58,7 @@ interface UnicodeAdapter {
         return 0
     }
 
-    fun instantiate(view: View): View {
+    suspend fun instantiate(view: View): View {
         this.view = view
         return view
     }

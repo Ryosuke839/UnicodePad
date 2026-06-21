@@ -31,10 +31,10 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     private var cur: Cursor? = null
     private var codepoints: MutableList<Long>? = null
     private var jump: Spinner? = null
-    private lateinit var map: NavigableMap<Int, Int>
+    private lateinit var map: NavigableMap<Int, Pair<Int, Int>>
     private lateinit var group: MutableList<String>
     private lateinit var groupIndex: MutableList<Int>
-    private lateinit var subGroup: MutableList<Pair<String, Int>>
+    private lateinit var subGroup: MutableList<Triple<String, Int, Int>>
     private var current = pref.getInt("rsindex", 0)
     private var guard = 0
     private val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -47,10 +47,10 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
             if (visibleItemCount != 0) {
                 map.floorEntry(index)?.let { e ->
                     jump?.let { jump ->
-                        if (guard == 0 && current != e.value) {
-                            current = e.value
+                        if (guard == 0 && current != e.value.second) {
+                            current = e.value.second
                             ++guard
-                            jump.setSelection(e.value, false)
+                            jump.setSelection(e.value.first, false)
                             jump.post { --guard }
                         }
                     }
@@ -60,8 +60,10 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
     private val selectListener = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            current = position
-            if (guard == 0) this@RSIndexAdapter.scrollToTitle(groupIndex[position])
+            if (guard == 0 && subGroup[current].third != position) {
+                current = groupIndex[position]
+                this@RSIndexAdapter.scrollToTitle(current)
+            }
         }
 
         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -119,24 +121,24 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
                     }
                     val cp = curr.first - 1 + 0x2F00
                     if (curr.first != last.first) {
-                        map[it.position] = map.size
                         group.add(activity.resources.getString(R.string.rsindex_group, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp))))
                         groupIndex.add(subGroup.size)
                     }
+                    map[it.position] = group.size - 1 to map.size
                     last = curr
-                    subGroup.add(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second) to it.position)
+                    subGroup.add(Triple(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second), it.position, group.size - 1))
                     it.moveToNext()
                 }
                 this@RSIndexAdapter.codepoints = codepoints
             }
-            if (current >= group.size) current = group.size - 1
+          if (current >= subGroup.size) current = subGroup.size - 1
         }
         invalidateViews()
         jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, group).also {
             it.setDropDownViewResource(R.layout.spinner_drop_down_item)
         }
         scrollToTitle(current)
-        jump.setSelection(current)
+        jump.setSelection(subGroup[current].third)
         view.setOnScrollListener(scrollListener)
         jump.onItemSelectedListener = selectListener
     }

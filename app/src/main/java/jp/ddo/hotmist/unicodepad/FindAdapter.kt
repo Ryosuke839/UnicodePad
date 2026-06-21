@@ -27,16 +27,22 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal class FindAdapter(activity: Activity, private val pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: List<Pair<NameDatabase.SearchType, Cursor>> = emptyList()
     private var saved: String = pref.getString("find", null) ?: ""
     private var adapter: CompleteAdapter? = null
+    private var progressBar: ProgressBar? = null
+    private val scope = MainScope()
     override fun name(): Int {
         return R.string.find
     }
 
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         super.instantiate(view)
         check(view is RecyclerView)
         val layout = LinearLayout(activity)
@@ -83,20 +89,33 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
         hl.addView(fl, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         hl.addView(find, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
         layout.addView(hl, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        layout.addView(view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        layout.addView(FrameLayout(activity).apply {
+            addView(view)
+            addView(ProgressBar(activity).apply {
+                isIndeterminate = true
+                visibility = View.GONE
+                progressBar = this
+            }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         find.setOnClickListener {
             saved = text.text.toString().replace("[^\\p{Alnum} \\-]".toRegex(), "")
             text.setText(saved)
             if (saved.isEmpty()) return@setOnClickListener
-            cur.forEach { it.second.close() }
-            cur = NameDatabase.SearchType.entries.mapNotNull {
-                val c = db.find(saved, UnicodeActivity.univer, it) ?: return@mapNotNull null
-                if (c.count > 0) it to c else null
-            }.toList()
-            if (!cur.isEmpty())
-                adapter?.update(saved)
-            (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
-            invalidateViews()
+            progressBar?.visibility = View.VISIBLE
+            scope.launch {
+                withContext(Dispatchers.IO) {
+                    cur.forEach { it.second.close() }
+                    cur = NameDatabase.SearchType.entries.mapNotNull {
+                        val c = db.find(saved, UnicodeActivity.univer, it) ?: return@mapNotNull null
+                        if (c.count > 0) it to c else null
+                    }.toList()
+                }
+                if (!cur.isEmpty())
+                    adapter?.update(saved)
+                (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
+                invalidateViews()
+                progressBar?.visibility = View.GONE
+            }
         }
         return layout
     }

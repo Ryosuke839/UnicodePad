@@ -31,9 +31,12 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.PagerTabStrip
 import androidx.viewpager.widget.ViewPager
 import com.woxthebox.draglistview.DragListView
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.content.edit
+import kotlinx.coroutines.MainScope
 
 class PageAdapter(private val activity: UnicodeActivity, private val pref: SharedPreferences, private val edit: EditText) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
     class DynamicDragListView(context: android.content.Context?, attrs: android.util.AttributeSet?) : DragListView(context, attrs) {
@@ -73,6 +76,7 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private val db: NameDatabase = NameDatabase(activity)
     val view: View?
         get() = views[page]
+    val scope = MainScope()
 
     override fun getCount(): Int {
         return numPage
@@ -113,9 +117,9 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterEmoji.single = bemoji
         brsindex = pref.getString("single_rsindex", "false") == "true"
         adapterRSIndex.single = brsindex
-        return adapters[position].let { adapter ->
-            adapter.setListener(this)
-            if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
+        val (adapter, view) = adapters[position].let { adapter ->
+            adapter.setListener(this@PageAdapter)
+            adapter to if (adapter is DragListUnicodeAdapter<*> && adapter.single) {
                 DynamicDragListView(activity, null).also { view ->
                     view.setLayoutManager(LinearLayoutManager(activity))
                     view.setDragListListener(adapter)
@@ -133,18 +137,23 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
             }.let { view ->
                 view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 views[position] = view
-                adapter.instantiate(view).also { layout ->
-                    val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-                        override fun onScale(detector: ScaleGestureDetector): Boolean {
-                            return (if (detector.scaleFactor > 1f) {
-                                true
-                            } else if (detector.scaleFactor < 1f) {
-                                false
-                            } else {
-                                null
-                            })?.let {
-                                if (adapter.single != it) {
-                                    pref.edit().putString(
+                view
+            }
+        }
+        scope.launch {
+            adapter.instantiate(view).also { layout ->
+                val scaleDetector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    override fun onScale(detector: ScaleGestureDetector): Boolean {
+                        return (if (detector.scaleFactor > 1f) {
+                            true
+                        } else if (detector.scaleFactor < 1f) {
+                            false
+                        } else {
+                            null
+                        })?.let {
+                            if (adapter.single != it) {
+                                pref.edit {
+                                    putString(
                                         if (adapter === adapterRecent) "single_rec" else
                                             if (adapter === adapterList) "single_list" else
                                                 if (adapter === adapterFind) "single_find" else
@@ -152,22 +161,33 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                                                         if (adapter === adapterEdit) "single_edt" else
                                                             if (adapter === adapterEmoji) "single_emoji" else null,
                                         it.toString()
-                                    ).apply()
-                                    notifyDataSetChanged()
+                                    )
                                 }
-                                true
-                            } ?: false
-                        }
-                    })
-                    (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
-                        adapter.onTouch()
-                        scaleDetector.onTouchEvent(event)
-                        scaleDetector.isInProgress
+                                notifyDataSetChanged()
+                            }
+                            true
+                        } ?: false
                     }
-                    collection.addView(layout, 0)
-                    layouts[position] = layout
+                })
+                (if (view is DragListView) view.recyclerView else view).setOnTouchListener { _, event ->
+                    adapter.onTouch()
+                    scaleDetector.onTouchEvent(event)
+                    scaleDetector.isInProgress
+                }
+                (layouts[position] as? LinearLayout)?.apply {
+                    removeAllViews()
+                    addView(layout, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 }
             }
+        }
+        return LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(ProgressBar(activity).apply {
+                isIndeterminate = true
+                gravity = Gravity.CENTER
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            layouts[position] = this
+            collection.addView(this, 0)
         }
     }
 

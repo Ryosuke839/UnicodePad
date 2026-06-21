@@ -16,7 +16,7 @@
 	<string name="delete">Удалить</string>
 	<string name="desc">Подробно</string>
 	<string name="find">Поиск</string>
-	<string name="fhint">Введите название символа</string>
+	<string name="fhint">Введите название символа или значение Unihan</string>
 	<string name="inlist">Найти в списке</string>
 	<string name="copied">Скопировано в буфер обмена</string>
 	<string name="finish">Ввод</string>
@@ -31,6 +31,9 @@
 	<string name="list">Список</string>
 	<string name="edit">Ввод</string>
 	<string name="emoji">Эмодзи</string>
+	<string name="rsindex">Указатель ключей</string>
+	<string name="rsindex_group">Ключ #%1$d (%2$s) %3$s</string>
+	<string name="rsindex_subgroup">Ключ #%1$d (%2$s) %3$s / %4$d штрихов</string>
 	<string name="normal">По умолчанию</string>
 	<string name="locale_default">По умолчанию (%s)</string>
 	<string name="locale_other">Другой…</string>
@@ -389,6 +392,36 @@
 	<string name="script_E0100">E0100 Дополнение к вариантным селекторам</string>
 	<string name="script_F0000">F0000 Дополнительная область для частного использования — A</string>
 	<string name="script_100000">100000 Дополнительная область для частного использования — B</string>
+
+	<string name="search_title_name">Кодовая точка</string>
+	<string name="search_title_emoji">Эмодзи</string>
+	<string name="unihan">Unihan</string>
+	<string name="unihan_rs_unicode">стандартное количество ключей</string>
+	<string name="unihan_total_strokes">общее количество штрихов</string>
+	<string name="unihan_alternate_total_strokes">альтернативное общее количество штрихов</string>
+	<string name="unihan_cantonese">чтение на кантонском диалекте</string>
+	<string name="unihan_definition">определение</string>
+	<string name="unihan_fanqie">чтение на фаньцзе</string>
+	<string name="unihan_hangul">корейское произношение на хангыле</string>
+	<string name="unihan_hanyu_pinlu">произношение и частотность\nСяньдай Ханью Пинлу Сидянь</string>
+	<string name="unihan_hanyu_pinyin">чтение на ханьюй пиньинь</string>
+	<string name="unihan_japanese">чтение на японском в кане</string>
+	<string name="unihan_japanese_kun">японское произношение</string>
+	<string name="unihan_japanese_on">китайско-японское произношение</string>
+	<string name="unihan_korean">корейское произношение</string>
+	<string name="unihan_mandarin">чтение на пиньинь</string>
+	<string name="unihan_smszd2003_readings">чтение на мандаринском и кантонском\nдиалектах в Соенгму Сан-Зидин</string>
+	<string name="unihan_tang">произношение династии Тан</string>
+	<string name="unihan_tghz2013">чтение на ханьюй пиньинь\nв универсальном стандартизированном словаре иероглифов</string>
+	<string name="unihan_vietnamese">произношение на вьетнамском</string>
+	<string name="unihan_xhc1983">чтение на ханьюй пиньинь\nв современном словаре китайского языка</string>
+	<string name="unihan_zhuang">чтение на чжуанском языке</string>
+	<string name="unihan_semantic_variant">семантический вариант</string>
+	<string name="unihan_simplified_variant">упрощённый китайский вариант</string>
+	<string name="unihan_specialized_semantic_variant">специализированный семантический вариант</string>
+	<string name="unihan_spoofing_variant">вариант подмены</string>
+	<string name="unihan_traditional_variant">традиционный китайский вариант</string>
+	<string name="unihan_z_variant">z-вариант</string>
 
 	<string name="guide_next">Дальше</string>
 	<string name="guide_skip">Пропустить</string>

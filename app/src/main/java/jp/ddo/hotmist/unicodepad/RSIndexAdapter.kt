@@ -23,15 +23,18 @@ import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
+    private var codepoints: MutableList<Long>? = null
     private var jump: Spinner? = null
-    private lateinit var map: NavigableMap<Int, Int>
+    private lateinit var map: NavigableMap<Int, Pair<Int, Int>>
     private lateinit var group: MutableList<String>
     private lateinit var groupIndex: MutableList<Int>
-    private lateinit var subGroup: MutableList<Pair<String, Int>>
+    private lateinit var subGroup: MutableList<Triple<String, Int, Int>>
     private var current = pref.getInt("rsindex", 0)
     private var guard = 0
     private val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -44,10 +47,10 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
             if (visibleItemCount != 0) {
                 map.floorEntry(index)?.let { e ->
                     jump?.let { jump ->
-                        if (guard == 0 && current != e.value) {
-                            current = e.value
+                        if (guard == 0 && current != e.value.second) {
+                            current = e.value.second
                             ++guard
-                            jump.setSelection(e.value, false)
+                            jump.setSelection(e.value.first, false)
                             jump.post { --guard }
                         }
                     }
@@ -57,8 +60,10 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
     private val selectListener = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            current = position
-            if (guard == 0) this@RSIndexAdapter.scrollToTitle(groupIndex[position])
+            if (guard == 0 && subGroup[current].third != position) {
+                current = groupIndex[position]
+                this@RSIndexAdapter.scrollToTitle(current)
+            }
         }
 
         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -72,7 +77,7 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     @SuppressLint("InlinedApi")
-    override fun instantiate(view: View): View {
+    override suspend fun instantiate(view: View): View {
         super.instantiate(view)
         val view = view as RecyclerView
         val layout = LinearLayout(activity)
@@ -90,51 +95,57 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
         return layout
     }
 
-    private fun initViews() {
+    private suspend fun initViews() {
         val view = (this.view as RecyclerView)
         val jump = this.jump!!
         view.setOnScrollListener(null)
         jump.onItemSelectedListener = null
         jump.adapter = null
-        cur?.close()
-        cur = db.rsindex()
-        map = TreeMap()
-        group = ArrayList()
-        groupIndex = ArrayList()
-        subGroup = ArrayList()
-        var last = 0 to 0
-        cur?.let {
-            it.moveToFirst()
-            while (!it.isAfterLast) {
-                val curr = it.getInt(1) to it.getInt(2)
-                if (curr == last) {
+        withContext(Dispatchers.IO) {
+            cur?.close()
+            cur = db.rsindex()
+            map = TreeMap()
+            group = ArrayList()
+            groupIndex = ArrayList()
+            subGroup = ArrayList()
+            var last = 0 to 0
+            cur?.let {
+                it.moveToFirst()
+                val codepoints = ArrayList<Long>(it.count)
+                while (!it.isAfterLast) {
+                    codepoints.add(it.getLong(3))
+                    val curr = it.getInt(1) to it.getInt(2)
+                    if (curr == last) {
+                        it.moveToNext()
+                        continue
+                    }
+                    val cp = curr.first - 1 + 0x2F00
+                    if (curr.first != last.first) {
+                        group.add(activity.resources.getString(R.string.rsindex_group, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp))))
+                        groupIndex.add(subGroup.size)
+                    }
+                    map[it.position] = group.size - 1 to map.size
+                    last = curr
+                    subGroup.add(Triple(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second), it.position, group.size - 1))
                     it.moveToNext()
-                    continue
                 }
-                val cp = curr.first - 1 + 0x2F00
-                if (curr.first != last.first) {
-                    map[it.position] = map.size
-                    group.add(activity.resources.getString(R.string.rsindex_group, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp))))
-                    groupIndex.add(subGroup.size)
-                }
-                last = curr
-                subGroup.add(activity.resources.getString(R.string.rsindex_subgroup, curr.first, db[cp, "name"]?.substring(15)?.lowercase(), String(Character.toChars(cp)), curr.second) to it.position)
-                it.moveToNext()
+                this@RSIndexAdapter.codepoints = codepoints
             }
+          if (current >= subGroup.size) current = subGroup.size - 1
         }
-        if (current >= group.size) current = group.size - 1
         invalidateViews()
         jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, group).also {
             it.setDropDownViewResource(R.layout.spinner_drop_down_item)
         }
         scrollToTitle(current)
-        jump.setSelection(current)
+        jump.setSelection(subGroup[current].third)
         view.setOnScrollListener(scrollListener)
         jump.onItemSelectedListener = selectListener
     }
 
     override fun destroy() {
         jump = null
+        codepoints = null
         cur?.close()
         cur = null
         super.destroy()
@@ -157,7 +168,7 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     override fun getCount(): Int {
-        return cur?.count ?: 0
+        return codepoints?.size ?: 0
     }
 
     override fun getItemTextColumn(i: Int): String {
@@ -165,10 +176,6 @@ internal class RSIndexAdapter(activity: Activity, pref: SharedPreferences, priva
     }
 
     override fun getItemCodePoint(i: Int): Long {
-        return cur?.let {
-            if (i < 0 || i >= it.count) return -1
-            it.moveToPosition(i)
-            it.getLong(3)
-        } ?: -1
+        return codepoints?.getOrNull(i) ?: -1
     }
 }

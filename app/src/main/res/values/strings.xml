@@ -545,7 +545,7 @@
 Copyright © 1991-2025 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.18.1</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.18.2</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

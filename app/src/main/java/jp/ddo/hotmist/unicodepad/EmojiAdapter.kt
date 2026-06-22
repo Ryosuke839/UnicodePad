@@ -23,19 +23,21 @@ import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
 internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private val db: NameDatabase, single: Boolean) : RecyclerUnicodeAdapter(activity, db, single) {
     private var cur: Cursor? = null
-    private var items: MutableList<Pair<String, Long>>? = null
+    private var items: List<Pair<String, Long>>? = null
     private var jump: Spinner? = null
     private lateinit var map: NavigableMap<Int, Int>
-    private lateinit var grp: MutableList<String>
-    private lateinit var idx: MutableList<Int>
+    private lateinit var grp: List<String>
+    private lateinit var idx: List<Int>
     private var current = pref.getInt("emoji", 0)
     private var tone = pref.getInt("tone", 0x2B1A)
     private var direction = pref.getInt("emoji_direction", 0x2B05)
@@ -136,46 +138,52 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
     }
 
     private suspend fun initViews() {
-        val view = (this.view as RecyclerView)
-        val jump = this.jump!!
-        view.setOnScrollListener(null)
-        jump.onItemSelectedListener = null
-        jump.adapter = null
-        withContext(Dispatchers.IO) {
-            cur?.close()
-            cur = db.emoji(UnicodeActivity.univer, tone, direction)
-            map = TreeMap()
-            grp = ArrayList()
-            idx = ArrayList()
-            var last = ""
-            cur?.let {
-                it.moveToFirst()
-                val items = ArrayList<Pair<String, Long>>(it.count)
-                while (!it.isAfterLast) {
-                    items.add(it.getString(0) to it.getLong(3) - 0x800000000000000L)
-                    val curr = it.getString(1) + " / " + it.getString(2)
-                    if (curr == last) {
+        try {
+            val view = (this.view as RecyclerView)
+            val jump = this.jump!!
+            view.setOnScrollListener(null)
+            jump.onItemSelectedListener = null
+            jump.adapter = null
+            withContext(Dispatchers.IO) {
+                cur?.close()
+                val items = ArrayList<Pair<String, Long>>()
+                val map = TreeMap<Int, Int>()
+                val grp = ArrayList<String>()
+                val idx = ArrayList<Int>()
+                cur = db.emoji(UnicodeActivity.univer, tone, direction)?.also {
+                    it.moveToFirst()
+                    var last = ""
+                    while (!it.isAfterLast) {
+                        items.add(it.getString(0) to it.getLong(3) - 0x800000000000000L)
+                        val curr = it.getString(1) + " / " + it.getString(2)
+                        if (curr == last) {
+                            it.moveToNext()
+                            continue
+                        }
+                        last = curr
+                        map[it.position] = map.size
+                        grp.add(curr)
+                        idx.add(it.position)
                         it.moveToNext()
-                        continue
                     }
-                    last = curr
-                    map[it.position] = map.size
-                    grp.add(curr)
-                    idx.add(it.position)
-                    it.moveToNext()
+                    ensureActive()
                 }
                 this@EmojiAdapter.items = items
+                this@EmojiAdapter.map = map
+                this@EmojiAdapter.grp = grp
+                this@EmojiAdapter.idx = idx
+                if (current >= grp.size) current = grp.size - 1
+                ensureActive()
             }
-            if (current >= grp.size) current = grp.size - 1
-        }
-        invalidateViews()
-        jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp).also {
-            it.setDropDownViewResource(R.layout.spinner_drop_down_item)
-        }
-        scrollToTitle(current)
-        jump.setSelection(current)
-        view.setOnScrollListener(scrollListener)
-        jump.onItemSelectedListener = selectListener
+            invalidateViews()
+            jump.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, grp).also {
+                it.setDropDownViewResource(R.layout.spinner_drop_down_item)
+            }
+            scrollToTitle(current)
+            jump.setSelection(current)
+            view.setOnScrollListener(scrollListener)
+            jump.onItemSelectedListener = selectListener
+        } catch (_: CancellationException) {}
     }
 
     override fun destroy() {

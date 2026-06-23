@@ -103,14 +103,17 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
             if (saved.isEmpty()) return@setOnClickListener
             progressBar?.visibility = View.VISIBLE
             scope.launch {
-                withContext(Dispatchers.IO) {
-                    cur.forEach { it.second.close() }
-                    cur = NameDatabase.SearchType.entries.mapNotNull {
+                val lastCur = cur
+                cur = emptyList()
+                invalidateViews()
+                cur = withContext(Dispatchers.IO) {
+                    lastCur.forEach { it.second.close() }
+                    NameDatabase.SearchType.entries.mapNotNull {
                         val c = db.find(saved, UnicodeActivity.univer, it) ?: return@mapNotNull null
                         if (c.count > 0) it to c else null
                     }.toList()
                 }
-                if (!cur.isEmpty())
+                if (cur.isNotEmpty())
                     adapter?.update(saved)
                 (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(text.windowToken, 0)
                 invalidateViews()
@@ -121,6 +124,9 @@ internal class FindAdapter(activity: Activity, private val pref: SharedPreferenc
     }
 
     override fun destroy() {
+        val lastCur = cur
+        cur = emptyList()
+        lastCur.forEach { it.second.close() }
         adapter = null
         super.destroy()
     }

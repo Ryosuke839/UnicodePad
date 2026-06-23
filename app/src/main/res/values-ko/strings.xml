@@ -400,7 +400,7 @@
 	<string name="unihan_total_strokes">총획수</string>
 	<string name="unihan_alternate_total_strokes">대체 총획수</string>
 	<string name="unihan_cantonese">광둥어 독음</string>
-	<string name="unihan_definition">정의</string>
+	<string name="unihan_definition">훈</string>
 	<string name="unihan_fanqie">반절 독음</string>
 	<string name="unihan_hangul">한글로 쓴 한국어 독음</string>
 	<string name="unihan_hanyu_pinlu">현대한어빈률사전 내 독음 및 빈도</string>

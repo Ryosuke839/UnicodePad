@@ -2,7 +2,13 @@
 
 # UnicodePad
 Unicode Pad is an Android App that enables you to input __every__ character in Unicode.
-You can download it from Google Play: https://play.google.com/store/apps/details?id=jp.ddo.hotmist.unicodepad
+
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=jp.ddo.hotmist.unicodepad)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/jp.ddo.hotmist.unicodepad/)
 
 ## Screen Shots
 ![screen shot 1](https://raw.githubusercontent.com/Ryosuke839/UnicodePad/images/ss-en1.png)

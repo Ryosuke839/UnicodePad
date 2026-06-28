@@ -14,78 +14,81 @@ package jp.ddo.hotmist.unicodepad
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import androidx.preference.PreferenceManager
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
-import java.io.File
-import java.io.IOException
-import java.util.*
+import androidx.core.content.edit
 
-class FontChooser internal constructor(private val activity: Activity, val spinner: Spinner, private val listener: Listener) : FileChooser.Listener {
-    private val adapter: ArrayAdapter<String> = ArrayAdapter(activity, android.R.layout.simple_spinner_item)
-    private var fontIndex: Int
-    private val fontPaths = ArrayList<String>()
+class FontChooser internal constructor(private val activity: Activity, val spinner: Spinner, private val listener: Listener) {
+    class FontChooserAdapter(val activity: Activity) : ArrayAdapter<FontData.BaseFont?>(activity, android.R.layout.simple_spinner_item, android.R.id.text1) {
+        init {
+            setDropDownViewResource(android.R.layout.simple_list_item_2)
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            return super.getView(position, convertView, parent).apply {
+                getItem(position)?.let {
+                    findViewById<TextView>(android.R.id.text1).text = it.name.ifEmpty { it.subtitle }
+                }
+            }
+        }
+
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+            return super.getDropDownView(position, convertView, parent).apply {
+                getItem(position)?.let {
+                    findViewById<TextView>(android.R.id.text1).text =
+                        it.name.ifEmpty { it.subtitle }
+                    findViewById<TextView>(android.R.id.text2).apply {
+                        if (it.name.isEmpty()) {
+                            text = ""
+                            visibility = View.GONE
+                        } else {
+                            text = it.subtitle
+                            visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private val fontData = FontData()
+    private val adapter = FontChooserAdapter(activity)
+    private var fontIndex = 0
 
     internal interface Listener {
         fun onTypefaceChosen(typeface: Typeface?)
     }
 
     fun save(edit: SharedPreferences.Editor) {
-        var fs = ""
-        for (s in fontPaths) fs += """
-     $s
-     
-     """.trimIndent()
-        edit.putString("fontpath", fs)
-        edit.putInt("fontidx", if (spinner.selectedItemId > 2) spinner.selectedItemId.toInt() - 2 else 0)
+        edit.putInt("fontidx", if (spinner.selectedItemId > 1) spinner.selectedItemId.toInt() - 1 else 0)
     }
 
-    private fun add(path: String): Boolean {
-        if (load(path) == null) return false
 
-        // Add remove item
-        if (adapter.count < 3) adapter.add(activity.resources.getString(R.string.rem))
-
-        // Remove duplicated items
-        for (i in fontPaths.indices.reversed()) {
-            if (path != fontPaths[i]) continue
-            adapter.remove(adapter.getItem(i + 3))
-            fontPaths.removeAt(i)
+    fun load(pref: SharedPreferences) {
+        val hash = if (fontIndex > 0) { fontData.getFonts()[fontIndex - 1].iterPaths.asSequence().toList() } else { listOf() }
+        fontIndex = pref.getInt("fontidx", 0)
+        fontData.loadFromPreferences(pref)
+        if (if (fontIndex > 0) { fontData.getFonts()[fontIndex - 1].iterPaths.asSequence().toList() } else { listOf() } != hash) {
+            fontIndex = 0
         }
-        adapter.add(File(path).name)
-        fontPaths.add(path)
-        return true
-    }
-
-    private fun load(path: String): Typeface? {
-        return try {
-            Typeface.createFromFile(path)
-        } catch (e: RuntimeException) {
-            null
+        adapter.clear()
+        adapter.add(FontData.DummyFont(activity.getString(R.string.normal)))
+        adapter.add(FontData.DummyFont(activity.getString(R.string.font_manage)))
+        for (font in fontData.getFonts()) {
+            adapter.add(font)
         }
-    }
-
-    private fun remove(which: Int) {
-        adapter.remove(adapter.getItem(which + 3))
-        try {
-            if (fontPaths[which].startsWith(activity.filesDir.canonicalPath)) File(fontPaths[which]).delete()
-        } catch (_: IOException) {
-        }
-        fontPaths.removeAt(which)
-        if (fontIndex == which + 1) fontIndex = 0
-        if (fontIndex > which + 1) --fontIndex
-
-        // Remove remove item
-        if (fontPaths.size == 0) adapter.remove(adapter.getItem(2))
-        spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2)
+        if (fontIndex > fontData.getFonts().size) fontIndex = 0
+        spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 1)
     }
 
     companion object {
@@ -93,18 +96,8 @@ class FontChooser internal constructor(private val activity: Activity, val spinn
     }
 
     init {
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        adapter.add(activity.resources.getString(R.string.normal))
-        adapter.add(activity.resources.getString(R.string.add))
-        val pref = PreferenceManager.getDefaultSharedPreferences(activity)
-        val fs = pref.getString("fontpath", null) ?: ""
-        for (s in fs.split("\n").toTypedArray()) {
-            if (s.isEmpty()) continue
-            add(s)
-        }
-        fontIndex = pref.getInt("fontidx", 0)
-        if (fontIndex > fontPaths.size) fontIndex = 0
         spinner.adapter = adapter
+        val pref = PreferenceManager.getDefaultSharedPreferences(activity)
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             @SuppressLint("InlinedApi")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -115,52 +108,31 @@ class FontChooser internal constructor(private val activity: Activity, val spinn
                         fontIndex = 0
                     }
                     1 -> {
-                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                        intent.type = "*/*"
-                        activity.startActivityForResult(intent, FONT_REQUEST_CODE)
-                    }
-                    2 -> {
-                        val str: Array<String?> = arrayOfNulls(fontPaths.size)
-                        for (i in str.indices) str[i] = adapter.getItem(i + 3)
-                        AlertDialog.Builder(activity)
-                                .setTitle(R.string.rem)
-                                .setItems(str) { _, which -> remove(which) }
-                                .setNegativeButton(android.R.string.cancel) { _, _ -> spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2) }
-                                .setOnCancelListener { spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2) }
-                                .show()
+                        activity.startActivityForResult(Intent(activity, FontManagerActivity::class.java), FONT_REQUEST_CODE)
+                        spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 1)
                     }
                     else -> {
-                        fontIndex = position - 2
-                        val tf = load(fontPaths[position - 3])
-                        if (tf != null) listener.onTypefaceChosen(tf) else remove(position - 3)
+                        fontIndex = position - 1
+                        pref.edit(true) {
+                            // Commit default font in case of crash
+                            putInt("fontidx", 0)
+                        }
+                        try {
+                            val tf = fontData.getFonts()[fontIndex - 1].getTypeface()
+                            listener.onTypefaceChosen(tf)
+                            pref.edit {
+                                putInt("fontidx", fontIndex)
+                            }
+                        } catch (e: FontData.BaseFont.FontCouldNotBeLoadedException) {
+                            Toast.makeText(activity, R.string.cantopen, Toast.LENGTH_SHORT).show()
+                            spinner.setSelection(0)
+                        }
                     }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2)
-    }
-
-    override fun onFileChosen(path: String) {
-        if (path.endsWith(".zip")) {
-            FileChooser(activity, this, path).onClick(null, -1)
-            return
-        }
-        if (add(path)) {
-            spinner.setSelection(adapter.count - 1)
-        } else {
-            Toast.makeText(activity, R.string.cantopen, Toast.LENGTH_SHORT).show()
-            try {
-                if (path.startsWith(activity.filesDir.canonicalPath)) File(path).delete()
-            } catch (_: IOException) {
-            }
-            spinner.setSelection(0)
-        }
-    }
-
-    override fun onFileCancel() {
-        spinner.setSelection(if (fontIndex == 0) 0 else fontIndex + 2)
+        load(pref)
     }
 }

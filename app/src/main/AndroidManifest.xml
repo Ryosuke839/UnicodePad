@@ -88,6 +88,12 @@
 		<activity android:name="TabsActivity"
 			android:parentActivityName=".SettingActivity"/>
 
+		<activity android:name="FontManagerActivity"
+			android:parentActivityName=".UnicodeActivity"/>
+
+		<activity android:name="FontFallbackActivity"
+			android:parentActivityName=".FontManagerActivity"/>
+
 		<activity android:name="RestartActivity"
 			android:parentActivityName=".UnicodeActivity"/>
 

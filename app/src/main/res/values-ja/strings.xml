@@ -45,6 +45,16 @@
 	<string name="cantopen">フォントを開けませんでした</string>
 	<string name="cantread">アクセスできませんでした　アプリに読み取り権限が与えられていないかもしれません</string>
 	<string name="denied">アクセスが拒否されています. SDカードにアクセスするにはアプリ設定からストレージ権限を付与してください</string>
+	<string name="font_manage">フォントの管理…</string>
+	<string name="font_rename">名前の変更…</string>
+	<string name="font_edit">フォールバックを編集</string>
+	<string name="font_delete">削除</string>
+	<string name="font_add">フォントの追加…</string>
+	<string name="font_add_fallback">フォントフォールバックの追加…</string>
+	<string name="font_add_existing">既存のフォントから追加…</string>
+	<string name="font_no_existing">追加できる既存のフォントがありません</string>
+	<string name="font_add_file">ファイルから追加…</string>
+	<string name="explorer_not_found">ファイルエクスプローラが見つかりませんでした. フォントを選択するにはファイルエクスプローラをインストールしてください</string>
 
 	<string name="script_0">0 基本ラテン文字</string>
 	<string name="script_80">80 ラテン1補助</string>

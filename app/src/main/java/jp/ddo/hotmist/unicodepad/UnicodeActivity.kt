@@ -75,11 +75,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.ViewPagerBottomSheetBehavior
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.util.Locale
-import java.util.zip.CRC32
 import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.math.min
@@ -155,7 +151,9 @@ class UnicodeActivity : BaseActivity() {
             override fun onTypefaceChosen(typeface: Typeface?) {
                 setTypeface(typeface, oldlocale)
             }
-        })
+        }).apply {
+            load(pref)
+        }
         locale = LocaleChooser(this@UnicodeActivity, Spinner(this), object : LocaleChooser.Listener {
             override fun onLocaleChosen(locale: Locale) {
                 setTypeface(oldtf, locale)
@@ -890,37 +888,6 @@ class UnicodeActivity : BaseActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == FontChooser.FONT_REQUEST_CODE) if (resultCode == RESULT_OK && data != null) {
-            val uri = data.data ?: return
-            var name = uri.path ?: return
-            while (name.endsWith("/")) name = name.substring(0, name.length - 1)
-            if (name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1)
-            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-            }
-            name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
-            try {
-                (contentResolver.openInputStream(uri) ?: throw IOException()).use { `is` ->
-                    val of = File(filesDir, "00000000/$name")
-                    of.parentFile?.mkdirs()
-                    FileOutputStream(of).use { os ->
-                        val crc = CRC32()
-                        val buf = ByteArray(256)
-                        var size: Int
-                        while (`is`.read(buf).also { size = it } > 0) {
-                            os.write(buf, 0, size)
-                            crc.update(buf, 0, size)
-                        }
-                        val mf = File(filesDir, String.format("%08x", crc.value) + "/" + name)
-                        mf.parentFile?.mkdirs()
-                        of.renameTo(mf)
-                        chooser.onFileChosen(mf.canonicalPath)
-                    }
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        } else chooser.onFileCancel()
         if (requestCode != -1) super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_FIRST_USER) {
             val intent = Intent()
@@ -962,6 +929,7 @@ class UnicodeActivity : BaseActivity() {
                         false
                 }
             }
+            chooser.load(pref)
         }
         if (requestCode != -1) {
             adCompat.renderAdToContainer(this, pref)

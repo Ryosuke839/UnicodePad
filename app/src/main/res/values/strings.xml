@@ -48,6 +48,16 @@
 	<string name="cantopen">Cannot open the font</string>
 	<string name="cantread">Cannot access; the application may not have permission to read</string>
 	<string name="denied">You have denied access. To browse SD card, please grant the storage permission from Apps setting.</string>
+	<string name="font_manage">Manage fonts…</string>
+	<string name="font_rename">Rename…</string>
+	<string name="font_edit">Edit fallback</string>
+	<string name="font_delete">Delete</string>
+	<string name="font_add">Add font…</string>
+	<string name="font_add_fallback">Add font fallback…</string>
+	<string name="font_add_existing">Add existing font…</string>
+	<string name="font_no_existing">No existing fonts available</string>
+	<string name="font_add_file">Add font from file…</string>
+	<string name="explorer_not_found">File explorer not found. Please install a file explorer app to select a font file.</string>
 
 	<string name="script_0">0 Basic Latin</string>
 	<string name="script_80">80 Latin-1 Supplement</string>

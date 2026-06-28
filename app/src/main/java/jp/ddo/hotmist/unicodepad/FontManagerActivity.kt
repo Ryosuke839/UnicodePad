@@ -114,7 +114,7 @@ class FontManagerActivity : BaseActivity() {
                     )
                 )
             }
-            name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
+            name = name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
             try {
                 (contentResolver.openInputStream(uri) ?: throw IOException()).use { `is` ->
                     val of = File(filesDir, "00000000/$name")
@@ -153,6 +153,12 @@ class FontManagerActivity : BaseActivity() {
                                     adapter.notifyItemInserted(fontData.getFonts().size - 1)
                                     pref.edit {
                                         fontData.saveToPreferences(this)
+                                    }
+                                    if (font is FontData.FallbackFont) {
+                                        startActivityForResult(Intent(this@FontManagerActivity, FontFallbackActivity::class.java).apply {
+                                            putExtra("fontIndex", fontData.getFonts().size - 1)
+                                            putExtra("fontFallback", font.serialize())
+                                        }, FONT_EDIT_CODE)
                                     }
                                 } catch (e: FontData.BaseFont.FontCouldNotBeLoadedException) {
                                     Toast.makeText(this@FontManagerActivity, R.string.cantopen, Toast.LENGTH_SHORT).show()

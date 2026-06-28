@@ -75,11 +75,12 @@ class FontChooser internal constructor(private val activity: Activity, val spinn
 
 
     fun load(pref: SharedPreferences) {
-        val hash = if (fontIndex > 0) { fontData.getFonts()[fontIndex - 1].iterPaths.asSequence().toList() } else { listOf() }
-        fontIndex = pref.getInt("fontidx", 0)
+        val hash = if (fontIndex > 0) { fontData.getFonts().getOrNull(fontIndex - 1)?.iterPaths?.asSequence()?.toList() } else { listOf() }
         fontData.loadFromPreferences(pref)
-        if (if (fontIndex > 0) { fontData.getFonts()[fontIndex - 1].iterPaths.asSequence().toList() } else { listOf() } != hash) {
-            fontIndex = 0
+        fontIndex = if (if (fontIndex > 0) { fontData.getFonts().getOrNull(fontIndex - 1)?.iterPaths?.asSequence()?.toList() } else { listOf() } != hash) {
+            0
+        } else {
+            pref.getInt("fontidx", 0)
         }
         adapter.clear()
         adapter.add(FontData.DummyFont(activity.getString(R.string.normal)))

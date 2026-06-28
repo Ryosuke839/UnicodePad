@@ -48,13 +48,13 @@ class FontData {
     }
 
     @Serializable
-    @RequiresApi(Build.VERSION_CODES.Q)
     class FallbackFont : BaseFont() {
         var paths: MutableList<String> = mutableListOf()
 
         override val subtitle: String
             get() = if (paths.isEmpty()) "" else "${File(paths[0]).name} +${paths.size - 1}"
 
+        @RequiresApi(Build.VERSION_CODES.Q)
         override fun getTypeface(): Typeface {
             return paths.fold(null as Typeface.CustomFallbackBuilder?) { b, path ->
                 val font = Font.Builder(File(path)).build()
@@ -98,7 +98,19 @@ class FontData {
         val json = pref.getString("fonts_v2", null)
         if (json != null) {
             try {
-                val loadedFonts = Json.decodeFromString<List<BaseFont>>(json)
+                val loadedFonts = Json.decodeFromString<List<BaseFont>>(json).let {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        it.map { font ->
+                            if (font is FallbackFont) {
+                                SingleFont(font.paths.firstOrNull() ?: "")
+                            } else {
+                                font
+                            }
+                        }
+                    } else {
+                        it
+                    }
+                }
                 fonts.clear()
                 fonts.addAll(loadedFonts)
             } catch (e: Exception) {

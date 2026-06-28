@@ -28,6 +28,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
 import androidx.preference.PreferenceManager
@@ -147,6 +148,14 @@ class FontFallbackActivity : BaseActivity() {
                 }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         })
+
+        onBackPressedDispatcher.addCallback {
+            setResult(RESULT_OK, Intent().apply {
+                putExtra("fontIndex", fontIndex)
+                putExtra("fontFallback", fontFallback.serialize())
+            })
+            finish()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -183,7 +192,7 @@ class FontFallbackActivity : BaseActivity() {
                     )
                 )
             }
-            name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
+            name = name.replace("[?:\"*|/\\\\<>]".toRegex(), "_")
             try {
                 (contentResolver.openInputStream(uri) ?: throw IOException()).use { `is` ->
                     val of = File(filesDir, "00000000/$name")

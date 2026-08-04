@@ -4,6 +4,6 @@ import android.app.Activity
 import android.content.SharedPreferences
 
 internal interface AdCompat {
-  fun renderAdToContainer(activity: Activity, pref: SharedPreferences)
+  fun renderAdToContainer(activity: Activity, pref: SharedPreferences): Int
   val showAdSettings: Boolean
 }

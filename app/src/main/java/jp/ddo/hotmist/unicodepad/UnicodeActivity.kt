@@ -34,17 +34,22 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.setContent
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -60,8 +65,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.setMargins
+import androidx.core.view.updatePadding
 import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
@@ -162,431 +170,455 @@ class UnicodeActivity : BaseActivity() {
             }
         })
 
-        setContent {
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+        setContentView(ComposeView(this).apply {
+            consumeWindowInsets = false
+            setContent {
+                Column(
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)).fillMaxHeight(),
                 ) {
-                    val multiline = pref.getBoolean("multiline", false)
-                    Box(
-                        modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
-                    ) {
-                        AndroidView(
-                            factory = {
-                                editText.apply {
-                                    id = R.id.editText
-                                    setOnTouchListener { view: View, motionEvent: MotionEvent ->
-                                        view.onTouchEvent(motionEvent)
-                                        if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                                            view.windowToken,
-                                            0
-                                        )
-                                        true
-                                    }
-                                    textSize = fontsize
-                                    maxLines = if (multiline) 3 else 1
-                                    inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
-                                    setOnEditorActionListener { _, actionId, keyEvent ->
-                                        if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
-                                            btnFinish.performClick()
-                                            true
-                                        } else
-                                            false
-                                    }
-                                    addTextChangedListener(object : TextWatcher {
-                                        override fun beforeTextChanged(
-                                            s: CharSequence?,
-                                            start: Int,
-                                            count: Int,
-                                            after: Int
-                                        ) {
-                                        }
-
-                                        override fun onTextChanged(
-                                            s: CharSequence?,
-                                            start: Int,
-                                            before: Int,
-                                            count: Int
-                                        ) {
-                                        }
-
-                                        override fun afterTextChanged(s: Editable?) {
-                                            if (!::itemUndo.isInitialized) {
-                                                history[0] = Triple(s.toString(), 0, 0)
-                                                return
-                                            }
-                                            if (s.toString() == history[historyCursor].first) {
-                                                return
-                                            }
-                                            while (history.size > historyCursor + 1) {
-                                                history.removeAt(history.lastIndex)
-                                            }
-                                            while (history.size >= MAX_HISTORY) {
-                                                history.removeAt(0)
-                                            }
-                                            history.add(
-                                                Triple(
-                                                    s.toString(),
-                                                    selectionStart,
-                                                    selectionEnd
-                                                )
-                                            )
-                                            historyCursor = history.size - 1
-                                            itemUndo.isEnabled = historyCursor > 0
-                                            itemRedo.isEnabled = false
-                                        }
-                                    })
-                                    requestFocus()
-                                }
-                            },
-                            update = {
-                                it.apply {
-                                    imeOptions = when (finishAction) {
-                                        R.string.finish -> EditorInfo.IME_ACTION_DONE
-                                        else -> EditorInfo.IME_ACTION_SEND
-                                    }
-                                    if (initialText != null) {
-                                        setText(initialText)
-                                        setSelection(length())
-                                        initialText = null
-                                    }
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                        if (showBtnClear) {
-                            AndroidView(
-                                factory = { context -> ImageButton(context).apply {
-                                    setImageResource(R.drawable.ic_action_cancel)
-                                    contentDescription = resources.getString(R.string.clear)
-                                    scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                    setOnClickListener {
-                                        editText.setText("")
-                                    }
-                                    TypedValue().also { value ->
-                                        context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, value, true)
-                                        background = AppCompatResources.getDrawable(context, value.resourceId)
-                                    }
-                                } },
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .padding(end = 4.dp),
-                            )
-                        }
-                    }
                     AndroidView(
-                        factory = { context -> ImageButton(context).apply {
-                            setImageResource(R.drawable.ic_action_backspace)
-                            contentDescription = resources.getString(R.string.erase)
-                            scaleType = ImageView.ScaleType.CENTER_INSIDE
-                            cropToPadding = false
-                            setOnTouchListener { view, motionEvent ->
-                                view.onTouchEvent(motionEvent)
-                                when (motionEvent.action) {
-                                    MotionEvent.ACTION_DOWN -> if (delay == null) {
-                                        delay = Runnable {
-                                            val str = editText.editableText.toString()
-                                            if (str.isEmpty()) return@Runnable
-                                            val start = editText.selectionStart
-                                            if (start < 1) return@Runnable
-                                            val end = editText.selectionEnd
-                                            if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
-                                            if (delay != null) {
-                                                editText.postDelayed(delay, timer.toLong())
-                                                if (timer > 100) timer -= 200
-                                            }
-                                        }
-                                        editText.post(delay)
-                                    }
-                                    MotionEvent.ACTION_UP -> {
-                                        editText.removeCallbacks(delay)
-                                        delay = null
-                                        timer = 500
-                                    }
-                                }
-                                true
-                            }
-                        } },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .height(fontsize.dp * 2),
+                        factory = { toolbar },
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                }
-                @Composable
-                fun MainView() {
-                    Column(
-                        modifier = Modifier.weight(1f),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
                     ) {
-                        Row(
-                            modifier = if (showBtnRow) Modifier.fillMaxWidth() else Modifier.height(0.dp),
-                        ) {
-                            AndroidView(
-                                factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    text = resources.getText(android.R.string.paste)
-                                } },
-                                update = {
-                                    it.setOnClickListener {
-                                        editText.setText(cm.text)
-                                        editText.setSelection(editText.length())
-                                    }
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            AndroidView(
-                                factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    text = resources.getText(R.string.desc)
-                                } },
-                                update = {
-                                    it.setOnClickListener {
-                                        val str = editText.editableText.toString()
-                                        if (str.isEmpty()) return@setOnClickListener
-                                        val start = editText.selectionStart
-                                        if (start == -1) return@setOnClickListener
-                                        val end = editText.selectionEnd
-                                        adpPage.adapterEdit.updateString()
-                                        var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
-                                        var i = 0
-                                        while (pos > 0) {
-                                            pos -= adpPage.adapterEdit.getItem(i++).length
-                                        }
-                                        if (pos < 0) i--
-                                        adpPage.showDesc(null, i, adpPage.adapterEdit)
-                                    }
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            AndroidView(
-                                factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    text = resources.getText(android.R.string.copy)
-                                } },
-                                update = {
-                                    it.setOnClickListener {
-                                        cm.text = editText.text.toString()
-                                        if (Build.VERSION.SDK_INT <= 32) {
-                                            Toast.makeText(
-                                                this@UnicodeActivity,
-                                                R.string.copied,
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            AndroidView(
-                                factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
-                                    btnFinish = this
-                                    viewTargets[R.id.finish] = this
-                                    text = resources.getText(finishAction)
-                                } },
-                                update = {
-                                    it.setOnClickListener {
-                                        when {
-                                            action == ACTION_INTERCEPT -> {
-                                                setResult(RESULT_OK, Intent().apply {
-                                                    putExtra(
-                                                        REPLACE_KEY,
-                                                        editText.text.toString()
-                                                    )
-                                                })
-                                                finish()
-                                            }
-
-                                            Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
-                                                setResult(RESULT_OK, Intent().apply {
-                                                    putExtra(
-                                                        Intent.EXTRA_PROCESS_TEXT,
-                                                        editText.text
-                                                    )
-                                                })
-                                                finish()
-                                            }
-
-                                            else -> {
-                                                startActivity(Intent().apply {
-                                                    action = Intent.ACTION_SEND
-                                                    type = "text/plain"
-                                                    putExtra(
-                                                        Intent.EXTRA_TEXT,
-                                                        editText.text.toString()
-                                                    )
-                                                })
-                                            }
-                                        }
-                                    }
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            AndroidView(
-                                factory = { context -> TextView(context, null, android.R.attr.textAppearanceSmall).apply {
-                                    text = resources.getText(R.string.font)
-                                } },
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(start = 8.dp),
-                            )
-                            AndroidView(
-                                factory = { chooser.spinner },
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .weight(2f),
-                            )
-                            AndroidView(
-                                factory = { locale.spinner },
-                                modifier = Modifier.align(Alignment.CenterVertically).weight(1f),
-                            )
-                        }
+                        val multiline = pref.getBoolean("multiline", false)
                         Box(
-                            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                            modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
                         ) {
-                            Column {
-                                AndroidView(
-                                    factory = { context -> View(context).apply {
-                                        viewTargets[R.id.cpager] = this
-                                    } },
-                                    modifier = Modifier.fillMaxWidth().weight(0.5f),
-                                )
-                                AndroidView(
-                                    factory = { context -> View(context) },
-                                    modifier = Modifier.fillMaxWidth().weight(0.5f),
-                                )
-                            }
                             AndroidView(
-                                factory = { pager },
-                                update = {
-                                    pager.offscreenPageLimit = 3
-                                    adpPage.also { adp ->
-                                        pager.adapter = adp
-                                        scroll?.setAdapter(adp)
+                                factory = {
+                                    editText.apply {
+                                        id = R.id.editText
+                                        setOnTouchListener { view: View, motionEvent: MotionEvent ->
+                                            view.onTouchEvent(motionEvent)
+                                            if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                                                view.windowToken,
+                                                0
+                                            )
+                                            true
+                                        }
+                                        textSize = fontsize
+                                        maxLines = if (multiline) 3 else 1
+                                        inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
+                                        setOnEditorActionListener { _, actionId, keyEvent ->
+                                            if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
+                                                btnFinish.performClick()
+                                                true
+                                            } else
+                                                false
+                                        }
+                                        addTextChangedListener(object : TextWatcher {
+                                            override fun beforeTextChanged(
+                                                s: CharSequence?,
+                                                start: Int,
+                                                count: Int,
+                                                after: Int
+                                            ) {
+                                            }
+
+                                            override fun onTextChanged(
+                                                s: CharSequence?,
+                                                start: Int,
+                                                before: Int,
+                                                count: Int
+                                            ) {
+                                            }
+
+                                            override fun afterTextChanged(s: Editable?) {
+                                                if (!::itemUndo.isInitialized) {
+                                                    history[0] = Triple(s.toString(), 0, 0)
+                                                    return
+                                                }
+                                                if (s.toString() == history[historyCursor].first) {
+                                                    return
+                                                }
+                                                while (history.size > historyCursor + 1) {
+                                                    history.removeAt(history.lastIndex)
+                                                }
+                                                while (history.size >= MAX_HISTORY) {
+                                                    history.removeAt(0)
+                                                }
+                                                history.add(
+                                                    Triple(
+                                                        s.toString(),
+                                                        selectionStart,
+                                                        selectionEnd
+                                                    )
+                                                )
+                                                historyCursor = history.size - 1
+                                                itemUndo.isEnabled = historyCursor > 0
+                                                itemRedo.isEnabled = false
+                                            }
+                                        })
+                                        requestFocus()
                                     }
-                                    scroll?.setLockView(pager, true)
-                                    pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
-                                    it.adapter = adpPage
-                                    it.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
+                                },
+                                update = {
+                                    it.apply {
+                                        imeOptions = when (finishAction) {
+                                            R.string.finish -> EditorInfo.IME_ACTION_DONE
+                                            else -> EditorInfo.IME_ACTION_SEND
+                                        }
+                                        if (initialText != null) {
+                                            setText(initialText)
+                                            setSelection(length())
+                                            initialText = null
+                                        }
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                             )
+                            if (showBtnClear) {
+                                AndroidView(
+                                    factory = { context -> ImageButton(context).apply {
+                                        setImageResource(R.drawable.ic_action_cancel)
+                                        contentDescription = resources.getString(R.string.clear)
+                                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                        setOnClickListener {
+                                            editText.setText("")
+                                        }
+                                        TypedValue().also { value ->
+                                            context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, value, true)
+                                            background = AppCompatResources.getDrawable(context, value.resourceId)
+                                        }
+                                    } },
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .padding(end = 4.dp),
+                                )
+                            }
+                        }
+                        AndroidView(
+                            factory = { context -> ImageButton(context).apply {
+                                setImageResource(R.drawable.ic_action_backspace)
+                                contentDescription = resources.getString(R.string.erase)
+                                scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                cropToPadding = false
+                                setOnTouchListener { view, motionEvent ->
+                                    view.onTouchEvent(motionEvent)
+                                    when (motionEvent.action) {
+                                        MotionEvent.ACTION_DOWN -> if (delay == null) {
+                                            delay = Runnable {
+                                                val str = editText.editableText.toString()
+                                                if (str.isEmpty()) return@Runnable
+                                                val start = editText.selectionStart
+                                                if (start < 1) return@Runnable
+                                                val end = editText.selectionEnd
+                                                if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
+                                                if (delay != null) {
+                                                    editText.postDelayed(delay, timer.toLong())
+                                                    if (timer > 100) timer -= 200
+                                                }
+                                            }
+                                            editText.post(delay)
+                                        }
+                                        MotionEvent.ACTION_UP -> {
+                                            editText.removeCallbacks(delay)
+                                            delay = null
+                                            timer = 500
+                                        }
+                                    }
+                                    true
+                                }
+                            } },
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .height(fontsize.dp * 2),
+                        )
+                    }
+                    @Composable
+                    fun MainView() {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Row(
+                                modifier = if (showBtnRow) Modifier.fillMaxWidth() else Modifier.height(0.dp),
+                            ) {
+                                AndroidView(
+                                    factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
+                                        text = resources.getText(android.R.string.paste)
+                                    } },
+                                    update = {
+                                        it.setOnClickListener {
+                                            editText.setText(cm.text)
+                                            editText.setSelection(editText.length())
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                )
+                                AndroidView(
+                                    factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
+                                        text = resources.getText(R.string.desc)
+                                    } },
+                                    update = {
+                                        it.setOnClickListener {
+                                            val str = editText.editableText.toString()
+                                            if (str.isEmpty()) return@setOnClickListener
+                                            val start = editText.selectionStart
+                                            if (start == -1) return@setOnClickListener
+                                            val end = editText.selectionEnd
+                                            adpPage.adapterEdit.updateString()
+                                            var pos = if (start == end) if (start == 0) 0 else start - 1 else min(start, end)
+                                            var i = 0
+                                            while (pos > 0) {
+                                                pos -= adpPage.adapterEdit.getItem(i++).length
+                                            }
+                                            if (pos < 0) i--
+                                            adpPage.showDesc(null, i, adpPage.adapterEdit)
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                )
+                                AndroidView(
+                                    factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
+                                        text = resources.getText(android.R.string.copy)
+                                    } },
+                                    update = {
+                                        it.setOnClickListener {
+                                            cm.text = editText.text.toString()
+                                            if (Build.VERSION.SDK_INT <= 32) {
+                                                Toast.makeText(
+                                                    this@UnicodeActivity,
+                                                    R.string.copied,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                )
+                                AndroidView(
+                                    factory = { context -> Button(context, null, android.R.attr.buttonBarButtonStyle).apply {
+                                        btnFinish = this
+                                        viewTargets[R.id.finish] = this
+                                        text = resources.getText(finishAction)
+                                    } },
+                                    update = {
+                                        it.setOnClickListener {
+                                            when {
+                                                action == ACTION_INTERCEPT -> {
+                                                    setResult(RESULT_OK, Intent().apply {
+                                                        putExtra(
+                                                            REPLACE_KEY,
+                                                            editText.text.toString()
+                                                        )
+                                                    })
+                                                    finish()
+                                                }
+
+                                                Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> {
+                                                    setResult(RESULT_OK, Intent().apply {
+                                                        putExtra(
+                                                            Intent.EXTRA_PROCESS_TEXT,
+                                                            editText.text
+                                                        )
+                                                    })
+                                                    finish()
+                                                }
+
+                                                else -> {
+                                                    startActivity(Intent().apply {
+                                                        action = Intent.ACTION_SEND
+                                                        type = "text/plain"
+                                                        putExtra(
+                                                            Intent.EXTRA_TEXT,
+                                                            editText.text.toString()
+                                                        )
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                AndroidView(
+                                    factory = { context -> TextView(context, null, android.R.attr.textAppearanceSmall).apply {
+                                        text = resources.getText(R.string.font)
+                                    } },
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .padding(start = 8.dp),
+                                )
+                                AndroidView(
+                                    factory = { chooser.spinner },
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .weight(2f),
+                                )
+                                AndroidView(
+                                    factory = { locale.spinner },
+                                    modifier = Modifier.align(Alignment.CenterVertically).weight(1f),
+                                )
+                            }
+                            Box(
+                                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                            ) {
+                                Column {
+                                    AndroidView(
+                                        factory = { context -> View(context).apply {
+                                            viewTargets[R.id.cpager] = this
+                                        } },
+                                        modifier = Modifier.fillMaxWidth().weight(0.5f),
+                                    )
+                                    AndroidView(
+                                        factory = { context -> View(context) },
+                                        modifier = Modifier.fillMaxWidth().weight(0.5f),
+                                    )
+                                }
+                                AndroidView(
+                                    factory = { pager },
+                                    update = {
+                                        pager.offscreenPageLimit = 3
+                                        adpPage.also { adp ->
+                                            pager.adapter = adp
+                                            scroll?.setAdapter(adp)
+                                        }
+                                        scroll?.setLockView(pager, true)
+                                        pager.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
+                                        it.adapter = adpPage
+                                        it.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
+                                        ViewCompat.setOnApplyWindowInsetsListener(it) { v, windowInsets ->
+                                            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                            adpPage.onInsetChanged(insets.bottom)
+                                            WindowInsetsCompat.CONSUMED
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
                         }
                     }
-                }
-                AndroidView(
-                    factory = { context -> CoordinatorLayout(context).apply {
-                        addView(LinearLayout(context).apply {
-                            orientation = LinearLayout.VERTICAL
-                            addView(if (scrollUi) {
-                                LockableScrollView(context).also {
-                                        scroll = it
-                                        it.addView(ComposeView(it.context).apply {
-                                            setContent {
-                                                MainView()
-                                            }
-                                        })
-                                        it.clipToOutline = true
+                    AndroidView(
+                        factory = { context -> CoordinatorLayout(context).apply {
+                            addView(LinearLayout(context).apply {
+                                orientation = LinearLayout.VERTICAL
+                                addView(if (scrollUi) {
+                                    LockableScrollView(context).also {
+                                            scroll = it
+                                            it.addView(ComposeView(it.context).apply {
+                                                setContent {
+                                                    MainView()
+                                                }
+                                            })
+                                            it.clipToOutline = true
+                                        }
+                                } else {
+                                    scroll = null
+                                    ComposeView(context).apply {
+                                        setContent {
+                                            MainView()
+                                        }
                                     }
-                            } else {
-                                scroll = null
-                                ComposeView(context).apply {
-                                    setContent {
-                                        MainView()
-                                    }
-                                }
-                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+                            })
                             if (adCompat.showAdSettings) {
                                 addView(LinearLayout(context).apply {
                                     id = R.id.adContainer
                                     orientation = LinearLayout.VERTICAL
-                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+                                    gravity = Gravity.BOTTOM
+                                    ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                        v.setPadding(0, 0, 0, insets.bottom)
+                                        WindowInsetsCompat.CONSUMED
+                                    }
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT))
                             }
-                        })
-                        addView(LinearLayout(context).apply {
-                            orientation = LinearLayout.VERTICAL
-                            setBackgroundResource(R.drawable.bottom_sheet_background)
-                            elevation = 30f
-                            addView(ImageView(context).apply {
-                                setImageResource(R.drawable.bottom_sheet_bar)
-                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (4 * getSystem().displayMetrics.density).toInt()).apply {
-                                setMargins((6 * getSystem().displayMetrics.density).toInt())
-                                gravity = Gravity.CENTER
-                            })
                             addView(LinearLayout(context).apply {
                                 orientation = LinearLayout.VERTICAL
-                                bottomSheetView = this
-                            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-                            setOnTouchListener { _, _ -> true }
-                        }, CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, getSystem().displayMetrics.heightPixels / 2).apply {
-                            behavior = ViewPagerBottomSheetBehavior<View>().apply {
-                                state = BottomSheetBehavior.STATE_HIDDEN
-                                isHideable = true
-                                bottomSheetBehavior = this
-                            }.also { behavior ->
-                                val bottomSheetBackCallback = object : OnBackPressedCallback(true) {
-                                    override fun handleOnBackPressed() {
-                                        if (behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-                                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
-                                        } else {
-                                            isEnabled = false
-                                            onBackPressed()
-                                        }
-                                    }
-                                }
-                                bottomSheetBackCallback.isEnabled = false
-                                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                                        bottomSheetBackCallback.isEnabled = newState != BottomSheetBehavior.STATE_HIDDEN
-                                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                                            bottomSheetView.removeAllViews()
-                                        } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
-                                        }
-                                    }
-
-                                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                                    }
+                                setBackgroundResource(R.drawable.bottom_sheet_background)
+                                elevation = 30f
+                                addView(ImageView(context).apply {
+                                    setImageResource(R.drawable.bottom_sheet_bar)
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (4 * getSystem().displayMetrics.density).toInt()).apply {
+                                    setMargins((6 * getSystem().displayMetrics.density).toInt())
+                                    gravity = Gravity.CENTER
                                 })
-                                onBackPressedDispatcher.addCallback(this@UnicodeActivity, bottomSheetBackCallback)
+                                addView(LinearLayout(context).apply {
+                                    orientation = LinearLayout.VERTICAL
+                                    bottomSheetView = this
+                                    ViewCompat.setOnApplyWindowInsetsListener(bottomSheetView) { v, windowInsets ->
+                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                        v.updatePadding(0, 0, 0, insets.bottom)
+                                        WindowInsetsCompat.CONSUMED
+                                    }
+                                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+                                setOnTouchListener { _, _ -> true }
+                            }, CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, getSystem().displayMetrics.heightPixels / 2).apply {
+                                behavior = ViewPagerBottomSheetBehavior<View>().apply {
+                                    isHideable = true
+                                    state = BottomSheetBehavior.STATE_HIDDEN
+                                    bottomSheetBehavior = this
+                                }.also { behavior ->
+                                    val bottomSheetBackCallback = object : OnBackPressedCallback(true) {
+                                        override fun handleOnBackPressed() {
+                                            if (behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                                                behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                            } else {
+                                                isEnabled = false
+                                                onBackPressed()
+                                            }
+                                        }
+                                    }
+                                    bottomSheetBackCallback.isEnabled = false
+                                    behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                                        override fun onStateChanged(bottomSheet: View, newState: Int) {
+                                            bottomSheetBackCallback.isEnabled = newState != BottomSheetBehavior.STATE_HIDDEN
+                                            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                                                bottomSheetView.removeAllViews()
+                                            } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                                                behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                            }
+                                        }
+
+                                        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                                        }
+                                    })
+                                    onBackPressedDispatcher.addCallback(this@UnicodeActivity, bottomSheetBackCallback)
+                                }
+                            })
+                        }},
+                        update = {
+                            if (adCompat.showAdSettings) {
+                                val height = adCompat.renderAdToContainer(this@UnicodeActivity, pref)
+                                adpPage.onAdHeightChanged((height * getSystem().displayMetrics.density).toInt())
                             }
-                        })
-                    }},
-                    update = {
-                        if (adCompat.showAdSettings) {
-                            adCompat.renderAdToContainer(this@UnicodeActivity, pref)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                )
-            }
+                        },
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                    )
+                }
 
-            LaunchedEffect(Unit) {
-                composed.value = true
-            }
+                LaunchedEffect(Unit) {
+                    composed.value = true
+                }
 
-            if (composed.value) {
-                val lifecycleOwner = LocalLifecycleOwner.current
+                if (composed.value) {
+                    val lifecycleOwner = LocalLifecycleOwner.current
 
-                DisposableEffect(lifecycleOwner) {
-                    val observer = LifecycleEventObserver { _, event ->
-                        if (event == Lifecycle.Event.ON_RESUME) {
-                            if (!pref.getBoolean("skip_guide", false)) {
-                                showGuide()
+                    DisposableEffect(lifecycleOwner) {
+                        val observer = LifecycleEventObserver { _, event ->
+                            if (event == Lifecycle.Event.ON_RESUME) {
+                                if (!pref.getBoolean("skip_guide", false)) {
+                                    showGuide()
+                                }
                             }
                         }
-                    }
 
-                    lifecycleOwner.lifecycle.addObserver(observer)
+                        lifecycleOwner.lifecycle.addObserver(observer)
 
-                    onDispose {
-                        lifecycleOwner.lifecycle.removeObserver(observer)
+                        onDispose {
+                            lifecycleOwner.lifecycle.removeObserver(observer)
+                        }
                     }
                 }
             }
-        }
+        })
 
         cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         disableime = pref.getBoolean("ime", true)

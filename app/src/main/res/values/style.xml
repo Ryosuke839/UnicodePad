@@ -21,7 +21,8 @@
 		<item name="cancel">@drawable/ic_action_cancel</item>
 		<item name="search">@drawable/ic_action_search</item>
 		<item name="drag_handle">@drawable/ic_drag_handle</item>
-		<item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
 	</style>
 
 	<style name="Theme.Light" parent="Theme.AppCompat.Light">
@@ -29,7 +30,8 @@
 		<item name="cancel">@drawable/ic_action_cancel_light</item>
 		<item name="search">@drawable/ic_action_search_light</item>
 		<item name="drag_handle">@drawable/ic_drag_handle_light</item>
-		<item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
 	</style>
 
 	<style name="Theme.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -37,7 +39,8 @@
 		<item name="cancel">@drawable/ic_action_cancel_light</item>
 		<item name="search">@drawable/ic_action_search_light</item>
 		<item name="drag_handle">@drawable/ic_drag_handle_light</item>
-		<item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
 	</style>
 
     <style name="Theme.DayNight" parent="Theme.Light" />

@@ -36,6 +36,7 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.content.edit
+import androidx.core.view.updatePadding
 import kotlinx.coroutines.MainScope
 
 class PageAdapter(private val activity: UnicodeActivity, private val pref: SharedPreferences, private val edit: EditText) : PagerAdapter(), OnItemClickListener, OnItemLongClickListener {
@@ -133,9 +134,11 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     view.adapter = adapter
                     view.layoutManager = adapter.getLayoutManager(activity, column)
                     view.adapter = adapter
+                    view.clipToPadding = false
                 }
             }.let { view ->
                 view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                view.setPadding(0, 0, 0, top + insetHeight + adHeight)
                 views[position] = view
                 view
             }
@@ -363,9 +366,27 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
         adapterCharacter?.setTypeface(tf, locale)
     }
 
+    private var adHeight = 0
+    fun onAdHeightChanged(height: Int) {
+        adHeight = height
+        views.forEach {
+            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
+        }
+    }
+
+    private var insetHeight = 0
+    fun onInsetChanged(bottom: Int) {
+        insetHeight = bottom
+        views.forEach {
+            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
+        }
+    }
+
+    private var top = 0
     fun onSizeChanged(top: Int) {
-        adapters.forEach {
-            it.lastPadding = top
+        this.top = top
+        views.forEach {
+            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
         }
     }
 

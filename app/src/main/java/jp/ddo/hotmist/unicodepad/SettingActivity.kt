@@ -26,11 +26,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.ClipboardManager
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,9 +43,24 @@ import java.io.IOException
 class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setContentView(LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(toolbar)
+            addView(LinearLayout(this@SettingActivity).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
+                id = R.id.settingContent
+            })
+
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(insets.left, 0, insets.right)
+                windowInsets
+            }
+        })
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
-                .replace(android.R.id.content, MyPreferenceFragment())
+                .replace(R.id.settingContent, MyPreferenceFragment())
                 .commit()
         }
     }
@@ -148,6 +167,17 @@ class SettingActivity : BaseActivity() {
         }
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+
+            listView.clipToPadding = false
+            ViewCompat.setOnApplyWindowInsetsListener(listView) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(0, 0, 0, insets.bottom)
+                WindowInsetsCompat.CONSUMED
+            }
         }
 
         override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {

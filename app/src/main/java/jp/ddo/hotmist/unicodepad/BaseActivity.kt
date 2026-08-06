@@ -1,5 +1,6 @@
 package jp.ddo.hotmist.unicodepad
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.activity.SystemBarStyle
@@ -41,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }.data).let { color ->
                 ColorUtils.calculateLuminance(color).let { intensity ->
                     if (intensity > 0.5) {
-                        SystemBarStyle.light(color, color)
+                        SystemBarStyle.light(color, Color.TRANSPARENT)
                     } else {
                         SystemBarStyle.dark(color)
                     }

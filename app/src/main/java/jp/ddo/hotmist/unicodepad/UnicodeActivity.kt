@@ -996,7 +996,8 @@ class UnicodeActivity : BaseActivity() {
             }
         }
         if (requestCode != -1) {
-            adCompat.renderAdToContainer(this, pref)
+            val height = adCompat.renderAdToContainer(this, pref)
+            adpPage.onAdHeightChanged((height * getSystem().displayMetrics.density).toInt())
         }
     }
 

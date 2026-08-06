@@ -134,11 +134,11 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
                     view.adapter = adapter
                     view.layoutManager = adapter.getLayoutManager(activity, column)
                     view.adapter = adapter
-                    view.clipToPadding = false
                 }
             }.let { view ->
                 view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                view.setPadding(0, 0, 0, top + insetHeight + adHeight)
+                (if (view is DragListView) view.recyclerView else view).clipToPadding = false
+                (if (view is DragListView) view.recyclerView else view).updatePadding(0, 0, 0, top + insetHeight + adHeight)
                 views[position] = view
                 view
             }
@@ -369,24 +369,24 @@ class PageAdapter(private val activity: UnicodeActivity, private val pref: Share
     private var adHeight = 0
     fun onAdHeightChanged(height: Int) {
         adHeight = height
-        views.forEach {
-            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
+        views.forEach { view ->
+            (if (view is DragListView) view.recyclerView else view)?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
         }
     }
 
     private var insetHeight = 0
     fun onInsetChanged(bottom: Int) {
         insetHeight = bottom
-        views.forEach {
-            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
+        views.forEach { view ->
+            (if (view is DragListView) view.recyclerView else view)?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
         }
     }
 
     private var top = 0
     fun onSizeChanged(top: Int) {
         this.top = top
-        views.forEach {
-            it?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
+        views.forEach { view ->
+            (if (view is DragListView) view.recyclerView else view)?.updatePadding(0, 0, 0, top + insetHeight + adHeight)
         }
     }
 

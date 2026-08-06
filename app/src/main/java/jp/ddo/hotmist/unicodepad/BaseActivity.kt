@@ -79,7 +79,7 @@ abstract class BaseActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             title = resources.getString(R.string.app_name)
             ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                 v.updatePadding(0, insets.top, 0, 0)
                 WindowInsetsCompat.CONSUMED
             }

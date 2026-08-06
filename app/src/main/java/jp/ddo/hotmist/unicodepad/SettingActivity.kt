@@ -53,7 +53,7 @@ class SettingActivity : BaseActivity() {
             })
 
             ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                 v.updatePadding(insets.left, 0, insets.right)
                 windowInsets
             }
@@ -174,7 +174,7 @@ class SettingActivity : BaseActivity() {
 
             listView.clipToPadding = false
             ViewCompat.setOnApplyWindowInsetsListener(listView) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                 v.updatePadding(0, 0, 0, insets.bottom)
                 WindowInsetsCompat.CONSUMED
             }

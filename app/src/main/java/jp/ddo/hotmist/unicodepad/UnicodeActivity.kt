@@ -485,7 +485,7 @@ class UnicodeActivity : BaseActivity() {
                                         it.adapter = adpPage
                                         it.setCurrentItem(min(pref.getInt("page", 1), adpPage.count - 1), false)
                                         ViewCompat.setOnApplyWindowInsetsListener(it) { v, windowInsets ->
-                                            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                                             adpPage.onInsetChanged(insets.bottom)
                                             WindowInsetsCompat.CONSUMED
                                         }
@@ -524,7 +524,7 @@ class UnicodeActivity : BaseActivity() {
                                     orientation = LinearLayout.VERTICAL
                                     gravity = Gravity.BOTTOM
                                     ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
-                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                                         v.setPadding(0, 0, 0, insets.bottom)
                                         WindowInsetsCompat.CONSUMED
                                     }
@@ -544,7 +544,7 @@ class UnicodeActivity : BaseActivity() {
                                     orientation = LinearLayout.VERTICAL
                                     bottomSheetView = this
                                     ViewCompat.setOnApplyWindowInsetsListener(bottomSheetView) { v, windowInsets ->
-                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                                        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                                         v.updatePadding(0, 0, 0, insets.bottom)
                                         WindowInsetsCompat.CONSUMED
                                     }

@@ -58,14 +58,14 @@ class TabsActivity : BaseActivity() {
                 setCanDragVertically(true)
                 recyclerView.clipToPadding = false
                 ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, windowInsets ->
-                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                     v.updatePadding(0, 0, 0, insets.bottom)
                     WindowInsetsCompat.CONSUMED
                 }
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
 
             ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                 v.updatePadding(insets.left, 0, insets.right)
                 windowInsets
             }

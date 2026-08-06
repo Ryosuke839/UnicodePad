@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,10 +35,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
         (TypedValue().also { tv ->
             theme.resolveAttribute(R.attr.colorPrimary, tv, true)
-        }.data and 0xFF).let { intensity ->
-            WindowCompat.getInsetsController(window, window.decorView).apply {
-                isAppearanceLightStatusBars = intensity > 0x7F
-                isAppearanceLightNavigationBars = intensity > 0x7F
+        }.data).let { color ->
+            ColorUtils.calculateLuminance(color).let { intensity ->
+                WindowCompat.getInsetsController(window, window.decorView).apply {
+                    isAppearanceLightStatusBars = intensity > 0.5
+                    isAppearanceLightNavigationBars = intensity > 0.5
+                }
             }
         }
 

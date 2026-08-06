@@ -2,6 +2,8 @@ package jp.ddo.hotmist.unicodepad
 
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.ColorUtils
@@ -33,16 +35,19 @@ abstract class BaseActivity : AppCompatActivity() {
         setTheme(getThemeFromPref().also { currentTheme = it })
         super.onCreate(savedInstanceState)
 
-        (TypedValue().also { tv ->
-            theme.resolveAttribute(R.attr.colorPrimary, tv, true)
-        }.data).let { color ->
-            ColorUtils.calculateLuminance(color).let { intensity ->
-                WindowCompat.getInsetsController(window, window.decorView).apply {
-                    isAppearanceLightStatusBars = intensity > 0.5
-                    isAppearanceLightNavigationBars = intensity > 0.5
+        enableEdgeToEdge(
+            (TypedValue().also { tv ->
+                theme.resolveAttribute(R.attr.colorPrimary, tv, true)
+            }.data).let { color ->
+                ColorUtils.calculateLuminance(color).let { intensity ->
+                    if (intensity > 0.5) {
+                        SystemBarStyle.light(color, color)
+                    } else {
+                        SystemBarStyle.dark(color)
+                    }
                 }
             }
-        }
+        )
 
         _toolbar = Toolbar(this).apply {
             setSupportActionBar(this)

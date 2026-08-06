@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }.data).let { color ->
                 ColorUtils.calculateLuminance(color).let { intensity ->
                     if (intensity > 0.5) {
-                        SystemBarStyle.light(color, Color.TRANSPARENT)
+                        SystemBarStyle.light(color, Color.argb(0x80, 0x1b, 0x1b, 0x1b))
                     } else {
                         SystemBarStyle.dark(color)
                     }

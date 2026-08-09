@@ -98,6 +98,7 @@ import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.content.edit
+import androidx.core.view.children
 
 
 @Suppress("DEPRECATION")
@@ -763,10 +764,8 @@ class UnicodeActivity : BaseActivity() {
             return
         }
         val targetView = when (targets[index]) {
-            R.id.action_bar -> findViewById<ViewGroup>(targets[index]).run {
-                (getChildAt(childCount - 1) as ViewGroup).run {
-                    getChildAt(childCount - 1)
-                }
+            R.id.action_bar -> toolbar.children.last().let {
+                (it as? ViewGroup)?.children?.last() ?: it
             }
             else -> viewTargets[targets[index]]!!
         }

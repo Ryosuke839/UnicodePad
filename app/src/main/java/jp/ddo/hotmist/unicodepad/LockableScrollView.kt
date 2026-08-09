@@ -20,9 +20,9 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.*
 import android.widget.ScrollView
+import androidx.core.view.isVisible
 
 class LockableScrollView : ScrollView {
-    private var inmove = false
     private lateinit var adapter: PageAdapter
     private var lockView: View? = null
     private var over = false
@@ -33,21 +33,23 @@ class LockableScrollView : ScrollView {
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (!over) return false
-        if (inmove && ev.actionMasked == MotionEvent.ACTION_UP) {
-            inmove = false
-            return true
-        }
-        var hit = false
-        adapter.view?.let {
-            if (it.visibility == VISIBLE) {
-                val rc = Rect()
-                it.getGlobalVisibleRect(rc)
-                if (rc.contains(ev.rawX.toInt(), ev.rawY.toInt())) hit = true
+
+        if (isTouchOnLockedContent(ev)) {
+            if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+                super.onInterceptTouchEvent(ev) // reset internal state only
             }
+            return false
         }
-        if (!inmove && !hit) return super.onInterceptTouchEvent(ev).also { inmove = it }
-        inmove = super.onInterceptTouchEvent(ev)
-        return false
+
+        return super.onInterceptTouchEvent(ev)
+    }
+
+    private fun isTouchOnLockedContent(ev: MotionEvent): Boolean {
+        if (!::adapter.isInitialized) return false
+        val target = adapter.view?.takeIf { it.isVisible } ?: return false
+        val rc = Rect()
+        target.getGlobalVisibleRect(rc)
+        return rc.contains(ev.rawX.toInt(), ev.rawY.toInt())
     }
 
     fun setAdapter(adapter: PageAdapter) {

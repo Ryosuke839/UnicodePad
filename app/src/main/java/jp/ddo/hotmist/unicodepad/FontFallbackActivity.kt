@@ -23,6 +23,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -30,6 +31,9 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,6 +63,7 @@ class FontFallbackActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         intent.extras?.let {
             fontIndex = it.getInt("fontIndex")
             fontFallback = FontData.FallbackFont().apply {
@@ -69,6 +74,7 @@ class FontFallbackActivity : BaseActivity() {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
         setContentView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            addView(toolbar)
             addView(EditText(this@FontFallbackActivity).apply {
                 setText(fontFallback.name)
                 hint = fontFallback.subtitle
@@ -100,53 +106,66 @@ class FontFallbackActivity : BaseActivity() {
                     }
                 })
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(Button(this@FontFallbackActivity, null, android.R.attr.borderlessButtonStyle).apply {
+                setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
+                setText(R.string.font_add_existing)
+                gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                compoundDrawablePadding = (8 * resources.displayMetrics.density).toInt()
+                setOnClickListener {
+                    val paths = FontData().apply {
+                        loadFromPreferences(pref)
+                    }.getFonts().mapNotNull {
+                        (it as? FontData.SingleFont)?.path?.let { path ->
+                            if (fontFallback.paths.contains(path)) null else path
+                        }
+                    }
+                    if (paths.isEmpty()) {
+                        Toast.makeText(this@FontFallbackActivity, R.string.font_no_existing, Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    AlertDialog.Builder(context)
+                        .setAdapter(ArrayAdapter(context, android.R.layout.simple_list_item_1, paths.map {
+                            File(it).name
+                        })) { _, i ->
+                            fontFallback.paths.add(paths[i])
+                            try {
+                                fontFallback.getTypeface()
+                                adapter.notifyItemInserted(fontFallback.paths.size - 1)
+                            } catch (e: FontData.BaseFont.FontCouldNotBeLoadedException) {
+                                Toast.makeText(this@FontFallbackActivity, R.string.cantopen, Toast.LENGTH_SHORT).show()
+                                fontFallback.paths.removeAt(fontFallback.paths.size - 1)
+                            }
+                        }
+                        .show()
+                }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(Button(this@FontFallbackActivity, null, android.R.attr.borderlessButtonStyle).apply {
+                setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
+                setText(R.string.font_add_file)
+                gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                compoundDrawablePadding = (8 * resources.displayMetrics.density).toInt()
+                setOnClickListener {
+                    openFontChooser()
+                }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
             addView(DynamicDragListView(this@FontFallbackActivity, null).apply {
                 setLayoutManager(LinearLayoutManager(this@FontFallbackActivity))
                 setDragListListener(this@FontFallbackActivity.adapter)
                 setAdapter(this@FontFallbackActivity.adapter, true)
                 setCanDragHorizontally(false)
                 setCanDragVertically(true)
+                ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, windowInsets ->
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+                    clipToPadding = false
+                    updatePadding(bottom = insets.bottom)
+                    WindowInsetsCompat.CONSUMED
+                }
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-            addView(LinearLayout(this@FontFallbackActivity).apply {
-                addView(Button(this@FontFallbackActivity).apply {
-                    setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
-                    setText(R.string.font_add_existing)
-                    setOnClickListener {
-                        val paths = FontData().apply {
-                            loadFromPreferences(pref)
-                        }.getFonts().mapNotNull {
-                            (it as? FontData.SingleFont)?.path?.let { path ->
-                                if (fontFallback.paths.contains(path)) null else path
-                            }
-                        }
-                        if (paths.isEmpty()) {
-                            Toast.makeText(this@FontFallbackActivity, R.string.font_no_existing, Toast.LENGTH_SHORT).show()
-                            return@setOnClickListener
-                        }
-                        AlertDialog.Builder(context)
-                            .setAdapter(ArrayAdapter(context, android.R.layout.simple_list_item_1, paths.map {
-                                File(it).name
-                            })) { _, i ->
-                                fontFallback.paths.add(paths[i])
-                                try {
-                                    fontFallback.getTypeface()
-                                    adapter.notifyItemInserted(fontFallback.paths.size - 1)
-                                } catch (e: FontData.BaseFont.FontCouldNotBeLoadedException) {
-                                    Toast.makeText(this@FontFallbackActivity, R.string.cantopen, Toast.LENGTH_SHORT).show()
-                                    fontFallback.paths.removeAt(fontFallback.paths.size - 1)
-                                }
-                            }
-                            .show()
-                    }
-                }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-                addView(Button(this@FontFallbackActivity).apply {
-                    setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
-                    setText(R.string.font_add_file)
-                    setOnClickListener {
-                        openFontChooser()
-                    }
-                }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+                v.updatePadding(left = insets.left, right = insets.right)
+                windowInsets
+            }
         })
 
         onBackPressedDispatcher.addCallback {

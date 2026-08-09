@@ -22,10 +22,14 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woxthebox.draglistview.DragListView
@@ -51,36 +55,51 @@ class FontManagerActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         pref = PreferenceManager.getDefaultSharedPreferences(this)
         fontData.loadFromPreferences(pref)
         adapter = FontManagerAdapter(this, fontData)
         setContentView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            addView(toolbar)
+            addView(Button(this@FontManagerActivity, null, android.R.attr.borderlessButtonStyle).apply {
+                setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
+                setText(R.string.font_add)
+                gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                compoundDrawablePadding = (8 * resources.displayMetrics.density).toInt()
+                setOnClickListener {
+                    openFontChooser(FONT_ADD_CODE)
+                }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                addView(Button(this@FontManagerActivity, null, android.R.attr.borderlessButtonStyle).apply {
+                    setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
+                    setText(R.string.font_add_fallback)
+                    gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                    compoundDrawablePadding = (8 * resources.displayMetrics.density).toInt()
+                    setOnClickListener {
+                        openFontChooser(FONT_ADD_FALLBACK_CODE)
+                    }
+                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            }
             addView(DynamicDragListView(this@FontManagerActivity, null).apply {
                 setLayoutManager(LinearLayoutManager(this@FontManagerActivity))
                 setDragListListener(this@FontManagerActivity.adapter)
                 setAdapter(this@FontManagerActivity.adapter, true)
                 setCanDragHorizontally(false)
                 setCanDragVertically(true)
-            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-            addView(LinearLayout(this@FontManagerActivity).apply {
-                addView(Button(this@FontManagerActivity).apply {
-                    setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
-                    setText(R.string.font_add)
-                    setOnClickListener {
-                        openFontChooser(FONT_ADD_CODE)
-                    }
-                }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    addView(Button(this@FontManagerActivity).apply {
-                        setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0)
-                        setText(R.string.font_add_fallback)
-                        setOnClickListener {
-                            openFontChooser(FONT_ADD_FALLBACK_CODE)
-                        }
-                    }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+                ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, windowInsets ->
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+                    clipToPadding = false
+                    updatePadding(bottom = insets.bottom)
+                    WindowInsetsCompat.CONSUMED
                 }
-            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+                v.updatePadding(left = insets.left, right = insets.right)
+                windowInsets
+            }
         })
     }
 

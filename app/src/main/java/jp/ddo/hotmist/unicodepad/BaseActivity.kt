@@ -1,7 +1,19 @@
 package jp.ddo.hotmist.unicodepad
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.LayoutInflater
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
 
 private val THEME = intArrayOf(
@@ -18,9 +30,69 @@ abstract class BaseActivity : AppCompatActivity() {
         return THEME[(pref.getString("theme", null)?.toIntOrNull() ?: 2131492983) - 2131492983]
     }
 
+    private lateinit var _toolbar: Toolbar
+    val toolbar: Toolbar
+        get() = _toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(getThemeFromPref().also { currentTheme = it })
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            enableEdgeToEdge(
+                (TypedValue().also { tv ->
+                    theme.resolveAttribute(R.attr.colorPrimary, tv, true)
+                }.data).let { color ->
+                    ColorUtils.calculateLuminance(color).let { intensity ->
+                        if (intensity > 0.5) {
+                            SystemBarStyle.light(color, Color.argb(0x80, 0x1b, 0x1b, 0x1b))
+                        } else {
+                            SystemBarStyle.dark(color)
+                        }
+                    }
+                }
+            )
+        }
+
+        _toolbar = (LayoutInflater.from(this).inflate(R.layout.toolbar, null) as Toolbar).apply {
+            setSupportActionBar(this)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            TypedValue().also { tv ->
+                theme.resolveAttribute(R.attr.actionBarTheme, tv, true)
+            }.resourceId.let { resId ->
+                setTitleTextColor(
+                    obtainStyledAttributes(
+                        resId,
+                        intArrayOf(android.R.attr.textColorPrimary)
+                    ).run {
+                        val color = getColor(0, 0)
+                        recycle()
+                        color
+                    })
+                obtainStyledAttributes(
+                    resId,
+                    intArrayOf(android.R.attr.textColorSecondary)
+                ).run {
+                    val color = getColor(0, 0)
+                    recycle()
+                    color
+                }.let { textColorSecondary ->
+                    setSubtitleTextColor(textColorSecondary)
+                    overflowIcon = overflowIcon?.apply {
+                        setTint(textColorSecondary)
+                    }
+                    navigationIcon = navigationIcon?.apply {
+                        setTint(textColorSecondary)
+                    }
+                }
+            }
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+                v.updatePadding(0, insets.top, 0, 0)
+                WindowInsetsCompat.CONSUMED
+            }
+        }
     }
 
     override fun onResume() {

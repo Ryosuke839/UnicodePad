@@ -27,4 +27,5 @@
 	<item name="font_rename" type="id"/>
 	<item name="font_edit" type="id"/>
 	<item name="font_delete" type="id"/>
+	<item name="settingContent" type="id"/>
 </resources>

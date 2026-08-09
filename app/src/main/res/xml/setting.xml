@@ -90,7 +90,7 @@
 			android:summary=""
 			android:title="@string/column_desc" />
 		<ListPreference
-			android:defaultValue="8"
+			android:defaultValue="16"
 			android:dialogTitle="@string/columnl_desc"
 			android:entries="@array/column"
 			android:entryValues="@array/column_val"

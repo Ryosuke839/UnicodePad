@@ -101,6 +101,7 @@ import java.util.zip.CRC32
 import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.content.edit
 
 
 @Suppress("DEPRECATION")
@@ -960,13 +961,17 @@ class UnicodeActivity : BaseActivity() {
     }
 
     public override fun onPause() {
-        val edit = pref.edit()
-        adpPage.save(edit)
-        chooser.save(edit)
-        locale.save(edit)
-        edit.putInt("page", pager.currentItem)
-        edit.apply()
+        saveState()
         super.onPause()
+    }
+
+    fun saveState() {
+        pref.edit {
+            adpPage.save(this)
+            chooser.save(this)
+            locale.save(this)
+            putInt("page", pager.currentItem)
+        }
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -1035,8 +1040,13 @@ class UnicodeActivity : BaseActivity() {
         disableime = pref.getBoolean("ime", true)
         showBtnClear = pref.getBoolean("clear", false)
         showBtnRow = pref.getBoolean("buttons", true)
-        scrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
+        val newScrollUi = (pref.getString("scroll", null)?.toIntOrNull() ?: 1) + (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0) > 1
         if (created) {
+            if (scrollUi != newScrollUi) {
+                saveState()
+                recreate()
+                return
+            }
             editText.textSize = fontsize
             adpPage.notifyDataSetChanged()
             editText.apply {
@@ -1052,6 +1062,7 @@ class UnicodeActivity : BaseActivity() {
                 }
             }
         }
+        scrollUi = newScrollUi
         if (requestCode != -1) {
             val height = adCompat.renderAdToContainer(this, pref)
             adpPage.onAdHeightChanged((height * getSystem().displayMetrics.density).toInt())

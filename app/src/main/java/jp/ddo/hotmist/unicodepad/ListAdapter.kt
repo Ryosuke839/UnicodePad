@@ -686,6 +686,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                         super.onScrolled(recyclerView, dx, dy)
                         val manager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
                         val firstVisibleItem = manager.findFirstVisibleItemPosition()
+                        if (firstVisibleItem == 0 && dy == 0) return
                         val visibleItemCount = recyclerView.childCount
                         if (visibleItemCount == 0)
                             return

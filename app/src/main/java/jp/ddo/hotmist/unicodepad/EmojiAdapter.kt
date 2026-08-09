@@ -48,6 +48,7 @@ internal class EmojiAdapter(activity: Activity, pref: SharedPreferences, private
             super.onScrolled(recyclerView, dx, dy)
             val manager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
             var index = manager.findFirstVisibleItemPosition()
+            if (index == 0 && dy == 0) return
             val visibleItemCount = recyclerView.childCount
             index -= searchTitlePosition(index)
             if (visibleItemCount != 0) {

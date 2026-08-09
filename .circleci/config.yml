@@ -4,6 +4,7 @@ jobs:
     working_directory: ~/code
     docker:
       - image: cimg/android:2024.01
+    resource_class: large
     environment:
       JVM_OPTS: -Xmx3200m
     steps:

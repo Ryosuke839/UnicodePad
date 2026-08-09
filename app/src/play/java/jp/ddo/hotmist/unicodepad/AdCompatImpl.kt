@@ -14,14 +14,14 @@ import android.content.SharedPreferences
 
 internal class AdCompatImpl : AdCompat {
     override val showAdSettings = true
-    override fun renderAdToContainer(activity: Activity, pref: SharedPreferences) {
+    override fun renderAdToContainer(activity: Activity, pref: SharedPreferences): Int {
         val adContainer = activity.findViewById<LinearLayout>(R.id.adContainer)
-        if (adContainer != null) {
+        return if (adContainer != null) {
             if (!pref.getBoolean("no-ad", false)) {
                 if (adContainer.childCount == 0) {
                     try {
                         MobileAds.initialize(activity) { }
-                        AdView(activity).also {
+                        AdView(activity).let {
                             val outMetrics = DisplayMetrics()
                             @Suppress("DEPRECATION")
                             activity.windowManager.defaultDisplay.getMetrics(outMetrics)
@@ -30,14 +30,24 @@ internal class AdCompatImpl : AdCompat {
                             (activity.findViewById<View>(R.id.adContainer) as LinearLayout).addView(it)
                             val adRequest = AdRequest.Builder().build()
                             it.loadAd(adRequest)
+                            it.adSize?.height
                         }
-                    } catch (e: NullPointerException) {}
+                    } catch (e: NullPointerException) {
+                        null
+                    }
+                } else {
+                    adContainer.getChildAt(0).let {
+                        (it as? AdView)?.adSize?.height
+                    }
                 }
             } else {
                 if (adContainer.childCount > 0) {
                     adContainer.removeAllViews()
                 }
+                null
             }
-        }
+        } else {
+            null
+        } ?: 0
     }
 }

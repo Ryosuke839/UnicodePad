@@ -317,7 +317,9 @@ class UnicodeActivity : BaseActivity() {
                                 if (showBtnClear) {
                                     AndroidView(
                                         factory = { context -> ImageButton(context).apply {
-                                            setImageResource(R.drawable.ic_action_cancel)
+                                            setImageResource(TypedValue().also { value ->
+                                                context.theme.resolveAttribute(R.attr.cancel, value, true)
+                                            }.resourceId)
                                             contentDescription = resources.getString(R.string.clear)
                                             scaleType = ImageView.ScaleType.CENTER_INSIDE
                                             setOnClickListener {
@@ -336,7 +338,9 @@ class UnicodeActivity : BaseActivity() {
                             }
                             AndroidView(
                                 factory = { context -> ImageButton(context).apply {
-                                    setImageResource(R.drawable.ic_action_backspace)
+                                    setImageResource(TypedValue().also { value ->
+                                        context.theme.resolveAttribute(R.attr.backspace, value, true)
+                                    }.resourceId)
                                     contentDescription = resources.getString(R.string.erase)
                                     scaleType = ImageView.ScaleType.CENTER_INSIDE
                                     cropToPadding = false

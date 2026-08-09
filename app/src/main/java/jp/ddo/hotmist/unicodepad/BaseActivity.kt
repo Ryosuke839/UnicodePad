@@ -3,6 +3,7 @@ package jp.ddo.hotmist.unicodepad
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.LayoutInflater
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -50,12 +51,9 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         )
 
-        _toolbar = Toolbar(this).apply {
+        _toolbar = (LayoutInflater.from(this).inflate(R.layout.toolbar, null) as Toolbar).apply {
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            setBackgroundColor(TypedValue().also { tv ->
-                theme.resolveAttribute(R.attr.colorPrimary, tv, true)
-            }.data)
             TypedValue().also { tv ->
                 theme.resolveAttribute(R.attr.actionBarTheme, tv, true)
             }.resourceId.let { resId ->
@@ -86,7 +84,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 }
             }
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            title = resources.getString(R.string.app_name)
             ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
                 v.updatePadding(0, insets.top, 0, 0)

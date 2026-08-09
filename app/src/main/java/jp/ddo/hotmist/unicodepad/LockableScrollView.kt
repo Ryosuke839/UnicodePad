@@ -93,4 +93,20 @@ class LockableScrollView : ScrollView {
     override fun scrollTo(x: Int, y: Int) {
         if (scroll) super.scrollTo(x, y)
     }
+
+    interface OnScrollListener {
+        fun onScroll(remainingY: Int)
+    }
+
+    private var scrollListener: OnScrollListener? = null
+
+    fun setOnScrollListener(listener: OnScrollListener) {
+        scrollListener = listener
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt)
+        val remainingY = (getChildAt(0)?.height ?: 0) - (height + scrollY)
+        scrollListener?.onScroll(remainingY)
+    }
 }

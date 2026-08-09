@@ -36,13 +36,16 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -56,13 +59,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.view.ViewCompat
@@ -173,167 +182,203 @@ class UnicodeActivity : BaseActivity() {
         setContentView(ComposeView(this).apply {
             consumeWindowInsets = false
             setContent {
-                Column(
+                val density = LocalDensity.current
+                var toolBarHeight by remember {
+                    mutableStateOf(0.dp)
+                }
+                var toolBarHeightOverride by remember {
+                    mutableStateOf<Dp?>(null)
+                }
+                var editTextHeight by remember {
+                    mutableStateOf(0.dp)
+                }
+
+                Box(
                     modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)).fillMaxHeight(),
                 ) {
-                    AndroidView(
-                        factory = { toolbar },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                    Column(
+                        modifier = Modifier.zIndex(1.0f)
                     ) {
-                        val multiline = pref.getBoolean("multiline", false)
-                        Box(
-                            modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
-                        ) {
-                            AndroidView(
-                                factory = {
-                                    editText.apply {
-                                        id = R.id.editText
-                                        setOnTouchListener { view: View, motionEvent: MotionEvent ->
-                                            view.onTouchEvent(motionEvent)
-                                            if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                                                view.windowToken,
-                                                0
-                                            )
-                                            true
-                                        }
-                                        textSize = fontsize
-                                        maxLines = if (multiline) 3 else 1
-                                        inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
-                                        setOnEditorActionListener { _, actionId, keyEvent ->
-                                            if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
-                                                btnFinish.performClick()
-                                                true
-                                            } else
-                                                false
-                                        }
-                                        addTextChangedListener(object : TextWatcher {
-                                            override fun beforeTextChanged(
-                                                s: CharSequence?,
-                                                start: Int,
-                                                count: Int,
-                                                after: Int
-                                            ) {
-                                            }
-
-                                            override fun onTextChanged(
-                                                s: CharSequence?,
-                                                start: Int,
-                                                before: Int,
-                                                count: Int
-                                            ) {
-                                            }
-
-                                            override fun afterTextChanged(s: Editable?) {
-                                                if (!::itemUndo.isInitialized) {
-                                                    history[0] = Triple(s.toString(), 0, 0)
-                                                    return
-                                                }
-                                                if (s.toString() == history[historyCursor].first) {
-                                                    return
-                                                }
-                                                while (history.size > historyCursor + 1) {
-                                                    history.removeAt(history.lastIndex)
-                                                }
-                                                while (history.size >= MAX_HISTORY) {
-                                                    history.removeAt(0)
-                                                }
-                                                history.add(
-                                                    Triple(
-                                                        s.toString(),
-                                                        selectionStart,
-                                                        selectionEnd
-                                                    )
-                                                )
-                                                historyCursor = history.size - 1
-                                                itemUndo.isEnabled = historyCursor > 0
-                                                itemRedo.isEnabled = false
-                                            }
-                                        })
-                                        requestFocus()
-                                    }
-                                },
-                                update = {
-                                    it.apply {
-                                        imeOptions = when (finishAction) {
-                                            R.string.finish -> EditorInfo.IME_ACTION_DONE
-                                            else -> EditorInfo.IME_ACTION_SEND
-                                        }
-                                        if (initialText != null) {
-                                            setText(initialText)
-                                            setSelection(length())
-                                            initialText = null
-                                        }
-                                    }
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                            if (showBtnClear) {
-                                AndroidView(
-                                    factory = { context -> ImageButton(context).apply {
-                                        setImageResource(R.drawable.ic_action_cancel)
-                                        contentDescription = resources.getString(R.string.clear)
-                                        scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                        setOnClickListener {
-                                            editText.setText("")
-                                        }
-                                        TypedValue().also { value ->
-                                            context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, value, true)
-                                            background = AppCompatResources.getDrawable(context, value.resourceId)
-                                        }
-                                    } },
-                                    modifier = Modifier
-                                        .align(Alignment.CenterEnd)
-                                        .padding(end = 4.dp),
-                                )
-                            }
-                        }
                         AndroidView(
-                            factory = { context -> ImageButton(context).apply {
-                                setImageResource(R.drawable.ic_action_backspace)
-                                contentDescription = resources.getString(R.string.erase)
-                                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                cropToPadding = false
-                                setOnTouchListener { view, motionEvent ->
-                                    view.onTouchEvent(motionEvent)
-                                    when (motionEvent.action) {
-                                        MotionEvent.ACTION_DOWN -> if (delay == null) {
-                                            delay = Runnable {
-                                                val str = editText.editableText.toString()
-                                                if (str.isEmpty()) return@Runnable
-                                                val start = editText.selectionStart
-                                                if (start < 1) return@Runnable
-                                                val end = editText.selectionEnd
-                                                if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
-                                                if (delay != null) {
-                                                    editText.postDelayed(delay, timer.toLong())
-                                                    if (timer > 100) timer -= 200
-                                                }
-                                            }
-                                            editText.post(delay)
-                                        }
-                                        MotionEvent.ACTION_UP -> {
-                                            editText.removeCallbacks(delay)
-                                            delay = null
-                                            timer = 500
+                            factory = { toolbar },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onGloballyPositioned { coordinates ->
+                                    with (density) {
+                                        if (toolBarHeightOverride == null) {
+                                            toolBarHeight = (coordinates.size.height - toolbar.paddingTop).toDp()
                                         }
                                     }
-                                    true
-                                }
-                            } },
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .height(fontsize.dp * 2),
+                                }.run {
+                                    toolBarHeightOverride?.let { height ->
+                                        this.height(height)
+                                    } ?: this
+                                },
                         )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onGloballyPositioned { coordinates ->
+                                    with (density) {
+                                        editTextHeight = coordinates.size.height.toDp()
+                                    }
+                                }
+                                .background(Color(TypedValue().also { tv ->
+                                    theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                                }.data)),
+                        ) {
+                            val multiline = pref.getBoolean("multiline", false)
+                            Box(
+                                modifier = Modifier.weight(1f).heightIn(max = fontsize.dp * 4),
+                            ) {
+                                AndroidView(
+                                    factory = {
+                                        editText.apply {
+                                            id = R.id.editText
+                                            setOnTouchListener { view: View, motionEvent: MotionEvent ->
+                                                view.onTouchEvent(motionEvent)
+                                                if (disableime) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                                                    view.windowToken,
+                                                    0
+                                                )
+                                                true
+                                            }
+                                            textSize = fontsize
+                                            maxLines = if (multiline) 3 else 1
+                                            inputType = InputType.TYPE_CLASS_TEXT or if (multiline) InputType.TYPE_TEXT_FLAG_MULTI_LINE else 0
+                                            setOnEditorActionListener { _, actionId, keyEvent ->
+                                                if (keyEvent?.keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN && !multiline || actionId == EditorInfo.IME_ACTION_DONE) {
+                                                    btnFinish.performClick()
+                                                    true
+                                                } else
+                                                    false
+                                            }
+                                            addTextChangedListener(object : TextWatcher {
+                                                override fun beforeTextChanged(
+                                                    s: CharSequence?,
+                                                    start: Int,
+                                                    count: Int,
+                                                    after: Int
+                                                ) {
+                                                }
+
+                                                override fun onTextChanged(
+                                                    s: CharSequence?,
+                                                    start: Int,
+                                                    before: Int,
+                                                    count: Int
+                                                ) {
+                                                }
+
+                                                override fun afterTextChanged(s: Editable?) {
+                                                    if (!::itemUndo.isInitialized) {
+                                                        history[0] = Triple(s.toString(), 0, 0)
+                                                        return
+                                                    }
+                                                    if (s.toString() == history[historyCursor].first) {
+                                                        return
+                                                    }
+                                                    while (history.size > historyCursor + 1) {
+                                                        history.removeAt(history.lastIndex)
+                                                    }
+                                                    while (history.size >= MAX_HISTORY) {
+                                                        history.removeAt(0)
+                                                    }
+                                                    history.add(
+                                                        Triple(
+                                                            s.toString(),
+                                                            selectionStart,
+                                                            selectionEnd
+                                                        )
+                                                    )
+                                                    historyCursor = history.size - 1
+                                                    itemUndo.isEnabled = historyCursor > 0
+                                                    itemRedo.isEnabled = false
+                                                }
+                                            })
+                                            requestFocus()
+                                        }
+                                    },
+                                    update = {
+                                        it.apply {
+                                            imeOptions = when (finishAction) {
+                                                R.string.finish -> EditorInfo.IME_ACTION_DONE
+                                                else -> EditorInfo.IME_ACTION_SEND
+                                            }
+                                            if (initialText != null) {
+                                                setText(initialText)
+                                                setSelection(length())
+                                                initialText = null
+                                            }
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                                if (showBtnClear) {
+                                    AndroidView(
+                                        factory = { context -> ImageButton(context).apply {
+                                            setImageResource(R.drawable.ic_action_cancel)
+                                            contentDescription = resources.getString(R.string.clear)
+                                            scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                            setOnClickListener {
+                                                editText.setText("")
+                                            }
+                                            TypedValue().also { value ->
+                                                context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, value, true)
+                                                background = AppCompatResources.getDrawable(context, value.resourceId)
+                                            }
+                                        } },
+                                        modifier = Modifier
+                                            .align(Alignment.CenterEnd)
+                                            .padding(end = 4.dp),
+                                    )
+                                }
+                            }
+                            AndroidView(
+                                factory = { context -> ImageButton(context).apply {
+                                    setImageResource(R.drawable.ic_action_backspace)
+                                    contentDescription = resources.getString(R.string.erase)
+                                    scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                    cropToPadding = false
+                                    setOnTouchListener { view, motionEvent ->
+                                        view.onTouchEvent(motionEvent)
+                                        when (motionEvent.action) {
+                                            MotionEvent.ACTION_DOWN -> if (delay == null) {
+                                                delay = Runnable {
+                                                    val str = editText.editableText.toString()
+                                                    if (str.isEmpty()) return@Runnable
+                                                    val start = editText.selectionStart
+                                                    if (start < 1) return@Runnable
+                                                    val end = editText.selectionEnd
+                                                    if (start != end) editText.editableText.delete(min(start, end), max(start, end)) else if (start > 1 && Character.isSurrogatePair(str[start - 2], str[start - 1])) editText.editableText.delete(start - 2, start) else editText.editableText.delete(start - 1, start)
+                                                    if (delay != null) {
+                                                        editText.postDelayed(delay, timer.toLong())
+                                                        if (timer > 100) timer -= 200
+                                                    }
+                                                }
+                                                editText.post(delay)
+                                            }
+                                            MotionEvent.ACTION_UP -> {
+                                                editText.removeCallbacks(delay)
+                                                delay = null
+                                                timer = 500
+                                            }
+                                        }
+                                        true
+                                    }
+                                } },
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .height(fontsize.dp * 2),
+                            )
+                        }
                     }
                     @Composable
                     fun MainView() {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                        ) {
+                        Column {
+                            Spacer(
+                                Modifier.height(toolBarHeight),
+                            )
                             Row(
                                 modifier = if (showBtnRow) Modifier.fillMaxWidth() else Modifier.height(0.dp),
                             ) {
@@ -501,14 +546,25 @@ class UnicodeActivity : BaseActivity() {
                                 orientation = LinearLayout.VERTICAL
                                 addView(if (scrollUi) {
                                     LockableScrollView(context).also {
-                                            scroll = it
-                                            it.addView(ComposeView(it.context).apply {
-                                                setContent {
-                                                    MainView()
+                                        scroll = it
+                                        it.addView(ComposeView(it.context).apply {
+                                            setContent {
+                                                MainView()
+                                            }
+                                        })
+                                        it.clipToOutline = true
+                                        it.setOnScrollListener(object : LockableScrollView.OnScrollListener {
+                                            override fun onScroll(remainingY: Int) {
+                                                val insetTop = density.run { toolbar.paddingTop.toDp() }
+                                                val remainingDp = density.run { remainingY.toDp() }
+                                                toolBarHeightOverride = if (remainingDp < toolBarHeight) {
+                                                    insetTop + remainingDp
+                                                } else {
+                                                    null
                                                 }
-                                            })
-                                            it.clipToOutline = true
-                                        }
+                                            }
+                                        })
+                                    }
                                 } else {
                                     scroll = null
                                     ComposeView(context).apply {
@@ -590,7 +646,7 @@ class UnicodeActivity : BaseActivity() {
                                 adpPage.onAdHeightChanged((height * getSystem().displayMetrics.density).toInt())
                             }
                         },
-                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)).padding(0.dp, editTextHeight, 0.dp, 0.dp),
                     )
                 }
 

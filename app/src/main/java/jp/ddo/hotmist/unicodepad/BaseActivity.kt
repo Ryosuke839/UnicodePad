@@ -1,6 +1,7 @@
 package jp.ddo.hotmist.unicodepad
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -37,19 +38,21 @@ abstract class BaseActivity : AppCompatActivity() {
         setTheme(getThemeFromPref().also { currentTheme = it })
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge(
-            (TypedValue().also { tv ->
-                theme.resolveAttribute(R.attr.colorPrimary, tv, true)
-            }.data).let { color ->
-                ColorUtils.calculateLuminance(color).let { intensity ->
-                    if (intensity > 0.5) {
-                        SystemBarStyle.light(color, Color.argb(0x80, 0x1b, 0x1b, 0x1b))
-                    } else {
-                        SystemBarStyle.dark(color)
+        if (Build.VERSION.SDK_INT >= 30) {
+            enableEdgeToEdge(
+                (TypedValue().also { tv ->
+                    theme.resolveAttribute(R.attr.colorPrimary, tv, true)
+                }.data).let { color ->
+                    ColorUtils.calculateLuminance(color).let { intensity ->
+                        if (intensity > 0.5) {
+                            SystemBarStyle.light(color, Color.argb(0x80, 0x1b, 0x1b, 0x1b))
+                        } else {
+                            SystemBarStyle.dark(color)
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
 
         _toolbar = (LayoutInflater.from(this).inflate(R.layout.toolbar, null) as Toolbar).apply {
             setSupportActionBar(this)

@@ -121,11 +121,6 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
 
     init {
         setHasStableIds(true)
-    }
-
-    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
-    override suspend fun instantiate(view: View): View {
-        super.instantiate(view)
         fromIndex.clear()
         fromCodePoint.clear()
         blockToIndex.clear()
@@ -499,6 +494,11 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0xE0100, 0xE01EF)
         add(0xF0000, 0xFFFFF)
         add(0x100000, 0x10FFFF)
+    }
+
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
+    override suspend fun instantiate(view: View): View {
+        super.instantiate(view)
         @Suppress("DEPRECATION")
         resnormal = activity.resources.getColor(android.R.color.transparent)
         resselect = TypedValue().also { tv ->

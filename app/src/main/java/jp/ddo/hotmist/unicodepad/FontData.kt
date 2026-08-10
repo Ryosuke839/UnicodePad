@@ -9,6 +9,7 @@ import java.io.File
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+import java.io.IOException
 
 class FontData {
     @Serializable
@@ -56,11 +57,17 @@ class FontData {
 
         @RequiresApi(Build.VERSION_CODES.Q)
         override fun getTypeface(): Typeface {
-            return paths.fold(null as Typeface.CustomFallbackBuilder?) { b, path ->
-                val font = Font.Builder(File(path)).build()
-                val family = FontFamily.Builder(font).build()
-                b?.addCustomFallback(family) ?: Typeface.CustomFallbackBuilder(family)
-            }?.build() ?: Typeface.DEFAULT
+            try {
+                return paths.fold(null as Typeface.CustomFallbackBuilder?) { b, path ->
+                    val font = Font.Builder(File(path)).build()
+                    val family = FontFamily.Builder(font).build()
+                    b?.addCustomFallback(family) ?: Typeface.CustomFallbackBuilder(family)
+                }?.build() ?: Typeface.DEFAULT
+            } catch (e: RuntimeException) {
+                throw FontCouldNotBeLoadedException(e)
+            } catch (e: IOException) {
+                throw FontCouldNotBeLoadedException(e)
+            }
         }
 
         override val iterPaths: Iterator<String>

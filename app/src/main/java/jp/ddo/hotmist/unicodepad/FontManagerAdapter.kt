@@ -57,7 +57,7 @@ class FontManagerAdapter internal constructor(private val activity: Activity, pr
                     subtitle.text = it.subtitle
                     subtitle.visibility = View.VISIBLE
                 }
-                button.tag = position
+                button.tag = it
             }
         }
     }
@@ -71,8 +71,9 @@ class FontManagerAdapter internal constructor(private val activity: Activity, pr
     }
 
     override fun onClick(view: View) {
-        val i = view.tag as Int
-        val font = fontData.getFonts()[i]
+        val font = view.tag as FontData.BaseFont
+        val i = fontData.getFonts().indexOf(font)
+        if (i == -1) return
         PopupMenu(activity, view).apply {
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {

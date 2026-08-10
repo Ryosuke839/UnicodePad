@@ -127,6 +127,7 @@ class FontFallbackActivity : BaseActivity() {
                         .setAdapter(ArrayAdapter(context, android.R.layout.simple_list_item_1, paths.map {
                             File(it).name
                         })) { _, i ->
+                            if (fontFallback.paths.contains(paths[i])) return@setAdapter
                             fontFallback.paths.add(paths[i])
                             try {
                                 fontFallback.getTypeface()
@@ -234,6 +235,7 @@ class FontFallbackActivity : BaseActivity() {
                                     FileChooser(this@FontFallbackActivity, this, path).onClick(null, -1)
                                     return
                                 }
+                                if (fontFallback.paths.contains(path)) return
                                 fontFallback.paths.add(path)
                                 try {
                                     fontFallback.getTypeface()

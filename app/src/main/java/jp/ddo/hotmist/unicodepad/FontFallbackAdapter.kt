@@ -44,7 +44,7 @@ class FontFallbackAdapter internal constructor(private val activity: Activity, p
         holder.apply {
             fontFallback.paths[position].let {
                 title.text = File(it).name
-                button.tag = position
+                button.tag = it
             }
         }
     }
@@ -58,7 +58,8 @@ class FontFallbackAdapter internal constructor(private val activity: Activity, p
     }
 
     override fun onClick(view: View) {
-        val i = view.tag as Int
+        val font = view.tag as String
+        val i = fontFallback.paths.indexOf(font)
         fontFallback.paths.removeAt(i)
         notifyItemRemoved(i)
     }

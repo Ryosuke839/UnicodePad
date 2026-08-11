@@ -48,6 +48,16 @@
 	<string name="cantopen">Cannot open the font</string>
 	<string name="cantread">Cannot access; the application may not have permission to read</string>
 	<string name="denied">You have denied access. To browse SD card, please grant the storage permission from Apps setting.</string>
+	<string name="font_manage">Manage fonts…</string>
+	<string name="font_rename">Rename…</string>
+	<string name="font_edit">Edit fallback</string>
+	<string name="font_delete">Delete</string>
+	<string name="font_add">Add font…</string>
+	<string name="font_add_fallback">Add font fallback…</string>
+	<string name="font_add_existing">Add existing font…</string>
+	<string name="font_no_existing">No existing fonts available</string>
+	<string name="font_add_file">Add font from file…</string>
+	<string name="explorer_not_found">File explorer not found. Please install a file explorer app to select a font file.</string>
 
 	<string name="script_0">0 Basic Latin</string>
 	<string name="script_80">80 Latin-1 Supplement</string>
@@ -545,7 +555,7 @@
 Copyright © 1991-2025 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
-	<string name="legal_app" translatable="false">UnicodePad 2.18.3</string>
+	<string name="legal_app" translatable="false">UnicodePad 2.19.3</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
 </resources>

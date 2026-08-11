@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 
 internal class AdCompatImpl : AdCompat {
     override val showAdSettings = false
-    override fun renderAdToContainer(activity: Activity, pref: SharedPreferences) {
+    override fun renderAdToContainer(activity: Activity, pref: SharedPreferences): Int {
+        return 0
     }
 }

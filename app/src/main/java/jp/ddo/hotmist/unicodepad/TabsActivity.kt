@@ -19,7 +19,10 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woxthebox.draglistview.DragListView
 
@@ -37,20 +40,35 @@ class TabsActivity : BaseActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setContentView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            addView(toolbar)
             addView(TextView(this@TabsActivity).apply {
                 setText(R.string.tabs_hint)
                 setPadding((8 * this@TabsActivity.resources.displayMetrics.density).toInt())
             })
-            val view = DynamicDragListView(this@TabsActivity, null)
-            val adapter = TabsAdapter(this@TabsActivity)
-            view.setLayoutManager(LinearLayoutManager(this@TabsActivity))
-            view.setDragListListener(adapter)
-            view.setAdapter(adapter, true)
-            view.setCanDragHorizontally(false)
-            view.setCanDragVertically(true)
-            addView(view)
+            addView(DynamicDragListView(this@TabsActivity, null).apply {
+                setLayoutManager(LinearLayoutManager(this@TabsActivity))
+                TabsAdapter(this@TabsActivity).let { adapter ->
+                    setDragListListener(adapter)
+                    setAdapter(adapter, true)
+                }
+                setCanDragHorizontally(false)
+                setCanDragVertically(true)
+                recyclerView.clipToPadding = false
+                ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, windowInsets ->
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+                    v.updatePadding(0, 0, 0, insets.bottom)
+                    WindowInsetsCompat.CONSUMED
+                }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+                v.updatePadding(insets.left, 0, insets.right)
+                windowInsets
+            }
         })
     }
 

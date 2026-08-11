@@ -23,6 +23,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,7 +50,6 @@ interface UnicodeAdapter {
     var typeface: Typeface?
     var locale: Locale
     var view: View?
-    var lastPadding: Int
     var onItemClickListener: View.OnClickListener?
     var onItemLongClickListener: View.OnLongClickListener?
     val reslist: Int
@@ -178,7 +178,7 @@ interface UnicodeAdapter {
                 imageView.visibility = View.GONE
             }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT))
             val characterView = CharacterView(activity, null, android.R.attr.textAppearanceLarge)
-            view.addView(characterView, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            view.addView(characterView, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             CellViewHolder(view, characterView)
         }.also {
             if (viewType != -1) {
@@ -191,7 +191,7 @@ interface UnicodeAdapter {
 
     fun onBindViewHolder(db: NameDatabase, holder: CharacterViewHolder, position: Int, last: Boolean) {
         holder.characterView.let { characterView ->
-            characterView.setPadding(padding, padding, padding, padding + if (last) lastPadding else 0)
+            characterView.setPadding(padding)
             characterView.setTextSize(fontsize)
             characterView.shrinkWidth(shrink)
             characterView.setTypeface(typeface, locale)
@@ -238,7 +238,6 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
     override var typeface: Typeface? = null
     override var locale: Locale = Locale.ROOT
     override var view: View? = null
-    override var lastPadding: Int = 0
     override var onItemClickListener: View.OnClickListener? = null
     override var onItemLongClickListener: View.OnLongClickListener? = null
     override val reslist = TypedValue().also {
@@ -362,7 +361,7 @@ abstract class RecyclerUnicodeAdapter(override val activity: Activity, private v
             }
         }
         if (holder !is UnicodeAdapter.CharacterViewHolder) {
-            holder.itemView.setPadding(0, 0, 0, if (position == itemCount - 1) lastPadding else 0)
+            holder.itemView.setPadding(0)
         }
     }
 
@@ -394,7 +393,6 @@ abstract class DragListUnicodeAdapter<T>(override val activity: Activity, privat
     override var typeface: Typeface? = null
     override var locale: Locale = Locale.ROOT
     override var view: View? = null
-    override var lastPadding: Int = 0
     override var onItemClickListener: View.OnClickListener? = null
     override var onItemLongClickListener: View.OnLongClickListener? = null
     override val reslist = TypedValue().also {

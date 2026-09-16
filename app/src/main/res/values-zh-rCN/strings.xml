@@ -16,7 +16,7 @@
 	<string name="delete">删除</string>
 	<string name="desc">详情</string>
 	<string name="find">查找</string>
-	<string name="fhint">输入字符名称</string>
+	<string name="fhint">输入字符名称或汉字读音</string>
 	<string name="inlist">转到列表</string>
 	<string name="copied">已复制到剪贴板</string>
 	<string name="finish">完成</string>
@@ -31,6 +31,9 @@
 	<string name="list">列表</string>
 	<string name="edit">输入</string>
 	<string name="emoji">绘文字</string>
+	<string name="rsindex">部首笔画索引</string>
+	<string name="rsindex_group">部首 #%1$d (%2$s) %3$s</string>
+	<string name="rsindex_subgroup">部首 #%1$d (%2$s) %3$s / %4$d 画</string>
 	<string name="normal">默认</string>
 	<string name="locale_default">默认 (%s)</string>
 	<string name="locale_other">其他…</string>
@@ -45,6 +48,16 @@
 	<string name="cantopen">无法打开字体</string>
 	<string name="cantread">无法读取；应用可能没有获得读取权限。</string>
 	<string name="denied">请求被拒绝。为浏览内部存储，请在权限设置中允许应用读取手机存储。</string>
+	<string name="font_manage">管理字体…</string>
+	<string name="font_rename">重命名…</string>
+	<string name="font_edit">修改回退顺序</string>
+	<string name="font_delete">删除</string>
+	<string name="font_add">添加字体…</string>
+	<string name="font_add_fallback">添加字体回退…</string>
+	<string name="font_add_existing">加入现有字体…</string>
+	<string name="font_no_existing">无可用字体</string>
+	<string name="font_add_file">从文件加入字体…</string>
+	<string name="explorer_not_found">找不到文件管理器。请安装一个文件管理器APP来选择字体文件。</string>
 
 	<string name="script_0">0 基本拉丁文字</string>
 	<string name="script_80">80 拉丁文字西欧语言补充</string>
@@ -297,6 +310,7 @@
 	<string name="script_11D00">11D00 马萨拉姆贡德文字</string>
 	<string name="script_11D60">11D60 贡贾拉贡德文字</string>
 	<string name="script_11DB0">11DB0 托隆西基文字</string>
+	<string name="script_11DF0">11DF0 孟加拉文字补充</string>
 	<string name="script_11EE0">11EE0 望加锡文字</string>
 	<string name="script_11F00">11F00 卡威文字</string>
 	<string name="script_11FB0">11FB0 傈僳文字补充</string>
@@ -304,6 +318,7 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字数字和标点符号</string>
 	<string name="script_12480">12480 早期王朝楔形文字</string>
+	<string name="script_12550">12550 古楔形文字数字</string>
 	<string name="script_12F90">12F90 塞浦路斯-米诺斯文字</string>
 	<string name="script_13000">13000 埃及象形文字</string>
 	<string name="script_13430">13430 埃及象形文字格式控制符</string>
@@ -325,6 +340,8 @@
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字补充</string>
 	<string name="script_18D80">18D80 西夏文字部首补充</string>
+	<string name="script_18E00">18E00 女真文字</string>
+	<string name="script_191A0">191A0 女真文字部首</string>
 	<string name="script_1AFF0">1AFF0 假名扩展B</string>
 	<string name="script_1B000">1B000 假名补充</string>
 	<string name="script_1B100">1B100 假名扩展A</string>
@@ -338,12 +355,14 @@
 	<string name="script_1D000">1D000 拜占庭乐谱符号</string>
 	<string name="script_1D100">1D100 乐谱符号</string>
 	<string name="script_1D200">1D200 古希腊乐谱记号</string>
+	<string name="script_1D250">1D250 乐谱符号补充</string>
 	<string name="script_1D2C0">1D2C0 卡克托维克数字</string>
 	<string name="script_1D2E0">1D2E0 玛雅数字</string>
 	<string name="script_1D300">1D300 太玄经符号</string>
 	<string name="script_1D360">1D360 算筹数字</string>
 	<string name="script_1D400">1D400 数学字母数字符号</string>
 	<string name="script_1D800">1D800 萨顿手语符号</string>
+	<string name="script_1DB00">1DB00 杂类符号与箭头扩展</string>
 	<string name="script_1DF00">1DF00 拉丁文字扩展G</string>
 	<string name="script_1E000">1E000 格拉哥里文字补充</string>
 	<string name="script_1E030">1E030 西里尔文字扩展D</string>
@@ -385,10 +404,14 @@
 	<string name="script_30000">30000 中日韩统一汉字扩展G</string>
 	<string name="script_31350">31350 中日韩统一汉字扩展H</string>
 	<string name="script_323B0">323B0 中日韩统一汉字扩展J</string>
+	<string name="script_3D000">3D000 小篆</string>
 	<string name="script_E0000">E0000 标签</string>
 	<string name="script_E0100">E0100 异体选择符补充</string>
 	<string name="script_F0000">F0000 补充私用区A</string>
 	<string name="script_100000">100000 补充私用区B</string>
+
+	<string name="search_title_name">码位</string>
+	<string name="search_title_emoji">绘文字</string>
 
 	<string name="guide_next">下一步</string>
 	<string name="guide_skip">跳过</string>
@@ -480,7 +503,7 @@
 	<string name="malformed">压缩包中文件含有非法文件名</string>
 	<string name="legal">法律信息</string>
 	<string name="legal_uni2">此应用包含经过修改的 Unicode 数据文件。
-Copyright © 1991-2025 Unicode, Inc. All rights reserved.
+Copyright © 1991-2026 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
 </resources>

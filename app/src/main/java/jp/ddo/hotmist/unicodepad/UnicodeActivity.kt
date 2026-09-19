@@ -86,6 +86,7 @@ import androidx.emoji2.text.EmojiCompat.InitCallback
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerTabStrip
 import androidx.viewpager.widget.ViewPager
@@ -1025,21 +1026,27 @@ class UnicodeActivity : BaseActivity() {
     }
 
     private fun showSessionHistory(atLaunch: Boolean = false) {
-        val adapter = SessionListAdapter(this, sessionStore, atLaunch)
-        AlertDialog.Builder(this)
+        val list = RecyclerView(this).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutManager = LinearLayoutManager(context)
+        }
+        val dialog = AlertDialog.Builder(this)
                 .setTitle(R.string.sessions)
                 .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                .setAdapter(adapter) { _, i ->
-                    val session = adapter.getItem(i)?.session
-                    if (session === sessionStore.current) return@setAdapter
-                    if (session == null) {
-                        sessionStore.startNew()
-                    } else {
-                        sessionStore.branch(session)
-                    }
-                    applyCurrentSessionToEditor()
+                .setView(list)
+                .create()
+        list.adapter = SessionListAdapter(sessionStore, atLaunch) { session ->
+            dialog.dismiss()
+            if (session !== sessionStore.current) {
+                if (session == null) {
+                    sessionStore.startNew()
+                } else {
+                    sessionStore.branch(session)
                 }
-                .show()
+                applyCurrentSessionToEditor()
+            }
+        }
+        dialog.show()
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {

@@ -20,11 +20,11 @@ import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.edit
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -315,46 +315,65 @@ internal class SessionStore(private val pref: SharedPreferences) {
 }
 
 internal class SessionListAdapter(
-    context: Context,
     private val store: SessionStore,
     atLaunch: Boolean,
-) : ArrayAdapter<SessionListItem>(context, R.layout.sessionitem, store.listItems(atLaunch).toMutableList()) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return (convertView
-                ?: LayoutInflater.from(context).inflate(R.layout.sessionitem, parent, false)).apply {
-            val elem = getItem(position)
-            val session = elem?.session
-            findViewById<TextView>(R.id.session_text).text = elem?.displayText()
-            findViewById<TextView>(R.id.session_status).text = statusLabel(elem)
-            findViewById<ImageButton>(R.id.session_favorite).apply {
-                isVisible = session != null
-                setImageResource(if (session?.isFavorite == true) R.drawable.ic_star else R.drawable.ic_star_border)
-                setOnClickListener {
-                    session?.let { store.toggleFavorite(it) }
-                    notifyDataSetChanged()
-                }
+    private val onSelect: (EditSession?) -> Unit,
+) : RecyclerView.Adapter<SessionListAdapter.ViewHolder>() {
+    private val items = store.listItems(atLaunch).toMutableList()
+
+    internal class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val text: TextView = view.findViewById(R.id.session_text)
+        val status: TextView = view.findViewById(R.id.session_status)
+        val favorite: ImageButton = view.findViewById(R.id.session_favorite)
+        val delete: ImageButton = view.findViewById(R.id.session_delete)
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.sessionitem, parent, false))
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items[position]
+        val session = item.session
+        holder.text.text = item.displayText()
+        holder.status.text = statusLabel(holder.itemView.context, item)
+        holder.itemView.setOnClickListener { onSelect(session) }
+        holder.favorite.run {
+            isVisible = session != null
+            setImageResource(starOf(session))
+            setOnClickListener {
+                if (session == null) return@setOnClickListener
+                store.toggleFavorite(session)
+                setImageResource(starOf(session))
             }
-            findViewById<ImageButton>(R.id.session_delete).apply {
-                isVisible = session != null
-                isEnabled = session != null && session !== store.current
-                alpha = if (isEnabled) 1f else 0.3f
-                setOnClickListener {
-                    session?.let { store.delete(it) }
-                    remove(elem)
-                }
+        }
+        holder.delete.run {
+            isVisible = session != null
+            isEnabled = session != null && session !== store.current
+            alpha = if (isEnabled) 1f else 0.3f
+            setOnClickListener {
+                val index = holder.bindingAdapterPosition
+                if (session == null || index == RecyclerView.NO_POSITION) return@setOnClickListener
+                store.delete(session)
+                items.removeAt(index)
+                notifyItemRemoved(index)
             }
         }
     }
 
-    private fun statusLabel(item: SessionListItem?): String {
+    private fun starOf(session: EditSession?): Int =
+        if (session?.isFavorite == true) R.drawable.ic_star else R.drawable.ic_star_border
+
+    private fun statusLabel(context: Context, item: SessionListItem): String {
         val parts = mutableListOf<String>()
-        when (item?.status) {
+        when (item.status) {
             SessionStatus.NEW -> parts.add(context.getString(R.string.session_new))
             SessionStatus.CURRENT -> parts.add(context.getString(R.string.session_current))
             SessionStatus.PREVIOUS -> parts.add(context.getString(R.string.session_previous))
-            else -> {}
+            SessionStatus.NONE -> {}
         }
-        val mark = item?.session?.mark ?: SessionMark.NONE
+        val mark = item.session?.mark ?: SessionMark.NONE
         if (mark and SessionMark.COPIED != 0) parts.add(context.getString(R.string.session_copied))
         if (mark and SessionMark.SHARED != 0) parts.add(context.getString(R.string.session_shared))
         return parts.joinToString(" / ")

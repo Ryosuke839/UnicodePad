@@ -695,7 +695,7 @@ class UnicodeActivity : BaseActivity() {
             } else {
                 when (pref.getString(SessionStore.PREF_STARTUP, SessionStore.STARTUP_PREVIOUS)) {
                     SessionStore.STARTUP_NEW -> sessionStore.startNew()
-                    SessionStore.STARTUP_CHOOSER -> showChooserOnStart = true
+                    SessionStore.STARTUP_CHOOSER -> showChooserOnStart = !sessionStore.isEmpty
                 }
             }
         }
@@ -847,7 +847,6 @@ class UnicodeActivity : BaseActivity() {
                     cur.cursor -= 1
                     applyHistoryEntry(cur)
                     applyingSession = false
-                    sessionStore.save()
                     updateUndoRedoMenu()
                 }
             }
@@ -858,7 +857,6 @@ class UnicodeActivity : BaseActivity() {
                     cur.cursor += 1
                     applyHistoryEntry(cur)
                     applyingSession = false
-                    sessionStore.save()
                     updateUndoRedoMenu()
                 }
             }

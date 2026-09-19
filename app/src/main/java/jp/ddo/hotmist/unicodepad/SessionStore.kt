@@ -81,6 +81,9 @@ internal class SessionStore(private val pref: SharedPreferences) {
     val current: EditSession
         get() = sessions.lastOrNull() ?: startNew()
 
+    val isEmpty: Boolean
+        get() = sessions.isEmpty()
+
     fun load() {
         sessions.clear()
         val json = pref.getString(PREF_SESSIONS, null) ?: return
@@ -155,9 +158,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
     }
 
     fun branch(source: EditSession = current): EditSession {
-        while (source.history.size > source.cursor + 1) {
-            source.history.removeAt(source.history.lastIndex)
-        }
         val session = EditSession(
             history = source.history.map { it.copy() }.toMutableList(),
             cursor = source.cursor,
@@ -183,7 +183,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
         }
         cur.history.add(HistoryEntry(text, selStart, selEnd))
         cur.cursor = cur.history.lastIndex
-        save()
     }
 
     fun listItems(atLaunch: Boolean = false): List<SessionListItem> {

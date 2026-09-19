@@ -819,9 +819,9 @@ class UnicodeActivity : BaseActivity() {
             menu.setGroupDividerEnabled(true)
         }
         menu.add(4, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_preferences)
-        menu.add(1, MENU_ID_SESSION, MENU_ID_SESSION, R.string.sessions).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         itemUndo = menu.add(1, MENU_ID_UNDO, MENU_ID_UNDO, R.string.undo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_revert).setEnabled(false)
         itemRedo = menu.add(1, MENU_ID_REDO, MENU_ID_REDO, R.string.redo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setEnabled(false)
+        menu.add(1, MENU_ID_SESSION, MENU_ID_SESSION, R.string.sessions).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(1, MENU_ID_CONVERT, MENU_ID_CONVERT, R.string.convert_).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_sort_alphabetically)
         menu.add(2, MENU_ID_DESC, MENU_ID_DESC, R.string.desc).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_info_details)

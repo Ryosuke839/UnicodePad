@@ -841,21 +841,17 @@ class UnicodeActivity : BaseActivity() {
             MENU_ID_SETTING -> startActivityForResult(Intent(this, SettingActivity::class.java), 0)
             MENU_ID_SESSION -> showSessionHistory()
             MENU_ID_UNDO -> {
-                val cur = sessionStore.current
-                if (cur.cursor > 0) {
+                if (sessionStore.undo()) {
                     applyingSession = true
-                    cur.cursor -= 1
-                    applyHistoryEntry(cur)
+                    applyHistoryEntry()
                     applyingSession = false
                     updateUndoRedoMenu()
                 }
             }
             MENU_ID_REDO -> {
-                val cur = sessionStore.current
-                if (cur.cursor < cur.history.lastIndex) {
+                if (sessionStore.redo()) {
                     applyingSession = true
-                    cur.cursor += 1
-                    applyHistoryEntry(cur)
+                    applyHistoryEntry()
                     applyingSession = false
                     updateUndoRedoMenu()
                 }

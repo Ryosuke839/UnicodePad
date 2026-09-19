@@ -185,6 +185,26 @@ internal class SessionStore(private val pref: SharedPreferences) {
         cur.cursor = cur.history.lastIndex
     }
 
+    fun undo(): Boolean {
+        var cur = current
+        if (cur.cursor <= 0) return false
+        if (cur.mark != SessionMark.NONE) {
+            cur = branch()
+        }
+        cur.cursor -= 1
+        return true
+    }
+
+    fun redo(): Boolean {
+        var cur = current
+        if (cur.cursor >= cur.history.lastIndex) return false
+        if (cur.mark != SessionMark.NONE) {
+            cur = branch()
+        }
+        cur.cursor += 1
+        return true
+    }
+
     fun listItems(atLaunch: Boolean = false): List<SessionListItem> {
         val cur = current
         val items = mutableListOf(

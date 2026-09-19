@@ -29,6 +29,7 @@
 	<string name="session_previous">Previous session</string>
 	<string name="session_copied">Copied</string>
 	<string name="session_shared">Shared</string>
+	<string name="session_delete">Delete session</string>
 	<string name="convert">Convert</string>
 	<string name="convert_">Convert…</string>
 	<string name="font">Font</string>

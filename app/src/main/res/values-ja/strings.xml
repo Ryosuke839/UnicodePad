@@ -29,6 +29,7 @@
 	<string name="session_previous">前回のセッション</string>
 	<string name="session_copied">コピー済み</string>
 	<string name="session_shared">共有済み</string>
+	<string name="session_delete">セッションを削除</string>
 	<string name="convert">変換</string>
 	<string name="convert_">変換…</string>
 	<string name="font">フォント</string>

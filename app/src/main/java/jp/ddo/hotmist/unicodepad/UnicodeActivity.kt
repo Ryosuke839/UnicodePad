@@ -1025,27 +1025,12 @@ class UnicodeActivity : BaseActivity() {
     }
 
     private fun showSessionHistory(atLaunch: Boolean = false) {
-        val rows = sessionStore.listItems(atLaunch)
-        val adapter = object : ArrayAdapter<SessionListItem>(this, android.R.layout.simple_list_item_2, rows) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                return (convertView
-                        ?: (context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_list_item_2, parent, false)).apply {
-                    val elem = getItem(position)
-                    findViewById<TextView>(android.R.id.text1).text = elem?.displayText()
-                    findViewById<TextView>(android.R.id.text2).text = when (elem?.status) {
-                        SessionStatus.NEW -> getString(R.string.session_new)
-                        SessionStatus.CURRENT -> getString(R.string.session_current)
-                        SessionStatus.PREVIOUS -> getString(R.string.session_previous)
-                        else -> sessionMarkLabel(elem?.mark ?: SessionMark.NONE)
-                    }
-                }
-            }
-        }
+        val adapter = SessionListAdapter(this, sessionStore, atLaunch)
         AlertDialog.Builder(this)
                 .setTitle(R.string.sessions)
                 .setNegativeButton(android.R.string.cancel) { _, _ -> }
                 .setAdapter(adapter) { _, i ->
-                    val session = rows[i].session
+                    val session = adapter.getItem(i)?.session
                     if (session === sessionStore.current) return@setAdapter
                     if (session == null) {
                         sessionStore.startNew()
@@ -1055,13 +1040,6 @@ class UnicodeActivity : BaseActivity() {
                     applyCurrentSessionToEditor()
                 }
                 .show()
-    }
-
-    private fun sessionMarkLabel(mark: Int): String {
-        val parts = mutableListOf<String>()
-        if (mark and SessionMark.COPIED != 0) parts.add(getString(R.string.session_copied))
-        if (mark and SessionMark.SHARED != 0) parts.add(getString(R.string.session_shared))
-        return parts.joinToString(" / ")
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {

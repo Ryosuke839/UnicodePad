@@ -15,8 +15,16 @@
 */
 package jp.ddo.hotmist.unicodepad
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,6 +33,7 @@ internal object SessionMark {
     const val NONE = 0
     const val COPIED = 1 shl 0
     const val SHARED = 1 shl 1
+    const val FAVORITE = 1 shl 2
 }
 
 internal enum class SessionStatus {
@@ -41,7 +50,6 @@ internal class EditSession(
     val history: MutableList<HistoryEntry>,
     var cursor: Int,
     var mark: Int,
-    var updatedAt: Long,
 ) {
     val text: String
         get() = history.getOrNull(cursor)?.text ?: ""
@@ -49,6 +57,8 @@ internal class EditSession(
         get() = history.getOrNull(cursor)?.selStart ?: 0
     val selEnd: Int
         get() = history.getOrNull(cursor)?.selEnd ?: 0
+    val isFavorite: Boolean
+        get() = mark and SessionMark.FAVORITE != 0
 
     fun isPrunableEmpty(): Boolean =
         mark == SessionMark.NONE && history.size <= 1 && text.isEmpty()
@@ -58,7 +68,6 @@ internal data class SessionListItem(
     val session: EditSession?,
     val text: String,
     val status: SessionStatus,
-    val mark: Int = SessionMark.NONE,
 ) {
     fun displayText(maxChars: Int = 80): String {
         val t = text.replace('\n', ' ').replace('\r', ' ')
@@ -90,7 +99,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
                         history = history,
                         cursor = cursor,
                         mark = s.optInt("mark"),
-                        updatedAt = s.optLong("updatedAt"),
                     )
                 )
             }
@@ -109,14 +117,12 @@ internal class SessionStore(private val pref: SharedPreferences) {
     }
 
     fun startNew(text: String = ""): EditSession {
-        val now = System.currentTimeMillis()
         val entry = HistoryEntry(text, text.length, text.length)
         val cur = sessions.lastOrNull()
         if (cur != null && cur.isPrunableEmpty()) {
             cur.history.clear()
             cur.history.add(entry)
             cur.cursor = 0
-            cur.updatedAt = now
             save()
             return cur
         }
@@ -124,7 +130,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
             history = mutableListOf(entry),
             cursor = 0,
             mark = SessionMark.NONE,
-            updatedAt = now,
         )
         sessions.add(session)
         prune()
@@ -138,16 +143,25 @@ internal class SessionStore(private val pref: SharedPreferences) {
         save()
     }
 
+    fun toggleFavorite(session: EditSession) {
+        session.mark = session.mark xor SessionMark.FAVORITE
+        save()
+    }
+
+    fun delete(session: EditSession) {
+        if (session === sessions.lastOrNull()) return
+        sessions.remove(session)
+        save()
+    }
+
     fun branch(source: EditSession = current): EditSession {
         while (source.history.size > source.cursor + 1) {
             source.history.removeAt(source.history.lastIndex)
         }
-        source.updatedAt = System.currentTimeMillis()
         val session = EditSession(
             history = source.history.map { it.copy() }.toMutableList(),
             cursor = source.cursor,
             mark = SessionMark.NONE,
-            updatedAt = System.currentTimeMillis(),
         )
         sessions.add(session)
         prune()
@@ -169,7 +183,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
         }
         cur.history.add(HistoryEntry(text, selStart, selEnd))
         cur.cursor = cur.history.lastIndex
-        cur.updatedAt = System.currentTimeMillis()
         save()
     }
 
@@ -178,13 +191,13 @@ internal class SessionStore(private val pref: SharedPreferences) {
         val items = mutableListOf(
             SessionListItem(null, "", SessionStatus.NEW)
         )
-        sessions.sortedByDescending { it.updatedAt }.forEach { s ->
+        sessions.asReversed().forEach { s ->
             val status = when {
                 s !== cur -> SessionStatus.NONE
                 atLaunch -> SessionStatus.PREVIOUS
                 else -> SessionStatus.CURRENT
             }
-            items.add(SessionListItem(s, s.text, status, s.mark))
+            items.add(SessionListItem(s, s.text, status))
         }
         return items
     }
@@ -195,11 +208,8 @@ internal class SessionStore(private val pref: SharedPreferences) {
             s !== cur && s.isPrunableEmpty()
         }
         while (sessions.size > MAX_SESSIONS) {
-            val victim = sessions
-                .filter { it !== cur }
-                .minByOrNull { it.updatedAt }
-                ?: break
-            sessions.remove(victim)
+            val to_remove = sessions.firstOrNull { it !== cur && !it.isFavorite } ?: break
+            sessions.remove(to_remove)
         }
     }
 
@@ -210,7 +220,6 @@ internal class SessionStore(private val pref: SharedPreferences) {
             val so = JSONObject()
             so.put("cursor", s.cursor)
             so.put("mark", s.mark)
-            so.put("updatedAt", s.updatedAt)
             so.put("history", writeHistory(s.history))
             arr.put(so)
         }
@@ -302,5 +311,52 @@ internal class SessionStore(private val pref: SharedPreferences) {
         const val STARTUP_CHOOSER = "chooser"
         const val MAX_SESSIONS = 32
         const val MAX_HISTORY = 256
+    }
+}
+
+internal class SessionListAdapter(
+    context: Context,
+    private val store: SessionStore,
+    atLaunch: Boolean,
+) : ArrayAdapter<SessionListItem>(context, R.layout.sessionitem, store.listItems(atLaunch).toMutableList()) {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return (convertView
+                ?: LayoutInflater.from(context).inflate(R.layout.sessionitem, parent, false)).apply {
+            val elem = getItem(position)
+            val session = elem?.session
+            findViewById<TextView>(R.id.session_text).text = elem?.displayText()
+            findViewById<TextView>(R.id.session_status).text = statusLabel(elem)
+            findViewById<ImageButton>(R.id.session_favorite).apply {
+                isVisible = session != null
+                setImageResource(if (session?.isFavorite == true) R.drawable.ic_star else R.drawable.ic_star_border)
+                setOnClickListener {
+                    session?.let { store.toggleFavorite(it) }
+                    notifyDataSetChanged()
+                }
+            }
+            findViewById<ImageButton>(R.id.session_delete).apply {
+                isVisible = session != null
+                isEnabled = session != null && session !== store.current
+                alpha = if (isEnabled) 1f else 0.3f
+                setOnClickListener {
+                    session?.let { store.delete(it) }
+                    remove(elem)
+                }
+            }
+        }
+    }
+
+    private fun statusLabel(item: SessionListItem?): String {
+        val parts = mutableListOf<String>()
+        when (item?.status) {
+            SessionStatus.NEW -> parts.add(context.getString(R.string.session_new))
+            SessionStatus.CURRENT -> parts.add(context.getString(R.string.session_current))
+            SessionStatus.PREVIOUS -> parts.add(context.getString(R.string.session_previous))
+            else -> {}
+        }
+        val mark = item?.session?.mark ?: SessionMark.NONE
+        if (mark and SessionMark.COPIED != 0) parts.add(context.getString(R.string.session_copied))
+        if (mark and SessionMark.SHARED != 0) parts.add(context.getString(R.string.session_shared))
+        return parts.joinToString(" / ")
     }
 }

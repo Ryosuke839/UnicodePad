@@ -23,6 +23,12 @@
 	<string name="share">Share</string>
 	<string name="undo">Undo</string>
 	<string name="redo">Redo</string>
+	<string name="sessions">Sessions</string>
+	<string name="session_new">New session</string>
+	<string name="session_current">Current session</string>
+	<string name="session_previous">Previous session</string>
+	<string name="session_copied">Copied</string>
+	<string name="session_shared">Shared</string>
 	<string name="convert">Convert</string>
 	<string name="convert_">Convert…</string>
 	<string name="font">Font</string>
@@ -541,6 +547,10 @@
 	<string name="scroll_always">Always</string>
 
 	<string name="ime_desc">Disable IME</string>
+	<string name="session_startup_desc">On launch</string>
+	<string name="session_startup_new">New session</string>
+	<string name="session_startup_previous">Previous session</string>
+	<string name="session_startup_chooser">Choose from session history</string>
 	<string name="clear_desc">Show clear button</string>
 	<string name="buttons_desc">Show button row</string>
 	<string name="process_text_desc">Launch from text selection context menu</string>

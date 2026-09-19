@@ -122,18 +122,22 @@ class UnicodeActivity : BaseActivity() {
     private val adCompat: AdCompat = AdCompatImpl()
     private lateinit var cm: ClipboardManager
     private lateinit var pref: SharedPreferences
+    private lateinit var sessionStore: SessionStore
     private var action: String? = null
     private var created = false
     private var disableime = false
     private var delay: Runnable? = null
     private var timer = 500
-    private val history = mutableListOf(Triple("", 0, 0))
-    private var historyCursor = 0
+    private var applyingSession = false
+    private var pendingSelection: Pair<Int, Int>? = null
+    private var showChooserOnStart = false
     private val viewTargets = mutableMapOf<Int, View>()
     private val composed = mutableStateOf(false)
     @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
+        sessionStore = SessionStore(pref)
+        sessionStore.load()
         onActivityResult(-1, 0, null)
         val useEmoji = pref.getString("emojicompat", "false")
         if (useEmoji != "null") {
@@ -179,6 +183,10 @@ class UnicodeActivity : BaseActivity() {
                 setTypeface(oldtf, locale)
             }
         })
+
+        cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        disableime = pref.getBoolean("ime", true)
+        resolveLaunchSession(savedInstanceState)
 
         setContentView(ComposeView(this).apply {
             consumeWindowInsets = false
@@ -272,29 +280,13 @@ class UnicodeActivity : BaseActivity() {
                                                 }
 
                                                 override fun afterTextChanged(s: Editable?) {
-                                                    if (!::itemUndo.isInitialized) {
-                                                        history[0] = Triple(s.toString(), 0, 0)
+                                                    if (applyingSession) return
+                                                    val text = s.toString()
+                                                    if (text == sessionStore.current.text) {
                                                         return
                                                     }
-                                                    if (s.toString() == history[historyCursor].first) {
-                                                        return
-                                                    }
-                                                    while (history.size > historyCursor + 1) {
-                                                        history.removeAt(history.lastIndex)
-                                                    }
-                                                    while (history.size >= MAX_HISTORY) {
-                                                        history.removeAt(0)
-                                                    }
-                                                    history.add(
-                                                        Triple(
-                                                            s.toString(),
-                                                            selectionStart,
-                                                            selectionEnd
-                                                        )
-                                                    )
-                                                    historyCursor = history.size - 1
-                                                    itemUndo.isEnabled = historyCursor > 0
-                                                    itemRedo.isEnabled = false
+                                                    sessionStore.recordEdit(text, selectionStart, selectionEnd)
+                                                    updateUndoRedoMenu()
                                                 }
                                             })
                                             requestFocus()
@@ -307,9 +299,11 @@ class UnicodeActivity : BaseActivity() {
                                                 else -> EditorInfo.IME_ACTION_SEND
                                             }
                                             if (initialText != null) {
+                                                applyingSession = true
                                                 setText(initialText)
-                                                setSelection(length())
+                                                applyPendingSelection(this)
                                                 initialText = null
+                                                applyingSession = false
                                             }
                                         }
                                     },
@@ -428,14 +422,7 @@ class UnicodeActivity : BaseActivity() {
                                     } },
                                     update = {
                                         it.setOnClickListener {
-                                            cm.text = editText.text.toString()
-                                            if (Build.VERSION.SDK_INT <= 32) {
-                                                Toast.makeText(
-                                                    this@UnicodeActivity,
-                                                    R.string.copied,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
+                                            copyText(showToast = Build.VERSION.SDK_INT <= 32)
                                         }
                                     },
                                     modifier = Modifier.weight(1f),
@@ -470,14 +457,7 @@ class UnicodeActivity : BaseActivity() {
                                                 }
 
                                                 else -> {
-                                                    startActivity(Intent().apply {
-                                                        action = Intent.ACTION_SEND
-                                                        type = "text/plain"
-                                                        putExtra(
-                                                            Intent.EXTRA_TEXT,
-                                                            editText.text.toString()
-                                                        )
-                                                    })
+                                                    shareText()
                                                 }
                                             }
                                         }
@@ -681,35 +661,52 @@ class UnicodeActivity : BaseActivity() {
             }
         })
 
-        cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        disableime = pref.getBoolean("ime", true)
-        val it = intent
-        action = it.action
-        // handle the paste home screen shortcut
-        if (action == "jp.ddo.hotmist.unicodepad.intent.action.PASTE") {
+        if (intent.action == ACTION_PASTE) {
             val view = findViewById<View>(android.R.id.content).rootView
             // the ClipboardManager text becomes valid when the view is in focus.
             view.doOnLayout {
-                history[0] = Triple(cm.text?.toString() ?: "", 0, 0)
-                initialText = cm.text?.toString()
+                sessionStore.startNew(cm.text?.toString() ?: "")
+                applyCurrentSessionToEditor()
             }
         }
-        when {
-            action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
-            action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()
-            Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> it.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
-            else -> null
-        }?.let {
-            history[0] = Triple(it, 0, 0)
-            initialText = it
+        if (showChooserOnStart) {
+            showSessionHistory(atLaunch = true)
         }
+        created = true
+    }
+
+    private fun resolveLaunchSession(savedInstanceState: Bundle?) {
+        val it = intent
+        action = it.action
+        val specialLaunch = action == ACTION_INTERCEPT
+                || action == Intent.ACTION_SEND
+                || action == ACTION_PASTE
+                || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT)
+        if (savedInstanceState == null) {
+            if (specialLaunch) {
+                sessionStore.startNew(when {
+                    action == ACTION_PASTE -> null
+                    action == ACTION_INTERCEPT -> it.getStringExtra(REPLACE_KEY)
+                    action == Intent.ACTION_SEND -> it.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()
+                    Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT -> it.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
+                    else -> null
+                } ?: "")
+            } else {
+                when (pref.getString(SessionStore.PREF_STARTUP, SessionStore.STARTUP_PREVIOUS)) {
+                    SessionStore.STARTUP_NEW -> sessionStore.startNew()
+                    SessionStore.STARTUP_CHOOSER -> showChooserOnStart = true
+                }
+            }
+        }
+        val current = sessionStore.current
+        initialText = current.text
+        pendingSelection = current.selStart to current.selEnd
         if (action == ACTION_INTERCEPT || (Build.VERSION.SDK_INT >= 23 && action == Intent.ACTION_PROCESS_TEXT && !it.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false))) {
             finishAction = R.string.finish
         } else {
             finishAction = R.string.share
             action = null
         }
-        created = true
     }
 
     fun setBottomSheetContent(view: View, ua: UnicodeAdapter?) {
@@ -821,6 +818,7 @@ class UnicodeActivity : BaseActivity() {
             menu.setGroupDividerEnabled(true)
         }
         menu.add(4, MENU_ID_SETTING, MENU_ID_SETTING, R.string.data_setting).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setIcon(android.R.drawable.ic_menu_preferences)
+        menu.add(1, MENU_ID_SESSION, MENU_ID_SESSION, R.string.sessions).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
         itemUndo = menu.add(1, MENU_ID_UNDO, MENU_ID_UNDO, R.string.undo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM).setIcon(android.R.drawable.ic_menu_revert).setEnabled(false)
         itemRedo = menu.add(1, MENU_ID_REDO, MENU_ID_REDO, R.string.redo).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER).setEnabled(false)
         menu.add(1, MENU_ID_PASTE, MENU_ID_PASTE, android.R.string.paste).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
@@ -833,37 +831,39 @@ class UnicodeActivity : BaseActivity() {
         } else {
             menu.add(3, MENU_ID_SHARE, MENU_ID_SHARE, R.string.share).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS).setIcon(android.R.drawable.ic_menu_share)
         }
+        updateUndoRedoMenu()
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             MENU_ID_SETTING -> startActivityForResult(Intent(this, SettingActivity::class.java), 0)
+            MENU_ID_SESSION -> showSessionHistory()
             MENU_ID_UNDO -> {
-                if (historyCursor > 0) {
-                    historyCursor -= 1
-                    history[historyCursor].also {
-                        editText.setText(it.first)
-                        editText.setSelection(it.second, it.third)
-                    }
-                    itemUndo.isEnabled = historyCursor > 0
-                    itemRedo.isEnabled = historyCursor < history.size - 1
+                val cur = sessionStore.current
+                if (cur.cursor > 0) {
+                    applyingSession = true
+                    cur.cursor -= 1
+                    applyHistoryEntry(cur)
+                    applyingSession = false
+                    sessionStore.save()
+                    updateUndoRedoMenu()
                 }
             }
             MENU_ID_REDO -> {
-                if (historyCursor < history.size - 1) {
-                    historyCursor += 1
-                    history[historyCursor].also {
-                        editText.setText(it.first)
-                        editText.setSelection(it.second, it.third)
-                    }
-                    itemUndo.isEnabled = historyCursor > 0
-                    itemRedo.isEnabled = historyCursor < history.size - 1
+                val cur = sessionStore.current
+                if (cur.cursor < cur.history.lastIndex) {
+                    applyingSession = true
+                    cur.cursor += 1
+                    applyHistoryEntry(cur)
+                    applyingSession = false
+                    sessionStore.save()
+                    updateUndoRedoMenu()
                 }
             }
             MENU_ID_PASTE -> {
-                editText.setText(cm.text)
-                editText.setSelection(editText.length())
+                sessionStore.startNew(cm.text?.toString() ?: "")
+                applyCurrentSessionToEditor()
             }
             MENU_ID_CONVERT-> {
                 val text = editText.text.toString()
@@ -932,17 +932,8 @@ class UnicodeActivity : BaseActivity() {
                 if (pos < 0) i--
                 adpPage.showDesc(null, i, adpPage.adapterEdit)
             }
-            MENU_ID_COPY -> {
-                cm.text = editText.text.toString()
-                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-            }
-            MENU_ID_SHARE -> {
-                startActivity(Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                })
-            }
+            MENU_ID_COPY -> copyText(showToast = true)
+            MENU_ID_SHARE -> shareText()
             MENU_ID_SEND -> when {
                 action == ACTION_INTERCEPT -> {
                     setResult(RESULT_OK, Intent().apply {
@@ -972,7 +963,105 @@ class UnicodeActivity : BaseActivity() {
             chooser.save(this)
             locale.save(this)
             putInt("page", pager.currentItem)
+            sessionStore.save(this)
         }
+    }
+
+    private fun updateUndoRedoMenu() {
+        if (!::itemUndo.isInitialized) return
+        val cur = sessionStore.current
+        itemUndo.isEnabled = cur.cursor > 0
+        itemRedo.isEnabled = cur.cursor < cur.history.lastIndex
+    }
+
+    private fun applyPendingSelection(et: EditText) {
+        val sel = pendingSelection
+        pendingSelection = null
+        val len = et.length()
+        if (sel != null) {
+            et.setSelection(sel.first.coerceIn(0, len), sel.second.coerceIn(0, len))
+        } else {
+            et.setSelection(len)
+        }
+    }
+
+    private fun applyHistoryEntry(session: EditSession = sessionStore.current) {
+        val entry = session.history[session.cursor]
+        editText.setText(entry.text)
+        val len = editText.length()
+        editText.setSelection(entry.selStart.coerceIn(0, len), entry.selEnd.coerceIn(0, len))
+    }
+
+    private fun applyCurrentSessionToEditor() {
+        val session = sessionStore.current
+        applyingSession = true
+        pendingSelection = session.selStart to session.selEnd
+        if (editText.parent != null) {
+            editText.setText(session.text)
+            applyPendingSelection(editText)
+            initialText = null
+        } else {
+            initialText = session.text
+        }
+        applyingSession = false
+        updateUndoRedoMenu()
+    }
+
+    private fun copyText(showToast: Boolean) {
+        cm.text = editText.text.toString()
+        sessionStore.armBranch(SessionMark.COPIED)
+        if (showToast) {
+            Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun shareText() {
+        sessionStore.armBranch(SessionMark.SHARED)
+        startActivity(Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+        })
+    }
+
+    private fun showSessionHistory(atLaunch: Boolean = false) {
+        val rows = sessionStore.listItems(atLaunch)
+        val adapter = object : ArrayAdapter<SessionListItem>(this, android.R.layout.simple_list_item_2, rows) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                return (convertView
+                        ?: (context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_list_item_2, parent, false)).apply {
+                    val elem = getItem(position)
+                    findViewById<TextView>(android.R.id.text1).text = elem?.displayText()
+                    findViewById<TextView>(android.R.id.text2).text = when (elem?.status) {
+                        SessionStatus.NEW -> getString(R.string.session_new)
+                        SessionStatus.CURRENT -> getString(R.string.session_current)
+                        SessionStatus.PREVIOUS -> getString(R.string.session_previous)
+                        else -> sessionMarkLabel(elem?.mark ?: SessionMark.NONE)
+                    }
+                }
+            }
+        }
+        AlertDialog.Builder(this)
+                .setTitle(R.string.sessions)
+                .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                .setAdapter(adapter) { _, i ->
+                    val session = rows[i].session
+                    if (session === sessionStore.current) return@setAdapter
+                    if (session == null) {
+                        sessionStore.startNew()
+                    } else {
+                        sessionStore.branch(session)
+                    }
+                    applyCurrentSessionToEditor()
+                }
+                .show()
+    }
+
+    private fun sessionMarkLabel(mark: Int): String {
+        val parts = mutableListOf<String>()
+        if (mark and SessionMark.COPIED != 0) parts.add(getString(R.string.session_copied))
+        if (mark and SessionMark.SHARED != 0) parts.add(getString(R.string.session_shared))
+        return parts.joinToString(" / ")
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -1067,9 +1156,11 @@ class UnicodeActivity : BaseActivity() {
 
     companion object {
         private const val ACTION_INTERCEPT = "com.adamrocker.android.simeji.ACTION_INTERCEPT"
+        private const val ACTION_PASTE = "jp.ddo.hotmist.unicodepad.intent.action.PASTE"
         private const val REPLACE_KEY = "replace_key"
         private const val PID_KEY = "pid_key"
         private const val MENU_ID_SETTING = 45
+        private const val MENU_ID_SESSION = 12
         private const val MENU_ID_UNDO = 13
         private const val MENU_ID_REDO = 14
         private const val MENU_ID_PASTE = 15
@@ -1078,7 +1169,6 @@ class UnicodeActivity : BaseActivity() {
         private const val MENU_ID_COPY = 35
         private const val MENU_ID_SHARE = 36
         private const val MENU_ID_SEND = 37
-        private const val MAX_HISTORY = 256
         private var fontsize = 24.0f
         internal var univer = 1000
     }

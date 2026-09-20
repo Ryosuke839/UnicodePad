@@ -142,6 +142,11 @@ class SettingActivity : BaseActivity() {
                     openPage("https://unicode.org/")
                 }
             }
+            findPreference<Preference>("legal_noto")!!.also {
+                it.setOnPreferenceClickListener {
+                    openPage("https://github.com/googlefonts/noto-emoji")
+                }
+            }
             if (!adCompat.showAdSettings) {
                 findPreference<CheckBoxPreference>("no-ad")!!.also {
                     if (Build.VERSION.SDK_INT >= 26) {

@@ -19,7 +19,7 @@ import android.content.Context
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.MetadataRepo
 
-private const val NOTO_EMOJI_COMPAT_ASSET = "NotoColorEmoji-emojicompat.ttf"
+private const val NOTO_EMOJI_COMPAT_ASSET = "noto-emoji/NotoColorEmoji-emojicompat.ttf"
 
 internal class NotoEmojiCompatConfig(context: Context) : EmojiCompat.Config(
     AssetMetadataLoader(context.applicationContext)

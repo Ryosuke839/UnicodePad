@@ -177,6 +177,10 @@
 			android:key="legal_uni"
 			android:summary="@string/legal_uni2"
 			android:title="@string/legal_uni" />
+		<Preference
+			android:key="legal_noto"
+			android:summary="@string/legal_noto2"
+			android:title="@string/legal_noto" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

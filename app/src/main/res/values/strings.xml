@@ -566,4 +566,8 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="legal_app" translatable="false">UnicodePad 2.19.3</string>
 	<string name="legal_app2" translatable="false">UnicodePad is licensed under the Apache License, Version2.0
 https://github.com/Ryosuke839/UnicodePad</string>
+	<string name="legal_noto" translatable="false">Noto Color Emoji</string>
+	<string name="legal_noto2" translatable="false">Copyright 2013 Google LLC
+Licensed under the SIL Open Font License, Version 1.1
+https://github.com/googlefonts/noto-emoji</string>
 </resources>

@@ -237,6 +237,8 @@
 	<string name="script_104B0">104B0 オセージ文字</string>
 	<string name="script_10500">10500 エルバサン文字</string>
 	<string name="script_10530">10530 カフカス・アルバニア文字</string>
+	<string name="script_10570">10570 ビタクチェ文字</string>
+	<string name="script_105C0">105C0 トズリ文字</string>
 	<string name="script_10600">10600 線文字A</string>
 	<string name="script_10780">10780 ラテン文字拡張F</string>
 	<string name="script_10800">10800 キプロス音節文字</string>
@@ -260,6 +262,7 @@
 	<string name="script_10C00">10C00 突厥文字</string>
 	<string name="script_10C80">10C80 ロヴァーシュ文字</string>
 	<string name="script_10D00">10D00 ハニーフィー・ロヒンギャ文字</string>
+	<string name="script_10D40">10D40 ガライ文字</string>
 	<string name="script_10E60">10E60 ルーミー数字</string>
 	<string name="script_10E80">10E80 ヤズィーディー文字</string>
 	<string name="script_10EC0">10EC0 アラビア文字拡張C</string>
@@ -279,6 +282,7 @@
 	<string name="script_11280">11280 ムルターニー文字</string>
 	<string name="script_112B0">112B0 フダーワーディー文字</string>
 	<string name="script_11300">11300 グランタ文字</string>
+	<string name="script_11380">11380 トゥル・ティガラリ文字</string>
 	<string name="script_11400">11400 ネパール文字</string>
 	<string name="script_11480">11480 ティルフータ文字</string>
 	<string name="script_11580">11580 梵字</string>
@@ -296,6 +300,8 @@
 	<string name="script_11AB0">11AB0 統合カナダ先住民音節拡張A</string>
 	<string name="script_11AC0">11AC0 パウ・チン・ハウ表語文字</string>
 	<string name="script_11B00">11B00 デーヴァナーガリー文字拡張A</string>
+	<string name="script_11B60">11B60 シャラダ文字補助</string>
+	<string name="script_11BC0">11BC0 スヌワール文字</string>
 	<string name="script_11C00">11C00 バイクシュキー文字</string>
 	<string name="script_11C70">11C70 マルチェン文字</string>
 	<string name="script_11D00">11D00 マサラム・ゴーンディー文字</string>
@@ -313,12 +319,15 @@
 	<string name="script_12F90">12F90 キュプロ・ミノア文字</string>
 	<string name="script_13000">13000 エジプト・ヒエログリフ</string>
 	<string name="script_13430">13430 エジプト・ヒエログリフ制御</string>
+	<string name="script_13460">13460 エジプト・ヒエログリフ拡張A</string>
 	<string name="script_14400">14400 アナトリア・ヒエログリフ</string>
+	<string name="script_16100">16100 グルン・ケーマ文字</string>
 	<string name="script_16800">16800 バムン文字補助</string>
 	<string name="script_16A40">16A40 ムロ文字</string>
 	<string name="script_16A70">16A70 タンサ文字</string>
 	<string name="script_16AD0">16AD0 バサ文字</string>
 	<string name="script_16B00">16B00 パハウ・フモン文字</string>
+	<string name="script_16D40">16D40 キラット・ライ文字</string>
 	<string name="script_16E40">16E40 メデファイドリン文字</string>
 	<string name="script_16EA0">16EA0 ザガワ・ベリア文字</string>
 	<string name="script_16F00">16F00 ポラード文字</string>
@@ -337,6 +346,8 @@
 	<string name="script_1B170">1B170 女書</string>
 	<string name="script_1BC00">1BC00 デュブロワエ式速記</string>
 	<string name="script_1BCA0">1BCA0 速記方式制御</string>
+	<string name="script_1CC00">1CC00 レガシーシステム用記号補助</string>
+	<string name="script_1CEC0">1CEC0 その他の記号補助</string>
 	<string name="script_1CF00">1CF00 ズナメニ音符記号</string>
 	<string name="script_1D000">1D000 ビザンチン音楽記号</string>
 	<string name="script_1D100">1D100 音楽記号</string>
@@ -355,6 +366,9 @@
 	<string name="script_1E100">1E100 ニアケン・プアチェ・フモン文字</string>
 	<string name="script_1E290">1E290 トト文字</string>
 	<string name="script_1E2C0">1E2C0 ワンチョー文字</string>
+	<string name="script_1E4D0">1E4D0 ナグ・ムンダリ文字</string>
+	<string name="script_1E5D0">1E5D0 オル・オナル文字</string>
+	<string name="script_1E6C0">1E6C0 タイ・ヨー文字</string>
 	<string name="script_1E7E0">1E7E0 エチオピア文字拡張B</string>
 	<string name="script_1E800">1E800 メンデ文字</string>
 	<string name="script_1E900">1E900 アドラム文字</string>
@@ -518,6 +532,4 @@ http://www.unicode.org/copyright.html.</string>
 	<string name="data_favorite">お気に入り (%1$d)</string>
 	<string name="data_scroll">スクロール位置</string>
 	<string name="data_merge">現在の値と合成</string>
-	<string name="script_11B60">11B60 シャラダ文字補助</string>
-	<string name="script_10570">10570 ビタクチェ文字</string>
 </resources>

@@ -301,6 +301,7 @@
 	<string name="script_11D00">11D00 マサラム・ゴーンディー文字</string>
 	<string name="script_11D60">11D60 グンジャラ・ゴーンディー文字</string>
 	<string name="script_11DB0">11DB0 トロン・シキ文字</string>
+	<string name="script_11DF0">11DF0 ベンガル文字補助</string>
 	<string name="script_11EE0">11EE0 マカサル文字</string>
 	<string name="script_11F00">11F00 カウィ文字</string>
 	<string name="script_11FB0">11FB0 リス文字補助</string>
@@ -308,6 +309,7 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字の数字及び句読点</string>
 	<string name="script_12480">12480 シュメール楔形文字</string>
+	<string name="script_12550">12550 原楔形文字数字</string>
 	<string name="script_12F90">12F90 キュプロ・ミノア文字</string>
 	<string name="script_13000">13000 エジプト・ヒエログリフ</string>
 	<string name="script_13430">13430 エジプト・ヒエログリフ制御</string>
@@ -326,6 +328,8 @@
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字補助</string>
 	<string name="script_18D80">18D80 西夏文字構成要素補助</string>
+	<string name="script_18E00">18E00 女真文字</string>
+	<string name="script_191A0">191A0 女真文字部首</string>
 	<string name="script_1AFF0">1AFF0 仮名文字拡張B</string>
 	<string name="script_1B000">1B000 仮名文字補助</string>
 	<string name="script_1B100">1B100 仮名文字拡張A</string>
@@ -337,12 +341,14 @@
 	<string name="script_1D000">1D000 ビザンチン音楽記号</string>
 	<string name="script_1D100">1D100 音楽記号</string>
 	<string name="script_1D200">1D200 古代ギリシア音符記号</string>
+	<string name="script_1D250">1D250 音楽記号補助</string>
 	<string name="script_1D2C0">1D2C0 カクトビク数字</string>
 	<string name="script_1D2E0">1D2E0 マヤ数字</string>
 	<string name="script_1D300">1D300 太玄経記号</string>
 	<string name="script_1D360">1D360 算木用数字</string>
 	<string name="script_1D400">1D400 数学用英数字記号</string>
 	<string name="script_1D800">1D800 サットン手話表記法</string>
+	<string name="script_1DB00">1DB00 その他の記号及び矢印拡張</string>
 	<string name="script_1DF00">1DF00 ラテン文字拡張G</string>
 	<string name="script_1E000">1E000 グラゴル文字補助</string>
 	<string name="script_1E030">1E030 キリール文字拡張D</string>
@@ -381,6 +387,7 @@
 	<string name="script_30000">30000 CJK統合漢字拡張G</string>
     <string name="script_31350">31350 CJK統合漢字拡張H</string>
 	<string name="script_323B0">323B0 CJK統合漢字拡張J</string>
+	<string name="script_3D000">3D000 小篆</string>
 	<string name="script_E0000">E0000 タグ</string>
 	<string name="script_E0100">E0100 字形選択子補助</string>
 	<string name="script_F0000">F0000 私用領域補助A</string>
@@ -440,7 +447,7 @@
 
 	<string name="version_desc">Unicodeのバージョン</string>
 
-	<string name="version_latest">最新 (17.0.0)</string>
+	<string name="version_latest">最新 (18.0.0)</string>
 
 	<string name="emojicompat_desc">EmojiCompat を使用して絵文字を表示</string>
 	<string name="emojicompat_null">使用しない</string>

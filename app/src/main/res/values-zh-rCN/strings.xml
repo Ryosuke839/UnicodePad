@@ -297,6 +297,7 @@
 	<string name="script_11D00">11D00 马萨拉姆贡德文字</string>
 	<string name="script_11D60">11D60 贡贾拉贡德文字</string>
 	<string name="script_11DB0">11DB0 托隆西基文字</string>
+	<string name="script_11DF0">11DF0 孟加拉文补充</string>
 	<string name="script_11EE0">11EE0 望加锡文字</string>
 	<string name="script_11F00">11F00 卡威文字</string>
 	<string name="script_11FB0">11FB0 傈僳文字补充</string>
@@ -304,6 +305,7 @@
 	<string name="script_12000">12000 楔形文字</string>
 	<string name="script_12400">12400 楔形文字数字和标点符号</string>
 	<string name="script_12480">12480 早期王朝楔形文字</string>
+	<string name="script_12550">12550 古体楔形文字数字</string>
 	<string name="script_12F90">12F90 塞浦路斯-米诺斯文字</string>
 	<string name="script_13000">13000 埃及象形文字</string>
 	<string name="script_13430">13430 埃及象形文字格式控制符</string>
@@ -325,6 +327,8 @@
 	<string name="script_18B00">18B00 契丹小字</string>
 	<string name="script_18D00">18D00 西夏文字补充</string>
 	<string name="script_18D80">18D80 西夏文字部首补充</string>
+	<string name="script_18E00">18E00 女真文</string>
+	<string name="script_191A0">191A0 女真文部首</string>
 	<string name="script_1AFF0">1AFF0 假名扩展B</string>
 	<string name="script_1B000">1B000 假名补充</string>
 	<string name="script_1B100">1B100 假名扩展A</string>
@@ -338,12 +342,14 @@
 	<string name="script_1D000">1D000 拜占庭乐谱符号</string>
 	<string name="script_1D100">1D100 乐谱符号</string>
 	<string name="script_1D200">1D200 古希腊乐谱记号</string>
+	<string name="script_1D250">1D250 乐谱符号补充</string>
 	<string name="script_1D2C0">1D2C0 卡克托维克数字</string>
 	<string name="script_1D2E0">1D2E0 玛雅数字</string>
 	<string name="script_1D300">1D300 太玄经符号</string>
 	<string name="script_1D360">1D360 算筹数字</string>
 	<string name="script_1D400">1D400 数学字母数字符号</string>
 	<string name="script_1D800">1D800 萨顿手语符号</string>
+	<string name="script_1DB00">1DB00 杂类符号与箭头扩展</string>
 	<string name="script_1DF00">1DF00 拉丁文字扩展G</string>
 	<string name="script_1E000">1E000 格拉哥里文字补充</string>
 	<string name="script_1E030">1E030 西里尔文字扩展D</string>
@@ -385,6 +391,7 @@
 	<string name="script_30000">30000 中日韩统一汉字扩展G</string>
 	<string name="script_31350">31350 中日韩统一汉字扩展H</string>
 	<string name="script_323B0">323B0 中日韩统一汉字扩展J</string>
+	<string name="script_3D000">3D000 小篆</string>
 	<string name="script_E0000">E0000 标签</string>
 	<string name="script_E0100">E0100 异体选择符补充</string>
 	<string name="script_F0000">F0000 补充私用区A</string>
@@ -414,7 +421,7 @@
 
 	<string name="version_desc">Unicode 版本</string>
 
-	<string name="version_latest">最新 (17.0.0)</string>
+	<string name="version_latest">最新 (18.0.0)</string>
 	
 	<string name="emojicompat_desc">使用EmojiCompat方式显示Emoji</string>
 	<string name="emojicompat_null">禁用</string>

@@ -80,7 +80,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.setMargins
 import androidx.core.view.updatePadding
-import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.emoji2.text.EmojiCompat.InitCallback
 import androidx.lifecycle.Lifecycle
@@ -137,7 +136,7 @@ class UnicodeActivity : BaseActivity() {
         onActivityResult(-1, 0, null)
         val useEmoji = pref.getString("emojicompat", "false")
         if (useEmoji != "null") {
-            EmojiCompat.init(BundledEmojiCompatConfig(this)
+            EmojiCompat.init(NotoEmojiCompatConfig(this)
                     .setReplaceAll(useEmoji == "true")
                     .registerInitCallback(object : InitCallback() {
                         override fun onInitialized() {

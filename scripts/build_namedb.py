@@ -26,6 +26,7 @@ UNICODE_VERSIONS = [
   1510,
   1600,
   1700,
+  1800,
 ]
 
 def main():
@@ -243,7 +244,7 @@ def main():
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
 
-      cur.execute('CREATE TABLE version_code as SELECT 72 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 73 as version;')
       con.commit()
 
       print('SELECT * FROM \'version_code\';')

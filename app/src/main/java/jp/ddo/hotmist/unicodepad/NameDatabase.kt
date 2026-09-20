@@ -189,7 +189,7 @@ class NameDatabase(context: Context) {
                 try {
                     db.rawQuery("SELECT * FROM version_code;", null).use { cur ->
                         cur.moveToFirst()
-                        if (cur.getInt(0) != 73) throw SQLiteException()
+                        if (cur.getInt(0) != 75) throw SQLiteException()
                     }
                 } catch (e: SQLiteException) {
                     db.close()

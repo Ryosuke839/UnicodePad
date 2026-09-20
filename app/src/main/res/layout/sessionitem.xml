@@ -15,6 +15,7 @@
    limitations under the License.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="?android:attr/selectableItemBackground"
@@ -61,7 +62,7 @@
 		android:focusable="false"
 		android:scaleType="centerInside"
 		android:src="@drawable/ic_star_border"
-		android:tint="?android:attr/textColorSecondary" />
+		app:tint="?android:attr/textColorSecondary" />
 
 	<ImageButton
 		android:id="@+id/session_delete"
@@ -72,6 +73,6 @@
 		android:focusable="false"
 		android:scaleType="centerInside"
 		android:src="@drawable/ic_delete"
-		android:tint="?android:attr/textColorSecondary" />
+		app:tint="?android:attr/textColorSecondary" />
 
 </LinearLayout>

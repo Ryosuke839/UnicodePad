@@ -142,19 +142,23 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         "#" to "\u2248 ",
                         "@" to "\u2022 ",
                     )
-                    it.text = charMap[s.substring(0, 1)] ?: s.substring(0, 1)
+                    val sp = s.indexOf(' ')
+                    if (sp <= 0) continue
+                    val lineType = s.substring(0, sp)
+                    val rest = s.substring(sp + 1)
+                    it.text = charMap[lineType] ?: ("$lineType ")
                     hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                    if (s.startsWith("*") || s.startsWith("=") || s.startsWith("%") || s.startsWith("@")) {
+                    if (lineType == "*" || lineType == "=" || lineType == "%" || lineType == "@" || (lineType.length > 1 && lineType != "kSEAL_MCJK")) {
                         it.gravity = Gravity.TOP
                         val desc = TextView(activity)
-                        desc.text = s.substring(2)
+                        desc.text = rest
                         desc.setTextIsSelectable(true)
                         hl.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
                     } else {
                         var cs = ""
                         var ps = ""
                         val ns = mutableListOf<String>()
-                        Scanner(s.substring(2)).use { sc ->
+                        Scanner(rest).use { sc ->
                             while (sc.hasNext()) {
                                 val ss = sc.next()
                                 if (Regex("[0-9A-Fa-f]{4,6}").matches(ss) && !Regex("[a-f]{4,6}").matches(ss)) {

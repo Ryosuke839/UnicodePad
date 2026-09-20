@@ -3,7 +3,7 @@
 import sys
 import sqlite3
 import re
-from ftplib import FTP
+from ftplib import FTP, error_perm
 import io
 from urllib.parse import urlparse
 import zipfile
@@ -26,7 +26,17 @@ UNICODE_VERSIONS = [
   1510,
   1600,
   1700,
+  1800,
 ]
+
+SOURCE_FILES = [
+  ('JurchenSources.txt', ['kJURC_RSUnicode', 'kJURC_NCReading']),
+  ('NushuSources.txt', ['kNSHU_Reading']),
+  ('SealSources.txt', ['kSEAL_MCJK', 'kSEAL_Rad']),
+  ('TangutSources.txt', ['kTGT_RSUnicode']),
+  ('Unikemet.txt', ['kEH_Core', 'kEH_Desc', 'kEH_Func']),
+]
+SOURCE_PROP_ORDER = [prop for _, props in SOURCE_FILES for prop in props]
 
 def main():
   with FTP('ftp.unicode.org') as ftp:
@@ -110,7 +120,7 @@ def main():
           process_file('Unihan_Variants.txt', ['kSemanticVariant', 'kSimplifiedVariant', 'kSpecializedSemanticVariant', 'kSpoofingVariant', 'kTraditionalVariant', 'kZVariant'])
       con.commit()
 
-      cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text NOT NULL, name text NOT NULL, version integer NOT NULL, lines text);')
+      cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text, name text, version integer NOT NULL, lines text);')
       characters = {}
       class OneCharacter:
         id = None
@@ -118,16 +128,19 @@ def main():
         version = 0
         words = []
         lines = []
+        source_props = {}
         def __init__(self, code, name, version):
           self.id = int(code, 16)
           self.name = name
           self.version = version
-          self.words = [name]
+          self.words = [name] if name else []
           self.lines = []
+          self.source_props = {}
         def update(self):
           nonlocal characters
           if self.id in characters:
             self.version = characters[self.id].version
+            self.source_props = characters[self.id].source_props
           characters[self.id] = self
         def append_line(self, line_type, line, is_word=False):
           if is_word:
@@ -135,9 +148,14 @@ def main():
           self.lines.append(line_type + ' ' + line.replace('\'', '\'\''))
         def insert(self):
           nonlocal cur
+          for tag in SOURCE_PROP_ORDER:
+            if tag in self.source_props:
+              self.append_line(tag, self.source_props[tag])
           def list_to_str(l):
             return '\'' + '\n'.join(l) + '\'' if len(l) > 0 else 'NULL'
-          exp = f'INSERT INTO name_table (id, words, name, version, lines) values ({self.id}, \'{" ".join(self.words)}\', \'{self.name}\', {self.version}, {list_to_str(self.lines)});'
+          words_sql = '\'' + ' '.join(self.words) + '\'' if self.words else 'NULL'
+          name_sql = '\'' + self.name + '\'' if self.name is not None else 'NULL'
+          exp = f'INSERT INTO name_table (id, words, name, version, lines) values ({self.id}, {words_sql}, {name_sql}, {self.version}, {list_to_str(self.lines)});'
           try:
             cur.execute(exp)
           except:
@@ -192,6 +210,36 @@ def main():
         print(ftp.retrlines(f'RETR NamesList.txt', oneline))
         if current is not None:
           current.update()
+        def process_source_file(filename, tags):
+          wanted = set(tags)
+          def source_line(line):
+            if len(line) == 0 or line[0] == '#':
+              return
+            tokens = line.split('\t')
+            if len(tokens) < 3:
+              print(f'Malformed line: {line}', file=sys.stderr)
+              return
+            if tokens[1] not in wanted:
+              return
+            if not tokens[0].startswith('U+'):
+              print(f'Malformed line: {line}', file=sys.stderr)
+              return
+            code = tokens[0][2:]
+            try:
+              cid = int(code, 16)
+            except ValueError:
+              print(f'Malformed line: {line}', file=sys.stderr)
+              return
+            if cid not in characters:
+              characters[cid] = OneCharacter(code, None, version)
+            characters[cid].source_props[tokens[1]] = tokens[2]
+          try:
+            print(f'RETR /Public/{version // 100}.{version // 10 % 10}.{version % 10}/ucd/{filename}')
+            print(ftp.retrlines(f'RETR {filename}', source_line))
+          except error_perm as e:
+            print(e)
+        for source_filename, source_tags in SOURCE_FILES:
+          process_source_file(source_filename, source_tags)
       for v in characters.values():
         v.insert()
       print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{version % 10}/emoji/')
@@ -243,7 +291,7 @@ def main():
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
 
-      cur.execute('CREATE TABLE version_code as SELECT 72 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 75 as version;')
       con.commit()
 
       print('SELECT * FROM \'version_code\';')

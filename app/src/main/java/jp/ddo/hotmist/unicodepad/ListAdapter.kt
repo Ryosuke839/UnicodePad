@@ -392,6 +392,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             if (univer >= 1100) {
                 add(0x11D60, 0x11DAF)
                 if (univer >= 1700) add(0x11DB0, 0x11DEF)
+                if (univer >= 1800) add(0x11DF0, 0x11DFF)
                 add(0x11EE0, 0x11EFF)
             }
             if (univer >= 1500) add(0x11F00, 0x11F5F)
@@ -401,6 +402,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0x12000, 0x123FF)
         add(0x12400, 0x1247F)
         if (univer >= 800) add(0x12480, 0x1254F)
+        if (univer >= 1800) add(0x12550, 0x1268F)
         if (univer >= 1400) add(0x12F90, 0x12FFF)
         add(0x13000, 0x1342F)
         if (univer >= 1500) add(0x13430, 0x1345F)
@@ -430,6 +432,10 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
             else add(0x18D00, 0x18D8F)
             if (univer >= 1700) add(0x18D80, 0x18DFF)
         }
+        if (univer >= 1800) {
+            add(0x18E00, 0x1919F)
+            add(0x191A0, 0x191DF)
+        }
         if (univer >= 1400) add(0x1AFF0, 0x1AFFF)
         add(0x1B000, 0x1B0FF)
         if (univer >= 1000) add(0x1B100, 0x1B12F)
@@ -443,12 +449,14 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         add(0x1D000, 0x1D0FF)
         add(0x1D100, 0x1D1FF)
         add(0x1D200, 0x1D24F)
+        if (univer >= 1800) add(0x1D250, 0x1D28F)
         if (univer >= 1500) add(0x1D2C0, 0x1D2DF)
         if (univer >= 1100) add(0x1D2E0, 0x1D2FF)
         add(0x1D300, 0x1D35F)
         add(0x1D360, 0x1D37F)
         add(0x1D400, 0x1D7FF)
         if (univer >= 800) add(0x1D800, 0x1DAAF)
+        if (univer >= 1800) add(0x1DB00, 0x1DBFF)
         if (univer >= 1400) add(0x1DF00, 0x1DFFF)
         if (univer >= 900) add(0x1E000, 0x1E02F)
         if (univer >= 1500) add(0x1E030, 0x1E08F)
@@ -490,6 +498,7 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
         if (univer >= 1300) add(0x30000, 0x3134F)
         if (univer >= 1500) add(0x31350, 0x323AF)
         if (univer >= 1700) add(0x323B0, 0x3347F)
+        if (univer >= 1800) add(0x3D000, 0x3FC3F)
         add(0xE0000, 0xE007F)
         add(0xE0100, 0xE01EF)
         add(0xF0000, 0xFFFFF)

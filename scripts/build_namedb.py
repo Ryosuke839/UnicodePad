@@ -37,6 +37,14 @@ SOURCE_FILES = [
   ('Unikemet.txt', ['kEH_Core', 'kEH_Desc', 'kEH_Func']),
 ]
 SOURCE_PROP_ORDER = [prop for _, props in SOURCE_FILES for prop in props]
+SV_LINE = re.compile(r'^([0-9A-F]+(?: [0-9A-F]+)*)\s*;\s*([^;]*?)\s*;\s*([^#]*?)\s*(?:#.*)?$')
+
+
+def standardized_variant_nameslist_lines(seq, desc, ctx):
+  if ctx:
+    return [f'{seq} {desc} ({tag})' for tag in ctx.split()]
+  return [f'{seq} {desc}']
+
 
 def main():
   with FTP('ftp.unicode.org') as ftp:
@@ -240,6 +248,32 @@ def main():
             print(e)
         for source_filename, source_tags in SOURCE_FILES:
           process_source_file(source_filename, source_tags)
+      bases_with_nl_tilde = {
+        cid for cid, ch in characters.items()
+        if any(l.startswith('~ ') for l in ch.lines)
+      }
+      def sv_line(line):
+        if len(line) == 0 or line[0] == '#':
+          return
+        m = SV_LINE.match(line)
+        if not m:
+          print(f'Malformed line: {line}', file=sys.stderr)
+          return
+        seq, desc, ctx = m.group(1), m.group(2).strip(), m.group(3).strip()
+        base = seq.split()[0]
+        try:
+          cid = int(base, 16)
+        except ValueError:
+          print(f'Malformed line: {line}', file=sys.stderr)
+          return
+        if cid in bases_with_nl_tilde:
+          return
+        if cid not in characters:
+          characters[cid] = OneCharacter(base, None, UNICODE_VERSIONS[-1])
+        for rest in standardized_variant_nameslist_lines(seq, desc, ctx):
+          characters[cid].append_line('~', rest)
+      print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/StandardizedVariants.txt')
+      print(ftp.retrlines('RETR StandardizedVariants.txt', sv_line))
       for v in characters.values():
         v.insert()
       print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{version % 10}/emoji/')

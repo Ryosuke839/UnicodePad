@@ -131,6 +131,7 @@ class SettingActivity : BaseActivity() {
             setText(findPreference("checker")!!)
             setText(findPreference("recentsize")!!)
             setEntry(findPreference("scroll")!!)
+            setEntry(findPreference("session_startup")!!)
             findPreference<Preference>("process_text")!!.onPreferenceChangeListener = this
             findPreference<Preference>("legal_app")!!.also {
                 it.setOnPreferenceClickListener {
@@ -140,6 +141,11 @@ class SettingActivity : BaseActivity() {
             findPreference<Preference>("legal_uni")!!.also {
                 it.setOnPreferenceClickListener {
                     openPage("https://unicode.org/")
+                }
+            }
+            findPreference<Preference>("legal_noto")!!.also {
+                it.setOnPreferenceClickListener {
+                    openPage("https://github.com/googlefonts/noto-emoji")
                 }
             }
             if (!adCompat.showAdSettings) {
@@ -289,6 +295,8 @@ class SettingActivity : BaseActivity() {
                                         it.put("process_text", if (pref.contains("process_text")) pref.getBoolean("process_text", true) else null)
                                         it.put("scroll", pref.getString("scroll", null))
                                         it.put("recentsize", pref.getString("recentsize", null))
+                                        it.put("session_startup", pref.getString("session_startup", null))
+                                        it.put("sessions", pref.getString("sessions", null))
                                     })
                                 }
                                 if (cbHistory.isChecked) {
@@ -414,6 +422,8 @@ class SettingActivity : BaseActivity() {
                                         (it.opt("process_text") as? Boolean)?.let { bool -> edit.putBoolean("process_text", bool) }
                                         (it.opt("scroll") as? String)?.let { str -> edit.putString("scroll", str) }
                                         (it.opt("recentsize") as? String)?.let { str -> edit.putString("recentsize", str) }
+                                        (it.opt("session_startup") as? String)?.let { str -> edit.putString("session_startup", str) }
+                                        (it.opt("sessions") as? String)?.let { str -> edit.putString("sessions", str) }
                                     }
                                 }
                                 if (cbHistory.isChecked) {

@@ -51,6 +51,7 @@
 		<item>@string/version_1510</item>
 		<item>@string/version_1600</item>
 		<item>@string/version_1700</item>
+		<item>@string/version_1800</item>
 		<item>@string/version_latest</item>
 	</string-array>
 	<string-array name="version_val">
@@ -71,6 +72,7 @@
 		<item>15.1.0</item>
 		<item>16.0.0</item>
 		<item>17.0.0</item>
+		<item>18.0.0</item>
 		<item>Latest</item>
 	</string-array>
 	<string name="version_def" translatable="false">Latest</string>
@@ -106,6 +108,16 @@
 		<item>0</item>
 		<item>1</item>
 		<item>2</item>
+	</string-array>
+	<string-array name="session_startup" tools:ignore="MissingTranslation">
+		<item>@string/session_startup_new</item>
+		<item>@string/session_startup_previous</item>
+		<item>@string/session_startup_chooser</item>
+	</string-array>
+	<string-array name="session_startup_val">
+		<item>new</item>
+		<item>previous</item>
+		<item>chooser</item>
 	</string-array>
 	<string name="gridsize_def" translatable="false">24.0</string>
 	<string name="textsize_def" translatable="false">24.0</string>

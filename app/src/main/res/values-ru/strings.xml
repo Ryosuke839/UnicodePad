@@ -300,6 +300,7 @@
 	<string name="script_11D00">11D00 Гонди Масарама</string>
 	<string name="script_11D60">11D60 Гунджалское гонди</string>
 	<string name="script_11DB0">11DB0 Толонг-сики</string>
+	<string name="script_11DF0">11DF0 Дополнение к бенгальскому письму</string>
 	<string name="script_11EE0">11EE0 Макасарское письмо</string>
 	<string name="script_11F00">11F00 Старояванское письмо (кави)</string>
 	<string name="script_11FB0">11FB0 Дополнение к лису</string>
@@ -307,6 +308,7 @@
 	<string name="script_12000">12000 Клинопись</string>
 	<string name="script_12400">12400 Клинописные цифры и пунктуация</string>
 	<string name="script_12480">12480 Раннединастическая клинопись</string>
+	<string name="script_12550">12550 Архаические клинописные цифры</string>
 	<string name="script_12F90">12F90 Кипро-минойское письмо</string>
 	<string name="script_13000">13000 Египетские иероглифы</string>
 	<string name="script_13430">13430 Управляющие символы форматирования египетских иероглифов</string>
@@ -328,6 +330,8 @@
 	<string name="script_18B00">18B00 Малое киданьское письмо</string>
 	<string name="script_18D00">18D00 Дополнение к тангутскому письму</string>
 	<string name="script_18D80">18D80 Дополнение к элементам тангутского письма</string>
+	<string name="script_18E00">18E00 Чжурчжэньское письмо</string>
+	<string name="script_191A0">191A0 Ключи чжурчжэньского письма</string>
 	<string name="script_1AFF0">1AFF0 Расширенная кана — B</string>
 	<string name="script_1B000">1B000 Дополнение к кане</string>
 	<string name="script_1B100">1B100 Расширенная кана — A</string>
@@ -341,12 +345,14 @@
 	<string name="script_1D000">1D000 Византийские музыкальные символы</string>
 	<string name="script_1D100">1D100 Музыкальные символы</string>
 	<string name="script_1D200">1D200 Древнегреческие музыкальные символы</string>
+	<string name="script_1D250">1D250 Дополнение к музыкальным символам</string>
 	<string name="script_1D2C0">1D2C0 Кактовикские цифры</string>
 	<string name="script_1D2E0">1D2E0 Цифры майя</string>
 	<string name="script_1D300">1D300 Символы \"Канона великого сокровенного\" (Тай Сюань Цзин)</string>
 	<string name="script_1D360">1D360 Цифры счётных палочек</string>
 	<string name="script_1D400">1D400 Математические буквы и цифры</string>
 	<string name="script_1D800">1D800 Жестовое письмо Саттон</string>
+	<string name="script_1DB00">1DB00 Расширенные разные символы и стрелки</string>
 	<string name="script_1DF00">1DF00 Расширенная латиница — G</string>
 	<string name="script_1E000">1E000 Дополнение к глаголице</string>
 	<string name="script_1E030">1E030 Расширенная кириллица — D</string>
@@ -388,6 +394,7 @@
 	<string name="script_30000">30000 Унифицированные идеограммы ККЯ — расширение G</string>
 	<string name="script_31350">31350 Унифицированные идеограммы ККЯ — расширение H</string>
 	<string name="script_323B0">323B0 Унифицированные идеограммы ККЯ — расширение J</string>
+	<string name="script_3D000">3D000 Малая печать (сяочжуань)</string>
 	<string name="script_E0000">E0000 Теги</string>
 	<string name="script_E0100">E0100 Дополнение к вариантным селекторам</string>
 	<string name="script_F0000">F0000 Дополнительная область для частного использования — A</string>
@@ -447,7 +454,7 @@
 
 	<string name="version_desc">Версия Unicode</string>
 
-	<string name="version_latest">Последняя (17.0.0)</string>
+	<string name="version_latest">Последняя (18.0.0)</string>
 
 	<string name="emojicompat_desc">Использовать EmojiCompat для эмодзи</string>
 	<string name="emojicompat_null">Не использовать</string>
@@ -512,7 +519,7 @@
 	<string name="malformed">Неправильное имя файла в ZIP–архиве</string>
 	<string name="legal">Лицензия</string>
 	<string name="legal_uni2">Это приложение включает модифицированную версию файла данных Unicode.
-Copyright © 1991-2025 Unicode, Inc. All rights reserved.
+Copyright © 1991-2026 Unicode, Inc. All rights reserved.
 Distributed under the Terms of Use in
 http://www.unicode.org/copyright.html.</string>
 </resources>

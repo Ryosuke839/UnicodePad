@@ -142,19 +142,23 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
                         "#" to "\u2248 ",
                         "@" to "\u2022 ",
                     )
-                    it.text = charMap[s.substring(0, 1)] ?: s.substring(0, 1)
+                    val sp = s.indexOf(' ')
+                    if (sp <= 0) continue
+                    val lineType = s.substring(0, sp)
+                    val rest = s.substring(sp + 1)
+                    it.text = charMap[lineType] ?: ("$lineType ")
                     hl.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                    if (s.startsWith("*") || s.startsWith("=") || s.startsWith("%") || s.startsWith("@")) {
+                    if (lineType == "*" || lineType == "=" || lineType == "%" || lineType == "@" || (lineType.length > 1 && lineType != "kSEAL_MCJK")) {
                         it.gravity = Gravity.TOP
                         val desc = TextView(activity)
-                        desc.text = s.substring(2)
+                        desc.text = rest
                         desc.setTextIsSelectable(true)
                         hl.addView(desc, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
                     } else {
                         var cs = ""
                         var ps = ""
                         val ns = mutableListOf<String>()
-                        Scanner(s.substring(2)).use { sc ->
+                        Scanner(rest).use { sc ->
                             while (sc.hasNext()) {
                                 val ss = sc.next()
                                 if (Regex("[0-9A-Fa-f]{4,6}").matches(ss) && !Regex("[a-f]{4,6}").matches(ss)) {
@@ -360,6 +364,8 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
             "kSpecializedSemanticVariant" to R.string.unihan_specialized_semantic_variant,
             "kSpoofingVariant" to R.string.unihan_spoofing_variant,
             "kTraditionalVariant" to R.string.unihan_traditional_variant,
+            "kJapaneseNewVariant" to R.string.unihan_japanese_new_variant,
+            "kJapaneseOldVariant" to R.string.unihan_japanese_old_variant,
             "kZVariant" to R.string.unihan_z_variant
         )
         private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "")

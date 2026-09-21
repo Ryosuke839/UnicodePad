@@ -138,6 +138,14 @@
 			android:defaultValue="false"
 			android:key="ime"
 			android:title="@string/ime_desc" />
+		<ListPreference
+			android:defaultValue="previous"
+			android:dialogTitle="@string/session_startup_desc"
+			android:entries="@array/session_startup"
+			android:entryValues="@array/session_startup_val"
+			android:key="session_startup"
+			android:summary=""
+			android:title="@string/session_startup_desc" />
 		<CheckBoxPreference
 			android:defaultValue="false"
 			android:key="clear"
@@ -177,6 +185,10 @@
 			android:key="legal_uni"
 			android:summary="@string/legal_uni2"
 			android:title="@string/legal_uni" />
+		<Preference
+			android:key="legal_noto"
+			android:summary="@string/legal_noto2"
+			android:title="@string/legal_noto" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

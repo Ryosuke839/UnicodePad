@@ -325,7 +325,7 @@ def main():
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
 
-      cur.execute('CREATE TABLE version_code as SELECT 75 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 77 as version;')
       con.commit()
 
       print('SELECT * FROM \'version_code\';')

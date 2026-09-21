@@ -37,6 +37,14 @@ SOURCE_FILES = [
   ('Unikemet.txt', ['kEH_Core', 'kEH_Desc', 'kEH_Func']),
 ]
 SOURCE_PROP_ORDER = [prop for _, props in SOURCE_FILES for prop in props]
+SV_LINE = re.compile(r'^([0-9A-F]+(?: [0-9A-F]+)*)\s*;\s*([^;]*?)\s*;\s*([^#]*?)\s*(?:#.*)?$')
+
+
+def standardized_variant_nameslist_lines(seq, desc, ctx):
+  if ctx:
+    return [f'{seq} {desc} ({tag})' for tag in ctx.split()]
+  return [f'{seq} {desc}']
+
 
 def main():
   with FTP('ftp.unicode.org') as ftp:
@@ -47,7 +55,7 @@ def main():
 
       print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/')
       print(ftp.cwd(f'/Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/'))
-      cur.execute('CREATE TABLE unihan_table (id integer NOT NULL PRIMARY KEY, kRSUnicode text, kTotalStrokes text, kAlternateTotalStrokes text, kCantonese text, kDefinition text, kFanqie text, kHangul text, kHanyuPinlu text, kHanyuPinyin text, kJapanese text, kJapaneseKun text, kJapaneseOn text, kKorean text, kMandarin text, kSMSZD2003Readings text, kTang text, kTGHZ2013 text, kVietnamese text, kXHC1983 text, kZhuang text, kSemanticVariant text, kSimplifiedVariant text, kSpecializedSemanticVariant text, kSpoofingVariant text, kTraditionalVariant text, kZVariant text);')
+      cur.execute('CREATE TABLE unihan_table (id integer NOT NULL PRIMARY KEY, kRSUnicode text, kTotalStrokes text, kAlternateTotalStrokes text, kCantonese text, kDefinition text, kFanqie text, kHangul text, kHanyuPinlu text, kHanyuPinyin text, kJapanese text, kJapaneseKun text, kJapaneseOn text, kKorean text, kMandarin text, kSMSZD2003Readings text, kTang text, kTGHZ2013 text, kVietnamese text, kXHC1983 text, kZhuang text, kSemanticVariant text, kSimplifiedVariant text, kSpecializedSemanticVariant text, kSpoofingVariant text, kTraditionalVariant text, kJapaneseNewVariant text, kJapaneseOldVariant text, kZVariant text);')
       cur.execute('CREATE TABLE rsindex_table (id integer NOT NULL PRIMARY KEY, radical integer NOT NULL, strokes integer NOT NULL, codepoint integer NOT NULL);')
       with io.BytesIO() as b:
         ftp.retrbinary('RETR Unihan.zip', b.write)
@@ -117,7 +125,7 @@ def main():
           process_file('Unihan_IRGSources.txt', ['kRSUnicode', 'kTotalStrokes'])
           process_file('Unihan_DictionaryLikeData.txt', ['kAlternateTotalStrokes'])
           process_file('Unihan_Readings.txt', ['kCantonese', 'kDefinition', 'kFanqie', 'kHangul', 'kHanyuPinlu', 'kHanyuPinyin', 'kJapanese', 'kJapaneseKun', 'kJapaneseOn', 'kKorean', 'kMandarin', 'kSMSZD2003Readings', 'kTang', 'kTGHZ2013', 'kVietnamese', 'kXHC1983', 'kZhuang'])
-          process_file('Unihan_Variants.txt', ['kSemanticVariant', 'kSimplifiedVariant', 'kSpecializedSemanticVariant', 'kSpoofingVariant', 'kTraditionalVariant', 'kZVariant'])
+          process_file('Unihan_Variants.txt', ['kSemanticVariant', 'kSimplifiedVariant', 'kSpecializedSemanticVariant', 'kSpoofingVariant', 'kTraditionalVariant', 'kJapaneseNewVariant', 'kJapaneseOldVariant', 'kZVariant'])
       con.commit()
 
       cur.execute('CREATE TABLE name_table (id integer NOT NULL PRIMARY KEY, words text, name text, version integer NOT NULL, lines text);')
@@ -240,6 +248,32 @@ def main():
             print(e)
         for source_filename, source_tags in SOURCE_FILES:
           process_source_file(source_filename, source_tags)
+      bases_with_nl_tilde = {
+        cid for cid, ch in characters.items()
+        if any(l.startswith('~ ') for l in ch.lines)
+      }
+      def sv_line(line):
+        if len(line) == 0 or line[0] == '#':
+          return
+        m = SV_LINE.match(line)
+        if not m:
+          print(f'Malformed line: {line}', file=sys.stderr)
+          return
+        seq, desc, ctx = m.group(1), m.group(2).strip(), m.group(3).strip()
+        base = seq.split()[0]
+        try:
+          cid = int(base, 16)
+        except ValueError:
+          print(f'Malformed line: {line}', file=sys.stderr)
+          return
+        if cid in bases_with_nl_tilde:
+          return
+        if cid not in characters:
+          characters[cid] = OneCharacter(base, None, UNICODE_VERSIONS[-1])
+        for rest in standardized_variant_nameslist_lines(seq, desc, ctx):
+          characters[cid].append_line('~', rest)
+      print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{UNICODE_VERSIONS[-1] % 10}/ucd/StandardizedVariants.txt')
+      print(ftp.retrlines('RETR StandardizedVariants.txt', sv_line))
       for v in characters.values():
         v.insert()
       print(f'RETR /Public/{UNICODE_VERSIONS[-1] // 100}.{UNICODE_VERSIONS[-1] // 10 % 10}.{version % 10}/emoji/')
@@ -291,7 +325,7 @@ def main():
       print(ftp.retrlines(f'RETR emoji-test.txt', emoji_line))
       con.commit()
 
-      cur.execute('CREATE TABLE version_code as SELECT 75 as version;')
+      cur.execute('CREATE TABLE version_code as SELECT 77 as version;')
       con.commit()
 
       print('SELECT * FROM \'version_code\';')

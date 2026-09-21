@@ -445,6 +445,8 @@
 	<string name="unihan_specialized_semantic_variant">specialized semantic variant</string>
 	<string name="unihan_spoofing_variant">spoofing variant</string>
 	<string name="unihan_traditional_variant">traditional Chinese variant</string>
+	<string name="unihan_japanese_new_variant">new Japanese variant</string>
+	<string name="unihan_japanese_old_variant">old Japanese variant</string>
 	<string name="unihan_z_variant">z-variant</string>
 
 	<string name="guide_next">Next</string>

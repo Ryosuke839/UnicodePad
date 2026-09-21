@@ -442,6 +442,8 @@
 	<string name="unihan_specialized_semantic_variant">特定意味的異体字</string>
 	<string name="unihan_spoofing_variant">スプーフィング異体字</string>
 	<string name="unihan_traditional_variant">繁体字</string>
+	<string name="unihan_japanese_new_variant">日本語新字体</string>
+	<string name="unihan_japanese_old_variant">日本語旧字体</string>
 	<string name="unihan_z_variant">Z-異体字</string>
 
 	<string name="guide_next">次へ</string>

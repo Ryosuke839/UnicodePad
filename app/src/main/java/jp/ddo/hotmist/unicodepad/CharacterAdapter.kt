@@ -364,6 +364,8 @@ internal class CharacterAdapter(private val activity: UnicodeActivity, private v
             "kSpecializedSemanticVariant" to R.string.unihan_specialized_semantic_variant,
             "kSpoofingVariant" to R.string.unihan_spoofing_variant,
             "kTraditionalVariant" to R.string.unihan_traditional_variant,
+            "kJapaneseNewVariant" to R.string.unihan_japanese_new_variant,
+            "kJapaneseOldVariant" to R.string.unihan_japanese_old_variant,
             "kZVariant" to R.string.unihan_z_variant
         )
         private val mods = arrayOf(null, "UTF-8: ", "from Unicode ", "")

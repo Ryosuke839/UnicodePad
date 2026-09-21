@@ -109,6 +109,16 @@
 		<item>1</item>
 		<item>2</item>
 	</string-array>
+	<string-array name="session_startup" tools:ignore="MissingTranslation">
+		<item>@string/session_startup_new</item>
+		<item>@string/session_startup_previous</item>
+		<item>@string/session_startup_chooser</item>
+	</string-array>
+	<string-array name="session_startup_val">
+		<item>new</item>
+		<item>previous</item>
+		<item>chooser</item>
+	</string-array>
 	<string name="gridsize_def" translatable="false">24.0</string>
 	<string name="textsize_def" translatable="false">24.0</string>
 	<string name="viewsize_def" translatable="false">120.0</string>

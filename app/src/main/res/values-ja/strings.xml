@@ -23,6 +23,13 @@
 	<string name="share">共有</string>
 	<string name="undo">元に戻す</string>
 	<string name="redo">やり直す</string>
+	<string name="sessions">セッション</string>
+	<string name="session_new">新規セッション</string>
+	<string name="session_current">現在のセッション</string>
+	<string name="session_previous">前回のセッション</string>
+	<string name="session_copied">コピー済み</string>
+	<string name="session_shared">共有済み</string>
+	<string name="session_delete">セッションを削除</string>
 	<string name="convert">変換</string>
 	<string name="convert_">変換…</string>
 	<string name="font">フォント</string>
@@ -503,6 +510,10 @@
 	<string name="scroll_always">常に有効</string>
 
 	<string name="ime_desc">IMEを無効化</string>
+	<string name="session_startup_desc">起動時</string>
+	<string name="session_startup_new">新規セッション</string>
+	<string name="session_startup_previous">前回のセッション</string>
+	<string name="session_startup_chooser">セッション履歴から選択</string>
 	<string name="clear_desc">全削除ボタンを表示</string>
 	<string name="buttons_desc">ボタン行を表示</string>
 	<string name="process_text_desc">テキスト選択メニューから起動する</string>

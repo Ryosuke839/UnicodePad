@@ -34,6 +34,7 @@ internal object SessionMark {
     const val COPIED = 1 shl 0
     const val SHARED = 1 shl 1
     const val FAVORITE = 1 shl 2
+    const val CURRENT = 1 shl 3
 }
 
 internal enum class SessionStatus {
@@ -61,7 +62,7 @@ internal class EditSession(
         get() = mark and SessionMark.FAVORITE != 0
 
     fun isPrunableEmpty(): Boolean =
-        mark == SessionMark.NONE && history.size <= 1 && text.isEmpty()
+        (mark and SessionMark.CURRENT.inv()) == SessionMark.NONE && history.size <= 1 && text.isEmpty()
 }
 
 internal data class SessionListItem(
@@ -79,7 +80,7 @@ internal class SessionStore(private val pref: SharedPreferences) {
     private val sessions = mutableListOf<EditSession>()
 
     val current: EditSession
-        get() = sessions.lastOrNull() ?: startNew()
+        get() = findCurrent() ?: sessions.lastOrNull()?.also { applyCurrentMark(it) } ?: startNew()
 
     val isEmpty: Boolean
         get() = sessions.isEmpty()
@@ -105,12 +106,16 @@ internal class SessionStore(private val pref: SharedPreferences) {
                     )
                 )
             }
+            if (sessions.isNotEmpty()) {
+                applyCurrentMark(findCurrent() ?: sessions.last())
+            }
         } catch (_: JSONException) {
             sessions.clear()
         }
     }
 
     fun save(edit: SharedPreferences.Editor? = null) {
+        prune()
         val json = toJson()
         if (edit != null) {
             edit.putString(PREF_SESSIONS, json)
@@ -121,20 +126,23 @@ internal class SessionStore(private val pref: SharedPreferences) {
 
     fun startNew(text: String = ""): EditSession {
         val entry = HistoryEntry(text, text.length, text.length)
-        val cur = sessions.lastOrNull()
-        if (cur != null && cur.isPrunableEmpty()) {
-            cur.history.clear()
-            cur.history.add(entry)
-            cur.cursor = 0
+        val reusable = findCurrent()?.takeIf { it.isPrunableEmpty() }
+            ?: sessions.lastOrNull()?.takeIf { it.isPrunableEmpty() }
+        if (reusable != null) {
+            reusable.history.clear()
+            reusable.history.add(entry)
+            reusable.cursor = 0
+            applyCurrentMark(reusable)
             save()
-            return cur
+            return reusable
         }
         val session = EditSession(
             history = mutableListOf(entry),
             cursor = 0,
-            mark = SessionMark.NONE,
+            mark = SessionMark.CURRENT,
         )
         sessions.add(session)
+        applyCurrentMark(session)
         prune()
         save()
         return session
@@ -152,8 +160,14 @@ internal class SessionStore(private val pref: SharedPreferences) {
     }
 
     fun delete(session: EditSession) {
-        if (session === sessions.lastOrNull()) return
+        if (session === findCurrent()) return
         sessions.remove(session)
+        save()
+    }
+
+    fun setCurrent(session: EditSession) {
+        if (session !in sessions) return
+        applyCurrentMark(session)
         save()
     }
 
@@ -161,18 +175,17 @@ internal class SessionStore(private val pref: SharedPreferences) {
         val session = EditSession(
             history = source.history.map { it.copy() }.toMutableList(),
             cursor = source.cursor,
-            mark = SessionMark.NONE,
+            mark = SessionMark.CURRENT,
         )
         sessions.add(session)
-        prune()
-        save()
+        applyCurrentMark(session)
         return session
     }
 
     fun recordEdit(text: String, selStart: Int, selEnd: Int) {
         var cur = current
         if (text == cur.text) return
-        if (cur.mark != SessionMark.NONE) {
+        if (cur !== sessions.lastOrNull() || cur.mark != SessionMark.CURRENT) {
             cur = branch()
         }
         while (cur.history.size > cur.cursor + 1) {
@@ -188,7 +201,7 @@ internal class SessionStore(private val pref: SharedPreferences) {
     fun undo(): Boolean {
         var cur = current
         if (cur.cursor <= 0) return false
-        if (cur.mark != SessionMark.NONE) {
+        if (cur !== sessions.lastOrNull() || cur.mark != SessionMark.CURRENT) {
             cur = branch()
         }
         cur.cursor -= 1
@@ -198,7 +211,7 @@ internal class SessionStore(private val pref: SharedPreferences) {
     fun redo(): Boolean {
         var cur = current
         if (cur.cursor >= cur.history.lastIndex) return false
-        if (cur.mark != SessionMark.NONE) {
+        if (cur !== sessions.lastOrNull() || cur.mark != SessionMark.CURRENT) {
             cur = branch()
         }
         cur.cursor += 1
@@ -206,13 +219,12 @@ internal class SessionStore(private val pref: SharedPreferences) {
     }
 
     fun listItems(atLaunch: Boolean = false): List<SessionListItem> {
-        val cur = current
         val items = mutableListOf(
             SessionListItem(null, "", SessionStatus.NEW)
         )
         sessions.asReversed().forEach { s ->
             val status = when {
-                s !== cur -> SessionStatus.NONE
+                s.mark and SessionMark.CURRENT == 0 -> SessionStatus.NONE
                 atLaunch -> SessionStatus.PREVIOUS
                 else -> SessionStatus.CURRENT
             }
@@ -221,8 +233,21 @@ internal class SessionStore(private val pref: SharedPreferences) {
         return items
     }
 
+    private fun findCurrent(): EditSession? =
+        sessions.lastOrNull { it.mark and SessionMark.CURRENT != 0 }
+
+    private fun applyCurrentMark(session: EditSession) {
+        for (s in sessions) {
+            if (s === session) {
+                s.mark = s.mark or SessionMark.CURRENT
+            } else {
+                s.mark = s.mark and SessionMark.CURRENT.inv()
+            }
+        }
+    }
+
     private fun prune() {
-        val cur = sessions.lastOrNull()
+        val cur = findCurrent()
         sessions.removeAll { s ->
             s !== cur && s.isPrunableEmpty()
         }

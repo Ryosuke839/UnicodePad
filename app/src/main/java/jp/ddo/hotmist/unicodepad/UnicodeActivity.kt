@@ -387,8 +387,8 @@ class UnicodeActivity : BaseActivity() {
                                     } },
                                     update = {
                                         it.setOnClickListener {
-                                            editText.setText(cm.text)
-                                            editText.setSelection(editText.length())
+                                            sessionStore.startNew(cm.text?.toString() ?: "")
+                                            applyCurrentSessionToEditor()
                                         }
                                     },
                                     modifier = Modifier.weight(1f),
@@ -1034,7 +1034,7 @@ class UnicodeActivity : BaseActivity() {
                 if (session == null) {
                     sessionStore.startNew()
                 } else {
-                    sessionStore.branch(session)
+                    sessionStore.setCurrent(session)
                 }
                 applyCurrentSessionToEditor()
             }

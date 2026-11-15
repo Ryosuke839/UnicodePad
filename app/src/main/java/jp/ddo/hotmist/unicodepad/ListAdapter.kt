@@ -89,8 +89,9 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
 
         override fun getView(i: Int, view: View?, parent: ViewGroup): View {
             return ((view ?: (activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(android.R.layout.simple_spinner_item, parent, false)) as TextView).also {
-                it.text = getItem(i)
-                it.setTextColor(0x00000000)
+                // The closed spinner is invisible behind the jump spinner; keep its text empty
+                // so it never shadows the jump spinner's selection in the accessibility tree
+                it.text = ""
             }
         }
 
@@ -520,6 +521,8 @@ internal class ListAdapter(activity: Activity, pref: SharedPreferences, db: Name
                 hl.gravity = Gravity.CENTER
                 FrameLayout(activity).also { fl ->
                     mark = Spinner(activity).also { mark ->
+                        // The closed view shows no text; label the control itself for screen readers
+                        mark.contentDescription = activity.getString(R.string.mark)
                         fl.addView(mark, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                         mark.adapter = MapAdapter()
                         mark.setSelection(0)
